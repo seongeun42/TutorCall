@@ -65,12 +65,12 @@
                 href="#"
                 class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 aria-current="page"
-                >선생님 홍보 게시판</a
+                >과외 모집</a
               >
               <a
                 href="#"
                 class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                >문제 Q&A 게시판</a
+                >문제 Q&A</a
               >
               <a
                 href="#"
