@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import QA from '@/pages/board/QA.vue'
 import NavBar from './components/NavBar.vue'
+import LectureRecruit from '@/pages/board/lecturerecruiting/LectureRecruit.vue'
+import QA from '@/pages/board/q&a/QA.vue'
+import QADetail from '@/pages/board/q&a/QADetail.vue'
 </script>
 
 <template>
   <NavBar />
-  <!-- <div class="container"> -->
-  <QA />
-  <!-- </div> -->
+  <!-- <QA /> -->
+  <QADetail />
+  <!-- <LectureRecruit /> -->
 </template>
 
-<style scoped>
-.container {
-  margin: 20px; /* 양 끝에 20px 간격을 주는 예제 값 */
-}
-</style>
+<style scoped></style>

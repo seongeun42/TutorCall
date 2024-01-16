@@ -1,19 +1,13 @@
 <template>
   <div class="container mx-auto">
-    <h2 class="font-bold text-[1.7rem] ml-5">문제 Q&A</h2>
-    <div class="flex justify-between items-center space-x-4 my-10">
-      <div class="menulist">
-        <a href="" class="menulist">전체</a>
-        <a href="" class="menulist">해결</a>
-        <a href="" class="menulist">미해결</a>
-      </div>
-
+    <h2 class="font-bold text-[1.7rem] mt-5 ml-20">과외 모집</h2>
+    <div class="flex justify-end items-center space-x-4 my-10">
       <div class="flex items-center">
         <select
           class="p-2 border border-gray-300 rounded-md mr-1 appearance-none"
           v-model="selectedSubject"
         >
-          <option value="">과목 선택</option>
+          <option value="">분야</option>
           <option value="math">수학</option>
           <option value="science">과학</option>
           <!-- 다른 과목들도 추가할 수 있습니다. -->
@@ -36,8 +30,7 @@
         </button>
       </div>
     </div>
-
-    <ProblemCard />
+    <TutorCard />
     <div class="flex justify-center mt-8">
       <button
         type="button"
@@ -61,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import ProblemCard from './ProblemCard.vue'
+import TutorCard from './TutorCard.vue'
 let selectedSubject = ''
 let currentPage = 1
 const totalPages = 10 // 전체 페이지 수 (원하는 값으로 변경)
@@ -80,15 +73,6 @@ const nextPage = () => {
 </script>
 
 <style>
-.menulist {
-  margin: 5px;
-  color: black;
-  font-size: 15px;
-  font-family: Inter;
-  font-weight: 600;
-  word-wrap: break-word;
-}
-
 /* 요소들을 감싸고 있는 div에 패딩 추가 */
 .container {
   padding: 10px 100px;
