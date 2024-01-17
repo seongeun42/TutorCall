@@ -6,6 +6,7 @@
       height: props.size + 'px',
       top: props.positionX + '%',
       left: props.positionY + '%',
+      transform: 'translate(-50%, -50%)',
       backgroundImage: 'url(https://via.placeholder.com/' + props.size + 'x' + props.size + ')',
       animation: 'ani' + Math.floor(Math.random() * 3) + 1
     }"

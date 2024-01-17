@@ -2,14 +2,18 @@
 import NavBar from '@/components/NavBar.vue'
 import SideBar from '@/pages/tutorcall/SideBar.vue'
 import TutorCallPage from '@/pages/tutorcall/TutorCallPage.vue'
-import SpeechBubble from '@/pages/tutorcall/SpeechBubble.vue'
+import MatchCall from '@/pages/tutorcall/MatchCall.vue'
+import MatchText from '@/pages/tutorcall/MatchText.vue'
 </script>
 
 <template>
   <div class="flex flex-col test">
-    <!--    <NavBar />-->
+    <NavBar />
     <!--    <TutorCallPage class="h-full overflow-hidden relative" />-->
-    <SpeechBubble class="w-60"> </SpeechBubble>
+    <div class="h-full relative flex justify-center items-center">
+      <MatchText></MatchText>
+      <MatchCall></MatchCall>
+    </div>
   </div>
 </template>
 
