@@ -72,7 +72,7 @@ const nextPage = () => {
 }
 </script>
 
-<style>
+<style scoped>
 /* 요소들을 감싸고 있는 div에 패딩 추가 */
 .container {
   padding: 10px 100px;

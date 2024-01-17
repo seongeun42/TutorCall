@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <div class="mt-20 mx-40">
+  <div class="container mx-auto my-10">
+    <div class="mx-20 my-10">
       <div class="flex justify-between items-center">
         <div class="flex items-center justify-center rounded-full w-20 h-8 bg-green-200">
           <p>과목</p>
