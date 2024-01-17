@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap scroll-mx-2 mt-5">
+  <div class="flex flex-wrap scroll-mx-2 mt-10">
     <div class="w-1/2 p-2 flex items-center">
       <div class="w-full">
         <div class="mb-4">
