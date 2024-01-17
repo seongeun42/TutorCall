@@ -9,7 +9,8 @@ import MatchText from '@/pages/tutorcall/MatchText.vue'
 <template>
   <div class="flex flex-col test">
     <NavBar />
-    <TutorCallPage class="h-full overflow-hidden relative" />
+    <!--    <TutorCallPage class="h-full overflow-hidden relative" />-->
+    <MatchText></MatchText>
   </div>
 </template>
 
