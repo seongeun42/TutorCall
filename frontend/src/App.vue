@@ -2,13 +2,13 @@
 import NavBar from './components/NavBar.vue'
 import LectureRecruit from '@/pages/board/lecturerecruiting/LectureRecruit.vue'
 import QA from '@/pages/board/q&a/QA.vue'
-import QADetail from '@/pages/board/q&a/QADetail.vue'
+import DetailQA from '@/pages/board/q&a/DetailQA.vue'
 </script>
 
 <template>
   <NavBar />
   <!-- <QA /> -->
-  <QADetail />
+  <DetailQA />
   <!-- <LectureRecruit /> -->
 </template>
 
