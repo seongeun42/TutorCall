@@ -3,12 +3,14 @@ import NavBar from '@/components/NavBar.vue'
 
 import StudentIndex from '@/pages/mainpage/StudentIndex.vue'
 import TutorIndex from '@/pages/mainpage/TutorIndex.vue'
+import MyPage from './pages/mypage/MyPage.vue'
 </script>
 
 <template>
   <NavBar />
   <!-- <StudentIndex /> -->
-  <TutorIndex />
+  <!-- <TutorIndex /> -->
+  <MyPage />
 </template>
 
 <style scoped>
