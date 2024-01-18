@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
-const isSignUp = ref(true);
-const isSignIn = ref(false);
+const isSignUp = ref(false);
+const isSignIn = ref(true);
 
 const toggle = () =>{
     isSignUp.value = !isSignUp.value;
@@ -195,7 +195,7 @@ const toggle = () =>{
 }
 
 .input-group input:focus {
-    border: 0.125rem solid #4EA685;
+    border: 0.125rem solid #dbd6ff;
 }
 
 .form button {
@@ -204,7 +204,7 @@ const toggle = () =>{
     padding: .6rem 0;
     border-radius: .5rem;
     border: none;
-    background-color: #4EA685;
+    background-color: #000295;
     color: #ffffff;
     font-size: 1.2rem;
     outline: none;
@@ -218,70 +218,6 @@ const toggle = () =>{
 .flex-col {
     flex-direction: column;
 }
-
-.social-list {
-    margin: 2rem 0;
-    padding: 1rem;
-    border-radius: 1.5rem;
-    width: 100%;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    transform: scale(0);
-    transition: .5s ease-in-out;
-    transition-delay: 1.2s;
-}
-
-.social-list>div {
-    color: #ffffff;
-    margin: 0 .5rem;
-    padding: .7rem;
-    cursor: pointer;
-    border-radius: .5rem;
-    cursor: pointer;
-    transform: scale(0);
-    transition: .5s ease-in-out;
-}
-
-.social-list>div:nth-child(1) {
-    transition-delay: 1.4s;
-}
-
-.social-list>div:nth-child(2) {
-    transition-delay: 1.6s;
-}
-
-.social-list>div:nth-child(3) {
-    transition-delay: 1.8s;
-}
-
-.social-list>div:nth-child(4) {
-    transition-delay: 2s;
-}
-
-.social-list>div>i {
-    font-size: 1.5rem;
-    transition: .4s ease-in-out;
-}
-
-.social-list>div:hover i {
-    transform: scale(1.5);
-}
-
-.facebook-bg {
-    background-color: #4267B2;
-}
-
-.google-bg {
-    background-color: #DB4437;
-}
-
-.twitter-bg {
-    background-color: #1DA1F2;
-}
-
-.insta-bg {
-    background-color: #E1306C;
-}
-
 .pointer {
     cursor: pointer;
 }
@@ -359,7 +295,7 @@ const toggle = () =>{
     height: 100vh;
     width: 300vw;
     transform: translate(35%, 0);
-    background-image: linear-gradient(-45deg, #4EA685 0%, #57B894 100%);
+    background-image: linear-gradient(to bottom, #7f7fd5, #86a8e7, #91eae4);
     transition: 1s ease-in-out;
     z-index: 6;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
