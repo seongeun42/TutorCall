@@ -1,12 +1,14 @@
-# Git Convention
-## 커밋메시지 템플릿 적용법
+# Tutor Call
+
+## Git Convention
+### 커밋메시지 템플릿 적용법
 
 * 레포지토리에 있는 .gitmessage.txt를 아래와 같이 적용
 ```
 git config commit.template .gitmessage.txt
 ```
 
-## 자바 auto lint
+### 자바 auto lint
 
 * 프로젝트의 .git/hooks/ 폴더 안에 **pre-commit** 파일 생성
 ```
