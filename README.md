@@ -50,11 +50,13 @@ npm run lint
 # 수정된 파일들 git add
 cd ..
 
-for file in $stagedFiles; do
-  if test -f "$file"; then
-    git add $file
-  fi
-done
+# for file in $stagedFiles; do
+#  if test -f "$file"; then
+#    git add $file
+#  fi
+# done
+
+git add .
 ```
 
 * pre-commit 실행 권한 부여
