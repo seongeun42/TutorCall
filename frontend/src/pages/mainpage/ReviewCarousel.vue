@@ -22,11 +22,10 @@ import ReviewDetail from './ReviewDetail.vue'
 import 'vue3-carousel/dist/carousel.css'
 
 export default defineComponent({
-  name: 'Autoplay',
+  name: 'AutoPlay',
   components: {
     Carousel,
     Slide,
-    Pagination,
     ReviewDetail
   }
 })
