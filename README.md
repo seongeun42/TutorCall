@@ -36,7 +36,7 @@ for file in $stagedFiles; do
   fi
 done
 ```
-test
+
 * pre-commit 실행 권한 부여
 ```
 chmod -x .git/hooks/pre-commit
