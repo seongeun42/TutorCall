@@ -10,4 +10,8 @@ import OnlineLecture from '@/pages/onlinelecture/OnlineLecture.vue';
 
 </template>
 
-<style scoped></style>
+<style scoped>
+.test {
+  height: 100%;
+}
+</style>
