@@ -39,9 +39,9 @@
 </template>
 
 <script setup lang="ts">
+import type { Ref } from 'vue'
 import { ref } from 'vue'
-
-const selectedSubject = ref('')
+const selectedSubject: Ref<string> = ref('')
 </script>
 
 <style scoped></style>

@@ -35,10 +35,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { Ref } from 'vue'
 
-const showAnswer = ref(false)
+const showAnswer: Ref<boolean> = ref(false)
 
-const toggleAnswer = () => {
+const toggleAnswer = (): void => {
   showAnswer.value = !showAnswer.value
 }
 </script>

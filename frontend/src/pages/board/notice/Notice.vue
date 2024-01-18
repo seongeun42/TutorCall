@@ -1,10 +1,10 @@
 <template>
   <div class="container mx-auto my-10">
     <div class="mx-10 my-5">
-      <!-- <MenuBar /> -->
+      <MenuBar />
       <!-- <NoticeArticle /> -->
-      <DetailNotice />
-      <!-- <FAQArticle /> -->
+      <!-- <DetailNotice /> -->
+      <FAQArticle />
     </div>
   </div>
 </template>

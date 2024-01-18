@@ -3,11 +3,7 @@
     <div class="mx-5">
       <div class="flex ml-5 justify-between items-center">
         <div class="flex">
-          <img
-            src="https://starteacher-v5-prod.s3.ap-northeast-2.amazonaws.com/tutor/profilebb06b015c44930414511bebd24f825af68f7d189947e79a5c9b1be0b27d1bb86"
-            alt=""
-            class="w-10 h-10 rounded-full"
-          />
+          <img src="@/img/teacher.png" alt="" class="w-10 h-10 rounded-full" />
           <div>
             <p class="text-sm">과외왕 김과외</p>
             <p class="text-xs">2 days ago</p>

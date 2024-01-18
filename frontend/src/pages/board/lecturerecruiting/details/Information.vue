@@ -4,7 +4,7 @@
       <p>선생님 정보</p>
       <div class="flex">
         <img
-          src="https://starteacher-v5-prod.s3.ap-northeast-2.amazonaws.com/tutor/profilebb06b015c44930414511bebd24f825af68f7d189947e79a5c9b1be0b27d1bb86"
+          src="@/img/teacher.png"
           alt=""
           class="mx-10 rounded-full"
           style="width: 300px; height: 300px"

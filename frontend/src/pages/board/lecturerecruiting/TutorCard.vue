@@ -33,11 +33,7 @@
           </p>
           <div class="flex justify-between items-center">
             <div class="flex items-center mb-5">
-              <img
-                src="https://starteacher-v5-prod.s3.ap-northeast-2.amazonaws.com/tutor/profilebb06b015c44930414511bebd24f825af68f7d189947e79a5c9b1be0b27d1bb86"
-                alt=""
-                class="w-10 h-10 rounded-full"
-              />
+              <img src="@/img/teacher.png" alt="" class="w-10 h-10 rounded-full" />
               <p>한석원</p>
               <p class="ml-3 text-xs text-gray-500">3시간전</p>
             </div>

@@ -55,17 +55,17 @@
 
 <script setup lang="ts">
 import TutorCard from './TutorCard.vue'
-let selectedSubject = ''
-let currentPage = 1
-const totalPages = 10 // 전체 페이지 수 (원하는 값으로 변경)
+let selectedSubject: string = ''
+let currentPage: number = 1
+const totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
 
-const prevPage = () => {
+const prevPage = (): void => {
   if (currentPage > 1) {
     currentPage--
   }
 }
 
-const nextPage = () => {
+const nextPage = (): void => {
   if (currentPage < totalPages) {
     currentPage++
   }
