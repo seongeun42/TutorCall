@@ -1,11 +1,15 @@
 <script setup lang="ts">
+
+interface chatForm {
+    isMychat: boolean,
+    message: string
+}
 const isMychat = defineProps<{
-    isMychat: boolean;
-    message: string;
+    data:chatForm
 }>();
 </script>
 <template>
-        <div v-if="!isMychat.isMychat">
+        <div v-if="!isMychat.data.isMychat">
             <div class="chat chat-start mx-2 my-1">
             <div class="chat-image avatar">
                 <div class="w-10 rounded-full">
@@ -15,10 +19,10 @@ const isMychat = defineProps<{
             <div class="chat-header">
                 Obi-Wan Kenobi
             </div>
-            <div class="chat-bubble">{{ isMychat.message }}</div>
+            <div class="chat-bubble">{{ isMychat.data.message }}</div>
             </div>
         </div>
-        <div v-if="isMychat.isMychat">
+        <div v-if="isMychat.data.isMychat">
             <div class="chat chat-end mx-2 my-1">
                 <div class="chat-image avatar">
                     <div class="w-10 rounded-full">
@@ -28,7 +32,7 @@ const isMychat = defineProps<{
                 <div class="chat-header">
                     Anakin
                 </div>
-                <div class="chat-bubble">{{ isMychat.message }}</div>
+                <div class="chat-bubble">{{ isMychat.data.message }}</div>
             </div>     
         </div>
 </template>

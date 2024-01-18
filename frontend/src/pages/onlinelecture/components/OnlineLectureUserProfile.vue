@@ -18,12 +18,12 @@ const props = defineProps<{info:userInfo}>();
             </div>
         </div>
         <div class="col-span-5 justify-self-start text-center">
-            <p class="flex justify-center items-center h-full mx-2 font-semibold">{{ info.nickName }}</p>
+            <p class="flex justify-center items-center h-full mx-2 font-semibold">{{ props.info.nickName }}</p>
         </div>
-        <div class="col-span-1 flex items-center justify-center" v-if ="info.isHost">
+        <div class="col-span-1 flex items-center justify-center" v-if ="props.info.isHost">
             <img src="@/img/host.jpg" alt="">
         </div>
-        <div class="col-span-1 flex items-center justify-center" v-if ="!info.mikeStatus">
+        <div class="col-span-1 flex items-center justify-center" v-if ="!props.info.mikeStatus">
             <img src="@/img/nomike.jpg" alt="">
         </div>
     </div>

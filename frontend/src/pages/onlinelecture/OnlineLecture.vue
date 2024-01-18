@@ -21,11 +21,33 @@ function handleChatView(chat: boolean){
     chatSideView.value = chat;
 }
 
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+*
+* 이하부터 테스트를 위한 더미 코드기 때문에 나중에 지워야함
+*
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 interface userInfo { 
     imgUrl: string,
     nickName: string,
     isHost: boolean,
     mikeStatus: boolean
+}
+
+interface videoSettings { 
+    onMike: boolean,
+    onVideo: boolean
+}
+
+interface chatForm {
+    isMychat: boolean,
+    message: string
+}
+
+interface btnProps { 
+    btnName1: string,
+    btnName2: string
 }
 
 const dummydata: userInfo = {
@@ -40,6 +62,21 @@ const dummydata2: userInfo = {
     nickName: "파트너 피카츄",
     isHost: false,
     mikeStatus: false
+}
+
+const dummydata3: videoSettings = {
+    onMike: false,
+    onVideo: false
+}
+
+const dummydata4: chatForm ={
+    isMychat: true,
+    message: "테스트 말풍선"
+}
+
+const dummydata5: chatForm ={
+    isMychat: false,
+    message: "테스트 말풍선"
 }
 
 </script>
@@ -68,24 +105,18 @@ const dummydata2: userInfo = {
                         <img v-else class="h-full w-full" src="../../img/whitepage.jpg" alt="">
                     </div>
                     <div class="row-span-1">
-                        <OnlineLectureSettingBtn/>
+                        <OnlineLectureSettingBtn :settings="dummydata3"/>
                     </div>
                 </div>
             <div class="col-span-2">
                 <div class="border-4 grid grid-rows-8 max-h-[500px]">
                     <div v-if ="chatSideView">
-                        <div class="row-start-1 row-span-5 overflow-auto max-h-[430px]">
-                            <OnlineLectureChatForm :isMychat="false" message="어디까지길어질수있나테스트를해봐야겠으니까지금테스트중인..."/>
-                            <OnlineLectureChatForm :isMychat="false" message="말풍선"/>
-                            <OnlineLectureChatForm :isMychat="true" message="말풍선"/>
-                            <OnlineLectureChatForm :isMychat="true" message="말풍선"/>
-                            <OnlineLectureChatForm :isMychat="true" message="말풍선"/>
+                        <div class="row-start-1 row-end-6 row-span-5 overflow-auto max-h-[430px] min-h-[430px]">
+                            <OnlineLectureChatForm :data = "dummydata4"/>
+                            <OnlineLectureChatForm :data = "dummydata5"/>
                             <OnlineLectureSystemMsg message="시스템 메세지"/>
-                            <OnlineLectureChatForm :isMychat="true" message="말풍선"/>
-                            <OnlineLectureChatForm :isMychat="true" message="말풍선"/>
-                            <OnlineLectureChatForm :isMychat="true" message="말풍선"/>
                         </div>
-                        <div class="row-span-1">
+                        <div class="row-start-7 row-span-1">
                             <OnlineLectureChatInput/>
                         </div>
                     </div>
