@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import NavBar from '@/components/NavBar.vue'
+
 import StudentIndex from '@/pages/mainpage/StudentIndex.vue'
 import TutorIndex from '@/pages/mainpage/TutorIndex.vue'
 </script>
@@ -10,4 +11,8 @@ import TutorIndex from '@/pages/mainpage/TutorIndex.vue'
   <TutorIndex />
 </template>
 
-<style scoped></style>
+<style scoped>
+.test {
+  height: 100%;
+}
+</style>
