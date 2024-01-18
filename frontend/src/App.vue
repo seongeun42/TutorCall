@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import NavBar from '@/components/NavBar.vue'
-import SideBar from '@/pages/tutorcall/SideBar.vue'
-import TutorCallPage from '@/pages/tutorcall/TutorCallPage.vue'
-import MatchCall from '@/pages/tutorcall/MatchCall.vue'
-import MatchText from '@/pages/tutorcall/MatchText.vue'
+
+import StudentIndex from '@/pages/mainpage/StudentIndex.vue'
+import TutorIndex from '@/pages/mainpage/TutorIndex.vue'
 </script>
 
 <template>
-  <div class="flex flex-col test">
-    <NavBar />
-    <!--    <TutorCallPage class="h-full overflow-hidden relative" />-->
-    <MatchText></MatchText>
-  </div>
+  <NavBar />
+  <!-- <StudentIndex /> -->
+  <TutorIndex />
 </template>
 
 <style scoped>
