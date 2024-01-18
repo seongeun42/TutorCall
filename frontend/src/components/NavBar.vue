@@ -54,7 +54,7 @@
           <div class="flex flex-shrink-0 items-center">
             <img
               class="h-8 w-auto"
-              src="C:\Users\SSAFY\Desktop\S10P12A604\frontend\src\img\logo.png"
+              src="../img/logo.png"
               alt="Your Company"
             />
           </div>
