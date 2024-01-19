@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import type { Ref } from 'vue';
 
-const isSignUp = ref(false);
-const isSignIn = ref(true);
+const isSignUp:Ref<boolean>= ref(false);
+const isSignIn:Ref<boolean> = ref(true);
 
-const toggle = () =>{
+const toggle = ():void =>{
     isSignUp.value = !isSignUp.value;
     isSignIn.value = !isSignIn.value;
 }
