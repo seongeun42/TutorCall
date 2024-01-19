@@ -11,6 +11,8 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "allowJs": true,
+    "esModuleInterop": true
   }
 }
