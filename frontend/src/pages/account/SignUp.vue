@@ -28,19 +28,23 @@ function handleFormStatus ():void{
           <div class="form sign-up">
             <div class="input-group">
               <i class='bx bxs-user'></i>
-              <input type="text" placeholder="Username">
+              <input type="text" placeholder="Username" required>
             </div>
             <div class="input-group">
               <i class='bx bx-mail-send'></i>
-              <input type="email" placeholder="Email">
+              <input type="email" placeholder="Email" required>
             </div>
             <div class="input-group">
               <i class='bx bxs-lock-alt'></i>
-              <input type="password" placeholder="Password">
+              <input type="password" placeholder="Password" required>
             </div>
             <div class="input-group">
               <i class='bx bxs-lock-alt'></i>
-              <input type="password" placeholder="Confirm password">
+              <input type="password" placeholder="Confirm password" required>
+            </div>
+            <div class="input-group">
+              <i class='bx bxs-user'></i>
+              <input type="text" placeholder="Recommender">
             </div>
             <button>
               Sign up
