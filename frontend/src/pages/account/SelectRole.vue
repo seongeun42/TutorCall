@@ -59,6 +59,8 @@ const closeModal = () => {
 const saveChoice = (choice: string) => {
   localStorage.setItem('userChoice', choice)
   //   console.log(localStorage.getItem('userChoice'))
+
+  emit('update:changeForm');
   closeModal()
   // 선택한 값을 'userChoice'라는 키로 localStorage에 저장.
   // 이 방법 이외에 변수로 저장해서 prop, emit으로 넘겨버리는 방법도 있음.
@@ -67,6 +69,12 @@ const saveChoice = (choice: string) => {
 const handleSubmit = () => {
   // 폼 제출 시 필요한 Role값을 localStorage에서 가져와 넘길 예정.
 }
+
+const emit = defineEmits<{
+  'update:changeForm':[];
+}>();
+
+
 </script>
 
 <style scoped>

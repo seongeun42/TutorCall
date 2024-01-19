@@ -6,9 +6,15 @@ import SelectRole from './SelectRole.vue';
 const isSignUp:Ref<boolean>= ref(false);
 const isSignIn:Ref<boolean> = ref(true);
 
-const toggle = ():void =>{
+function toggle ():void{
     isSignUp.value = !isSignUp.value;
     isSignIn.value = !isSignIn.value;
+    console.log("click event");
+}
+
+function handleFormStatus ():void{
+  isSignUp.value = !isSignUp.value;
+  isSignIn.value = !isSignIn.value;
 }
 
 </script>
@@ -76,8 +82,8 @@ const toggle = ():void =>{
               <span>
                 Don't have an account?
               </span>
-                <b  @click="toggle" class="pointer">
-                  <SelectRole />
+                <b class="pointer">
+                  <SelectRole @update:changeForm="handleFormStatus"/>
                 </b>
             </p>
           </div>
