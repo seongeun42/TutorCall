@@ -79,8 +79,16 @@ function handleFormStatus ():void{
             </button>
             <p>
               <b>
-                Forgot password?
+                or continue with
               </b>
+              <span>
+                <div style="max-width: 45px; display: inline-flex; justify-content: center;">
+                  <img src="@/img/google_logo.png" alt="구글계정로그인" style="margin-left: 5px; margin-right: 5px;">
+                  <img src="@/img/naver_logo.png" alt="네이버계정로그인" style="margin-left: 5px; margin-right: 5px;">
+                  <img src="@/img/kakao_logo.png" alt="카카오계정로그인" style="margin-left: 5px; margin-right: 5px;">
+                  <img src="@/img/insta_logo.png" alt="인스타계정로그인" style="margin-left: 5px; margin-right: 5px;">
+                </div>
+              </span>
             </p>
             <p>
               <span>
