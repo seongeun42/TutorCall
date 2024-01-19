@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { Ref } from 'vue';
+import SelectRole from './SelectRole.vue';
 
 const isSignUp:Ref<boolean>= ref(false);
 const isSignIn:Ref<boolean> = ref(true);
@@ -76,7 +77,7 @@ const toggle = ():void =>{
                 Don't have an account?
               </span>
                 <b  @click="toggle" class="pointer">
-                  Sign up here
+                  <SelectRole />
                 </b>
             </p>
           </div>
