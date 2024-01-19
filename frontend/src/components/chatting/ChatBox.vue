@@ -11,7 +11,7 @@ import ChatTopMenu from './ChatTopMenu.vue'
   >
     <div id="friendslist" class="absolute w-[290px] h-[484px] left-0 top-0">
       <ChatTopMenu />
-      <div id="friends">
+      <div id="friends" class="mt-2">
         <ChatFriend />
         <ChatFriend />
         <ChatFriend />
@@ -22,8 +22,4 @@ import ChatTopMenu from './ChatTopMenu.vue'
   </div>
 </template>
 
-<style scoped>
-* {
-  @apply m-0 p-0;
-}
-</style>
+<style scoped></style>

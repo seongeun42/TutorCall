@@ -19,19 +19,16 @@
       </div>
     </div>
     <div
-      class="status active w-[9px] h-[9px] absolute rounded-[50%] right-[17px] top-[31px] bg-[#26c281]"
+      class="status w-[9px] h-[9px] absolute rounded-[50%] right-[17px] top-[31px] bg-[#26c281]"
     ></div>
   </div>
 </template>
 
 <style scoped>
-* {
-  @apply m-0 p-0;
-}
 .status.away {
-  background: #ffce54;
+  @apply bg-[#ffce54];
 }
 .status.inactive {
-  background: #eaeef0;
+  @apply bg-[#eaeef0];
 }
 </style>
