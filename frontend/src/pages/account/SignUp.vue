@@ -224,7 +224,7 @@ function handleFormStatus ():void{
     padding: .6rem 0;
     border-radius: .5rem;
     border: none;
-    background-color: #000295;
+    background-color: ##5c5edc;
     color: #ffffff;
     font-size: 1.2rem;
     outline: none;
