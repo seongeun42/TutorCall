@@ -10,12 +10,8 @@
       <p class="mx-20 font-bold text-3xl">50,000원</p>
     </div>
   </div>
-  <div class="flex justify-end my-10">
-    <button class="bg-blue-900 rounded-full w-32 h-12 text-gray-100 text-xl font-bold">
-      전환하기
-    </button>
-  </div>
-  <!-- <WithdrawlModal /> -->
+
+  <WithdrawlModal />
 </template>
 
 <script setup lang="ts">
