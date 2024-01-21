@@ -6,7 +6,9 @@
       <div class="container p-40 bg-white">
         <!-- <MyLectureList /> -->
         <!-- <InformationUpdate /> -->
-        <ReviewCheck />
+        <!-- <ReviewCheck /> -->
+        <!-- <WithdrawlPage /> -->
+        <ProfitCheck />
       </div>
     </div>
   </div>
@@ -17,6 +19,8 @@ import SideBar from '@/components/SideBar.vue'
 import MyLectureList from './tutor/MyLectureList.vue'
 import InformationUpdate from './tutor/InformationUpdate.vue'
 import ReviewCheck from './tutor/ReviewCheck.vue'
+import WithdrawlPage from './tutor/WithdrawlPage.vue'
+import ProfitCheck from './tutor/ProfitCheck.vue'
 import type { Ref } from 'vue'
 import { ref } from 'vue'
 
