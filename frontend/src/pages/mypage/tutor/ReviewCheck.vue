@@ -8,7 +8,7 @@
       <p class="mx-12 text-3xl">{{ score }}점</p>
     </div>
   </div>
-  <ReviewChart />
+  <ReviewChart class="my-32" />
   <p class="font-bold text-2xl">학생 리뷰</p>
   <p class="border-2 my-10"></p>
   <ReviewHistory />

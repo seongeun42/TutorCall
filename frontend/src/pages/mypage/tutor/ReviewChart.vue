@@ -1,57 +1,57 @@
 <template>
-  <Chart
-    :size="{ width: 500, height: 420 }"
-    :data="data"
-    :margin="margin"
-    :direction="direction"
-    :axis="axis"
-  >
-    <template #layers>
-      <Grid strokeDasharray="2,2" />
-      <Bar :dataKeys="['name', 'pl']" :barStyle="{ fill: '#90e0ef' }" />
-      <Bar :dataKeys="['name', 'avg']" :barStyle="{ fill: '#0096c7' }" />
-      <Bar :dataKeys="['name', 'inc']" :barStyle="{ fill: '#48cae4' }" />
-      <Marker :value="1000" label="Avg." color="#e76f51" strokeWidth="2" strokeDasharray="6 6" />
-    </template>
-
-    <template #widgets>
-      <Tooltip
-        borderColor="#48CAE4"
-        :config="{
-          pl: { color: '#90e0ef' },
-          avg: { color: '#0096c7' },
-          inc: { color: '#48cae4' }
-        }"
-      />
-    </template>
-  </Chart>
+  <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Chart, Grid, Line } from 'vue3-charts'
-import { plByMonth } from './data'
-import type { Ref } from 'vue'
-const props: Array = defineProps(['data', 'direction', 'margin', 'axis'])
-const data: Ref<any> = ref(plByMonth)
-const direction: Ref<string> = ref('horizontal')
-const margin: Ref<Array> = ref({
-  left: 0,
-  top: 20,
-  right: 20,
-  bottom: 0
+import { ref, onMounted, defineProps } from 'vue'
+import { Bar } from 'vue-chartjs'
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+} from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
+// const props = defineProps(['chartData', 'chartOptions'])
+const chartData = ref({
+  labels: ['전달력', '매너', '전문성'],
+  datasets: [
+    {
+      label: '만족',
+      data: [40, 20, 12],
+      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      borderColor: 'rgba(75, 192, 192, 1)',
+      borderWidth: 1
+    },
+    {
+      label: '불만족',
+      data: [10, 30, 8],
+      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      borderColor: 'rgba(255, 99, 132, 1)',
+      borderWidth: 1
+    }
+  ]
 })
 
-const axis: Ref<Object> = ref({
-  primary: {
-    type: 'band'
-  },
-  secondary: {
-    domain: ['dataMin', 'dataMax + 100'],
-    type: 'linear',
-    ticks: 8
+const chartOptions = ref({
+  responsive: true,
+  scales: {
+    y: {
+      beginAtZero: true
+    }
   }
 })
-
-console.log(data)
+onMounted(() => {})
 </script>
+
+<style>
+#my-chart-id {
+  width: 60%;
+  height: 70%;
+}
+</style>
