@@ -1,6 +1,7 @@
-package com.potato.TutorCall.user.domain;
+package com.potato.TutorCall.payment.domain;
 
-import com.potato.TutorCall.user.domain.enums.PointType;
+import com.potato.TutorCall.user.domain.User;
+import com.potato.TutorCall.payment.domain.enums.PointType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

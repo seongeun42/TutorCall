@@ -1,4 +1,4 @@
-package com.potato.TutorCall.user.domain.enums;
+package com.potato.TutorCall.payment.domain.enums;
 
 import lombok.Getter;
 
