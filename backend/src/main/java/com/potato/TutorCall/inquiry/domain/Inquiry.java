@@ -1,5 +1,6 @@
 package com.potato.TutorCall.inquiry.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,6 +21,8 @@ public class Inquiry {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     private String title;

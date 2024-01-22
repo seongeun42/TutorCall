@@ -1,5 +1,6 @@
 package com.potato.TutorCall.chat.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.potato.TutorCall.chat.domain.enums.ChatroomType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,6 +10,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,5 +28,17 @@ public class Chatroom {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+
+
+
+    // 양방향 연관 관계
+    @JsonManagedReference
+    @OneToMany(mappedBy = "chatroom", fetch = FetchType.LAZY)
+    private List<ChatParticipant> participantList = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "chatroom", fetch = FetchType.LAZY)
+    private List<ChatMessage> messageList = new ArrayList<>();
 
 }

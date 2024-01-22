@@ -1,7 +1,11 @@
 package com.potato.TutorCall.lecture.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.potato.TutorCall.review.domain.Review;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
+import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,6 +14,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,6 +26,8 @@ public class Lecture {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tutor tutor;
 
     private String promotionTitle;
@@ -45,6 +53,7 @@ public class Lecture {
 
     private int price;
 
+    @OneToOne(fetch = FetchType.LAZY)
     private Tag tag;
 
     private LocalDateTime lectureStartAt;
@@ -52,5 +61,17 @@ public class Lecture {
     private LocalDateTime lectureEndAt;
 
     private boolean isDelete;
+
+
+
+
+    // 양방향 연관 관계
+    @JsonManagedReference
+    @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
+    private List<LectureParticipant> participantList = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
+    private List<Review> reviewList = new ArrayList<>();
 
 }

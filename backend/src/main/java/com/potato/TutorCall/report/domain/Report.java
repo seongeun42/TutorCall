@@ -1,5 +1,6 @@
 package com.potato.TutorCall.report.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.potato.TutorCall.report.domain.enums.ReportType;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
@@ -20,6 +21,8 @@ public class Report {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private User reporter;
 
     private Long reported;

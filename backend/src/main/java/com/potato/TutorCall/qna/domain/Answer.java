@@ -1,5 +1,6 @@
 package com.potato.TutorCall.qna.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,11 +21,15 @@ public class Answer {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tutor tutor;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private Question question;
 
-    private String cotent;
+    private String content;
 
     private boolean isChosen;
 
