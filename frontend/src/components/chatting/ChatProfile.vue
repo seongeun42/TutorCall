@@ -33,4 +33,66 @@
   -ms-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
   -o-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
 }
+
+/* 애니메이션 관련인 듯...? */
+.cx,
+.cy {
+  @apply absolute w-0 h-[3px] transition-all duration-[250ms] ease-[ease-in-out] right-[15px] top-[15px];
+  background: #fff;
+  -webkit-transition: all 250ms ease-in-out;
+  -moz-transition: all 250ms ease-in-out;
+  -ms-transition: all 250ms ease-in-out;
+  -o-transition: all 250ms ease-in-out;
+}
+.cx.s1,
+.cy.s1 {
+  @apply w-5 transition-all duration-100 ease-[ease-out] right-0;
+  -webkit-transition: all 100ms ease-out;
+  -moz-transition: all 100ms ease-out;
+  -ms-transition: all 100ms ease-out;
+  -o-transition: all 100ms ease-out;
+}
+.cy.s2 {
+  @apply rotate-[50deg] transition-all duration-100 ease-[ease-out];
+  -ms-transform: rotate(50deg);
+  -webkit-transform: rotate(50deg);
+  -webkit-transition: all 100ms ease-out;
+  -moz-transition: all 100ms ease-out;
+  -ms-transition: all 100ms ease-out;
+  -o-transition: all 100ms ease-out;
+}
+.cy.s3 {
+  @apply rotate-45 transition-all duration-100 ease-[ease-out];
+  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -webkit-transition: all 100ms ease-out;
+  -moz-transition: all 100ms ease-out;
+  -ms-transition: all 100ms ease-out;
+  -o-transition: all 100ms ease-out;
+}
+.cx.s1 {
+  @apply w-5 transition-all duration-100 ease-[ease-out] right-0;
+  -webkit-transition: all 100ms ease-out;
+  -moz-transition: all 100ms ease-out;
+  -ms-transition: all 100ms ease-out;
+  -o-transition: all 100ms ease-out;
+}
+.cx.s2 {
+  @apply rotate-[140deg] transition-all duration-100 ease-[ease-out];
+  -ms-transform: rotate(140deg);
+  -webkit-transform: rotate(140deg);
+  -webkit-transition: all 100ms ease-out;
+  -moz-transition: all 100ms ease-out;
+  -ms-transition: all 100ease-out;
+  -o-transition: all 100ms ease-out;
+}
+.cx.s3 {
+  @apply rotate-[135deg] transition-all duration-100 ease-[ease-out];
+  -ms-transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+  -webkit-transition: all 100ease-out;
+  -moz-transition: all 100ms ease-out;
+  -ms-transition: all 100ms ease-out;
+  -o-transition: all 100ms ease-out;
+}
 </style>

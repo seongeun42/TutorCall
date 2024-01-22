@@ -29,7 +29,7 @@ import ChattingMessage from '@/components/chatting/ChattingMessage.vue'
 
 <style scoped>
 #chat-messages {
-  @apply w-[290px] h-[270px] overflow-y-scroll overflow-x-hidden transition-all duration-200 ease-[cubic-bezier(0.000,0.995,0.990,1.000)] mt-[30px] pr-5;
+  @apply opacity-0 w-[290px] h-[270px] overflow-y-scroll overflow-x-hidden transition-all duration-200 ease-[cubic-bezier(0.000,0.995,0.990,1.000)] mt-[30px] pr-5;
   -webkit-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
   -moz-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
   -ms-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
