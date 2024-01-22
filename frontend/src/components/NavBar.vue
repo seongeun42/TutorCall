@@ -1,4 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref, type Ref } from 'vue'
+const isTutor: Ref<boolean> = ref(true)
+</script>
 
 <template>
   <nav class="bg-gray-100">
@@ -38,44 +41,38 @@
 
             Menu open: "block", Menu closed: "hidden"
           -->
-            <svg
-              class="hidden h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+
+            <img class="hidden h-6 w-6" src="@/img/setting.png" />
           </button>
         </div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
           <div class="flex flex-shrink-0 items-center">
-            <img
-              class="h-8 w-auto"
-              src="C:\Users\SSAFY\Desktop\S10P12A604\frontend\src\img\logo.png"
-              alt="Your Company"
-            />
+            <img class="h-8 w-auto" src="@/img/logo.png" alt="Your Company" />
           </div>
           <div class="hidden sm:ml-6 sm:block flex-1 justify-evenly">
             <div class="flex space-x-4 justify-evenly">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
               <a
                 href="#"
-                class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
                 aria-current="page"
                 >과외 모집</a
               >
               <a
                 href="#"
-                class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
                 >문제 Q&A</a
               >
               <a
                 href="#"
-                class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
                 >공지사항</a
+              >
+              <a
+                v-if="isTutor"
+                href="#"
+                class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
+                >화상과외 활성화</a
               >
             </div>
           </div>
@@ -105,27 +102,14 @@
             </svg>
           </button>
           <!-- 설정 톱니바퀴 버튼 만들기 -->
-          <!-- <button
+          <button
             type="button"
-            class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+            class="ml-3 relative rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
           >
             <span class="absolute -inset-1.5"></span>
-            <span class="sr-only">View notifications</span>
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
-              />
-            </svg>
-          </button> -->
+            <span class="sr-only">Settings</span>
+            <img src="@/img/setting.png" alt="" class="w-6 h-6" />
+          </button>
 
           <!-- Profile dropdown -->
           <div class="relative ml-3">
