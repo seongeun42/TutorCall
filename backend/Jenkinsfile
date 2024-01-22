@@ -31,7 +31,7 @@ pipeline {
                     }
 
                     sh 'chmod +x ./gradlew'
-                    sh "./gradlew ${env.bootJar}"
+                    sh "./gradlew ${env.BUILD_CMD}"
                     
                     dir('build/libs'){
                         sh "mv *.jar ${env.RENAME_JAR}.jar"
