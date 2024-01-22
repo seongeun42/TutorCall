@@ -5,6 +5,7 @@ import com.potato.TutorCall.payment.domain.Coupon;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -36,5 +37,16 @@ public class UserCoupon {
     private LocalDateTime createdAt;
 
     private LocalDateTime expiredAt;
+
+
+
+
+    // 생성자
+    @Builder
+    public UserCoupon(Coupon coupon, User owner, LocalDateTime expiredAt) {
+        this.coupon = coupon;
+        this.owner = owner;
+        this.expiredAt = expiredAt;
+    }
 
 }
