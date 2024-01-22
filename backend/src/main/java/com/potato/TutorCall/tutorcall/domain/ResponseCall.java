@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -34,5 +35,16 @@ public class ResponseCall {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+
+
+
+    // 생성자
+    @Builder
+    public ResponseCall(Tutor tutor, RequestCall call, int price) {
+        this.tutor = tutor;
+        this.call = call;
+        this.price = price;
+    }
 
 }
