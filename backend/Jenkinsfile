@@ -25,7 +25,7 @@ pipeline {
         stage('build spring project') {
             steps {
                 sh 'ls -al'
-                dir('demo'){                
+                dir('potato'){                
                     dir('build/libs') {
                        sh 'rm -rf *.jar'
                     }
