@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import NavBar from '@/components/NavBar.vue'
 import OnlineLecture from '@/pages/onlinelecture/OnlineLecture.vue'
-import ChatBox from './components/chatting/ChatBox.vue'
+import ChatRoom from '@/components/chatting/ChatRoom.vue'
 </script>
 
 <template>
   <!-- <NavBar /> -->
   <!-- <OnlineLecture/> -->
-  <ChatBox />
+  <ChatRoom />
 </template>
 
 <style scoped>
