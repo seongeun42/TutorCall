@@ -7,6 +7,7 @@ import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -72,5 +73,20 @@ public class Lecture {
     @JsonManagedReference
     @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
     private List<Review> reviewList = new ArrayList<>();
+
+
+
+
+    // 생성자
+    @Builder
+    public Lecture(Tutor tutor, String promotionTitle, String promotionContent, LocalDateTime promotionDue, int maxParticipants, int price, Tag tag) {
+        this.tutor = tutor;
+        this.promotionTitle = promotionTitle;
+        this.promotionContent = promotionContent;
+        this.promotionDue = promotionDue;
+        this.maxParticipants = maxParticipants;
+        this.price = price;
+        this.tag = tag;
+    }
 
 }
