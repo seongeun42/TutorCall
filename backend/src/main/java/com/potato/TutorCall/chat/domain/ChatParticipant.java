@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -30,5 +31,15 @@ public class ChatParticipant {
     private LocalDateTime lastVisitAt;
 
     private LocalDateTime lastLeaveAt;
+
+
+
+
+    // 생성자
+    @Builder
+    public ChatParticipant(User user, Chatroom chatroom) {
+        this.user = user;
+        this.chatroom = chatroom;
+    }
 
 }
