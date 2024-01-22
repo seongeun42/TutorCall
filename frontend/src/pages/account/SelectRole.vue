@@ -8,24 +8,24 @@
       <h3 class="font-black mb-4 mt-10 text-3xl">당신에 대해 알려주세요!</h3>
       <p class="py-4 font-extrabold">당신은 선생님이신가요 학생이신가요?</p>
       <div class="modal-action flex justify-center">
-        <form method="dialog"  >
+        <form method="dialog">
           <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
-        
-        <form @submit.prevent="handleSubmit" style="margin: 0px;">
+
+        <form @submit.prevent="handleSubmit" style="margin: 0px">
           <div class="flex justify-center">
             <button
               class="btnimsi btn-[#121212] bg-gray rounded px-4 py-2 mr-auto w-1/2 flex items-center"
               @click="saveChoice('학생')"
             >
-              <img src="@/img/tutor.png" alt="그림 설명">
+              <img src="@/img/tutor.png" alt="그림 설명" />
               <span>학생</span>
             </button>
             <button
               class="btnimsi btn-[#121212] bg-gray rounded px-4 py-2 ml-auto w-1/2 flex items-center"
               @click="saveChoice('선생님')"
             >
-              <img src="@/img/tutor.png" alt="선생님">
+              <img src="@/img/tutor.png" alt="선생님" />
               <span>선생님</span>
             </button>
           </div>
@@ -35,24 +35,26 @@
   </dialog>
 </template>
 
-
-
 <script setup lang="ts">
 //   import { ref } from 'vue';
 
 const modalId = 'my_modal_4'
 
-const showModal = () => {
+const showModal = (): void => {
   const modal = document.getElementById(modalId) as HTMLDialogElement
   if (modal) {
     modal.showModal()
+  } else {
+    console.error(`Element with id ${modalId} is not an HTMLDialogElement`)
   }
 }
 
-const closeModal = () => {
+const closeModal = (): void => {
   const modal = document.getElementById(modalId) as HTMLDialogElement
   if (modal) {
     modal.close()
+  } else {
+    console.error(`Element with id ${modalId} is not an HTMLDialogElement`)
   }
 }
 
@@ -60,7 +62,7 @@ const saveChoice = (choice: string) => {
   localStorage.setItem('userChoice', choice)
   //   console.log(localStorage.getItem('userChoice'))
 
-  emit('update:changeForm');
+  emit('update:changeForm')
   closeModal()
   // 선택한 값을 'userChoice'라는 키로 localStorage에 저장.
   // 이 방법 이외에 변수로 저장해서 prop, emit으로 넘겨버리는 방법도 있음.
@@ -71,25 +73,23 @@ const handleSubmit = () => {
 }
 
 const emit = defineEmits<{
-  'update:changeForm':[];
-}>();
-
-
+  'update:changeForm': []
+}>()
 </script>
 
 <style scoped>
 .btnimsi {
   display: inline-flex;
-    height: 15rem/* 48px */;
-    min-height: 3rem/* 48px */;
-    flex-shrink: 0;
-    cursor: pointer;
-    user-select: none;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--rounded-btn, 0.5rem/* 8px */);
-    border-color: transparent;
-    border-color: oklch(var(--btn-color, var(--b2)) / var(--tw-border-opacity));
+  height: 15rem /* 48px */;
+  min-height: 3rem /* 48px */;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--rounded-btn, 0.5rem /* 8px */);
+  border-color: transparent;
+  border-color: oklch(var(--btn-color, var(--b2)) / var(--tw-border-opacity));
 }
 </style>
