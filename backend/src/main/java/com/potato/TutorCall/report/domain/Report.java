@@ -5,6 +5,7 @@ import com.potato.TutorCall.report.domain.enums.ReportType;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -37,5 +38,17 @@ public class Report {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+
+
+
+    // 생성자
+    @Builder
+    public Report(User reporter, Long reported, ReportType type, String content) {
+        this.reporter = reporter;
+        this.reported = reported;
+        this.type = type;
+        this.content = content;
+    }
 
 }
