@@ -68,12 +68,18 @@ const isTutor: Ref<boolean> = ref(true)
                 class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
                 >공지사항</a
               >
-              <a
-                v-if="isTutor"
-                href="#"
-                class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
-                >화상과외 활성화</a
-              >
+              <div v-if="isTutor" class="flex items-center">
+                <p class="ms-3 text-sm font-semibold text-black-500 dark:text-gray-300">
+                  화상과외 활성화
+                </p>
+
+                <label class="ml-3 relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" value="" class="sr-only peer" checked />
+                  <div
+                    class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+                  ></div>
+                </label>
+              </div>
             </div>
           </div>
         </div>
