@@ -1,5 +1,6 @@
 package com.potato.TutorCall.payment.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.payment.domain.enums.PointType;
 import jakarta.persistence.*;
@@ -20,6 +21,8 @@ public class PointHistory {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     private Long receiver;

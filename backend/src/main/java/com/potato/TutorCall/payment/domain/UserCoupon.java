@@ -1,5 +1,6 @@
 package com.potato.TutorCall.payment.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.potato.TutorCall.payment.domain.Coupon;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.util.Lazy;
 
 import java.time.LocalDateTime;
 
@@ -20,8 +22,12 @@ public class UserCoupon {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private Coupon coupon;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
 
     private boolean used;
