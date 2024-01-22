@@ -1,12 +1,16 @@
 package com.potato.TutorCall.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.potato.TutorCall.chat.domain.ChatParticipant;
 import com.potato.TutorCall.inquiry.domain.Inquiry;
 import com.potato.TutorCall.lecture.domain.LectureParticipant;
 import com.potato.TutorCall.notification.domain.Notification;
 import com.potato.TutorCall.payment.domain.PointHistory;
 import com.potato.TutorCall.payment.domain.UserCoupon;
+import com.potato.TutorCall.qna.domain.Question;
 import com.potato.TutorCall.report.domain.Report;
+import com.potato.TutorCall.tutorcall.domain.RequestCall;
+import com.potato.TutorCall.tutorcall.domain.TutorCall;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.domain.enums.SnsType;
 import jakarta.persistence.*;
@@ -79,6 +83,23 @@ public class User {
     @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<LectureParticipant> rectureList = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
+    private List<Question> questionList = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<TutorCall> tutorCallList = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<ChatParticipant> chatroomList = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "caller", fetch = FetchType.LAZY)
+    private List<RequestCall> requestCallList = new ArrayList<>();
+
 
 
 

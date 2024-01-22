@@ -1,5 +1,6 @@
 package com.potato.TutorCall.tutor.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,8 +14,12 @@ public class TutorTag {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tutor tutor;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tag tag;
 
 }

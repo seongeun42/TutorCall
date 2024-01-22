@@ -1,5 +1,7 @@
 package com.potato.TutorCall.tutorcall.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.potato.TutorCall.review.domain.Review;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
@@ -20,9 +22,16 @@ public class TutorCall {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tutor tutor;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Review review;
 
     private String problemContent;
 

@@ -2,6 +2,7 @@ package com.potato.TutorCall.lecture.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.potato.TutorCall.review.domain.Review;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.user.domain.User;
@@ -68,5 +69,9 @@ public class Lecture {
     @JsonManagedReference
     @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
     private List<LectureParticipant> participantList = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
+    private List<Review> reviewList = new ArrayList<>();
 
 }
