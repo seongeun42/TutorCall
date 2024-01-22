@@ -27,4 +27,15 @@ import ChattingMessage from '@/components/chatting/ChattingMessage.vue'
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+#chat-messages {
+  @apply w-[290px] h-[270px] overflow-y-scroll overflow-x-hidden transition-all duration-200 ease-[cubic-bezier(0.000,0.995,0.990,1.000)] mt-[30px] pr-5;
+  -webkit-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
+  -moz-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
+  -ms-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
+  -o-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
+}
+#chat-messages.animate {
+  @apply opacity-100 mt-0;
+}
+</style>
