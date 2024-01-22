@@ -1,20 +1,49 @@
-
 pipeline {
     agent any
-    stages {
-        stage('Build') {
+    environment {
+        BACKEND = 'springboot'
+        TAG = 'test'
+        RENAME_JAR = 'springboot'
+        BUILD_CMD = 'bootJar'
+        WORKSPACE_DIR = ''
+    }
+    stages {        
+        stage('remove spring docker iamge&container') {
             steps {
-                echo 'Building..'
+                script { 
+                    try {
+                        // sh 'docker image prune -a -f'
+                        sh "docker ps -q --filter name=${env.BACKEND} | grep -q . && docker stop springboot && docker rm ${env.BACKEND}"
+                        sh "docker rmi $(docker images --filter=reference='${env.TAG}' -q)"
+                    } catch(e){
+                        echo 'remove spring docker image&container fail!'
+                    }
+                }
             }
         }
-        stage('Test') {
+
+        stage('build spring project') {
             steps {
-                echo 'Testing..'
+                sh 'ls -al'
+                dir('demo'){                
+                    dir('build/libs') {
+                       sh 'rm -rf *.jar'
+                    }
+
+                    sh 'chmod +x ./gradlew'
+                    sh "./gradlew ${env.bootJar}"
+                    
+                    dir('build/libs'){
+                        sh "mv *.jar ${env.RENAME_JAR}.jar"
+                    }
+                }
             }
         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+
+        stage('deploy'){
+            steps{
+                sh 'docker build -t test:v1.0 .'
+                sh "docker run -d -p 8088:8080 --name ${env.BACKEND} ${env.TAG}:v1.0"
             }
         }
     }
