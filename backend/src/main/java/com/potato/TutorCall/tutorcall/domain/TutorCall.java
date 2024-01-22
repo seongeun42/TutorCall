@@ -6,6 +6,7 @@ import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -45,5 +46,21 @@ public class TutorCall {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+
+
+
+    // 생성자
+    @Builder
+    public TutorCall(Tutor tutor, User user, Review review, String problemContent, String replayVideo, String liveUrl, boolean liveState, int price) {
+        this.tutor = tutor;
+        this.user = user;
+        this.review = review;
+        this.problemContent = problemContent;
+        this.replayVideo = replayVideo;
+        this.liveUrl = liveUrl;
+        this.liveState = liveState;
+        this.price = price;
+    }
 
 }
