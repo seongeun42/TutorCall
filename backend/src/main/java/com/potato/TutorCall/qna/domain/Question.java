@@ -7,6 +7,7 @@ import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -54,5 +55,17 @@ public class Question {
     @JsonManagedReference
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<Answer> answerList = new ArrayList<>();
+
+
+
+
+    // 생성자
+    @Builder
+    public Question(User writer, String title, String content, Tag tag) {
+        this.writer = writer;
+        this.title = title;
+        this.content = content;
+        this.tag = tag;
+    }
 
 }
