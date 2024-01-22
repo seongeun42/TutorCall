@@ -7,6 +7,7 @@ import com.potato.TutorCall.tutorcall.domain.TutorCall;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -45,5 +46,20 @@ public class Review {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+
+
+
+    // 생성자
+    @Builder
+    public Review(Tutor tutor, User reviewer, Lecture lecture, int mannerRate, int communicationRate, int professionalismRate, String content) {
+        this.tutor = tutor;
+        this.reviewer = reviewer;
+        this.lecture = lecture;
+        this.mannerRate = mannerRate;
+        this.communicationRate = communicationRate;
+        this.professionalismRate = professionalismRate;
+        this.content = content;
+    }
 
 }
