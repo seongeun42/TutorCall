@@ -15,18 +15,7 @@
   </div>
   <p class="my-10 border-2"></p>
   <p class="font-bold text-2xl">사용자 정보 세부사항</p>
-  <div class="mt-8">
-    <p class="text-xl mb-5">소개글</p>
-    <div class="input-group">
-      <input
-        class="bg-gray-200 w-full h-20 text-lg rounded-lg"
-        type="text"
-        name=""
-        id=""
-        placeholder="소개글을 작성하세요"
-      />
-    </div>
-  </div>
+
   <div class="mt-8">
     <p class="text-xl mb-5">닉네임</p>
     <div class="input-group">

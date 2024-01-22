@@ -5,10 +5,11 @@
       <p class="text-4xl font-bold my-10 mx-32">{{ title }}</p>
       <div class="container p-40 bg-white">
         <!-- <MyLectureList /> -->
-        <!-- <InformationUpdate /> -->
+        <InformationUpdate />
         <!-- <ReviewCheck /> -->
         <!-- <WithdrawlPage /> -->
-        <ProfitCheck />
+        <!-- <ProfitCheck /> -->
+        <!-- <StudentInformationUpdate /> -->
       </div>
     </div>
   </div>
@@ -16,6 +17,7 @@
 
 <script setup lang="ts">
 import SideBar from '@/components/SideBar.vue'
+import StudentInformationUpdate from './student/information/StudentInformationUpdate.vue'
 import MyLectureList from './tutor/MyLectureList.vue'
 import InformationUpdate from './tutor/InformationUpdate.vue'
 import ReviewCheck from './tutor/ReviewCheck.vue'

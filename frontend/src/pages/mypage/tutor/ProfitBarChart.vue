@@ -41,9 +41,4 @@ const chartOptions = ref({
 })
 </script>
 
-<style scoped>
-/* #my-chart-id {
-    width: 1000px;
-    height: 1000px;
-  } */
-</style>
+<style scoped></style>
