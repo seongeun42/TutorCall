@@ -3,7 +3,14 @@
   <div class="flex mx-20">
     <img src="@/img/default_profile.png" class="w-28 h-28 rounded-full" alt="" />
     <div class="mx-10 my-3">
-      <button class="border-4 border-blue-300 w-40 h-16 text-blue-500">사진 업로드</button>
+      <label
+        for="file-upload"
+        class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+      >
+        <button class="border-4 border-blue-300 w-40 h-16 text-blue-500">사진 업로드</button>
+        <input id="file-upload" name="file-upload" type="file" class="sr-only" />
+      </label>
+
       <p class="text-center mt-2 text-lg">삭제</p>
     </div>
     <p class="border-2 mx-20"></p>
