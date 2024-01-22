@@ -1,12 +1,12 @@
 <template>
-  <button class="btn btn- bg-white" @click="showModal">회원가입</button>
+  <button class="btn bg-white ml-5" @click="showModal">회원가입</button>
   <dialog
     :id="modalId"
     class="modal fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50"
   >
     <div class="modal-box w-1/2 h-2/3 max-w-md bg-white p-6 rounded-md shadow-md text-center">
       <h3 class="font-black mb-4 mt-10 text-3xl">당신에 대해 알려주세요!</h3>
-      <p class="py-4 font-extrabold">당신은 선생님이신가요 학생이신가요?</p>
+      <p class="py-4 font-semibold text-xl">당신은 학생이신가요 선생님이신가요?</p>
       <div class="modal-action flex justify-center">
         <form method="dialog">
           <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -18,15 +18,15 @@
               class="btnimsi btn-[#121212] bg-gray rounded px-4 py-2 mr-auto w-1/2 flex items-center"
               @click="saveChoice('학생')"
             >
-              <img src="@/img/tutor.png" alt="그림 설명" />
-              <span>학생</span>
+              <img src="@/img/hand_student.png" alt="그림 설명" />
+              <span style="font-size: large">학생</span>
             </button>
             <button
               class="btnimsi btn-[#121212] bg-gray rounded px-4 py-2 ml-auto w-1/2 flex items-center"
               @click="saveChoice('선생님')"
             >
-              <img src="@/img/tutor.png" alt="선생님" />
-              <span>선생님</span>
+              <img src="@/img/Teacher_pana.png" alt="선생님" />
+              <span style="font-size: large">선생님</span>
             </button>
           </div>
         </form>
