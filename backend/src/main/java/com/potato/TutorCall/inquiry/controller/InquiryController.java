@@ -2,15 +2,16 @@ package com.potato.TutorCall.inquiry.controller;
 
 import com.potato.TutorCall.inquiry.dto.InquiryDto;
 import com.potato.TutorCall.inquiry.service.InquiryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/inquiry")
+@RequiredArgsConstructor
 public class InquiryController {
 
-  @Autowired private InquiryService inquiryService;
+  private final InquiryService inquiryService;
 
   // 내 문의 조회
   @GetMapping
@@ -26,19 +27,19 @@ public class InquiryController {
 
   // 문의 수정
   @PatchMapping("/{inquiryId}")
-  public ResponseEntity<?> updateInquiry(@PathVariable long inquiryId) {
+  public ResponseEntity<?> updateInquiry(@PathVariable Long inquiryId) {
     return null;
   }
 
   // 문의 삭제
   @DeleteMapping("/{inquiryId}")
-  public ResponseEntity<?> deleteInquiry(@PathVariable long inquiryId) {
+  public ResponseEntity<?> deleteInquiry(@PathVariable Long inquiryId) {
     return null;
   }
 
   // 문의 답변 등록
   @PatchMapping("/answer/{inquiryId}")
-  public ResponseEntity<?> answerInquiry(@PathVariable long inquiryId) {
+  public ResponseEntity<?> answerInquiry(@PathVariable Long inquiryId) {
     return null;
   }
 }
