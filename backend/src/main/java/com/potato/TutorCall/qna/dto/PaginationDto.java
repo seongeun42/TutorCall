@@ -3,11 +3,11 @@ package com.potato.TutorCall.qna.dto;
 import lombok.Data;
 
 @Data
-public class PagenationDto {
+public class PaginationDto {
 
     private int page;
     private boolean isEnd;
-    private String tag;
+    private long tagId;
     private String keyword;
     private int size;
 

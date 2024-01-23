@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -35,11 +36,12 @@ public class Question {
 
     private String content;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tag tag;
 
+    @Column(columnDefinition = "boolean default false")
     private boolean isEnd;
-
+    @Column(columnDefinition = "boolean default false")
     private boolean isDelete;
 
     @CreatedDate

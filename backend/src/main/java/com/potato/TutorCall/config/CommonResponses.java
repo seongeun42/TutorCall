@@ -1,4 +1,4 @@
-package config;
+package com.potato.TutorCall.config;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

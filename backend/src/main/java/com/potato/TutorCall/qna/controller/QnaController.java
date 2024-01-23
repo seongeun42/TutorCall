@@ -1,9 +1,9 @@
 package com.potato.TutorCall.qna.controller;
 
 import com.potato.TutorCall.qna.dto.AnswerWriteDto;
-import com.potato.TutorCall.qna.dto.PagenationDto;
+import com.potato.TutorCall.qna.dto.PaginationDto;
 import com.potato.TutorCall.qna.dto.QuestionWriteDto;
-import config.CommonResponses;
+import com.potato.TutorCall.config.CommonResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class QnaController {
     @CommonResponses
     @Operation(summary = "Q&A 게시판 전체 조회", description = "전체 게시글 가져옴")
     @GetMapping("/question")
-    public ResponseEntity<?> questionAll(PagenationDto pageNationDto){
+    public ResponseEntity<?> questionAll(PaginationDto pageNationDto){
         return null;
     }
 
