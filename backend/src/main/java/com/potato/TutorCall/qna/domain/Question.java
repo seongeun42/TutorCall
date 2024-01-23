@@ -68,4 +68,49 @@ public class Question {
         this.tag = tag;
     }
 
+    
+    
+    
+    // 비즈니스 로직
+    /**
+     * 질문 제목 변경
+     *
+     * @param title 변경 제목
+     */
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    /**
+     * 질문 내용 변경
+     *
+     * @param content 변경 내용
+     */
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
+    /**
+     * 질문 태그 변경
+     *
+     * @param tag 변경 태그
+     */
+    public void changeTag(Tag tag) {
+        this.tag = tag;
+    }
+
+    /**
+     * 해결 상태로 변경
+     */
+    public void ended() {
+        isEnd = true;
+    }
+
+    /**
+     * 질문 삭제
+     */
+    public void deleted() {
+        isDelete = true;
+    }
+    
 }
