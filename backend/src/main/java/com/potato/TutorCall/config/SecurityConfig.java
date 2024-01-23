@@ -28,7 +28,6 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable()) // form login 비활성화
                 .httpBasic(basic -> basic.disable()) // http basic 비활성화
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()); // 어떤 요청이든 허용
-
         return http.build();
     }
 
