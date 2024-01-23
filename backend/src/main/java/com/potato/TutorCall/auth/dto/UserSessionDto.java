@@ -1,0 +1,18 @@
+package com.potato.TutorCall.auth.dto;
+
+
+import com.potato.TutorCall.user.domain.enums.RoleType;
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+public class SessionDto {
+    private Long id;
+    private RoleType roleType;
+
+    @Builder
+    public SessionDto(Long id, RoleType roleType){
+        this.id = id;
+        this.roleType = roleType;
+    }
+}
