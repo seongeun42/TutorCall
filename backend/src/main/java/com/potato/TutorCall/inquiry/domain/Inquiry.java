@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,7 +16,6 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-
 public class Inquiry {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,5 +37,16 @@ public class Inquiry {
     private LocalDateTime createdAt;
 
     private LocalDateTime answerAt;
+
+
+
+
+    // 생성자
+    @Builder
+    public Inquiry(User user, String title, String content) {
+        this.user = user;
+        this.title = title;
+        this.content = content;
+    }
 
 }

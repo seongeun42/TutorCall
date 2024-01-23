@@ -2,6 +2,7 @@ package com.potato.TutorCall.payment.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,5 +29,20 @@ public class Coupon {
     private LocalDateTime startAt;
 
     private LocalDateTime endAt;
+
+
+
+
+    // 생성자
+    @Builder
+    public Coupon(String code, String name, String desc, int point, int dueDate, LocalDateTime startAt, LocalDateTime endAt) {
+        this.code = code;
+        this.name = name;
+        this.desc = desc;
+        this.point = point;
+        this.dueDate = dueDate;
+        this.startAt = startAt;
+        this.endAt = endAt;
+    }
 
 }

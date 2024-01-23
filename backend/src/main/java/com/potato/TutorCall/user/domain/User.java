@@ -15,6 +15,7 @@ import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.domain.enums.SnsType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -102,5 +103,17 @@ public class User {
 
 
 
+
+    // 생성자
+    @Builder
+    public User(String email, String nickname, String password, RoleType role, String profile, SnsType sns, int point) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.role = role;
+        this.profile = profile;
+        this.sns = sns;
+        this.point = point;
+    }
 
 }

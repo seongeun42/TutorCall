@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.potato.TutorCall.chat.domain.enums.ChatroomType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -40,5 +41,15 @@ public class Chatroom {
     @JsonManagedReference
     @OneToMany(mappedBy = "chatroom", fetch = FetchType.LAZY)
     private List<ChatMessage> messageList = new ArrayList<>();
+
+
+
+
+    // 생성자
+    @Builder
+    public Chatroom(String name, ChatroomType type) {
+        this.name = name;
+        this.type = type;
+    }
 
 }

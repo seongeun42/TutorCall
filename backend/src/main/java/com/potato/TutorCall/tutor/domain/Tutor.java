@@ -9,6 +9,7 @@ import com.potato.TutorCall.tutorcall.domain.TutorCall;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,6 +30,8 @@ public class Tutor {
     private User user;
 
     private String introduction;
+
+    private boolean isActive;
 
     private int reliablity;
 
@@ -57,5 +60,15 @@ public class Tutor {
     @JsonManagedReference
     @OneToMany(mappedBy = "tutor", fetch = FetchType.LAZY)
     private List<TutorTag> tutorTagList = new ArrayList<>();
+
+
+
+
+    // 생성자
+    @Builder
+    public Tutor(User user, String introduction) {
+        this.user = user;
+        this.introduction = introduction;
+    }
 
 }

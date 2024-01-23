@@ -3,6 +3,7 @@ package com.potato.TutorCall.tutor.domain;
 import com.potato.TutorCall.tutor.domain.enums.SchoolType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,5 +20,16 @@ public class Tag {
     private SchoolType level;
 
     private int grade;
+
+
+
+
+    // 생성자
+    @Builder
+    public Tag(String subject, SchoolType level, int grade) {
+        this.subject = subject;
+        this.level = level;
+        this.grade = grade;
+    }
 
 }

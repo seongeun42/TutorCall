@@ -7,6 +7,7 @@ import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -48,5 +49,17 @@ public class RequestCall {
     @JsonManagedReference
     @OneToMany(mappedBy = "call", fetch = FetchType.LAZY)
     private List<ResponseCall> responseCallList = new ArrayList<>();
+
+
+
+
+    // 생성자
+    @Builder
+    public RequestCall(User caller, String title, String content, Tag tag) {
+        this.caller = caller;
+        this.title = title;
+        this.content = content;
+        this.tag = tag;
+    }
 
 }

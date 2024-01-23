@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -40,5 +41,16 @@ public class Answer {
 
     @LastModifiedDate
     private LocalDateTime modifiedAt;
+
+
+
+
+    // 생성자
+    @Builder
+    public Answer(Tutor tutor, Question question, String content) {
+        this.tutor = tutor;
+        this.question = question;
+        this.content = content;
+    }
 
 }

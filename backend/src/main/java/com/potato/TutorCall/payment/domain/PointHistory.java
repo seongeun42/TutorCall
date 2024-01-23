@@ -5,6 +5,7 @@ import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.payment.domain.enums.PointType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -37,5 +38,19 @@ public class PointHistory {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+
+
+
+    // 생성자
+    @Builder
+    public PointHistory(User user, Long receiver, Long sender, PointType type, String desc, int amount) {
+        this.user = user;
+        this.receiver = receiver;
+        this.sender = sender;
+        this.type = type;
+        this.desc = desc;
+        this.amount = amount;
+    }
 
 }

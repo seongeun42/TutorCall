@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -30,5 +31,15 @@ public class Notification {
 
     @CreatedDate
     private LocalDateTime createAt;
+
+
+
+
+    // 생성자
+    @Builder
+    public Notification(User receiver, String content) {
+        this.receiver = receiver;
+        this.content = content;
+    }
 
 }

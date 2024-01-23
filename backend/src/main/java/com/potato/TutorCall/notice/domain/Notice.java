@@ -2,6 +2,7 @@ package com.potato.TutorCall.notice.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -24,5 +25,15 @@ public class Notice {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+
+
+
+    // 생성자
+    @Builder
+    public Notice(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 
 }
