@@ -35,7 +35,8 @@ public class Question {
 
     private String content;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tag tag;
 
     private boolean isEnd;
