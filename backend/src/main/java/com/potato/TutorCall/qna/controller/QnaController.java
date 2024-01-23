@@ -1,12 +1,79 @@
 package com.potato.TutorCall.qna.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.potato.TutorCall.qna.dto.AnswerWriteDto;
+import com.potato.TutorCall.qna.dto.PagenationDto;
+import com.potato.TutorCall.qna.dto.QuestionWriteDto;
+import config.CommonResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("qna")
-
+@Tag(name="qna API", description = "Q&A 등록을 위한 API")
 public class QnaController {
+
+
+    @CommonResponses
+    @Operation(summary="Q&A 게시글 선택 조회", description = "questionId에 맞는 q&a 게시글 스펙 반환")
+    @GetMapping("/question/{questionId}")
+    public ResponseEntity<?> question(@PathVariable("questionId") int questionId){
+        return null;
+    }
+
+    @CommonResponses
+    @Operation(summary = "Q&A 게시판 전체 조회", description = "전체 게시글 가져옴")
+    @GetMapping("/question")
+    public ResponseEntity<?> questionAll(PagenationDto pageNationDto){
+        return null;
+    }
+
+    @CommonResponses
+    @Operation(summary="새 질문 작성", description = "새 질문 작성")
+    @PostMapping("/question")
+    public ResponseEntity<?> writeQuestion(@RequestBody QuestionWriteDto questionWriteDto){
+        return null;
+    }
+
+    @CommonResponses
+    @Operation(summary="질문글 수정", description = "질문글 수정")
+    @PatchMapping("/question/{questionId}")
+    public ResponseEntity<?> editQuestion(@PathVariable("questionId") int questionId, @RequestBody QuestionWriteDto questionWriteDto){
+        return null;
+    }
+
+    @CommonResponses
+    @Operation(summary="질문글 삭제", description = "질문글 삭제")
+    @DeleteMapping("/question/{questionId}")
+    public ResponseEntity<?> deleteQuestion(@PathVariable("questionId") int questionId){
+        return null;
+    }
+
+    @CommonResponses
+    @Operation(summary="답변 작성", description = "답변 작성")
+    @PostMapping("/answer")
+    public ResponseEntity<?> writeAnswer(@RequestBody AnswerWriteDto answerWriteDto){
+        return null;
+    }
+
+    @CommonResponses
+    @Operation(summary = "답변 삭제", description = "답변을 삭제한다")
+    @PatchMapping("/answer/{answerId}")
+    public ResponseEntity<?> editAnswer(@PathVariable("answerId") int answerId, @RequestBody AnswerWriteDto answerWriteDto){
+        return null;
+    }
+
+    @CommonResponses
+    @Operation(summary="답변 채택", description = "답변을 채택한다")
+    @PatchMapping("/answer/selection/{answerId}")
+    public ResponseEntity<?> chooseAnswer(@PathVariable("answerId") int answerId){
+        return null;
+    }
+
+
+
+
 
 
 }
