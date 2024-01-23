@@ -6,12 +6,12 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class SessionDto {
+public class UserSessionDto {
     private Long id;
     private RoleType roleType;
 
     @Builder
-    public SessionDto(Long id, RoleType roleType){
+    public UserSessionDto(Long id, RoleType roleType){
         this.id = id;
         this.roleType = roleType;
     }
