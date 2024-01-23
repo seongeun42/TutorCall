@@ -34,7 +34,8 @@ public class RequestCall {
 
     private String content;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tag tag;
 
     private int tutorCount;
@@ -60,6 +61,17 @@ public class RequestCall {
         this.title = title;
         this.content = content;
         this.tag = tag;
+    }
+
+
+
+
+    // 비즈니스 로직
+    /**
+     * 요청 수락한 선생님 수
+     */
+    public void increaseTutorCount() {
+        tutorCount++;
     }
 
 }

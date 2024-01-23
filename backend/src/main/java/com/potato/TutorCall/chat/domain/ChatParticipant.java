@@ -42,4 +42,24 @@ public class ChatParticipant {
         this.chatroom = chatroom;
     }
 
+
+
+
+    // 비즈니스 로직
+    /**
+     * 마지막으로 방문한 시간 갱신
+     * @param lastVisitAt 방문한 시간
+     */
+    public void updateLastVisitAt(LocalDateTime lastVisitAt) {
+        this.lastVisitAt = lastVisitAt;
+    }
+
+    /**
+     * 마지막으로 떠난 시간 갱신
+     * @param lastLeaveAt 떠난 시간
+     */
+    public void updateLastLeaveAt(LocalDateTime lastLeaveAt) {
+        this.lastLeaveAt = lastLeaveAt;
+    }
+
 }
