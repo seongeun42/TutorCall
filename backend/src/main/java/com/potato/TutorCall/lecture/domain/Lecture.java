@@ -53,7 +53,8 @@ public class Lecture {
 
     private int price;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tag tag;
 
     private LocalDateTime lectureStartAt;

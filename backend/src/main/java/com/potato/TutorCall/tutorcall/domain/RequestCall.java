@@ -34,7 +34,8 @@ public class RequestCall {
 
     private String content;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tag tag;
 
     private int tutorCount;
