@@ -42,4 +42,15 @@ public class Notification {
         this.content = content;
     }
 
+
+
+
+    // 비즈니스 로직
+    /**
+     * 알림 확인 표시
+     */
+    public void beChecked() {
+        isChecked = true;
+    }
+
 }

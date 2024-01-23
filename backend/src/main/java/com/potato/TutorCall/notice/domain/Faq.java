@@ -27,5 +27,27 @@ public class Faq {
         this.question = question;
         this.answer = answer;
     }
+    
+    
+    
+    
+    // 비즈니스 로직
+    /**
+     * 질문 내용 수정
+     * 
+     * @param question 새로운 질문
+     */
+    public void changeQuestion(String question) {
+        this.question = question;
+    }
 
+    /**
+     * 답변 내용 수정
+     * 
+     * @param answer 새로운 답변
+     */
+    public void changeAnswer(String answer) {
+        this.answer = answer;
+    }
+    
 }
