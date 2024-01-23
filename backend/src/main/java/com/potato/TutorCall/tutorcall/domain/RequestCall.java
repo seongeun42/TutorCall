@@ -61,5 +61,16 @@ public class RequestCall {
         this.content = content;
         this.tag = tag;
     }
+    
+    
+    
+    
+    // 비즈니스 로직
+    /**
+     * 요청 수락한 선생님 수
+     */
+    public void increaseTutorCount() {
+        tutorCount++;
+    }
 
 }

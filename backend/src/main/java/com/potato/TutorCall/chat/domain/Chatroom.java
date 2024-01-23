@@ -52,4 +52,16 @@ public class Chatroom {
         this.type = type;
     }
 
+
+
+
+    // 비즈니스 로직
+    /**
+     * 채팅방 명 변경
+     * @param name 새로운 채팅방명
+     */
+    public void changeName(String name) {
+        this.name = name;
+    }
+
 }

@@ -63,4 +63,35 @@ public class TutorCall {
         this.price = price;
     }
 
+
+
+
+    // 비즈니스 로직
+    /**
+     * 다시보기 영상 url 설정
+     *
+     * @param replayVideo 영상 url
+     */
+    public void setReplayVideo(String replayVideo) {
+        this.replayVideo = replayVideo;
+    }
+
+    /**
+     * 강의룸 url 설정
+     *
+     * @param liveUrl 강의룸 url
+     */
+    public void setLiveUrl(String liveUrl) {
+        this.liveUrl = liveUrl;
+    }
+
+    /**
+     * 강의 진행 상태 변경
+     *
+     * @param liveState 강의 진행 상태
+     */
+    public void changeLiveState(boolean liveState) {
+        this.liveState = liveState;
+    }
+
 }

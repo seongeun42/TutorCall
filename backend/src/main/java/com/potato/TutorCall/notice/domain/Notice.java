@@ -36,4 +36,26 @@ public class Notice {
         this.content = content;
     }
 
+
+
+
+    // 비즈니스 로직
+    /**
+     * 공지사항 제목 수정
+     *
+     * @param title 새로운 제목
+     */
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    /**
+     * 공지 내용 수정
+     *
+     * @param content 새로운 내용
+     */
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
 }

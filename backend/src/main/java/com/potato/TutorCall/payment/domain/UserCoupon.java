@@ -1,7 +1,6 @@
 package com.potato.TutorCall.payment.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.potato.TutorCall.payment.domain.Coupon;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.util.Lazy;
 
 import java.time.LocalDateTime;
 
@@ -48,5 +46,16 @@ public class UserCoupon {
         this.owner = owner;
         this.expiredAt = expiredAt;
     }
-
+    
+    
+    
+    
+    // 비즈니스 로직
+    /**
+     *  사용된 쿠폰으로 변경
+     */
+    public void beUsed() {
+        this.used = true;
+    }
+    
 }

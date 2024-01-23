@@ -53,4 +53,31 @@ public class Answer {
         this.content = content;
     }
 
+
+
+
+    // 비즈니스 로직
+    /**
+     * 답변 내용 변경
+     *
+     * @param content 수정한 내용
+     */
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
+    /**
+     * 채택된 답변으로 변경
+     */
+    public void beChosen() {
+        isChosen = true;
+    }
+
+    /**
+     * 답변 삭제
+     */
+    public void deleted() {
+        isDelete = true;
+    }
+
 }
