@@ -1,5 +1,6 @@
 package com.potato.TutorCall.mypage.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutor.domain.TutorTag;
@@ -25,8 +26,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
@@ -155,4 +160,36 @@ class MyPageControllerTest {
                 .andExpect(jsonPath("$.tutor.tags[1].grade").value(3));
     }
 
+    @Test
+    @DisplayName("세선 정보가 없으면 프로필을 변경할 수 없다")
+    void updateProfileWithoutSession() throws Exception {
+        Map<String, String> requestMap = new HashMap<>();
+        requestMap.put("profile", "new_img.jpg");
+        String requestBody = new ObjectMapper().writeValueAsString(requestMap);
+
+        mockMvc.perform(patch("/mypage/profile")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    @DisplayName("사용자는 본인의 프로필 이미지를 변경할 수 있음")
+    void updateProfile() throws Exception {
+        session = new MockHttpSession();
+        session.setAttribute("user", 1L);
+
+        Map<String, String> requestMap = new HashMap<>();
+        requestMap.put("profile", "new_img.jpg");
+        String requestBody = new ObjectMapper().writeValueAsString(requestMap);
+
+        mockMvc.perform(patch("/mypage/profile")
+                        .session(session)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk());
+
+        String updateProfile = userRepository.findById(1L).get().getProfile();
+        assertThat(updateProfile).isEqualTo("new_img.jpg");
+    }
 }

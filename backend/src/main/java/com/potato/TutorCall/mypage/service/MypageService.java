@@ -10,6 +10,7 @@ import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +24,7 @@ public class MypageService {
     private final TutorTagRepository tutorTagRepository;
 
     public MyPageProfileResDto getUserProfile(Long id) {
-        User currentUser = userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다."));
+        User currentUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
 
         MyPageProfileResDto userInfo = new MyPageProfileResDto(currentUser);
 
@@ -36,5 +37,12 @@ public class MypageService {
         }
 
         return userInfo;
+    }
+
+    @Transactional
+    public void updateProfile(Long id, String profile) {
+        User currentUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
+
+        currentUser.changeProfile(profile);
     }
 }

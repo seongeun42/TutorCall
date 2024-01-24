@@ -39,7 +39,8 @@ public class MyPageController {
    */
   @PatchMapping("/profile")
   public ResponseEntity<?> updateProfileImage(@SessionAttribute(name = "user")Long id, @RequestBody ProfileUpdateReqDto newProfile) {
-    mypageService.updateProfile(newProfile.getProfile());
+    System.out.println(id);
+    mypageService.updateProfile(id, newProfile.getProfile());
 
     return ResponseEntity.ok().build();
   }
