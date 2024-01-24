@@ -74,4 +74,10 @@ public class AuthController {
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpSession session){
+        this.authService.logout(session);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

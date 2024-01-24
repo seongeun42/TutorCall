@@ -43,4 +43,8 @@ public class AuthService {
         session.setAttribute(key, UserSessionDto.of(user));
     }
 
+    public void logout(HttpSession session){
+        session.invalidate();
+    }
+
 }
