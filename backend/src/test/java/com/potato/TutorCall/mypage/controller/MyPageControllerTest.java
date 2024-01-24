@@ -159,9 +159,9 @@ class MyPageControllerTest {
     @DisplayName("존재하지 않는 유저 정보는 조회할 수 없다")
     void getNonExistentUser() throws Exception {
         session = new MockHttpSession();
-        session.setAttribute("user", 2L);
+        session.setAttribute("user", 3L);
 
-        mockMvc.perform(get("/mypage"))
+        mockMvc.perform(get("/mypage").session(session))
                 .andExpect(status().is4xxClientError());
     }
 
