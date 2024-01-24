@@ -1,8 +1,10 @@
 package com.potato.TutorCall.notice.service;
 
+import com.potato.TutorCall.notice.domain.Faq;
 import com.potato.TutorCall.notice.domain.Notice;
 import com.potato.TutorCall.notice.dto.NoticeDto;
 import com.potato.TutorCall.notice.dto.UpdateNotice;
+import com.potato.TutorCall.notice.repository.FaqRepository;
 import com.potato.TutorCall.notice.repository.NoticeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -46,4 +48,11 @@ public class NoticeService {
 
         return notice;
     }
+
+    private final FaqRepository faqRepository;
+    public List<Faq> faqFind() {
+        return faqRepository.findAll();
+    }
+
+
 }
