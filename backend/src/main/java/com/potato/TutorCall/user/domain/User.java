@@ -40,6 +40,7 @@ public class User {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private RoleType role;
 
     private String profile;
@@ -114,6 +115,69 @@ public class User {
         this.profile = profile;
         this.sns = sns;
         this.point = point;
+    }
+
+
+    // 비즈니스 로직
+    /**
+     * 닉네임 변경 함수
+     *
+     * @param nickname 새로운 닉네임
+     */
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    /**
+     * 비밀번호 변경
+     *
+     * @param password 새로운 비밀번호
+     */
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * 프로필 사진 변경
+     *
+     * @param profile 새로운 프로필 url
+     */
+    public void changeProfile(String profile) {
+        this.profile = profile;
+    }
+
+    /**
+     * 포인트 증감
+     *
+     * @param point 증감할 포인트 양
+     */
+    public void changePoint(int point) {
+        this.point += point;
+    }
+
+    /**
+     *  차단 만료 기일 설정
+     *
+     * @param block 차단 만료 기일
+     */
+    public void setBlock(LocalDateTime block) {
+        this.block = block;
+    }
+
+    /**
+     * 새로운 알림 존재 여부 상태 변경
+     *
+     * @param existNotification 새로운 알림 존재 여부
+     */
+    public void changeExistNotification(boolean existNotification) {
+        this.existNotification = existNotification;
+    }
+
+    /**
+     * 탈퇴 처리
+     */
+    public void unjoin() {
+        this.unjoin = true;
     }
 
 }

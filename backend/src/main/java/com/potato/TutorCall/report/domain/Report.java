@@ -51,4 +51,24 @@ public class Report {
         this.content = content;
     }
 
+
+
+
+    // 비즈니스 로직
+    /**
+     * 진행 상황 끝으로 변경
+     */
+    public void processDone() {
+        this.proceedState = true;
+    }
+
+    /**
+     * 처리 결과 반영
+     *
+     * @param result 처리 결과
+     */
+    public void setResult(String result) {
+        this.result = result;
+    }
+
 }
