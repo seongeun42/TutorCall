@@ -1,5 +1,6 @@
 package com.potato.TutorCall.mypage.service;
 
+import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutor.domain.TutorTag;
@@ -21,24 +22,19 @@ public class MypageService {
     private final TutorRepository tutorRepository;
     private final TutorTagRepository tutorTagRepository;
 
-    public Optional<MyPageProfileResDto> getUserProfile(Long id) {
-        Optional<User> currentUser = userRepository.findById(id);
+    public MyPageProfileResDto getUserProfile(Long id) {
+        User currentUser = userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다."));
 
-        // 들어온 id에 해당하는 유저 정보가 없으면
-        if(currentUser.isEmpty()) {
-            return Optional.empty();
-        }
-
-        MyPageProfileResDto userInfo = new MyPageProfileResDto(currentUser.get());
+        MyPageProfileResDto userInfo = new MyPageProfileResDto(currentUser);
 
         // 유저가 선생이라면
-        Optional<Tutor> currentTutor = tutorRepository.findByUser(currentUser.get());
+        Optional<Tutor> currentTutor = tutorRepository.findByUser(currentUser);
         if(currentTutor.isPresent()) {
             List<TutorTag> tutorTagList = tutorTagRepository.findByTutor(currentTutor.get());
 
             userInfo.addTutorInfo(currentTutor.get(), tutorTagList);
         }
 
-        return Optional.of(userInfo);
+        return userInfo;
     }
 }

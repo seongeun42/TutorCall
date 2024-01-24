@@ -26,13 +26,9 @@ public class MyPageController {
    */
   @GetMapping
   public ResponseEntity<?> getMyProfile(@SessionAttribute(name = "user")Long id) {
-    Optional<MyPageProfileResDto> myProfile = mypageService.getUserProfile(id);
-
-    if(myProfile.isPresent()) {
-      return ResponseEntity.ok(myProfile.get());
-    }
+    MyPageProfileResDto myProfile = mypageService.getUserProfile(id);
     
-    return ResponseEntity.badRequest().build();
+    return ResponseEntity.ok(myProfile);
   }
 
   /**
@@ -41,7 +37,8 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/profile")
-  public ResponseEntity<?> updateProfileImage() {
+  public ResponseEntity<?> updateProfileImage(@SessionAttribute(name = "user")Long id) {
+
     return ResponseEntity.badRequest().build();
   }
 
