@@ -3,6 +3,7 @@ package com.potato.TutorCall.inquiry.controller;
 import com.potato.TutorCall.inquiry.dto.ErrorMsg;
 import com.potato.TutorCall.inquiry.dto.InquirySaveRequestDto;
 import com.potato.TutorCall.inquiry.dto.SuccessMsg;
+import com.potato.TutorCall.inquiry.dto.SuccessMsgContent;
 import com.potato.TutorCall.inquiry.service.InquiryService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ public class InquiryController {
   // 문의 수정
   //    @PatchMapping("/{inquiryId}")
   //    public ResponseEntity<?> updateInquiry(@PathVariable Long inquiryId, @RequestBody
-  // InquirySaveRequestDto inquiryDto) {
+  //    InquirySaveRequestDto inquiryDto) {
   //        // 실패일 경우
   //        if (inquiryService.findById(inquiryId).isEmpty()) {
   //            ErrorMsg err = new ErrorMsg();
@@ -65,23 +66,38 @@ public class InquiryController {
   //
   //        // 성공인 경우
   //        InquirySaveRequestDto updatedInquiry = inquiryService.updateInquiry(inquiryId,
-  // inquiryDto);
+  //                inquiryDto);
   //        SuccessMsg msg = new SuccessMsg();
   //        msg.setInquiryId(createdInquiry.getId());
   //        msg.setMessage("문의가 생성되었습니다");
   //        return new ResponseEntity<SuccessMsg>(msg, HttpStatusCode.valueOf(201));
   //    }
-  // }
 
   // 문의 삭제
-  //  @DeleteMapping("/{inquiryId}")
-  //  public ResponseEntity<?> deleteInquiry(@PathVariable Long inquiryId) {
-  //    return null;
-  //  }
+  @DeleteMapping("/{inquiryId}")
+  public ResponseEntity<?> deleteInquiry(@PathVariable Long inquiryId) {
+
+    boolean isDeleted = inquiryService.deleteInquiry(inquiryId);
+    // 성공인 경우
+    if (isDeleted) {
+      SuccessMsgContent msg = new SuccessMsgContent();
+      msg.setMessage("문의가 삭제되었습니다");
+      return new ResponseEntity<SuccessMsgContent>(msg, HttpStatusCode.valueOf(201));
+    }
+
+    // 권한이 없는 경우?
+
+    // 삭제 실패인 경우
+    ErrorMsg err = new ErrorMsg();
+    err.setTimeStamp(LocalDateTime.now());
+    err.setMessage("문의 삭제 실패");
+    return new ResponseEntity<ErrorMsg>(err, HttpStatusCode.valueOf(400));
+  }
 
   // 문의 답변 등록
-  //  @PatchMapping("/answer/{inquiryId}")
-  //  public ResponseEntity<?> answerInquiry(@PathVariable Long inquiryId) {
-  //    return null;
-  //  }
+  //    @PatchMapping("/answer/{inquiryId}")
+  //    public ResponseEntity<?> answerInquiry(@PathVariable Long inquiryId) {
+  //        return null;
+  //    }
+
 }

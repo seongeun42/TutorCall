@@ -28,11 +28,22 @@ public class InquiryService {
     }
   }
 
-  //     문의 수정 하기
+  // 문의 수정 하기
   //    public InquirySaveRequestDto updateInquiry(Long inquiryId, InquirySaveRequestDto inquiryDto)
   // {
   //        Inquiry updatedInquiry = inquiryRepository.getReferenceById(inquiryId);
-  //        updatedInquiry.
+  //        if (updatedInquiry.getId() == null) {
+  //            return ;
+  //        }
   //    }
 
+  // 문의 삭제 하기
+  public boolean deleteInquiry(Long inquiryId) {
+    Inquiry deletedInquiry = inquiryRepository.getReferenceById(inquiryId);
+    if (deletedInquiry.getId() == null) {
+      return false;
+    }
+    inquiryRepository.deleteById(inquiryId);
+    return true;
+  }
 }
