@@ -46,10 +46,10 @@ public class UserCoupon {
         this.owner = owner;
         this.expiredAt = expiredAt;
     }
-    
-    
-    
-    
+
+
+
+
     // 비즈니스 로직
     /**
      *  사용된 쿠폰으로 변경
@@ -57,5 +57,5 @@ public class UserCoupon {
     public void beUsed() {
         this.used = true;
     }
-    
+
 }

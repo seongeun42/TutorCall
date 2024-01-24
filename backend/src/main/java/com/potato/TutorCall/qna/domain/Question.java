@@ -69,9 +69,9 @@ public class Question {
         this.tag = tag;
     }
 
-    
-    
-    
+
+
+
     // 비즈니스 로직
     /**
      * 질문 제목 변경
@@ -113,5 +113,5 @@ public class Question {
     public void deleted() {
         isDelete = true;
     }
-    
+
 }
