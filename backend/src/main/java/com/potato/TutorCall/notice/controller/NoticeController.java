@@ -22,7 +22,7 @@ public class NoticeController {
 
     @Operation(summary="Notice 게시글 선택 조회", description = "Notice 게시글 선택 조회")
     @GetMapping("/{noticeId}")
-    public ResponseEntity<NoticeResponse> findNotice(@PathVariable long noticeId){
+    public ResponseEntity<NoticeResponse> findNotice(@PathVariable("noticeId") long noticeId){
         Notice notice = noticeService.findById(noticeId);
 
         return ResponseEntity.ok()
@@ -50,7 +50,7 @@ public class NoticeController {
 
     @Operation(summary="Notice 게시글 수정", description = "관리자 Notice 게시글 수정")
     @PatchMapping("/{noticeId}")
-    public ResponseEntity<Notice> updateNotice(@PathVariable long noticeId, @RequestBody UpdateNotice updateNotice){
+    public ResponseEntity<Notice> updateNotice(@PathVariable("noticeId") long noticeId, @RequestBody UpdateNotice updateNotice){
         Notice updatedNotice = noticeService.update(noticeId, updateNotice);
 
         return ResponseEntity.ok()
@@ -59,7 +59,7 @@ public class NoticeController {
 
     @Operation(summary="Notice 게시글 삭제", description = "관리자 Notice 게시글 삭제")
     @DeleteMapping("/{noticeId}")
-    public ResponseEntity<Void> deleteNotice(@PathVariable long noticeId){
+    public ResponseEntity<Void> deleteNotice(@PathVariable("noticeId") long noticeId){
         noticeService.delete(noticeId);
 
         return ResponseEntity.ok()
@@ -87,7 +87,7 @@ public class NoticeController {
 
     @Operation(summary="Faq 게시글 수정", description = "관리자 Faq 게시글 수정")
     @PatchMapping("/faq/{faqId}")
-    public ResponseEntity<Faq> updateFaq(@PathVariable long faqId, @RequestBody UpdateFaq updateFaq){
+    public ResponseEntity<Faq> updateFaq(@PathVariable("faqId") long faqId, @RequestBody UpdateFaq updateFaq){
         Faq updatedFaq = noticeService.updateFaq(faqId, updateFaq);
         return ResponseEntity.ok()
                 .body(updatedFaq);
@@ -95,7 +95,7 @@ public class NoticeController {
 
     @Operation(summary="Faq 게시글 삭제", description = "관리자 Faq 게시글 삭제")
     @DeleteMapping("/faq/{faqId}")
-    public ResponseEntity<Void> deleteFaq(@PathVariable long faqId){
+    public ResponseEntity<Void> deleteFaq(@PathVariable("faqId") long faqId){
         noticeService.deleteFaq(faqId);
 
         return ResponseEntity.ok()
