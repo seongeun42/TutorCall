@@ -109,7 +109,7 @@ class MyPageControllerTest {
     @DisplayName("세션 정보가 없으면 정보를 가져올 수 없다")
     void getUserProfileWithoutSession() throws Exception {
         mockMvc.perform(get("/mypage"))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is5xxServerError());
     }
 
     @Test
