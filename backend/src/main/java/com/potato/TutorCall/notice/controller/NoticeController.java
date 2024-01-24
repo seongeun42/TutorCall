@@ -55,10 +55,13 @@ public class NoticeController {
         return null;
     }
 
-    @Operation(summary="Notice게시글 삭제", description = "관리자 Notice 게시글 삭제")
+    @Operation(summary="Notice 게시글 삭제", description = "관리자 Notice 게시글 삭제")
     @DeleteMapping("/{noticeId}")
-    public ResponseEntity<?> deleteNotice(@PathVariable("noticeId") int noticeId){
-        return null;
+    public ResponseEntity<Void> deleteNotice(@PathVariable long noticeId){
+        noticeService.delete(noticeId);
+
+        return ResponseEntity.ok()
+                .build();
     }
 
     @Operation(summary="Faq 조회", description = "Faq 게시글 조회")

@@ -18,12 +18,19 @@ public class NoticeService {
         return noticeRepository.save(noticeDto.toEntity());
     }
 
+    // 전체 공지사항 조회
     public List<Notice> findAll() {
         return noticeRepository.findAll();
     }
 
+    // 공지사항 상세글 조회
     public Notice findById(long id) {
         return noticeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+    }
+
+    // 공지사항 게시글 삭제
+    public void delete(long id) {
+        noticeRepository.deleteById(id);
     }
 }
