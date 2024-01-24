@@ -32,7 +32,7 @@ public class PointHistory {
 
     private PointType type;
 
-    private String desc;
+    private String description;
 
     private int amount;
 
@@ -44,12 +44,12 @@ public class PointHistory {
 
     // 생성자
     @Builder
-    public PointHistory(User user, Long receiver, Long sender, PointType type, String desc, int amount) {
+    public PointHistory(User user, Long receiver, Long sender, PointType type, String description, int amount) {
         this.user = user;
         this.receiver = receiver;
         this.sender = sender;
         this.type = type;
-        this.desc = desc;
+        this.description = description;
         this.amount = amount;
     }
 

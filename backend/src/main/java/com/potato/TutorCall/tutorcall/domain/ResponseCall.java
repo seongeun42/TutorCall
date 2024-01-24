@@ -47,4 +47,15 @@ public class ResponseCall {
         this.price = price;
     }
 
+
+
+
+    // 비즈니스 로직
+    /**
+     * 매칭 상태 변경
+     */
+    public void changeMatched() {
+        this.matched = true;
+    }
+
 }

@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL;
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: '179077400696-64tl4f9kq3956o3gh39gtfs3h5f073ki.apps.googleusercontent.com'
+            client-secret: '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'
+            redirect-uri: 'http://localhost:8080/login/oauth2/code/google'
+            authorization-grant-type: 'authorization_code'
+            scope:
+              - email
+              - profile
+logging:
+  level:
+    org.hibernate.SQL: debug

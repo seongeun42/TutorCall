@@ -19,6 +19,8 @@ public class Commision {
     private double commision;
 
 
+
+
     // 생성자
     @Builder
     public Commision(int grade, double commision) {
