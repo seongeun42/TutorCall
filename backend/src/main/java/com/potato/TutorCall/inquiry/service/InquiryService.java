@@ -29,13 +29,12 @@ public class InquiryService {
   }
 
   // 문의 수정 하기
-  //    public InquirySaveRequestDto updateInquiry(Long inquiryId, InquirySaveRequestDto inquiryDto)
-  // {
-  //        Inquiry updatedInquiry = inquiryRepository.getReferenceById(inquiryId);
-  //        if (updatedInquiry.getId() == null) {
-  //            return ;
-  //        }
-  //    }
+  public Long updateInquiry(Long inquiryId, InquirySaveRequestDto inquiryDto) {
+    Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow();
+    inquiry.changeTitle(inquiryDto.getTitle());
+    inquiry.changeContent(inquiryDto.getContent());
+    return inquiryId;
+  }
 
   // 문의 삭제 하기
   public boolean deleteInquiry(Long inquiryId) {
@@ -45,5 +44,10 @@ public class InquiryService {
     }
     inquiryRepository.deleteById(inquiryId);
     return true;
+  }
+
+  // 유저 한 명 선택하기
+  public Inquiry selectOneInquiry(Long inquiryId) {
+    return inquiryRepository.getReferenceById(inquiryId);
   }
 }

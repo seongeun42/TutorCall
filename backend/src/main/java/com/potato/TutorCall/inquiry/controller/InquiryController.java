@@ -1,9 +1,6 @@
 package com.potato.TutorCall.inquiry.controller;
 
-import com.potato.TutorCall.inquiry.dto.ErrorMsg;
-import com.potato.TutorCall.inquiry.dto.InquirySaveRequestDto;
-import com.potato.TutorCall.inquiry.dto.SuccessMsg;
-import com.potato.TutorCall.inquiry.dto.SuccessMsgContent;
+import com.potato.TutorCall.inquiry.dto.*;
 import com.potato.TutorCall.inquiry.service.InquiryService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +16,11 @@ public class InquiryController {
   private final InquiryService inquiryService;
 
   // 테스트용
-  @PostMapping("/test")
-  public String createInquiry(@RequestBody String text) {
-    System.out.println("TEST");
-    return text;
-  }
+  //  @PostMapping("/test")
+  //  public String createInquiry(@RequestBody String text) {
+  //    System.out.println("TEST");
+  //    return text;
+  //  }
 
   // 내 문의 조회
   //  @GetMapping
@@ -52,26 +49,25 @@ public class InquiryController {
   }
 
   // 문의 수정
-  //    @PatchMapping("/{inquiryId}")
-  //    public ResponseEntity<?> updateInquiry(@PathVariable Long inquiryId, @RequestBody
-  //    InquirySaveRequestDto inquiryDto) {
-  //        // 실패일 경우
-  //        if (inquiryService.findById(inquiryId).isEmpty()) {
-  //            ErrorMsg err = new ErrorMsg();
-  //            err.setTimeStamp(LocalDateTime.now());
-  //            err.setMessage("문의 변경 실패");
-  //            return new ResponseEntity<ErrorMsg>(err, HttpStatusCode.valueOf(400));
-  //        }
-  //        // 수정 권한이 없는 경우?
-  //
-  //        // 성공인 경우
-  //        InquirySaveRequestDto updatedInquiry = inquiryService.updateInquiry(inquiryId,
-  //                inquiryDto);
-  //        SuccessMsg msg = new SuccessMsg();
-  //        msg.setInquiryId(createdInquiry.getId());
-  //        msg.setMessage("문의가 생성되었습니다");
-  //        return new ResponseEntity<SuccessMsg>(msg, HttpStatusCode.valueOf(201));
-  //    }
+  @PatchMapping("/{inquiryId}")
+  public ResponseEntity<?> updateInquiry(
+      @PathVariable Long inquiryId, @RequestBody InquirySaveRequestDto inquiryDto) {
+    Long updateRequestDto = inquiryService.updateInquiry(inquiryId, inquiryDto);
+    // 실패일 경우
+    if (updateRequestDto == null) {
+      ErrorMsg err = new ErrorMsg();
+      err.setTimeStamp(LocalDateTime.now());
+      err.setMessage("문의 변경 실패");
+      return new ResponseEntity<ErrorMsg>(err, HttpStatusCode.valueOf(400));
+    }
+    // 수정 권한이 없는 경우?
+
+    // 성공인 경우
+    SuccessMsg msg = new SuccessMsg();
+    msg.setInquiryId(inquiryId);
+    msg.setMessage("문의가 수정되었습니다");
+    return new ResponseEntity<SuccessMsg>(msg, HttpStatusCode.valueOf(200));
+  }
 
   // 문의 삭제
   @DeleteMapping("/{inquiryId}")
