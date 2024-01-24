@@ -85,10 +85,12 @@ public class NoticeController {
                 .body(savedFaq);
     }
 
-    @Operation(summary="Faq 게시글 작성", description = "관리자 Faq 게시글 작성")
+    @Operation(summary="Faq 게시글 수정", description = "관리자 Faq 게시글 수정")
     @PatchMapping("/faq/{faqId}")
-    public ResponseEntity<?> updateFaq(@PathVariable("faqId") int faqId, @RequestBody FaqDto fqaDto){
-        return null;
+    public ResponseEntity<Faq> updateFaq(@PathVariable long faqId, @RequestBody UpdateFaq updateFaq){
+        Faq updatedFaq = noticeService.updateFaq(faqId, updateFaq);
+        return ResponseEntity.ok()
+                .body(updatedFaq);
     }
 
     @Operation(summary="Faq 게시글 삭제", description = "관리자 Faq 게시글 삭제")

@@ -4,6 +4,7 @@ import com.potato.TutorCall.notice.domain.Faq;
 import com.potato.TutorCall.notice.domain.Notice;
 import com.potato.TutorCall.notice.dto.FaqDto;
 import com.potato.TutorCall.notice.dto.NoticeDto;
+import com.potato.TutorCall.notice.dto.UpdateFaq;
 import com.potato.TutorCall.notice.dto.UpdateNotice;
 import com.potato.TutorCall.notice.repository.FaqRepository;
 import com.potato.TutorCall.notice.repository.NoticeRepository;
@@ -62,5 +63,15 @@ public class NoticeService {
         return faqRepository.save(faqDto.toEntity());
     }
 
+    // Faq 수정
+    @Transactional
+    public Faq updateFaq(long id, UpdateFaq updateFaq) {
+        Faq faq = faqRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+        faq.changeQuestion(updateFaq.getQuestion());
+        faq.changeAnswer(updateFaq.getAnswer());
+
+        return faq;
+    }
 
 }
