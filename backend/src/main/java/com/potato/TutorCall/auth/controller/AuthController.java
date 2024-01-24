@@ -6,6 +6,7 @@ import com.potato.TutorCall.auth.dto.SendEmailDto;
 import com.potato.TutorCall.auth.dto.request.AuthLoginRequestDto;
 import com.potato.TutorCall.auth.dto.request.EmailCheckResponseDto;
 import com.potato.TutorCall.auth.dto.request.NickCheckResponseDto;
+import com.potato.TutorCall.auth.dto.request.SignupRequestDto;
 import com.potato.TutorCall.auth.service.AuthService;
 import com.potato.TutorCall.auth.service.EmailService;
 import com.potato.TutorCall.user.domain.User;
@@ -94,8 +95,15 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PostMapping("signup")
+    public ResponseEntity<?> signup (SignupRequestDto signupRequestDto){
+        User user = this.userService.signup(signupRequestDto);
 
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "회원가입 되었습니다.");
 
+        return new ResponseEntity<>(response,HttpStatus.CREATED);
+    }
 }
 
 
