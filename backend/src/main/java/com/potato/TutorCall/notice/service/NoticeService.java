@@ -2,6 +2,7 @@ package com.potato.TutorCall.notice.service;
 
 import com.potato.TutorCall.notice.domain.Faq;
 import com.potato.TutorCall.notice.domain.Notice;
+import com.potato.TutorCall.notice.dto.FaqDto;
 import com.potato.TutorCall.notice.dto.NoticeDto;
 import com.potato.TutorCall.notice.dto.UpdateNotice;
 import com.potato.TutorCall.notice.repository.FaqRepository;
@@ -50,8 +51,15 @@ public class NoticeService {
     }
 
     private final FaqRepository faqRepository;
+
+    // Faq 조회
     public List<Faq> faqFind() {
         return faqRepository.findAll();
+    }
+
+    // Faq 작성
+    public Faq saveFaq(FaqDto faqDto) {
+        return faqRepository.save(faqDto.toEntity());
     }
 
 

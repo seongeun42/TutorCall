@@ -1,5 +1,6 @@
 package com.potato.TutorCall.notice.controller;
 
+import com.potato.TutorCall.notice.domain.Faq;
 import com.potato.TutorCall.notice.domain.Notice;
 import com.potato.TutorCall.notice.dto.*;
 import com.potato.TutorCall.notice.service.NoticeService;
@@ -78,8 +79,10 @@ public class NoticeController {
 
     @Operation(summary="Faq 등록", description = "관리자 Faq 게시글 작성")
     @PostMapping("/faq")
-    public ResponseEntity<?> createFaq(@RequestBody FaqDto fqaDto){
-        return null;
+    public ResponseEntity<Faq> createFaq(@RequestBody FaqDto faqDto){
+        Faq savedFaq = noticeService.saveFaq(faqDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(savedFaq);
     }
 
     @Operation(summary="Faq 게시글 작성", description = "관리자 Faq 게시글 작성")
