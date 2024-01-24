@@ -21,4 +21,9 @@ public class NoticeService {
     public List<Notice> findAll() {
         return noticeRepository.findAll();
     }
+
+    public Notice findById(long id) {
+        return noticeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+    }
 }

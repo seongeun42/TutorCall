@@ -21,13 +21,16 @@ import java.util.List;
 public class NoticeController {
     private final NoticeService noticeService;
 
-    @Operation(summary="Q&A 게시글 선택 조회", description = "Q&A 게시글 선택 조회")
+    @Operation(summary="Notice 게시글 선택 조회", description = "Notice 게시글 선택 조회")
     @GetMapping("/{noticeId}")
-    public ResponseEntity<?> notice(@PathVariable("noticeId") int noticeId){
-        return null;
+    public ResponseEntity<NoticeResponse> findNotice(@PathVariable long noticeId){
+        Notice notice = noticeService.findById(noticeId);
+
+        return ResponseEntity.ok()
+                .body(new NoticeResponse(notice));
     }
 
-    @Operation(summary="Q&A 게시글 전체 조회", description = "Q&A 게시글 전체 조회")
+    @Operation(summary="Notice 게시글 전체 조회", description = "Notice 게시글 전체 조회")
     @GetMapping("/")
     public ResponseEntity<List<NoticeResponse>> noticeAll() {
         List<NoticeResponse> notices = noticeService.findAll()
@@ -38,7 +41,7 @@ public class NoticeController {
                 .body(notices);
     }
     
-    @Operation(summary="Q&A 게시글 작성", description = "관리자 Q&A 게시글 작성")
+    @Operation(summary="Notice 게시글 작성", description = "관리자 Notice 게시글 작성")
     @PostMapping("/")
     public ResponseEntity<Notice> createNotice(@RequestBody NoticeDto noticeDto){
         Notice savedNotice = noticeService.save(noticeDto);
@@ -46,13 +49,13 @@ public class NoticeController {
                 .body(savedNotice);
     }
 
-    @Operation(summary="Q&A 게시글 수정", description = "관리자 Q&A 게시글 수정")
+    @Operation(summary="Notice 게시글 수정", description = "관리자 Notice 게시글 수정")
     @PatchMapping("/{noticeId}")
     public ResponseEntity<?> updateNotice(@PathVariable("noticeId") int noticeId, @RequestBody NoticeDto noticeDto){
         return null;
     }
 
-    @Operation(summary="Q&A 게시글 삭제", description = "관리자 Q&A 게시글 삭제")
+    @Operation(summary="Notice게시글 삭제", description = "관리자 Notice 게시글 삭제")
     @DeleteMapping("/{noticeId}")
     public ResponseEntity<?> deleteNotice(@PathVariable("noticeId") int noticeId){
         return null;
