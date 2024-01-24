@@ -95,7 +95,11 @@ public class NoticeController {
 
     @Operation(summary="Faq 게시글 삭제", description = "관리자 Faq 게시글 삭제")
     @DeleteMapping("/faq/{faqId}")
-    public ResponseEntity<?> deleteFaq(@PathVariable("faqId") int faqId){
-        return null;
+    public ResponseEntity<Void> deleteFaq(@PathVariable long faqId){
+        noticeService.deleteFaq(faqId);
+
+        return ResponseEntity.ok()
+                .build();
     }
+
 }

@@ -74,4 +74,9 @@ public class NoticeService {
         return faq;
     }
 
+    // Faq 삭제
+    public void deleteFaq(long id) {
+        faqRepository.deleteById(id);
+    }
+
 }
