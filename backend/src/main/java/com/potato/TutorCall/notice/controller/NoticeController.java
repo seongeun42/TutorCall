@@ -1,11 +1,13 @@
 package com.potato.TutorCall.notice.controller;
 
+import com.potato.TutorCall.notice.domain.Notice;
 import com.potato.TutorCall.notice.dto.FaqDto;
 import com.potato.TutorCall.notice.dto.NoticeDto;
 import com.potato.TutorCall.notice.service.NoticeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +32,10 @@ public class NoticeController {
 
     @Operation(summary="Q&A 게시글 작성", description = "관리자 Q&A 게시글 작성")
     @PostMapping("/")
-    public ResponseEntity<?> createNotice(@RequestBody NoticeDto noticeDto){
-        return null;
+    public ResponseEntity<Notice> createNotice(@RequestBody NoticeDto noticeDto){
+        Notice savedNotice = noticeService.save(noticeDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(savedNotice);
     }
 
     @Operation(summary="Q&A 게시글 수정", description = "관리자 Q&A 게시글 수정")
