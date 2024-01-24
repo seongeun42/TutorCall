@@ -2,8 +2,10 @@ package com.potato.TutorCall.inquiry.service;
 
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.inquiry.domain.Inquiry;
+import com.potato.TutorCall.inquiry.dto.InquiryAnswerDto;
 import com.potato.TutorCall.inquiry.dto.InquirySaveRequestDto;
 import com.potato.TutorCall.inquiry.repository.InquiryRepository;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,8 @@ public class InquiryService {
 
   // 문의 수정 하기
   public Long updateInquiry(Long inquiryId, InquirySaveRequestDto inquiryDto) {
-    Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(() -> new NotFoundException("문의 변경 실패"));
+    Inquiry inquiry =
+        inquiryRepository.findById(inquiryId).orElseThrow(() -> new NotFoundException("문의 변경 실패"));
     inquiry.changeTitle(inquiryDto.getTitle());
     inquiry.changeContent(inquiryDto.getContent());
     inquiryRepository.save(inquiry);
@@ -45,6 +48,22 @@ public class InquiryService {
       return false;
     }
     inquiryRepository.deleteById(inquiryId);
+    return true;
+  }
+
+  // 문의에 대한 답변 등록하기 (관리자)
+  public boolean answerInquiry(Long inquiryId, InquiryAnswerDto answerDto) {
+
+    // 해당 문의번호에 해당하는 문의가 존재하는지 확인
+    Inquiry answeredInquiry =
+        inquiryRepository.findById(inquiryId).orElseThrow(() -> new NotFoundException("답변 등록 실패"));
+
+    // 사용자가 관리자 권한을 가졌는지 확인
+
+    // 문의 답변 등록하기
+    answeredInquiry.setAnswer(answerDto.getAnswer());
+    answeredInquiry.updateAnswerState();
+    answeredInquiry.updateAnswerAt(LocalDateTime.now());
     return true;
   }
 

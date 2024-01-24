@@ -83,9 +83,16 @@ public class InquiryController {
   }
 
   // 문의 답변 등록
-  //    @PatchMapping("/answer/{inquiryId}")
-  //    public ResponseEntity<?> answerInquiry(@PathVariable Long inquiryId) {
-  //        return null;
-  //    }
+  @PatchMapping("/answer/{inquiryId}")
+  public ResponseEntity<?> answerInquiry(
+      @PathVariable Long inquiryId, @RequestBody InquiryAnswerDto answerDto) {
 
+    boolean isAnswered = inquiryService.answerInquiry(inquiryId, answerDto);
+    if (!isAnswered) {
+      return null;
+    }
+    SuccessMsgContent msg = new SuccessMsgContent();
+    msg.setMessage("답변 등록이 완료되었습니다.");
+    return new ResponseEntity<SuccessMsgContent>(msg, HttpStatusCode.valueOf(200));
+  }
 }
