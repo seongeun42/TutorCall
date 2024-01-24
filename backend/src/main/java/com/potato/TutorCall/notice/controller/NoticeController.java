@@ -3,6 +3,7 @@ package com.potato.TutorCall.notice.controller;
 import com.potato.TutorCall.notice.domain.Notice;
 import com.potato.TutorCall.notice.dto.FaqDto;
 import com.potato.TutorCall.notice.dto.NoticeDto;
+import com.potato.TutorCall.notice.dto.NoticeResponse;
 import com.potato.TutorCall.notice.service.NoticeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/notice")
@@ -26,10 +29,15 @@ public class NoticeController {
 
     @Operation(summary="Q&A 게시글 전체 조회", description = "Q&A 게시글 전체 조회")
     @GetMapping("/")
-    public ResponseEntity<?> noticeAll(@RequestBody NoticeDto noticeDto){
-        return null;
+    public ResponseEntity<List<NoticeResponse>> noticeAll() {
+        List<NoticeResponse> notices = noticeService.findAll()
+                .stream()
+                .map(NoticeResponse::new)
+                .toList();
+        return ResponseEntity.ok()
+                .body(notices);
     }
-
+    
     @Operation(summary="Q&A 게시글 작성", description = "관리자 Q&A 게시글 작성")
     @PostMapping("/")
     public ResponseEntity<Notice> createNotice(@RequestBody NoticeDto noticeDto){
