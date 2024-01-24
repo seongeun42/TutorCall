@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,7 @@ public class NoticeController {
         Notice notice = noticeService.findById(noticeId);
 
         return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
                 .body(new NoticeResponse(notice));
     }
 
@@ -44,6 +46,12 @@ public class NoticeController {
     @PostMapping
     public ResponseEntity<Notice> createNotice(@RequestBody NoticeDto noticeDto){
         Notice savedNotice = noticeService.save(noticeDto);
+
+        //생성된 공지사항 ID
+        long noticeId = savedNotice.getId();
+
+        // 응답 메시지 생성
+//        Notice response = new Notice(noticeId, "공지사항이 생성되었습니다.");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedNotice);
     }
@@ -68,7 +76,7 @@ public class NoticeController {
 
     @Operation(summary="Faq 조회", description = "Faq 게시글 조회")
     @GetMapping("/faq")
-    public ResponseEntity<List<FaqResponse>> faqAll() {
+    public ResponseEntity<?> faqAll() {
         List<FaqResponse> faqs = noticeService.faqFind()
                 .stream()
                 .map(FaqResponse::new)

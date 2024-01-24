@@ -11,6 +11,7 @@ import com.potato.TutorCall.notice.repository.NoticeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class NoticeService {
     // 공지사항 상세글 조회
     public Notice findById(long id) {
         return noticeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 게시글에 접근했습니다."));
     }
 
     // 공지사항 게시글 삭제
@@ -44,7 +45,7 @@ public class NoticeService {
     @Transactional
     public Notice update(long id, UpdateNotice updateNotice) {
         Notice notice = noticeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+                .orElseThrow(() -> new NotFoundException("수정 불가능한 게시물에 접근했습니다."));
         notice.changeTitle(updateNotice.getTitle());
         notice.changeContent(updateNotice.getContent());
 
@@ -67,7 +68,7 @@ public class NoticeService {
     @Transactional
     public Faq updateFaq(long id, UpdateFaq updateFaq) {
         Faq faq = faqRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+                .orElseThrow(() -> new NotFoundException("수정 불가능한 게시물에 접근했습니다."));
         faq.changeQuestion(updateFaq.getQuestion());
         faq.changeAnswer(updateFaq.getAnswer());
 
