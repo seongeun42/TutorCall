@@ -1,6 +1,7 @@
 package com.potato.TutorCall.mypage.controller;
 
 import com.potato.TutorCall.mypage.dto.req.MyPagePaginationDto;
+import com.potato.TutorCall.mypage.dto.req.ProfileUpdateReqDto;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
 import com.potato.TutorCall.mypage.service.MypageService;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +27,9 @@ public class MyPageController {
    */
   @GetMapping
   public ResponseEntity<?> getMyProfile(@SessionAttribute(name = "user")Long id) {
-    Optional<MyPageProfileResDto> myProfile = mypageService.getUserProfile(id);
-
-    if(myProfile.isPresent()) {
-      return ResponseEntity.ok(myProfile.get());
-    }
+    MyPageProfileResDto myProfile = mypageService.getUserProfile(id);
     
-    return ResponseEntity.badRequest().build();
+    return ResponseEntity.ok(myProfile);
   }
 
   /**
@@ -41,8 +38,10 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/profile")
-  public ResponseEntity<?> updateProfileImage() {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> updateProfileImage(@SessionAttribute(name = "user")Long id, @RequestBody ProfileUpdateReqDto newProfile) {
+    mypageService.updateProfile(id, newProfile.getProfile());
+
+    return ResponseEntity.ok().build();
   }
 
   /**
