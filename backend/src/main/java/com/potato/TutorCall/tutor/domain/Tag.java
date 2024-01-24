@@ -2,10 +2,7 @@ package com.potato.TutorCall.tutor.domain;
 
 import com.potato.TutorCall.tutor.domain.enums.SchoolType;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter

@@ -25,8 +25,8 @@ public class MyPageController {
    * @return
    */
   @GetMapping
-  public ResponseEntity<?> getMyProfile() {
-    Optional<MyPageProfileResDto> myProfile = mypageService.getUserProfile(1L);
+  public ResponseEntity<?> getMyProfile(@SessionAttribute(name = "user")Long id) {
+    Optional<MyPageProfileResDto> myProfile = mypageService.getUserProfile(id);
 
     if(myProfile.isPresent()) {
       return ResponseEntity.ok(myProfile.get());
