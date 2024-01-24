@@ -53,18 +53,10 @@ public class InquiryController {
   public ResponseEntity<?> updateInquiry(
       @PathVariable Long inquiryId, @RequestBody InquirySaveRequestDto inquiryDto) {
     Long updateRequestDto = inquiryService.updateInquiry(inquiryId, inquiryDto);
-    // 실패일 경우
-    if (updateRequestDto == null) {
-      ErrorMsg err = new ErrorMsg();
-      err.setTimeStamp(LocalDateTime.now());
-      err.setMessage("문의 변경 실패");
-      return new ResponseEntity<ErrorMsg>(err, HttpStatusCode.valueOf(400));
-    }
-    // 수정 권한이 없는 경우?
-
+    // 실패일 경우는 InquiryService에서 Exception을 통해 처리,
     // 성공인 경우
     SuccessMsg msg = new SuccessMsg();
-    msg.setInquiryId(inquiryId);
+    msg.setInquiryId(updateRequestDto);
     msg.setMessage("문의가 수정되었습니다");
     return new ResponseEntity<SuccessMsg>(msg, HttpStatusCode.valueOf(200));
   }

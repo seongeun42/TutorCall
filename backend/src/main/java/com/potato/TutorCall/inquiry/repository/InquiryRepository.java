@@ -6,16 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
-
-  // 내 문의 조회
-  //    Page<Inquiry> myInquiry(InquiryDto inquiryDto);
-
-  // 문의 수정
-  //    void updateInquiry();
-
-  // 문의 삭제
-  //    void deleteInquiry();
-
-  // 문의 답변 등록
-  //    void answerInquiry();
 }

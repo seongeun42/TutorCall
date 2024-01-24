@@ -1,5 +1,6 @@
 package com.potato.TutorCall.inquiry.service;
 
+import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.inquiry.domain.Inquiry;
 import com.potato.TutorCall.inquiry.dto.InquirySaveRequestDto;
 import com.potato.TutorCall.inquiry.repository.InquiryRepository;
@@ -30,9 +31,10 @@ public class InquiryService {
 
   // 문의 수정 하기
   public Long updateInquiry(Long inquiryId, InquirySaveRequestDto inquiryDto) {
-    Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow();
+    Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(() -> new NotFoundException("문의 변경 실패"));
     inquiry.changeTitle(inquiryDto.getTitle());
     inquiry.changeContent(inquiryDto.getContent());
+    inquiryRepository.save(inquiry);
     return inquiryId;
   }
 
