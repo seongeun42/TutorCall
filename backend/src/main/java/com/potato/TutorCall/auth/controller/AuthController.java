@@ -5,6 +5,7 @@ import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.SendEmailDto;
 import com.potato.TutorCall.auth.dto.request.AuthLoginRequestDto;
 import com.potato.TutorCall.auth.dto.request.EmailCheckResponseDto;
+import com.potato.TutorCall.auth.dto.request.NickCheckResponseDto;
 import com.potato.TutorCall.auth.service.AuthService;
 import com.potato.TutorCall.auth.service.EmailService;
 import com.potato.TutorCall.user.domain.User;
@@ -28,6 +29,7 @@ import java.util.Map;
 public class AuthController {
     private final EmailService emailService;
     private final AuthService authService;
+    private  final UserService userService;
     @PostMapping("/login")
     public ResponseEntity<?> login(AuthLoginRequestDto authLoginRequestDto, HttpServletRequest httpServletRequest) throws Exception{
         //유저 확인 메소드
@@ -61,7 +63,6 @@ public class AuthController {
         this.emailService.sendEmail(sendEmailDto);
 
         //디비 저장
-        this.u
         response.put("message", "이메일 인증 코드를 발송했습니다.");
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
@@ -80,4 +81,21 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/nick-check")
+    public ResponseEntity<?> nickCheck(NickCheckResponseDto nickCheckResponseDto) throws BadRequestException{
+        User user = this.userService.findByNickname(nickCheckResponseDto.getNickname());
+
+        if(user == null) throw new BadRequestException("이미 존재하는 닉네임입니다.");
+
+        Map<String, String> response = new HashMap<>();
+
+        response.put("message", "사용 가능한 닉네임입니다.");
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+
 }
+
+

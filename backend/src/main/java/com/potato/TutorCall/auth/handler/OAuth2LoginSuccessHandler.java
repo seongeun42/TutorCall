@@ -81,6 +81,5 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         // 성공 시 FRONTEND 주소로 리다이렉트
         // TODO: SESSION설정
         response.sendRedirect(frontendUrl);
-
     }
 }
