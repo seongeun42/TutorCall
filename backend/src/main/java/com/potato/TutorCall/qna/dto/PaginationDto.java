@@ -5,10 +5,9 @@ import lombok.Data;
 @Data
 public class PaginationDto {
 
-    private int page;
     private boolean isEnd;
-    private long tagId;
+    private Long tagId;
     private String keyword;
-    private int size;
+
 
 }

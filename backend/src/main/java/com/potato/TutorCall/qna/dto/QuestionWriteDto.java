@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class QuestionWriteDto {
 
-    private long writer;
+    private Long writerId;
     private String questionTitle;
     private String questionContent;
-    private long tagId;
+    private Long tagId;
 
 }

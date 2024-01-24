@@ -2,7 +2,6 @@ package com.potato.TutorCall.qna.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.potato.TutorCall.lecture.domain.Lecture;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
@@ -10,7 +9,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
