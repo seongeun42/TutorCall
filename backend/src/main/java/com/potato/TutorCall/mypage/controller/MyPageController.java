@@ -1,15 +1,23 @@
 package com.potato.TutorCall.mypage.controller;
 
 import com.potato.TutorCall.mypage.dto.req.MyPagePaginationDto;
+import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
+import com.potato.TutorCall.mypage.service.MypageService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 /** 마이페이지 기능에 대한 컨트롤러 */
 @RestController
 @RequestMapping("/mypage")
 @Slf4j
-public class MypageController {
+@RequiredArgsConstructor
+public class MyPageController {
+
+  private final MypageService mypageService;
 
   /**
    * 내 정보 조회
@@ -17,7 +25,13 @@ public class MypageController {
    * @return
    */
   @GetMapping
-  public ResponseEntity<?> getMyProfile() {
+  public ResponseEntity<?> getMyProfile(@SessionAttribute(name = "user")Long id) {
+    Optional<MyPageProfileResDto> myProfile = mypageService.getUserProfile(id);
+
+    if(myProfile.isPresent()) {
+      return ResponseEntity.ok(myProfile.get());
+    }
+    
     return ResponseEntity.badRequest().build();
   }
 
