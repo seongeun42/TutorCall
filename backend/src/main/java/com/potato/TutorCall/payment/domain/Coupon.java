@@ -20,7 +20,7 @@ public class Coupon {
 
     private String name;
 
-    private String desc;
+    private String description;
 
     private int point;
 
@@ -35,10 +35,10 @@ public class Coupon {
 
     // 생성자
     @Builder
-    public Coupon(String code, String name, String desc, int point, int dueDate, LocalDateTime startAt, LocalDateTime endAt) {
+    public Coupon(String code, String name, String description, int point, int dueDate, LocalDateTime startAt, LocalDateTime endAt) {
         this.code = code;
         this.name = name;
-        this.desc = desc;
+        this.description = description;
         this.point = point;
         this.dueDate = dueDate;
         this.startAt = startAt;
