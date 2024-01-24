@@ -1,0 +1,13 @@
+package com.potato.TutorCall.notice.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class UpdateNotice {
+    private String title;
+    private String content;
+}

@@ -4,6 +4,7 @@ import com.potato.TutorCall.notice.domain.Notice;
 import com.potato.TutorCall.notice.dto.FaqDto;
 import com.potato.TutorCall.notice.dto.NoticeDto;
 import com.potato.TutorCall.notice.dto.NoticeResponse;
+import com.potato.TutorCall.notice.dto.UpdateNotice;
 import com.potato.TutorCall.notice.service.NoticeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,8 +52,11 @@ public class NoticeController {
 
     @Operation(summary="Notice 게시글 수정", description = "관리자 Notice 게시글 수정")
     @PatchMapping("/{noticeId}")
-    public ResponseEntity<?> updateNotice(@PathVariable("noticeId") int noticeId, @RequestBody NoticeDto noticeDto){
-        return null;
+    public ResponseEntity<Notice> updateNotice(@PathVariable long noticeId, @RequestBody UpdateNotice updateNotice){
+        Notice updatedNotice = noticeService.update(noticeId, updateNotice);
+
+        return ResponseEntity.ok()
+                .body(updatedNotice);
     }
 
     @Operation(summary="Notice 게시글 삭제", description = "관리자 Notice 게시글 삭제")
