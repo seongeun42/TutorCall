@@ -4,8 +4,6 @@ import com.potato.TutorCall.notice.domain.Faq;
 import com.potato.TutorCall.notice.domain.Notice;
 import com.potato.TutorCall.notice.dto.FaqDto;
 import com.potato.TutorCall.notice.dto.NoticeDto;
-import com.potato.TutorCall.notice.dto.UpdateFaq;
-import com.potato.TutorCall.notice.dto.UpdateNotice;
 import com.potato.TutorCall.notice.repository.FaqRepository;
 import com.potato.TutorCall.notice.repository.NoticeRepository;
 import jakarta.transaction.Transactional;
@@ -43,11 +41,11 @@ public class NoticeService {
 
     // 공지사항 게시글 수정
     @Transactional
-    public Notice update(long id, UpdateNotice updateNotice) {
+    public Notice update(long id, NoticeDto noticeDto) {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("수정 불가능한 게시물에 접근했습니다."));
-        notice.changeTitle(updateNotice.getTitle());
-        notice.changeContent(updateNotice.getContent());
+        notice.changeTitle(noticeDto.getTitle());
+        notice.changeContent(noticeDto.getContent());
 
         return notice;
     }
@@ -66,11 +64,11 @@ public class NoticeService {
 
     // Faq 수정
     @Transactional
-    public Faq updateFaq(long id, UpdateFaq updateFaq) {
+    public Faq updateFaq(long id, FaqDto faqDto) {
         Faq faq = faqRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("수정 불가능한 게시물에 접근했습니다."));
-        faq.changeQuestion(updateFaq.getQuestion());
-        faq.changeAnswer(updateFaq.getAnswer());
+        faq.changeQuestion(faqDto.getQuestion());
+        faq.changeAnswer(faqDto.getAnswer());
 
         return faq;
     }

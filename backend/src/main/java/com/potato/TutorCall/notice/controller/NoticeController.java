@@ -12,7 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/notice")
@@ -58,8 +61,8 @@ public class NoticeController {
 
     @Operation(summary="Notice 게시글 수정", description = "관리자 Notice 게시글 수정")
     @PatchMapping("/{noticeId}")
-    public ResponseEntity<Notice> updateNotice(@PathVariable("noticeId") long noticeId, @RequestBody UpdateNotice updateNotice){
-        Notice updatedNotice = noticeService.update(noticeId, updateNotice);
+    public ResponseEntity<Notice> updateNotice(@PathVariable("noticeId") long noticeId, @RequestBody NoticeDto noticeDto){
+        Notice updatedNotice = noticeService.update(noticeId, noticeDto);
 
         return ResponseEntity.ok()
                 .body(updatedNotice);
@@ -81,8 +84,9 @@ public class NoticeController {
                 .stream()
                 .map(FaqResponse::new)
                 .toList();
+        Map<String, List<FaqResponse>> result = Map.of("faqs", faqs);
         return ResponseEntity.ok()
-                .body(faqs);
+                .body(result);
     }
 
     @Operation(summary="Faq 등록", description = "관리자 Faq 게시글 작성")
@@ -95,8 +99,8 @@ public class NoticeController {
 
     @Operation(summary="Faq 게시글 수정", description = "관리자 Faq 게시글 수정")
     @PatchMapping("/faq/{faqId}")
-    public ResponseEntity<Faq> updateFaq(@PathVariable("faqId") long faqId, @RequestBody UpdateFaq updateFaq){
-        Faq updatedFaq = noticeService.updateFaq(faqId, updateFaq);
+    public ResponseEntity<Faq> updateFaq(@PathVariable("faqId") long faqId, @RequestBody FaqDto faqDto){
+        Faq updatedFaq = noticeService.updateFaq(faqId, faqDto);
         return ResponseEntity.ok()
                 .body(updatedFaq);
     }
