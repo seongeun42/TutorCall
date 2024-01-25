@@ -1,18 +1,17 @@
 package com.potato.TutorCall.qna.controller;
 
 import com.potato.TutorCall.qna.dto.AnswerWriteDto;
-import com.potato.TutorCall.qna.dto.PaginationDto;
+import com.potato.TutorCall.qna.dto.SearchFormDto;
 import com.potato.TutorCall.qna.dto.QuestionWriteDto;
 import com.potato.TutorCall.config.CommonResponses;
+import com.potato.TutorCall.qna.service.AnswerService;
 import com.potato.TutorCall.qna.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping("qna")
@@ -21,9 +20,11 @@ public class QnaController {
 
 
     private final QuestionService questionService;
+    private final AnswerService answerService;
 
-    public QnaController(QuestionService questionService) {
+    public QnaController(QuestionService questionService, AnswerService answerService) {
         this.questionService = questionService;
+        this.answerService = answerService;
     }
 
     @CommonResponses
@@ -36,7 +37,7 @@ public class QnaController {
     @CommonResponses
     @Operation(summary = "Q&A 게시판 전체 조회", description = "전체 게시글 가져옴")
     @GetMapping("/question")
-    public ResponseEntity<?> questionAll(Pageable pageable, PaginationDto pageNationDto){
+    public ResponseEntity<?> questionAll(Pageable pageable, SearchFormDto pageNationDto){
         return questionService.questionAll(pageable, pageNationDto);
     }
 
@@ -57,30 +58,32 @@ public class QnaController {
     @CommonResponses
     @Operation(summary="질문글 삭제", description = "질문글 삭제")
     @DeleteMapping("/question/{questionId}")
-    public ResponseEntity<?> deleteQuestion(@PathVariable("questionId") int questionId, HttpSession session){
-        //세션에서 id를 받아오는 로직을 추가해야 함...
-        return null;
+    public ResponseEntity<?> deleteQuestion(@PathVariable("questionId") int questionId){
+        //session 정보 필요
+        return questionService.deleteQuestion(questionId);
     }
 
     @CommonResponses
     @Operation(summary="답변 작성", description = "답변 작성")
     @PostMapping("/answer")
     public ResponseEntity<?> writeAnswer(@RequestBody AnswerWriteDto answerWriteDto){
-        return null;
+        return answerService.writeAnswer(answerWriteDto);
     }
 
     @CommonResponses
     @Operation(summary = "답변 삭제", description = "답변을 삭제한다")
     @PatchMapping("/answer/{answerId}")
-    public ResponseEntity<?> editAnswer(@PathVariable("answerId") int answerId, @RequestBody AnswerWriteDto answerWriteDto){
-        return null;
+    public ResponseEntity<?> deleteAnswer(@PathVariable("answerId") int answerId){
+        // session 정보 필요
+        return answerService.deleteAnswer(answerId);
     }
 
     @CommonResponses
     @Operation(summary="답변 채택", description = "답변을 채택한다")
     @PatchMapping("/answer/selection/{answerId}")
     public ResponseEntity<?> chooseAnswer(@PathVariable("answerId") int answerId){
-        return null;
+        // session 정보 필요
+        return answerService.chooseAnswer(answerId);
     }
 
 

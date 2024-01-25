@@ -1,29 +1,14 @@
 package com.potato.TutorCall.qna.repository;
 
-import com.potato.TutorCall.qna.domain.QQuestion;
 import com.potato.TutorCall.qna.domain.Question;
-import com.potato.TutorCall.qna.dto.PaginationDto;
 import com.potato.TutorCall.qna.dto.QuestionWriteDto;
 import com.potato.TutorCall.tutor.domain.Tag;
-import com.potato.TutorCall.tutor.repository.TagRepository;
 import com.potato.TutorCall.user.domain.User;
-import com.potato.TutorCall.user.repository.UserRepository;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.impl.JPAUpdateClause;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 import static com.potato.TutorCall.qna.domain.QQuestion.question;
 

@@ -14,10 +14,10 @@ import java.time.LocalDate;
 public class CommonResponseDto {
 
     Question question;
-    Answer answer;
     Page<Question> questions;
     String message;
     LocalDate timestamp;
     Long questionId;
+    Long answerId;
 
 }

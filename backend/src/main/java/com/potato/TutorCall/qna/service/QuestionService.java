@@ -4,7 +4,7 @@ import com.potato.TutorCall.exception.customException.InvalidException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.qna.domain.Question;
 import com.potato.TutorCall.qna.dto.CommonResponseDto;
-import com.potato.TutorCall.qna.dto.PaginationDto;
+import com.potato.TutorCall.qna.dto.SearchFormDto;
 import com.potato.TutorCall.qna.dto.QuestionWriteDto;
 import com.potato.TutorCall.qna.repository.QuestionRepository;
 import com.potato.TutorCall.tutor.domain.Tag;
@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class QuestionService {
@@ -33,7 +34,7 @@ public class QuestionService {
     public ResponseEntity<?> question(int questionId){
 
         CommonResponseDto commonResponseDto;
-        Question q= questionRepository.findById((long) questionId)
+        Question q= (Question) questionRepository.findQuestionByIdAndIsDelete((long) questionId, false)
                 .orElseThrow(()-> new NotFoundException("질문 조회 실패"));
 
         commonResponseDto = CommonResponseDto.builder().question(q).build();
@@ -46,6 +47,7 @@ public class QuestionService {
                 .orElseThrow(()-> new NotFoundException("질문 작성 실패"));
         User user = userRepository.findById(questionWriteDto.getWriterId())
                 .orElseThrow(()-> new NotFoundException("질문 작성 실패"));
+
         CommonResponseDto commonResponseDto;
         Long questionId = null;
 
@@ -61,11 +63,12 @@ public class QuestionService {
         return ResponseEntity.ok(commonResponseDto);
     }
 
-    public ResponseEntity<?> questionAll(Pageable pageable, PaginationDto paginationDto){
+    public ResponseEntity<?> questionAll(Pageable pageable, SearchFormDto searchFormDto){
 
         Page<Question> list = null;
         CommonResponseDto commonResponseDto;
-        list = questionRepository.findAllByContentContainsAndTag_IdAndIsEnd(pageable, paginationDto.getKeyword(), paginationDto.getTagId(), paginationDto.isEnd());
+        list = questionRepository.findAllByContentContainsAndTag_IdAndIsEndAndIsDelete
+                (pageable, searchFormDto.getKeyword(), searchFormDto.getTagId(), searchFormDto.isEnd(), false);
 
         commonResponseDto = CommonResponseDto.builder().questions(list).build();
         return ResponseEntity.ok(commonResponseDto);
@@ -96,10 +99,14 @@ public class QuestionService {
 
     }
 
-    public ResponseEntity<?> deleteQuestion(int questionId, long writerId){
+    @Transactional
+    public ResponseEntity<?> deleteQuestion(int questionId){
+
+        //session에서 꺼내온 user 정보와 비교해서 InvalidException 추가해야 함.
 
         CommonResponseDto commonResponseDto;
-        int count = questionRepository.deleteQuestionByIdAndWriter_Id((long) questionId, writerId);
+//        int count = questionRepository.updateQuestionByIdAndWriter_IdAndIsDelete((long) questionId, writerId);
+        int count = questionRepository.updateQuestionByIdAndIsDelete((long) questionId, true);
         if (count ==0) throw new NotFoundException("질문 삭제 실패");
 
         commonResponseDto = CommonResponseDto.builder().
