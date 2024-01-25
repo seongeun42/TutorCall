@@ -1,11 +1,15 @@
 package com.potato.TutorCall.tutor.service;
 
 import com.potato.TutorCall.exception.customException.NotFoundException;
+import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutor.repository.TutorRepository;
+import com.potato.TutorCall.tutor.repository.TutorTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -13,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TutorService {
 
     private final TutorRepository tutorRepository;
+    private final TutorTagRepository tutorTagRepository;
 
     /**
      * Tutor를 DB에 저장하는 함수
@@ -50,6 +55,16 @@ public class TutorService {
     public void changeActiveState(Long id) {
         Tutor tutor = this.findById(id);
         tutor.changeActiveState(!tutor.isActive());
+    }
+
+    /**
+     * Tutor의 Tag list를 조회하는 함수
+     * @param tutor Tutor
+     * @return Tutor의 Tag list
+     */
+    @Transactional(readOnly = true)
+    public List<Tag> getTutorTags(Tutor tutor) {
+        return tutorTagRepository.getTagsByTutor(tutor);
     }
 
 }
