@@ -27,9 +27,6 @@ public class SecurityConfig {
                         // TODO .successHandler() 구현하기
                         // TODO .failureHandler() 구현하기
                 )
-                .authorizeHttpRequests(auth -> {
-                    auth.anyRequest().permitAll();
-                })
                 .cors(cors -> cors.configurationSource(this.configurationSource())) // cors 설정
                 .csrf(csrf -> csrf.disable()) // csrf설정 비활성화
                 .formLogin(form -> form.disable()) // form login 비활성화

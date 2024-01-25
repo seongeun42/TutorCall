@@ -510,6 +510,5 @@ coverage
 
 *.tsbuildinfo
 
-
 # 설정파일 무시
 **/resources/application*.yml
