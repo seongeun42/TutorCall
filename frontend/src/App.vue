@@ -2,12 +2,14 @@
 import NavBar from '@/components/NavBar.vue'
 import OnlineLecture from '@/pages/onlinelecture/OnlineLecture.vue'
 import ChatRoom from '@/components/chatting/ChatRoom.vue'
+import MyPage from './pages/mypage/MyPage.vue'
 </script>
 
 <template>
-  <!-- <NavBar /> -->
+  <NavBar />
   <!-- <OnlineLecture/> -->
-  <ChatRoom />
+  <!-- <ChatRoom /> -->
+  <MyPage />
 </template>
 
 <style scoped>
