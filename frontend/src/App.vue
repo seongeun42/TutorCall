@@ -1,18 +1,13 @@
 <script setup lang="ts">
 import NavBar from '@/components/NavBar.vue'
-
-import StudentIndex from '@/pages/mainpage/StudentIndex.vue'
-import TutorIndex from '@/pages/mainpage/TutorIndex.vue'
-import MyPage from './pages/mypage/MyPage.vue'
-import QA from './pages/board/q&a/QA.vue'
+import OnlineLecture from '@/pages/onlinelecture/OnlineLecture.vue'
+import ChatRoom from '@/components/chatting/ChatRoom.vue'
 </script>
 
 <template>
-  <NavBar />
-  <!-- <StudentIndex /> -->
-  <!-- <TutorIndex /> -->
-  <MyPage />
-  <!-- <QA /> -->
+  <!-- <NavBar /> -->
+  <!-- <OnlineLecture/> -->
+  <ChatRoom />
 </template>
 
 <style scoped>

@@ -1,6 +1,21 @@
 <script setup lang="ts">
 import { ref, type Ref } from 'vue'
+import CallNotification from '@/components/CallNotification.vue'
 const isTutor: Ref<boolean> = ref(true)
+
+interface notifyDate {
+  message: string
+}
+
+const dummyData: notifyDate = {
+  message: '테스트 데이터 알림'
+}
+
+const modalShow: Ref<boolean> = ref(false)
+function handleMode(show: boolean, mode: string) {
+  modalShow.value = show
+  //mode에 따라 수행할 기능이 다름.
+}
 </script>
 
 <template>
@@ -86,27 +101,38 @@ const isTutor: Ref<boolean> = ref(true)
         <div
           class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
-          <button
-            type="button"
-            class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-          >
-            <span class="absolute -inset-1.5"></span>
-            <span class="sr-only">View notifications</span>
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              aria-hidden="true"
+          <div class="dropdown dropdown-end">
+            <div
+              tabindex="0"
+              type="button"
+              role="button"
+              class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
-              />
-            </svg>
-          </button>
+              <span class="absolute -inset-1.5"></span>
+              <span class="sr-only">View notifications</span>
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+                />
+              </svg>
+              <ul
+                tabindex="0"
+                class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+              >
+                <li><a>Item 1</a></li>
+                <li><a>Item 2</a></li>
+              </ul>
+            </div>
+          </div>
           <!-- 설정 톱니바퀴 버튼 만들기 -->
           <button
             type="button"
@@ -185,6 +211,12 @@ const isTutor: Ref<boolean> = ref(true)
       </div>
     </div>
   </nav>
+  <CallNotification
+    v-if="modalShow"
+    :data="dummyData"
+    :show="modalShow"
+    @update:clicked="handleMode"
+  />
 </template>
 
 <style scoped></style>
