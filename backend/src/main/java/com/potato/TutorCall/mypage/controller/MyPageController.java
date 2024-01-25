@@ -16,9 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /** 마이페이지 기능에 대한 컨트롤러 */
+@Slf4j
 @RestController
 @RequestMapping("/mypage")
-@Slf4j
 @RequiredArgsConstructor
 public class MyPageController {
 
@@ -152,4 +152,5 @@ public class MyPageController {
   public ResponseEntity<?> getTutorcallHistory() {
     return ResponseEntity.badRequest().build();
   }
+
 }

@@ -51,9 +51,6 @@ public class MypageService {
         return userInfo;
     }
 
-    return userInfo;
-  }
-
   @Transactional
   public void updateProfile(Long id, String profile) {
     User currentUser =
