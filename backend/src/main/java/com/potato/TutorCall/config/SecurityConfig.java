@@ -12,7 +12,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Arrays;
-
 @Configuration
 @EnableWebMvc
 public class SecurityConfig {
@@ -24,7 +23,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
                 .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(endpoint -> endpoint.baseUri("/api/v1/auth/oath2")) // auth 요청 보낼 URI
+                                .authorizationEndpoint(endpoint -> endpoint.baseUri("/api/v1/auth/oath2")) // auth 요청 보낼 URI
                         // TODO .successHandler() 구현하기
                         // TODO .failureHandler() 구현하기
                 )
