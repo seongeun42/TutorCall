@@ -1,6 +1,8 @@
 package com.potato.TutorCall.qna.service;
 
+import com.potato.TutorCall.exception.customException.InvalidException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
+import com.potato.TutorCall.qna.domain.Answer;
 import com.potato.TutorCall.qna.domain.Question;
 import com.potato.TutorCall.qna.dto.AnswerWriteDto;
 import com.potato.TutorCall.qna.dto.CommonResponseDto;
@@ -25,7 +27,9 @@ public class AnswerService {
         this.answerRepository = answerRepository;
     }
 
-    public ResponseEntity<?> writeAnswer(AnswerWriteDto answerWriteDto){
+    public ResponseEntity<?> writeAnswer(AnswerWriteDto answerWriteDto, int userId){
+
+        answerWriteDto.setTutorUserId(userId);
         Tutor tutor = tutorRepository.findById(answerWriteDto.getTutorUserId())
                 .orElseThrow(()-> new NotFoundException("답변 작성 실패"));
         Question targetQuestion = questionRepository.findById(answerWriteDto.getQuestionId())
@@ -47,9 +51,15 @@ public class AnswerService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteAnswer(int answerId){
+    public ResponseEntity<?> deleteAnswer(int answerId, int userId){
 
         CommonResponseDto commonResponseDto;
+        Answer targetAnswer = answerRepository.findById((long) answerId)
+                .orElseThrow(()->new NotFoundException("질문 삭제 실패"));
+
+        if(!targetAnswer.getTutor().getId().equals((long)userId))
+            throw new InvalidException("삭제 권한 없음");
+
         int count = answerRepository.updateAnswerByIdAndIsDelete((long) answerId, true);
         if (count ==0) throw new NotFoundException("질문 삭제 실패");
 
@@ -60,8 +70,16 @@ public class AnswerService {
     }
 
     @Transactional
-    public ResponseEntity<?> chooseAnswer(int answerId){
+    public ResponseEntity<?> chooseAnswer(int answerId, int userId){
+
         CommonResponseDto commonResponseDto;
+
+        Answer targetAnswer = answerRepository.findById((long) answerId)
+                .orElseThrow(()-> new NotFoundException("답변 채택 실패"));
+
+        if(!targetAnswer.getQuestion().getWriter().getId().equals((long) userId))
+            throw new InvalidException("권한 없음");
+
         int count = answerRepository.updateAnswerByIdAndIsChosen((long) answerId, true);
         if (count ==0) throw new NotFoundException("답변 채택 실패");
 

@@ -1,6 +1,7 @@
 package com.potato.TutorCall.qna.repository;
 
 import com.potato.TutorCall.qna.domain.Answer;
+import com.potato.TutorCall.qna.domain.Question;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

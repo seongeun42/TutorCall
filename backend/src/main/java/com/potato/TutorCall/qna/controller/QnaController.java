@@ -51,39 +51,45 @@ public class QnaController {
     @CommonResponses
     @Operation(summary="질문글 수정", description = "질문글 수정")
     @PatchMapping("/question/{questionId}")
-    public ResponseEntity<?> editQuestion(@PathVariable("questionId") int questionId, @RequestBody QuestionWriteDto questionWriteDto){
-        return questionService.editQuestion(questionId, questionWriteDto);
+    public ResponseEntity<?> editQuestion(@PathVariable("questionId") int questionId,
+                                          @RequestBody QuestionWriteDto questionWriteDto,
+                                          @SessionAttribute("userId") int userId){
+        return questionService.editQuestion(questionId, questionWriteDto, userId);
     }
 
     @CommonResponses
     @Operation(summary="질문글 삭제", description = "질문글 삭제")
     @DeleteMapping("/question/{questionId}")
-    public ResponseEntity<?> deleteQuestion(@PathVariable("questionId") int questionId){
+    public ResponseEntity<?> deleteQuestion(@PathVariable("questionId") int questionId,
+                                            @SessionAttribute("userId") int userId){
         //session 정보 필요
-        return questionService.deleteQuestion(questionId);
+        return questionService.deleteQuestion(questionId, userId);
     }
 
     @CommonResponses
     @Operation(summary="답변 작성", description = "답변 작성")
     @PostMapping("/answer")
-    public ResponseEntity<?> writeAnswer(@RequestBody AnswerWriteDto answerWriteDto){
-        return answerService.writeAnswer(answerWriteDto);
+    public ResponseEntity<?> writeAnswer(@RequestBody AnswerWriteDto answerWriteDto,
+                                         @SessionAttribute("userId") int userId){
+        return answerService.writeAnswer(answerWriteDto, userId);
     }
 
     @CommonResponses
     @Operation(summary = "답변 삭제", description = "답변을 삭제한다")
     @PatchMapping("/answer/{answerId}")
-    public ResponseEntity<?> deleteAnswer(@PathVariable("answerId") int answerId){
+    public ResponseEntity<?> deleteAnswer(@PathVariable("answerId") int answerId,
+                                          @SessionAttribute("userId") int userId){
         // session 정보 필요
-        return answerService.deleteAnswer(answerId);
+        return answerService.deleteAnswer(answerId, userId);
     }
 
     @CommonResponses
     @Operation(summary="답변 채택", description = "답변을 채택한다")
     @PatchMapping("/answer/selection/{answerId}")
-    public ResponseEntity<?> chooseAnswer(@PathVariable("answerId") int answerId){
+    public ResponseEntity<?> chooseAnswer(@PathVariable("answerId") int answerId,
+                                          @SessionAttribute("userId") int userId){
         // session 정보 필요
-        return answerService.chooseAnswer(answerId);
+        return answerService.chooseAnswer(answerId, userId);
     }
 
 

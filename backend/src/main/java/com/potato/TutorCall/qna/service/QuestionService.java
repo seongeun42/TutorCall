@@ -74,7 +74,7 @@ public class QuestionService {
         return ResponseEntity.ok(commonResponseDto);
     }
 
-    public ResponseEntity<?> editQuestion(int questionId, QuestionWriteDto questionWriteDto){
+    public ResponseEntity<?> editQuestion(int questionId, QuestionWriteDto questionWriteDto, int userId){
 
         Long count = null;
         CommonResponseDto commonResponseDto;
@@ -83,10 +83,16 @@ public class QuestionService {
         User user = userRepository.findById(questionWriteDto.getWriterId())
                 .orElseThrow(()-> new NotFoundException("질문 수정 실패"));
 
+        User requestUser = userRepository.findById((long) userId)
+                .orElseThrow(()-> new NotFoundException("질문 수정 실패"));
+
         Question editTarget = questionRepository.findById((long) questionId)
                 .orElseThrow(()-> new NotFoundException("질문 수정 실패"));
 
         if(!editTarget.getId().equals(user.getId()))
+            throw new InvalidException("수정 권한 없음");
+
+        if(!requestUser.getId().equals(editTarget.getId()))
             throw new InvalidException("수정 권한 없음");
 
         count = questionRepository.editQuestion(questionId, questionWriteDto, user, tag);
@@ -100,9 +106,15 @@ public class QuestionService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteQuestion(int questionId){
+    public ResponseEntity<?> deleteQuestion(int questionId, int userId){
 
-        //session에서 꺼내온 user 정보와 비교해서 InvalidException 추가해야 함.
+        User requestUser = userRepository.findById((long) userId)
+                .orElseThrow(()-> new NotFoundException("질문 삭제 실패"));
+        Question editTarget = questionRepository.findById((long) questionId)
+                .orElseThrow(()-> new NotFoundException("질문 삭제 실패"));
+
+        if(!editTarget.getId().equals(requestUser.getId()))
+            throw new InvalidException("수정 권한 없음");
 
         CommonResponseDto commonResponseDto;
 //        int count = questionRepository.updateQuestionByIdAndWriter_IdAndIsDelete((long) questionId, writerId);
