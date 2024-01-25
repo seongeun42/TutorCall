@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import java.time.LocalDate;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
+@Data
 public class CommonResponseDto {
 
     Question question;

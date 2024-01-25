@@ -1,5 +1,6 @@
 package com.potato.TutorCall.report.service;
 
+import com.potato.TutorCall.exception.customException.DuplicatedException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.lecture.domain.Lecture;
 import com.potato.TutorCall.lecture.repository.LectureRepository;
@@ -61,6 +62,8 @@ public class ReportService {
                         .message("신고 접수 성공")
                         .reportId(reportId)
                         .build();
+
+        System.out.println(commonResponseDto.toString());
 
         return ResponseEntity.ok(commonResponseDto);
     }
@@ -132,6 +135,9 @@ public class ReportService {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(()->new NotFoundException("존재하지 않는 report"));
 
+        if(report.isProceedState())
+            throw new DuplicatedException("이미 처리된 신고물입니다.");
+
         int count = 0;
         switch(report.getType()){
             case USER -> {
@@ -158,6 +164,7 @@ public class ReportService {
         if (count == 0) throw new NotFoundException("신고 처리 실패");
 
         CommonResponseDto commonResponseDto = CommonResponseDto.builder()
+                .reportId(reportId)
                 .message("신고가 처리되었습니다").build();
 
         return ResponseEntity.ok(commonResponseDto);
