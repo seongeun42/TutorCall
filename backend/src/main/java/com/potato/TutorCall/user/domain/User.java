@@ -53,6 +53,8 @@ public class User {
 
   private boolean existNotification;
 
+  private boolean noPushNotification;
+
   private boolean unjoin;
 
   @CreatedDate private LocalDateTime joinDate;
@@ -170,6 +172,15 @@ public class User {
    */
   public void changeExistNotification(boolean existNotification) {
     this.existNotification = existNotification;
+  }
+
+  /**
+   * 푸시 알림 수신 여부 변경
+   *
+   * @param noPushNotification 푸시 알림
+   */
+  public void changeNoPushNotification(boolean noPushNotification) {
+      this.noPushNotification = noPushNotification;
   }
 
   /** 탈퇴 처리 */
