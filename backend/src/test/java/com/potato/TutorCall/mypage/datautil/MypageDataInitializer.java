@@ -11,15 +11,21 @@ import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.domain.enums.SnsType;
 import com.potato.TutorCall.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 
 /** Mypage 테스트용 데이터 추가를 위한 클래스 */
+@Component
 public class MypageDataInitializer {
-  public static void addUser(UserRepository userRepository) {
+  @Autowired private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+  public void addUser(UserRepository userRepository) {
     User testUser =
         User.builder()
             .email("user1@ssafy.com")
             .nickname("user1")
-            .password("pw1")
+            .password(bCryptPasswordEncoder.encode("pw1"))
             .profile("img1.jpg")
             .sns(SnsType.NAVER)
             .point(100)
@@ -28,7 +34,7 @@ public class MypageDataInitializer {
     userRepository.save(testUser);
   }
 
-  public static void addTutor(
+  public void addTutor(
       UserRepository userRepository,
       TutorRepository tutorRepository,
       TutorTagRepository tutorTagRepository,
@@ -37,7 +43,7 @@ public class MypageDataInitializer {
         User.builder()
             .email("user2@ssafy.com")
             .nickname("user2")
-            .password("pw2")
+            .password(bCryptPasswordEncoder.encode("pw2"))
             .profile("img2.jpg")
             .sns(SnsType.KAKAO)
             .point(300)

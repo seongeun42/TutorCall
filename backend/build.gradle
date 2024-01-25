@@ -56,8 +56,8 @@ dependencies {
 	// Spring Session을 Redis에 저장하기 위한 의존성입니다.
 	implementation 'org.springframework.session:spring-session-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-//	implementation 'org.springframework.boot:spring-boot-starter-security:3.0.5'
-//	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.0.7'
+	implementation 'org.springframework.boot:spring-boot-starter-security:3.0.5'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.0.7'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
