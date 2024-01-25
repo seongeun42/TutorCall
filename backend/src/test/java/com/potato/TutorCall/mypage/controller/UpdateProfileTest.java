@@ -6,9 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.TutorCall.mypage.datautil.MypageDataInitializer;
-import com.potato.TutorCall.tutor.repository.TagRepository;
-import com.potato.TutorCall.tutor.repository.TutorRepository;
-import com.potato.TutorCall.tutor.repository.TutorTagRepository;
 import com.potato.TutorCall.user.repository.UserRepository;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,9 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UpdateProfileTest {
   @Autowired private UserRepository userRepository;
-  @Autowired private TutorRepository tutorRepository;
-  @Autowired private TutorTagRepository tutorTagRepository;
-  @Autowired private TagRepository tagRepository;
+  @Autowired private MypageDataInitializer dataInitializer;
 
   @Autowired private WebApplicationContext wc;
 
@@ -40,9 +35,7 @@ public class UpdateProfileTest {
 
   @BeforeEach
   void addTestData() {
-    MypageDataInitializer.addUser(userRepository);
-    MypageDataInitializer.addTutor(
-        userRepository, tutorRepository, tutorTagRepository, tagRepository);
+    dataInitializer.addUser(userRepository);
 
     mockMvc = MockMvcBuilders.webAppContextSetup(wc).build();
   }
@@ -57,7 +50,7 @@ public class UpdateProfileTest {
     mockMvc
         .perform(
             patch("/mypage/profile").contentType(MediaType.APPLICATION_JSON).content(requestBody))
-        .andExpect(status().is5xxServerError());
+        .andExpect(status().isForbidden());
   }
 
   @Test

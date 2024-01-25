@@ -7,6 +7,7 @@ import com.potato.TutorCall.mypage.dto.req.ProfileUpdateReqDto;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
 import com.potato.TutorCall.mypage.dto.res.UpdateSuccessResDto;
 import com.potato.TutorCall.mypage.service.MypageService;
+import javax.naming.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -66,7 +67,8 @@ public class MyPageController {
    */
   @PatchMapping("/password")
   public ResponseEntity<?> updatePassword(
-      @SessionAttribute(name = "name") Long id, @RequestBody PasswordUpdateReqDto newPasswordReq) {
+      @SessionAttribute(name = "user") Long id, @RequestBody PasswordUpdateReqDto newPasswordReq)
+      throws AuthenticationException {
     mypageService.updatePassword(id, newPasswordReq.getPassword(), newPasswordReq.getNewPassword());
 
     return ResponseEntity.ok(new UpdateSuccessResDto("비밀번호가 변경되었습니다."));

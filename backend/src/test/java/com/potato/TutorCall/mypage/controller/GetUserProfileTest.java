@@ -31,6 +31,7 @@ public class GetUserProfileTest {
   @Autowired private TutorRepository tutorRepository;
   @Autowired private TutorTagRepository tutorTagRepository;
   @Autowired private TagRepository tagRepository;
+  @Autowired private MypageDataInitializer dataInitializer;
 
   @Autowired private WebApplicationContext wc;
 
@@ -39,9 +40,8 @@ public class GetUserProfileTest {
 
   @BeforeEach
   void addTestData() {
-    MypageDataInitializer.addUser(userRepository);
-    MypageDataInitializer.addTutor(
-        userRepository, tutorRepository, tutorTagRepository, tagRepository);
+    dataInitializer.addUser(userRepository);
+    dataInitializer.addTutor(userRepository, tutorRepository, tutorTagRepository, tagRepository);
 
     mockMvc = MockMvcBuilders.webAppContextSetup(wc).build();
   }
@@ -49,7 +49,7 @@ public class GetUserProfileTest {
   @Test
   @DisplayName("세션 정보가 없으면 정보를 가져올 수 없다")
   void getUserProfileWithoutSession() throws Exception {
-    mockMvc.perform(get("/mypage")).andExpect(status().is5xxServerError());
+    mockMvc.perform(get("/mypage")).andExpect(status().isForbidden());
   }
 
   @Test

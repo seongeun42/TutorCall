@@ -1,5 +1,6 @@
 package com.potato.TutorCall.mypage.service;
 
+import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutor.domain.TutorTag;
@@ -9,7 +10,9 @@ import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import javax.naming.AuthenticationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +23,11 @@ public class MypageService {
   private final UserRepository userRepository;
   private final TutorRepository tutorRepository;
   private final TutorTagRepository tutorTagRepository;
+  private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
   public MyPageProfileResDto getUserProfile(Long id) {
     User currentUser =
-        userRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
+        userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다."));
 
     MyPageProfileResDto userInfo = new MyPageProfileResDto(currentUser);
 
@@ -41,7 +45,7 @@ public class MypageService {
   @Transactional
   public void updateProfile(Long id, String profile) {
     User currentUser =
-        userRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
+        userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다."));
 
     currentUser.changeProfile(profile);
   }
@@ -49,8 +53,21 @@ public class MypageService {
   @Transactional
   public void updateNickname(Long id, String nickname) {
     User currentUser =
-        userRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
+        userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다."));
 
     currentUser.changeNickname(nickname);
+  }
+
+  @Transactional
+  public void updatePassword(Long id, String password, String newPassword)
+      throws AuthenticationException {
+    User currentUser =
+        userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
+    // 비밀번호 검증
+    if (!bCryptPasswordEncoder.matches(password, currentUser.getPassword())) {
+      throw new AuthenticationException("기존 비밀번호가 일치하지 않습니다.");
+    }
+
+    currentUser.changePassword(bCryptPasswordEncoder.encode(newPassword));
   }
 }
