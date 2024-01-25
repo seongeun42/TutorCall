@@ -21,7 +21,7 @@ public class MyPageProfileResDto {
     private final Integer point;
     private final String profile;
     private final LocalDateTime joinDate;
-    private final TutorDto tutor;
+    private TutorDto tutor = null;
 
     @Builder
     public MyPageProfileResDto(User user, Tutor tutor, List<Tag> tags) {
@@ -32,7 +32,8 @@ public class MyPageProfileResDto {
         this.point = user.getPoint();
         this.profile = user.getProfile();
         this.joinDate = user.getJoinDate();
-        this.tutor = new TutorDto(tutor, tags);
+        if (tutor != null)
+            this.tutor = new TutorDto(tutor, tags);
     }
 
 }

@@ -30,16 +30,18 @@ public class MypageService {
         User currentUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
 
         MyPageProfileResDto userInfo = null;
-        if (currentUser.getRole() == RoleType.USER)
+        if (currentUser.getRole() == RoleType.USER) {
             userInfo = MyPageProfileResDto.builder()
                     .user(currentUser)
                     .build();
-        else {
+        }
+        else if (currentUser.getRole() == RoleType.TUTOR) {
             Tutor tutor = tutorService.findById(currentUser.getId());
             List<Tag> tags = tutorService.getTutorTags(tutor);
             userInfo = MyPageProfileResDto.builder()
                     .user(currentUser)
                     .tutor(tutor)
+                    .tags(tags)
                     .build();
         }
 
