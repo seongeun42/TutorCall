@@ -43,8 +43,13 @@ repositories {
 	mavenCentral()
 }
 
+test {
+	useJUnitPlatform()
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	// Spring Boot에서 Redis를 사용하기 위한 의존성입니다.
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -67,8 +72,13 @@ dependencies {
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 	// -- queryDSL --
 
+
+	//mybatis
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+
 	testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
-//	runtimeOnly 'com.h2database:h2' version '1.4.200'
+
 	//swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 	//
@@ -77,6 +87,19 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	//
+
+	//log4j2
+	testAnnotationProcessor 'org.projectlombok:lombok' // 테스트를 위한 세팅
+	testImplementation 'org.projectlombok:lombok' // 테스트를 위한 세팅
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+
+	//test
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
+	testImplementation 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+	testImplementation 'org.junit.jupiter:junit-jupiter-params'
+
 }
 
 // queryDSL 추가설정 : 빌드 옵션
@@ -92,4 +115,9 @@ tasks.withType(JavaCompile) {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+configurations {
+	all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	all*.exclude group: 'org.springframework.boot', module: 'logback-classic'
 }

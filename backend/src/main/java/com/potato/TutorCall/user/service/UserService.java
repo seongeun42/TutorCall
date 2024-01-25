@@ -23,7 +23,6 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-
     @Transactional()
     public User save(User user){
         return this.userRepository.save(user);
