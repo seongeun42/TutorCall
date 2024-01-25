@@ -7,38 +7,50 @@ import com.potato.TutorCall.tutor.repository.TutorRepository;
 import com.potato.TutorCall.tutor.repository.TutorTagRepository;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class MypageService {
 
-    private final UserRepository userRepository;
-    private final TutorRepository tutorRepository;
-    private final TutorTagRepository tutorTagRepository;
+  private final UserRepository userRepository;
+  private final TutorRepository tutorRepository;
+  private final TutorTagRepository tutorTagRepository;
 
-    public Optional<MyPageProfileResDto> getUserProfile(Long id) {
-        Optional<User> currentUser = userRepository.findById(id);
+  public MyPageProfileResDto getUserProfile(Long id) {
+    User currentUser =
+        userRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
 
-        // 들어온 id에 해당하는 유저 정보가 없으면
-        if(currentUser.isEmpty()) {
-            return Optional.empty();
-        }
+    MyPageProfileResDto userInfo = new MyPageProfileResDto(currentUser);
 
-        MyPageProfileResDto userInfo = new MyPageProfileResDto(currentUser.get());
+    // 유저가 선생이라면
+    Optional<Tutor> currentTutor = tutorRepository.findByUser(currentUser);
+    if (currentTutor.isPresent()) {
+      List<TutorTag> tutorTagList = tutorTagRepository.findByTutor(currentTutor.get());
 
-        // 유저가 선생이라면
-        Optional<Tutor> currentTutor = tutorRepository.findByUser(currentUser.get());
-        if(currentTutor.isPresent()) {
-            List<TutorTag> tutorTagList = tutorTagRepository.findByTutor(currentTutor.get());
-
-            userInfo.addTutorInfo(currentTutor.get(), tutorTagList);
-        }
-
-        return Optional.of(userInfo);
+      userInfo.addTutorInfo(currentTutor.get(), tutorTagList);
     }
+
+    return userInfo;
+  }
+
+  @Transactional
+  public void updateProfile(Long id, String profile) {
+    User currentUser =
+        userRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
+
+    currentUser.changeProfile(profile);
+  }
+
+  @Transactional
+  public void updateNickname(Long id, String nickname) {
+    User currentUser =
+        userRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
+
+    currentUser.changeNickname(nickname);
+  }
 }

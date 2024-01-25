@@ -1,14 +1,14 @@
 package com.potato.TutorCall.mypage.controller;
 
 import com.potato.TutorCall.mypage.dto.req.MyPagePaginationDto;
+import com.potato.TutorCall.mypage.dto.req.NicknameUpdateReqDto;
+import com.potato.TutorCall.mypage.dto.req.ProfileUpdateReqDto;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
 import com.potato.TutorCall.mypage.service.MypageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 /** 마이페이지 기능에 대한 컨트롤러 */
 @RestController
@@ -25,14 +25,11 @@ public class MyPageController {
    * @return
    */
   @GetMapping
-  public ResponseEntity<?> getMyProfile(@SessionAttribute(name = "user")Long id) {
-    Optional<MyPageProfileResDto> myProfile = mypageService.getUserProfile(id);
+  public ResponseEntity<?> getMyProfile(@SessionAttribute(name = "user") Long id) {
+    MyPageProfileResDto myProfile = mypageService.getUserProfile(id);
 
-    if(myProfile.isPresent()) {
-      return ResponseEntity.ok(myProfile.get());
-    }
-    
-    return ResponseEntity.badRequest().build();
+    return ResponseEntity.ok(myProfile);
+
   }
 
   /**
@@ -41,8 +38,11 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/profile")
-  public ResponseEntity<?> updateProfileImage() {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> updateProfileImage(
+      @SessionAttribute(name = "user") Long id, @RequestBody ProfileUpdateReqDto newProfile) {
+    mypageService.updateProfile(id, newProfile.getProfile());
+
+    return ResponseEntity.ok().build();
   }
 
   /**
@@ -51,8 +51,11 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/nickname")
-  public ResponseEntity<?> updateNickname() {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> updateNickname(
+      @SessionAttribute(name = "user") Long id, @RequestBody NicknameUpdateReqDto newNickname) {
+    mypageService.updateNickname(id, newNickname.getNickname());
+
+    return ResponseEntity.ok().build();
   }
 
   /**
