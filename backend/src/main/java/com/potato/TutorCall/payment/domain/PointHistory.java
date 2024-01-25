@@ -52,16 +52,4 @@ public class PointHistory {
         this.description = description;
         this.amount = amount;
     }
-
-  // 생성자
-  @Builder
-  public PointHistory(
-      User user, Long receiver, Long sender, PointType type, String description, int amount) {
-    this.user = user;
-    this.receiver = receiver;
-    this.sender = sender;
-    this.type = type;
-    this.description = description;
-    this.amount = amount;
-  }
 }

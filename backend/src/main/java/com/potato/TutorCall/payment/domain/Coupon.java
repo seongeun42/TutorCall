@@ -45,22 +45,4 @@ public class Coupon {
         this.endAt = endAt;
     }
 
-  // 생성자
-  @Builder
-  public Coupon(
-      String code,
-      String name,
-      String description,
-      int point,
-      int dueDate,
-      LocalDateTime startAt,
-      LocalDateTime endAt) {
-    this.code = code;
-    this.name = name;
-    this.description = description;
-    this.point = point;
-    this.dueDate = dueDate;
-    this.startAt = startAt;
-    this.endAt = endAt;
-  }
 }
