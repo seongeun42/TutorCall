@@ -1,15 +1,19 @@
 package com.potato.TutorCall.mypage.controller;
 
+import com.potato.TutorCall.auth.SessionKey;
+import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.mypage.dto.req.MyPagePaginationDto;
+import com.potato.TutorCall.mypage.dto.req.NicknameUpdateReqDto;
+import com.potato.TutorCall.mypage.dto.req.PasswordUpdateReqDto;
 import com.potato.TutorCall.mypage.dto.req.ProfileUpdateReqDto;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
+import com.potato.TutorCall.mypage.dto.res.UpdateSuccessResDto;
 import com.potato.TutorCall.mypage.service.MypageService;
+import javax.naming.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 /** 마이페이지 기능에 대한 컨트롤러 */
 @RestController
@@ -26,9 +30,10 @@ public class MyPageController {
    * @return
    */
   @GetMapping
-  public ResponseEntity<?> getMyProfile(@SessionAttribute(name = "user")Long id) {
-    MyPageProfileResDto myProfile = mypageService.getUserProfile(id);
-    
+  public ResponseEntity<?> getMyProfile(
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession) {
+    MyPageProfileResDto myProfile = mypageService.getUserProfile(userSession.getId());
+
     return ResponseEntity.ok(myProfile);
   }
 
@@ -38,10 +43,12 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/profile")
-  public ResponseEntity<?> updateProfileImage(@SessionAttribute(name = "user")Long id, @RequestBody ProfileUpdateReqDto newProfile) {
-    mypageService.updateProfile(id, newProfile.getProfile());
+  public ResponseEntity<?> updateProfileImage(
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
+      @RequestBody ProfileUpdateReqDto newProfile) {
+    mypageService.updateProfile(userSession.getId(), newProfile.getProfile());
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(new UpdateSuccessResDto("프로필 사진이 변경되었습니다."));
   }
 
   /**
@@ -50,8 +57,12 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/nickname")
-  public ResponseEntity<?> updateNickname() {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> updateNickname(
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
+      @RequestBody NicknameUpdateReqDto newNickname) {
+    mypageService.updateNickname(userSession.getId(), newNickname.getNickname());
+
+    return ResponseEntity.ok(new UpdateSuccessResDto("닉네임이 변경되었습니다."));
   }
 
   /**
@@ -60,8 +71,14 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/password")
-  public ResponseEntity<?> updatePassword() {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> updatePassword(
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
+      @RequestBody PasswordUpdateReqDto newPasswordReq)
+      throws AuthenticationException {
+    mypageService.updatePassword(
+        userSession.getId(), newPasswordReq.getPassword(), newPasswordReq.getNewPassword());
+
+    return ResponseEntity.ok(new UpdateSuccessResDto("비밀번호가 변경되었습니다."));
   }
 
   /**

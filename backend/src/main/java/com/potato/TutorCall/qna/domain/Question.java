@@ -2,7 +2,6 @@ package com.potato.TutorCall.qna.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.potato.TutorCall.lecture.domain.Lecture;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
@@ -35,12 +34,14 @@ public class Question {
 
     private String content;
 
+
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     private Tag tag;
 
+    @Column(columnDefinition = "boolean default false")
     private boolean isEnd;
-
+    @Column(columnDefinition = "boolean default false")
     private boolean isDelete;
 
     @CreatedDate
