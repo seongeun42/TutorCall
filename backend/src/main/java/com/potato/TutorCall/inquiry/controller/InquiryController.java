@@ -4,6 +4,8 @@ import com.potato.TutorCall.inquiry.dto.*;
 import com.potato.TutorCall.inquiry.service.InquiryService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +25,12 @@ public class InquiryController {
   //  }
 
   // 내 문의 조회
-  //  @GetMapping
-  //  public ResponseEntity<?> myInquiry(InquiryDto inquiryDto) {
-  //    return null;
-  //  }
+  @GetMapping
+  public ResponseEntity<?> myInquiry(
+      @RequestParam(value = "userId") Long userId, Pageable pageable) {
+    Page<InquiryDto> myInquiries = inquiryService.myInquiry(userId, pageable).map(InquiryDto::new);
+    return new ResponseEntity<>(myInquiries, HttpStatusCode.valueOf(200));
+  }
 
   // 문의 등록
   @PostMapping

@@ -7,7 +7,10 @@ import com.potato.TutorCall.inquiry.dto.InquirySaveRequestDto;
 import com.potato.TutorCall.inquiry.repository.InquiryRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,11 +18,21 @@ public class InquiryService {
 
   private final InquiryRepository inquiryRepository;
 
+  // 내 문의 조회하기
+  @Transactional(readOnly = true)
+  public Page<Inquiry> myInquiry(Long userId, Pageable pageable) {
+    Page<Inquiry> myInquiries =
+        inquiryRepository.findAllByUserIdOrderByCreatedAtDesc(pageable, userId);
+    return myInquiries;
+  }
+
   // 문의 등록 하기
   public Long saveInquiry(InquirySaveRequestDto inquiryDto) {
     Inquiry saveInquiry =
         Inquiry.builder()
             //                .user
+            //                        .user(new User((long)Math.floor(Math.random() * 11),"1", "1",
+            // "1", RoleType.USER, "1", SnsType.KAKAO, 7))
             .title(inquiryDto.getTitle())
             .content(inquiryDto.getContent())
             .build();
@@ -65,10 +78,5 @@ public class InquiryService {
     answeredInquiry.updateAnswerState();
     answeredInquiry.updateAnswerAt(LocalDateTime.now());
     return true;
-  }
-
-  // 유저 한 명 선택하기
-  public Inquiry selectOneInquiry(Long inquiryId) {
-    return inquiryRepository.getReferenceById(inquiryId);
   }
 }
