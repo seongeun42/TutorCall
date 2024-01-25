@@ -22,6 +22,7 @@ public class AnswerRepositoryImpl implements AnswerRepositoryCustom{
                 .build();
 
         entityManager.persist(answer);
+        entityManager.flush();
 
         return answer.getId();
     }

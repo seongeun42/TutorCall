@@ -44,14 +44,13 @@ public class Report {
 
     // 생성자
     @Builder
-    public Report(User reporter, Long reported, ReportType type, String content) {
+    public Report(User reporter, Long reported, ReportType type, String content, String result) {
         this.reporter = reporter;
         this.reported = reported;
         this.type = type;
         this.content = content;
+        this.result = result;
     }
-
-
 
 
     // 비즈니스 로직

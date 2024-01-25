@@ -59,8 +59,6 @@ public class User {
     private LocalDateTime joinDate;
 
 
-
-
     // 양방향 연관 관계
     @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
