@@ -7,15 +7,14 @@ import com.potato.TutorCall.notice.service.NoticeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/notice")
@@ -36,13 +35,12 @@ public class NoticeController {
 
     @Operation(summary="Notice 게시글 전체 조회", description = "Notice 게시글 전체 조회")
     @GetMapping
-    public ResponseEntity<List<NoticeResponse>> noticeAll() {
-        List<NoticeResponse> notices = noticeService.findAll()
-                .stream()
-                .map(NoticeResponse::new)
-                .toList();
-        return ResponseEntity.ok()
-                .body(notices);
+    public ResponseEntity<?> searchNotice(Pageable pageable) {
+        Page<NoticeResponse> noticeResponses = noticeService.getNoticeList(pageable).map(NoticeResponse::new);
+        Map<String, Object> response = new HashMap<>();
+        response.put("notices", noticeResponses.getContent());
+        return ResponseEntity.ok().body(response);
+
     }
     
     @Operation(summary="Notice 게시글 작성", description = "관리자 Notice 게시글 작성")
@@ -54,7 +52,7 @@ public class NoticeController {
         long noticeId = savedNotice.getId();
 
         // 응답 메시지 생성
-//        Notice response = new Notice(noticeId, "공지사항이 생성되었습니다.");
+        // Notice response = new Notice(noticeId, "공지사항이 생성되었습니다.");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedNotice);
     }

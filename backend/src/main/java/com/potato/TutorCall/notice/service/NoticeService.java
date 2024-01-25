@@ -6,8 +6,11 @@ import com.potato.TutorCall.notice.dto.FaqDto;
 import com.potato.TutorCall.notice.dto.NoticeDto;
 import com.potato.TutorCall.notice.repository.FaqRepository;
 import com.potato.TutorCall.notice.repository.NoticeRepository;
-import jakarta.transaction.Transactional;
+import com.potato.TutorCall.user.domain.User;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
@@ -24,8 +27,9 @@ public class NoticeService {
     }
 
     // 전체 공지사항 조회
-    public List<Notice> findAll() {
-        return noticeRepository.findAll();
+    @Transactional(readOnly = true)
+    public Page<Notice> getNoticeList(Pageable pageable) {
+        return noticeRepository.findAllByOrderByIdDesc(pageable);
     }
 
     // 공지사항 상세글 조회
