@@ -1,5 +1,7 @@
 package com.potato.TutorCall.qna.repository;
 
+import static com.potato.TutorCall.qna.domain.QQuestion.question;
+
 import com.potato.TutorCall.qna.domain.Question;
 import com.potato.TutorCall.qna.dto.QuestionWriteDto;
 import com.potato.TutorCall.tutor.domain.Tag;
@@ -10,50 +12,47 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.potato.TutorCall.qna.domain.QQuestion.question;
-
 @RequiredArgsConstructor
 public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 
-    private final JPAQueryFactory queryFactory;
-    private final EntityManager entityManager;
+  private final JPAQueryFactory queryFactory;
+  private final EntityManager entityManager;
 
-    @Override
-    @Transactional
-    public Long writeQuestion(QuestionWriteDto questionWriteDto, User user, Tag tag) {
+  @Override
+  @Transactional
+  public Long writeQuestion(QuestionWriteDto questionWriteDto, User user, Tag tag) {
 
-        //user가 null이어도 insert가 진행되어서 억지로 막아놓음..
+    // user가 null이어도 insert가 진행되어서 억지로 막아놓음..
 
-        Question question = Question.
-                builder().
-                title(questionWriteDto.getQuestionTitle()).
-                content(questionWriteDto.getQuestionContent()).
-                tag(tag).
-                writer(user).
-                build();
-        entityManager.persist(question);
-        return question.getId();
-    }
+    Question question =
+        Question.builder()
+            .title(questionWriteDto.getQuestionTitle())
+            .content(questionWriteDto.getQuestionContent())
+            .tag(tag)
+            .writer(user)
+            .build();
+    entityManager.persist(question);
+    return question.getId();
+  }
 
-    @Override
-    @Transactional
-    public long editQuestion(int questionId, QuestionWriteDto questionWriteDto, User user, Tag tag) {
+  @Override
+  @Transactional
+  public long editQuestion(int questionId, QuestionWriteDto questionWriteDto, User user, Tag tag) {
 
-        long count = 0;
+    long count = 0;
 
-        JPAUpdateClause updateClause= queryFactory.update(question)
-                .set(question.title, questionWriteDto.getQuestionTitle())
-                .set(question.content, questionWriteDto.getQuestionContent())
-                .where(question.id.eq((long) questionId), question.writer.id.eq(user.getId()));
+    JPAUpdateClause updateClause =
+        queryFactory
+            .update(question)
+            .set(question.title, questionWriteDto.getQuestionTitle())
+            .set(question.content, questionWriteDto.getQuestionContent())
+            .where(question.id.eq((long) questionId), question.writer.id.eq(user.getId()));
 
-        if(tag != null) updateClause.set(question.tag.id, tag.getId());
+    if (tag != null) updateClause.set(question.tag.id, tag.getId());
 
-        count = updateClause.execute();
-        entityManager.flush();
-        entityManager.clear();
-        return count;
-
-    }
-
-
+    count = updateClause.execute();
+    entityManager.flush();
+    entityManager.clear();
+    return count;
+  }
 }

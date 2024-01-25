@@ -4,5 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum ChatroomType {
-    PERSONAL, GROUP;
+  PERSONAL,
+  GROUP;
 }

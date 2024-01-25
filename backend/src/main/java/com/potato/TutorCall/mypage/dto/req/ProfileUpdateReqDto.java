@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class ProfileUpdateReqDto {
-    String profile;
+  String profile;
 }

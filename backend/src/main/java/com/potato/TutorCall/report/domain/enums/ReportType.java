@@ -4,5 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ReportType {
-    USER, POST, COMMENT;
+  USER,
+  POST,
+  COMMENT;
 }

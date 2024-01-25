@@ -5,8 +5,7 @@ import lombok.Data;
 @Data
 public class AnswerWriteDto {
 
-    private long questionId;
-    private String answerContent;
-    private long tutorUserId;
-
+  private long questionId;
+  private String answerContent;
+  private long tutorUserId;
 }

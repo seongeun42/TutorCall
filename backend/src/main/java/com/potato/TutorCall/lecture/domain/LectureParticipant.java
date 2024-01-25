@@ -13,25 +13,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LectureParticipant {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Lecture lecture;
+  @JsonBackReference
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Lecture lecture;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+  @JsonBackReference
+  @ManyToOne(fetch = FetchType.LAZY)
+  private User user;
 
-
-
-
-    // 생성자
-    @Builder
-    public LectureParticipant(Lecture lecture, User user) {
-        this.lecture = lecture;
-        this.user = user;
-    }
-
+  // 생성자
+  @Builder
+  public LectureParticipant(Lecture lecture, User user) {
+    this.lecture = lecture;
+    this.user = user;
+  }
 }

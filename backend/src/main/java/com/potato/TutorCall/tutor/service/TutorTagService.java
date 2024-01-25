@@ -11,10 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TutorTagService {
 
-    private final TutorTagRepository tutorTagRepository;
+  private final TutorTagRepository tutorTagRepository;
 
-    public Long save(TutorTag tutorTag) {
-        return tutorTagRepository.save(tutorTag).getId();
-    }
-
+  public Long save(TutorTag tutorTag) {
+    return tutorTagRepository.save(tutorTag).getId();
+  }
 }

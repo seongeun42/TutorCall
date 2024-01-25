@@ -32,24 +32,21 @@ public class PointHistory {
 
   private PointType type;
 
-    private String description;
+  private String description;
 
   private int amount;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+  @CreatedDate private LocalDateTime createdAt;
 
-
-
-
-    // 생성자
-    @Builder
-    public PointHistory(User user, Long receiver, Long sender, PointType type, String description, int amount) {
-        this.user = user;
-        this.receiver = receiver;
-        this.sender = sender;
-        this.type = type;
-        this.description = description;
-        this.amount = amount;
-    }
+  // 생성자
+  @Builder
+  public PointHistory(
+      User user, Long receiver, Long sender, PointType type, String description, int amount) {
+    this.user = user;
+    this.receiver = receiver;
+    this.sender = sender;
+    this.type = type;
+    this.description = description;
+    this.amount = amount;
+  }
 }

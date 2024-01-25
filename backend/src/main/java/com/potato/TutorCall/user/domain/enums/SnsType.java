@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum SnsType {
-
-    KAKAO, NAVER;
-
+  KAKAO,
+  NAVER;
 }

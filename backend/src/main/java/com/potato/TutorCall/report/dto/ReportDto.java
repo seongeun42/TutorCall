@@ -1,4 +1,3 @@
 package com.potato.TutorCall.report.dto;
 
-public class ReportDto {
-}
+public class ReportDto {}

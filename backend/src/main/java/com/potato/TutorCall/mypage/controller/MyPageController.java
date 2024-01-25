@@ -152,5 +152,4 @@ public class MyPageController {
   public ResponseEntity<?> getTutorcallHistory() {
     return ResponseEntity.badRequest().build();
   }
-
 }

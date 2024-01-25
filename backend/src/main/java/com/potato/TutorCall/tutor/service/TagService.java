@@ -9,10 +9,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TagService {
 
-    private final TagRepository tagRepository;
+  private final TagRepository tagRepository;
 
-    public Long save(Tag tag) {
-        return tagRepository.save(tag).getId();
-    }
-
+  public Long save(Tag tag) {
+    return tagRepository.save(tag).getId();
+  }
 }

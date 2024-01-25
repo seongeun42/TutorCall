@@ -3,5 +3,4 @@ package com.potato.TutorCall.lecture.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class LectureController {
-}
+public class LectureController {}

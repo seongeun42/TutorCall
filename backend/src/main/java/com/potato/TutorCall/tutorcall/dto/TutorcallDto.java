@@ -1,4 +1,3 @@
 package com.potato.TutorCall.tutorcall.dto;
 
-public class TutorcallDto {
-}
+public class TutorcallDto {}

@@ -5,9 +5,7 @@ import lombok.Data;
 @Data
 public class SearchFormDto {
 
-    private boolean isEnd;
-    private Long tagId;
-    private String keyword;
-
-
+  private boolean isEnd;
+  private Long tagId;
+  private String keyword;
 }
