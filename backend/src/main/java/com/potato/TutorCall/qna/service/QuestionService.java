@@ -74,7 +74,7 @@ public class QuestionService {
         return ResponseEntity.ok(commonResponseDto);
     }
 
-    public ResponseEntity<?> editQuestion(int questionId, QuestionWriteDto questionWriteDto, int userId){
+    public ResponseEntity<?> editQuestion(int questionId, QuestionWriteDto questionWriteDto, long userId){
 
         Long count = null;
         CommonResponseDto commonResponseDto;
@@ -106,9 +106,9 @@ public class QuestionService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteQuestion(int questionId, int userId){
+    public ResponseEntity<?> deleteQuestion(int questionId, long userId){
 
-        User requestUser = userRepository.findById((long) userId)
+        User requestUser = userRepository.findById(userId)
                 .orElseThrow(()-> new NotFoundException("질문 삭제 실패"));
         Question editTarget = questionRepository.findById((long) questionId)
                 .orElseThrow(()-> new NotFoundException("질문 삭제 실패"));
@@ -117,8 +117,8 @@ public class QuestionService {
             throw new InvalidException("수정 권한 없음");
 
         CommonResponseDto commonResponseDto;
-//        int count = questionRepository.updateQuestionByIdAndWriter_IdAndIsDelete((long) questionId, writerId);
-        int count = questionRepository.updateQuestionByIdAndIsDelete((long) questionId, true);
+      int count = questionRepository.updateQuestionByIdAndWriter_IdAndIsDelete((long) questionId, false, userId);
+
         if (count ==0) throw new NotFoundException("질문 삭제 실패");
 
         commonResponseDto = CommonResponseDto.builder().

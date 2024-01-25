@@ -1,5 +1,7 @@
 package com.potato.TutorCall.qna.controller;
 
+import com.potato.TutorCall.auth.SessionKey;
+import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.qna.dto.AnswerWriteDto;
 import com.potato.TutorCall.qna.dto.SearchFormDto;
 import com.potato.TutorCall.qna.dto.QuestionWriteDto;
@@ -53,43 +55,46 @@ public class QnaController {
     @PatchMapping("/question/{questionId}")
     public ResponseEntity<?> editQuestion(@PathVariable("questionId") int questionId,
                                           @RequestBody QuestionWriteDto questionWriteDto,
-                                          @SessionAttribute("userId") int userId){
-        return questionService.editQuestion(questionId, questionWriteDto, userId);
+                                          HttpSession session){
+        UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+        return questionService.editQuestion(questionId, questionWriteDto, userSessionDto.getId());
     }
 
     @CommonResponses
     @Operation(summary="질문글 삭제", description = "질문글 삭제")
     @DeleteMapping("/question/{questionId}")
     public ResponseEntity<?> deleteQuestion(@PathVariable("questionId") int questionId,
-                                            @SessionAttribute("userId") int userId){
-        //session 정보 필요
-        return questionService.deleteQuestion(questionId, userId);
+                                            HttpSession session){
+
+        UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+        return questionService.deleteQuestion(questionId, userSessionDto.getId());
     }
 
     @CommonResponses
     @Operation(summary="답변 작성", description = "답변 작성")
     @PostMapping("/answer")
     public ResponseEntity<?> writeAnswer(@RequestBody AnswerWriteDto answerWriteDto,
-                                         @SessionAttribute("userId") int userId){
-        return answerService.writeAnswer(answerWriteDto, userId);
+                                         HttpSession session){
+        UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+        return answerService.writeAnswer(answerWriteDto, userSessionDto.getId());
     }
 
     @CommonResponses
     @Operation(summary = "답변 삭제", description = "답변을 삭제한다")
     @PatchMapping("/answer/{answerId}")
     public ResponseEntity<?> deleteAnswer(@PathVariable("answerId") int answerId,
-                                          @SessionAttribute("userId") int userId){
-        // session 정보 필요
-        return answerService.deleteAnswer(answerId, userId);
+                                          HttpSession session){
+        UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+        return answerService.deleteAnswer(answerId, userSessionDto.getId());
     }
 
     @CommonResponses
     @Operation(summary="답변 채택", description = "답변을 채택한다")
     @PatchMapping("/answer/selection/{answerId}")
     public ResponseEntity<?> chooseAnswer(@PathVariable("answerId") int answerId,
-                                          @SessionAttribute("userId") int userId){
-        // session 정보 필요
-        return answerService.chooseAnswer(answerId, userId);
+                                          HttpSession session){
+        UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+        return answerService.chooseAnswer(answerId, userSessionDto.getId());
     }
 
 

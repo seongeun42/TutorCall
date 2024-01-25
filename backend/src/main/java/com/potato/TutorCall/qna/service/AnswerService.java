@@ -27,7 +27,7 @@ public class AnswerService {
         this.answerRepository = answerRepository;
     }
 
-    public ResponseEntity<?> writeAnswer(AnswerWriteDto answerWriteDto, int userId){
+    public ResponseEntity<?> writeAnswer(AnswerWriteDto answerWriteDto, long userId){
 
         answerWriteDto.setTutorUserId(userId);
         Tutor tutor = tutorRepository.findById(answerWriteDto.getTutorUserId())
@@ -51,13 +51,13 @@ public class AnswerService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteAnswer(int answerId, int userId){
+    public ResponseEntity<?> deleteAnswer(int answerId, long userId){
 
         CommonResponseDto commonResponseDto;
         Answer targetAnswer = answerRepository.findById((long) answerId)
                 .orElseThrow(()->new NotFoundException("질문 삭제 실패"));
 
-        if(!targetAnswer.getTutor().getId().equals((long)userId))
+        if(!targetAnswer.getTutor().getId().equals(userId))
             throw new InvalidException("삭제 권한 없음");
 
         int count = answerRepository.updateAnswerByIdAndIsDelete((long) answerId, true);
@@ -70,14 +70,14 @@ public class AnswerService {
     }
 
     @Transactional
-    public ResponseEntity<?> chooseAnswer(int answerId, int userId){
+    public ResponseEntity<?> chooseAnswer(int answerId, long userId){
 
         CommonResponseDto commonResponseDto;
 
         Answer targetAnswer = answerRepository.findById((long) answerId)
                 .orElseThrow(()-> new NotFoundException("답변 채택 실패"));
 
-        if(!targetAnswer.getQuestion().getWriter().getId().equals((long) userId))
+        if(!targetAnswer.getQuestion().getWriter().getId().equals(userId))
             throw new InvalidException("권한 없음");
 
         int count = answerRepository.updateAnswerByIdAndIsChosen((long) answerId, true);

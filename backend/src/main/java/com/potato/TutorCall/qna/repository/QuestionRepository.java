@@ -16,11 +16,9 @@ import java.util.Optional;
 public interface QuestionRepository extends JpaRepository<Question, Long>, QuestionRepositoryCustom {
 
     @Modifying
-    @Query("UPDATE Question q set q.isDelete = :isDelete where q.id = :questionId")
-    int updateQuestionByIdAndIsDelete(@Param("questionId") Long questionId,  @Param("isDelete") boolean isDelete);
-
+    @Query("UPDATE Question q set q.isDelete = :isDelete where q.id = :questionId and q.writer.id = :writerId")
+    int updateQuestionByIdAndWriter_IdAndIsDelete(@Param("questionId") Long questionId,  @Param("isDelete") boolean isDelete, @Param("writerId") long writerId);
     Page<Question> findAllByContentContainsAndTag_IdAndIsEndAndIsDelete(Pageable pageable, String keyword, Long tagId, boolean isEnd, boolean isDelete);
-
     Optional<Object> findQuestionByIdAndIsDelete(long questionId, boolean isDelete);
 
 }
