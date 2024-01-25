@@ -8,10 +8,13 @@ import com.potato.TutorCall.auth.dto.SendEmailDto;
 import com.potato.TutorCall.auth.dto.request.AuthLoginRequestDto;
 import com.potato.TutorCall.auth.dto.request.EmailCheckResponseDto;
 import com.potato.TutorCall.auth.dto.request.SendEmailRequestDto;
+import com.potato.TutorCall.auth.dto.request.NickCheckResponseDto;
+import com.potato.TutorCall.auth.dto.request.SignupRequestDto;
 import com.potato.TutorCall.auth.service.AuthService;
 import com.potato.TutorCall.auth.service.EmailService;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.repository.UserRepository;
+import com.potato.TutorCall.user.service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +37,8 @@ public class AuthController {
     private final EmailService emailService;
     private final AuthService authService;
     private final CodeRepositorty codeRepositorty;
-    private final UserRepository userRepository;
+    private final UserService userService;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(AuthLoginRequestDto authLoginRequestDto, HttpServletRequest httpServletRequest) throws Exception{
         //유저 확인 메소드
@@ -69,10 +73,8 @@ public class AuthController {
                 .subject("코드 번호 [" + code + "] 입니다.").build();
 
         this.emailService.sendEmail(sendEmailDto);
-        //디비에 저장
 
         this.codeRepositorty.setCode(email, code);
-
         response.put("message", "이메일 인증 코드를 발송했습니다.");
 
         return new ResponseEntity<>(response,HttpStatus.CREATED);
@@ -90,4 +92,34 @@ public class AuthController {
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpSession session){
+        this.authService.logout(session);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/nick-check")
+    public ResponseEntity<?> nickCheck(NickCheckResponseDto nickCheckResponseDto) throws BadRequestException{
+        User user = this.userService.findByNickname(nickCheckResponseDto.getNickname());
+
+        if(user == null) throw new BadRequestException("이미 존재하는 닉네임입니다.");
+
+        Map<String, String> response = new HashMap<>();
+
+        response.put("message", "사용 가능한 닉네임입니다.");
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("signup")
+    public ResponseEntity<?> signup (SignupRequestDto signupRequestDto){
+        User user = this.userService.signup(signupRequestDto);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "회원가입 되었습니다.");
+
+        return new ResponseEntity<>(response,HttpStatus.CREATED);
+    }
 }
+
+
