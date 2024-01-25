@@ -4,6 +4,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import com.potato.TutorCall.auth.SessionKey;
+import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.mypage.datautil.MypageDataInitializer;
 import com.potato.TutorCall.tutor.domain.enums.SchoolType;
 import com.potato.TutorCall.tutor.repository.TagRepository;
@@ -55,8 +57,10 @@ public class GetUserProfileTest {
   @Test
   @DisplayName("일반 유저의 정보를 가져온다")
   void getUserProfileSuccess() throws Exception {
+    UserSessionDto userSession = UserSessionDto.builder().id(1L).roleType(RoleType.USER).build();
+
     session = new MockHttpSession();
-    session.setAttribute("user", 1L);
+    session.setAttribute(SessionKey.USER, userSession);
 
     mockMvc
         .perform(get("/mypage").session(session))
@@ -72,8 +76,10 @@ public class GetUserProfileTest {
   @Test
   @DisplayName("선생의 정보를 가져온다")
   void getTutorProfileSuccess() throws Exception {
+    UserSessionDto userSession = UserSessionDto.builder().id(2L).roleType(RoleType.TUTOR).build();
+
     session = new MockHttpSession();
-    session.setAttribute("user", 2L);
+    session.setAttribute(SessionKey.USER, userSession);
 
     mockMvc
         .perform(get("/mypage").session(session))

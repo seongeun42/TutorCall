@@ -1,5 +1,7 @@
 package com.potato.TutorCall.mypage.controller;
 
+import com.potato.TutorCall.auth.SessionKey;
+import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.mypage.dto.req.MyPagePaginationDto;
 import com.potato.TutorCall.mypage.dto.req.NicknameUpdateReqDto;
 import com.potato.TutorCall.mypage.dto.req.PasswordUpdateReqDto;
@@ -28,8 +30,9 @@ public class MyPageController {
    * @return
    */
   @GetMapping
-  public ResponseEntity<?> getMyProfile(@SessionAttribute(name = "user") Long id) {
-    MyPageProfileResDto myProfile = mypageService.getUserProfile(id);
+  public ResponseEntity<?> getMyProfile(
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession) {
+    MyPageProfileResDto myProfile = mypageService.getUserProfile(userSession.getId());
 
     return ResponseEntity.ok(myProfile);
   }
@@ -41,8 +44,9 @@ public class MyPageController {
    */
   @PatchMapping("/profile")
   public ResponseEntity<?> updateProfileImage(
-      @SessionAttribute(name = "user") Long id, @RequestBody ProfileUpdateReqDto newProfile) {
-    mypageService.updateProfile(id, newProfile.getProfile());
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
+      @RequestBody ProfileUpdateReqDto newProfile) {
+    mypageService.updateProfile(userSession.getId(), newProfile.getProfile());
 
     return ResponseEntity.ok(new UpdateSuccessResDto("프로필 사진이 변경되었습니다."));
   }
@@ -54,8 +58,9 @@ public class MyPageController {
    */
   @PatchMapping("/nickname")
   public ResponseEntity<?> updateNickname(
-      @SessionAttribute(name = "user") Long id, @RequestBody NicknameUpdateReqDto newNickname) {
-    mypageService.updateNickname(id, newNickname.getNickname());
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
+      @RequestBody NicknameUpdateReqDto newNickname) {
+    mypageService.updateNickname(userSession.getId(), newNickname.getNickname());
 
     return ResponseEntity.ok(new UpdateSuccessResDto("닉네임이 변경되었습니다."));
   }
@@ -67,9 +72,11 @@ public class MyPageController {
    */
   @PatchMapping("/password")
   public ResponseEntity<?> updatePassword(
-      @SessionAttribute(name = "user") Long id, @RequestBody PasswordUpdateReqDto newPasswordReq)
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
+      @RequestBody PasswordUpdateReqDto newPasswordReq)
       throws AuthenticationException {
-    mypageService.updatePassword(id, newPasswordReq.getPassword(), newPasswordReq.getNewPassword());
+    mypageService.updatePassword(
+        userSession.getId(), newPasswordReq.getPassword(), newPasswordReq.getNewPassword());
 
     return ResponseEntity.ok(new UpdateSuccessResDto("비밀번호가 변경되었습니다."));
   }

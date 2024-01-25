@@ -5,7 +5,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.TutorCall.auth.SessionKey;
+import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.mypage.datautil.MypageDataInitializer;
+import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.repository.UserRepository;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,8 +58,10 @@ class UpdateNickNameTest {
   @Test
   @DisplayName("사용자는 본인의 닉네임을 변경할 수 있음")
   void updateNickname() throws Exception {
+    UserSessionDto userSession = UserSessionDto.builder().id(1L).roleType(RoleType.USER).build();
+
     session = new MockHttpSession();
-    session.setAttribute("user", 1L);
+    session.setAttribute(SessionKey.USER, userSession);
 
     Map<String, String> requestMap = new HashMap<>();
     requestMap.put("nickname", "new_nickname");

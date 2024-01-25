@@ -5,8 +5,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.TutorCall.auth.SessionKey;
+import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.mypage.datautil.MypageDataInitializer;
 import com.potato.TutorCall.user.domain.User;
+import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.repository.UserRepository;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,8 +63,10 @@ public class UpdatePasswordTest {
   @Test
   @DisplayName("비밀번호가 일치하지 않으면 변경할 수 없다")
   void passwordInconsistency() throws Exception {
+    UserSessionDto userSession = UserSessionDto.builder().id(1L).roleType(RoleType.USER).build();
+
     session = new MockHttpSession();
-    session.setAttribute("user", 1L);
+    session.setAttribute(SessionKey.USER, userSession);
 
     Map<String, String> requestMap = new HashMap<>();
     requestMap.put("password", "pw2");
@@ -80,8 +85,10 @@ public class UpdatePasswordTest {
   @Test
   @DisplayName("비밀번호 변경 성공")
   void updatePassword() throws Exception {
+    UserSessionDto userSession = UserSessionDto.builder().id(1L).roleType(RoleType.USER).build();
+
     session = new MockHttpSession();
-    session.setAttribute("user", 1L);
+    session.setAttribute(SessionKey.USER, userSession);
 
     Map<String, String> requestMap = new HashMap<>();
     requestMap.put("password", "pw1");
