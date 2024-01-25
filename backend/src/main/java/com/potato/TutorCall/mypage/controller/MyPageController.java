@@ -2,8 +2,10 @@ package com.potato.TutorCall.mypage.controller;
 
 import com.potato.TutorCall.mypage.dto.req.MyPagePaginationDto;
 import com.potato.TutorCall.mypage.dto.req.NicknameUpdateReqDto;
+import com.potato.TutorCall.mypage.dto.req.PasswordUpdateReqDto;
 import com.potato.TutorCall.mypage.dto.req.ProfileUpdateReqDto;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
+import com.potato.TutorCall.mypage.dto.res.UpdateSuccessResDto;
 import com.potato.TutorCall.mypage.service.MypageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +31,6 @@ public class MyPageController {
     MyPageProfileResDto myProfile = mypageService.getUserProfile(id);
 
     return ResponseEntity.ok(myProfile);
-
   }
 
   /**
@@ -42,7 +43,7 @@ public class MyPageController {
       @SessionAttribute(name = "user") Long id, @RequestBody ProfileUpdateReqDto newProfile) {
     mypageService.updateProfile(id, newProfile.getProfile());
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(new UpdateSuccessResDto("프로필 사진이 변경되었습니다."));
   }
 
   /**
@@ -55,7 +56,7 @@ public class MyPageController {
       @SessionAttribute(name = "user") Long id, @RequestBody NicknameUpdateReqDto newNickname) {
     mypageService.updateNickname(id, newNickname.getNickname());
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(new UpdateSuccessResDto("닉네임이 변경되었습니다."));
   }
 
   /**
@@ -64,8 +65,11 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/password")
-  public ResponseEntity<?> updatePassword() {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> updatePassword(
+      @SessionAttribute(name = "name") Long id, @RequestBody PasswordUpdateReqDto newPasswordReq) {
+    mypageService.updatePassword(id, newPasswordReq.getPassword(), newPasswordReq.getNewPassword());
+
+    return ResponseEntity.ok(new UpdateSuccessResDto("비밀번호가 변경되었습니다."));
   }
 
   /**
