@@ -17,13 +17,6 @@ public class InquiryController {
 
   private final InquiryService inquiryService;
 
-  // 테스트용
-  //  @PostMapping("/test")
-  //  public String createInquiry(@RequestBody String text) {
-  //    System.out.println("TEST");
-  //    return text;
-  //  }
-
   // 내 문의 조회
   @GetMapping
   public ResponseEntity<?> myInquiry(
@@ -70,20 +63,15 @@ public class InquiryController {
   public ResponseEntity<?> deleteInquiry(@PathVariable Long inquiryId) {
 
     boolean isDeleted = inquiryService.deleteInquiry(inquiryId);
-    // 성공인 경우
-    if (isDeleted) {
-      SuccessMsgContent msg = new SuccessMsgContent();
-      msg.setMessage("문의가 삭제되었습니다");
-      return new ResponseEntity<SuccessMsgContent>(msg, HttpStatusCode.valueOf(201));
-    }
-
     // 권한이 없는 경우?
-
-    // 삭제 실패인 경우
-    ErrorMsg err = new ErrorMsg();
-    err.setTimeStamp(LocalDateTime.now());
-    err.setMessage("문의 삭제 실패");
-    return new ResponseEntity<ErrorMsg>(err, HttpStatusCode.valueOf(400));
+    if (!isDeleted) {
+      return null;
+    }
+    // 실패인 경우는 InquiryService에서 Exception을 통해 처리,
+    // 성공인 경우
+    SuccessMsgContent msg = new SuccessMsgContent();
+    msg.setMessage("문의가 삭제되었습니다");
+    return new ResponseEntity<SuccessMsgContent>(msg, HttpStatusCode.valueOf(201));
   }
 
   // 문의 답변 등록

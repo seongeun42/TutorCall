@@ -30,6 +30,7 @@ public class InquiryService {
   public Long saveInquiry(InquirySaveRequestDto inquiryDto) {
     Inquiry saveInquiry =
         Inquiry.builder()
+            // 유저 아이디 구현 후 입력 요함.
             //                .user
             //                        .user(new User((long)Math.floor(Math.random() * 11),"1", "1",
             // "1", RoleType.USER, "1", SnsType.KAKAO, 7))
@@ -56,7 +57,8 @@ public class InquiryService {
 
   // 문의 삭제 하기
   public boolean deleteInquiry(Long inquiryId) {
-    Inquiry deletedInquiry = inquiryRepository.getReferenceById(inquiryId);
+    Inquiry deletedInquiry =
+        inquiryRepository.findById(inquiryId).orElseThrow(() -> new NotFoundException("문의 삭제 실패"));
     if (deletedInquiry.getId() == null) {
       return false;
     }
