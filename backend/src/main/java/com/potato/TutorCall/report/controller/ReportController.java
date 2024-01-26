@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("report")
 @Tag(name="Report API", description = "Report 등록을 위한 API")
 public class ReportController {
-
     private final ReportService reportService;
 
     public ReportController(ReportService reportService) {
@@ -29,7 +28,7 @@ public class ReportController {
                                         @RequestBody ReportForm reportForm,
                                         HttpSession httpSession) {
         UserSessionDto userSessionDto = (UserSessionDto) httpSession.getAttribute(SessionKey.USER);
-        return reportService.reportUser(reportForm.getReportedId(), userId, reportForm);
+        return reportService.reportUser(userSessionDto.getId(), userId, reportForm);
     }
 
     @Operation(summary = "Question Type 신고", description = "Question 신고")
@@ -68,7 +67,7 @@ public class ReportController {
                                            ReportListDto reportListDto,
                                            HttpSession httpSession) {
         UserSessionDto userSessionDto = (UserSessionDto) httpSession.getAttribute(SessionKey.USER);
-        return reportService.findAllReport(1, pageable, reportListDto);
+        return reportService.findAllReport(userSessionDto.getId(), pageable, reportListDto);
     }
 
     @Operation(summary = "신고 처리", description = "Admin은 신고 처리를 한다.")
@@ -76,7 +75,7 @@ public class ReportController {
     public ResponseEntity<?> acceptReport(@PathVariable("reportId") int reportId,
                                           HttpSession httpSession) {
         UserSessionDto userSessionDto = (UserSessionDto) httpSession.getAttribute(SessionKey.USER);
-        return reportService.acceptReport(2, reportId);
+        return reportService.acceptReport(userSessionDto.getId(), reportId);
     }
 
 }
