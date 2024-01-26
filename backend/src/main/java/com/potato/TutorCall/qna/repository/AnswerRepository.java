@@ -12,11 +12,11 @@ public interface AnswerRepository extends JpaRepository<Answer, Long>, AnswerRep
 
   @Modifying
   @Query("UPDATE Answer a set a.isDelete = :isDelete where a.id = :answerId")
-  int updateAnswerByIdAndIsDelete(
+  int deleteQuestion(
       @Param("answerId") Long answerId, @Param("isDelete") boolean isDelete);
 
   @Modifying
   @Query("UPDATE Answer a set a.isChosen = :isChosen where a.id = :answerId")
-  int updateAnswerByIdAndIsChosen(
+  int chooseAnswer(
       @Param("answerId") Long answerId, @Param("isChosen") boolean isChosen);
 }

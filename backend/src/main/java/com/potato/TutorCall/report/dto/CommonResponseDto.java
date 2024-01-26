@@ -15,6 +15,6 @@ import org.springframework.data.domain.Page;
 @Data
 public class CommonResponseDto {
     long reportId;
-    Page<Report> reports;
+    Page<ReportDto> reports;
     String message;
 }

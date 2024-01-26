@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long>, ReportRepositoryCustom {
 
-    Page<Report> findAllByTypeAndProceedState(Pageable pageable, ReportType reportType, boolean proceedState);
+    Page<Report> findAllByTypeAndProceedStateOrderByIdDesc(Pageable pageable, ReportType reportType, boolean proceedState);
 
     @Modifying
     @Query(value="UPDATE Report r set r.proceedState = true where r.id = :reportId")

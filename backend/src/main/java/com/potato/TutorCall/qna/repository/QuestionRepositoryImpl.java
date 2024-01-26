@@ -22,7 +22,6 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
   @Transactional
   public Long writeQuestion(QuestionWriteDto questionWriteDto, User user, Tag tag) {
 
-
         Question question = Question.
                 builder().
                 title(questionWriteDto.getQuestionTitle()).

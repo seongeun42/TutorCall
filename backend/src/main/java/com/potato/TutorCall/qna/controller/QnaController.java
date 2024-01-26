@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("qna")
+@RequestMapping("/qna")
 @Tag(name = "qna API", description = "Q&A 등록을 위한 API")
 public class QnaController {
 

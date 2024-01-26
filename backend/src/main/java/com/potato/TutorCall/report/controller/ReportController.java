@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("report")
+@RequestMapping("/report")
 @Tag(name="Report API", description = "Report 등록을 위한 API")
 public class ReportController {
     private final ReportService reportService;

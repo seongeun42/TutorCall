@@ -12,6 +12,7 @@ import com.potato.TutorCall.qna.repository.QuestionRepository;
 import com.potato.TutorCall.report.domain.Report;
 import com.potato.TutorCall.report.domain.enums.ReportType;
 import com.potato.TutorCall.report.dto.CommonResponseDto;
+import com.potato.TutorCall.report.dto.ReportDto;
 import com.potato.TutorCall.report.dto.ReportForm;
 import com.potato.TutorCall.report.dto.ReportListDto;
 import com.potato.TutorCall.report.repository.ReportRepository;
@@ -147,9 +148,8 @@ public class ReportService {
         if(!user.getRole().equals(RoleType.ADMIN))
             throw new InvalidException("권한이 존재하지 않습니다");
 
-        Page<Report> list = null;
-        list = reportRepository.findAllByTypeAndProceedState(pageable, reportListDto.getType(),
-                reportListDto.isState());
+        Page<ReportDto> list = reportRepository.findAllByTypeAndProceedStateOrderByIdDesc(pageable, reportListDto.getType(),
+                reportListDto.isState()).map(ReportDto::new);
 
         CommonResponseDto commonResponseDto = CommonResponseDto.builder()
                 .reports(list).build();
@@ -180,11 +180,11 @@ public class ReportService {
                 break;
             }
             case ANSWER -> {
-                count = answerRepository.updateAnswerByIdAndIsDelete(report.getReported(), true);
+                count = answerRepository.deleteQuestion(report.getReported(), true);
                 break;
             }
             case QUESTION -> {
-                count = questionRepository.updateQuestionByIdAndIsDelete(report.getReported(), true);
+                count = questionRepository.deleteQuestion(report.getReported(), true);
                 break;
             }
             case PROMOTION -> {
@@ -192,8 +192,6 @@ public class ReportService {
                 break;
             }
         }
-
-//        if (count == 0) throw new NotFoundException("잘못된 신고 대상");
 
         count = reportRepository.updateReportById(reportId);
         if (count == 0) throw new NotFoundException("신고 처리 실패");
