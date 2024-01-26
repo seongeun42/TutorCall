@@ -1,6 +1,7 @@
 package com.potato.TutorCall.report.service;
 
 import com.potato.TutorCall.exception.customException.DuplicatedException;
+import com.potato.TutorCall.exception.customException.InvalidException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.lecture.domain.Lecture;
 import com.potato.TutorCall.lecture.repository.LectureRepository;
@@ -15,6 +16,7 @@ import com.potato.TutorCall.report.dto.ReportForm;
 import com.potato.TutorCall.report.dto.ReportListDto;
 import com.potato.TutorCall.report.repository.ReportRepository;
 import com.potato.TutorCall.user.domain.User;
+import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,6 +70,14 @@ public class ReportService {
         return ResponseEntity.ok(commonResponseDto);
     }
 
+    public boolean isDuplicatedReport(User reporter, long reportedId, ReportType reportType){
+
+        Report report = reportRepository.findReportByReportedAndReporterAndType(reportedId, reporter,
+                reportType);
+
+        return report != null;
+    }
+
     @Transactional
     public ResponseEntity<?> reportUser(long reporterId, long reportedId, ReportForm reportForm){
 
@@ -77,6 +87,9 @@ public class ReportService {
         User reported =
                 userRepository.findById(reportedId)
                         .orElseThrow(()-> new NotFoundException("잘못된 유저 신고"));
+
+        if(isDuplicatedReport(reporter, reportedId, ReportType.USER))
+            throw new DuplicatedException("중복 신고는 불가능합니다!");
 
         return returnResponseEntity(reportedId, reporter, reportForm, ReportType.USER);
 
@@ -91,6 +104,9 @@ public class ReportService {
                 questionRepository.findById(questionId)
                         .orElseThrow(()-> new NotFoundException("존재하지 않는 대상 신고"));
 
+        if(isDuplicatedReport(reporter, questionId, ReportType.QUESTION))
+            throw new DuplicatedException("중복 신고는 불가능합니다!");
+
         return returnResponseEntity(questionId, reporter, reportForm, ReportType.QUESTION);
     }
 
@@ -102,6 +118,9 @@ public class ReportService {
         Lecture reported =
                 lectureRepository.findById(lectureId)
                         .orElseThrow(()-> new NotFoundException("존재하지 않는 홍보물 신고"));
+
+        if(isDuplicatedReport(reporter, lectureId, ReportType.PROMOTION))
+            throw new DuplicatedException("중복 신고는 불가능합니다!");
 
         return returnResponseEntity(lectureId, reporter, reportForm, ReportType.PROMOTION);
     }
@@ -115,10 +134,21 @@ public class ReportService {
                 answerRepository.findById(answerId)
                         .orElseThrow(()-> new NotFoundException("존재하지 않는 대상 신고"));
 
+        if(isDuplicatedReport(reporter, answerId, ReportType.ANSWER))
+            throw new DuplicatedException("중복 신고는 불가능합니다!");
+
         return returnResponseEntity(answerId, reporter, reportForm, ReportType.ANSWER);
     }
 
-    public ResponseEntity<?> findAllReport(Pageable pageable, ReportListDto reportListDto){
+    public ResponseEntity<?> findAllReport(long userId, Pageable pageable, ReportListDto reportListDto){
+
+        User user =
+                userRepository.findById(userId)
+                        .orElseThrow(()-> new NotFoundException("잘못된 유저 접근"));
+
+        if(!user.getRole().equals(RoleType.ADMIN))
+            throw new InvalidException("권한이 존재하지 않습니다");
+
         Page<Report> list = null;
         list = reportRepository.findAllByTypeAndProceedState(pageable, reportListDto.getType(),
                 reportListDto.isState());
@@ -130,7 +160,14 @@ public class ReportService {
     }
 
     @Transactional
-    public ResponseEntity<?> acceptReport(long reportId){
+    public ResponseEntity<?> acceptReport(long userId, long reportId){
+
+        User user =
+                userRepository.findById(userId)
+                        .orElseThrow(()-> new NotFoundException("잘못된 유저 접근"));
+
+        if(!user.getRole().equals(RoleType.ADMIN))
+            throw new InvalidException("권한이 존재하지 않습니다");
 
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(()->new NotFoundException("존재하지 않는 report"));
