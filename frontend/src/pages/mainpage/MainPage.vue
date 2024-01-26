@@ -21,9 +21,10 @@ import ProblemUpload from './ProblemUpload.vue'
 import ReviewCarousel from './ReviewCarousel.vue'
 import FindTutor from './FindTutor.vue'
 import { ref } from 'vue'
+import type { Ref } from 'vue'
 
 // 추후 로직 구현 필요(비회원 & 학생 / 선생님 회원 구분)
-const isTutor = ref(false)
+const isTutor: Ref<boolean> = ref(false)
 </script>
 
 <style scoped></style>

@@ -63,7 +63,7 @@ const router = createRouter({
     },
     {
       // 과외 구하는 모집 및 홍보 게시판
-      path: '/lecturespromo',
+      path: '/lecturespromotion',
       name: 'lecturesPromo',
       component: LectureRecruit,
       children: [
@@ -90,32 +90,19 @@ const router = createRouter({
       ]
     },
     {
-      // 온라인 과외방 기본 경로 (컴포넌트 없음)
-      path: '/onlinelecture',
-      name: 'onlineLecture',
-      children: [
-        // 개별 온라인 과외방
-        {
-          path: ':onlineLectureNum',
-          name: 'onlineLectureNum',
-          component: OnlineLecture
-        }
-      ]
-    },
-    {
       // 튜터콜 (컴포넌트 없음)
       path: '/onlinelecture',
       name: 'onlineLecture',
       children: [
         // 개별 온라인 과외방 + 튜터콜
         {
-          path: ':onlineLectureNum',
+          path: ':tutorId/:onlineLectureNum',
           name: 'onlineLectureNum',
           component: OnlineLecture
         },
-        // 과외방 대기실
+        // 튜터콜 대기실
         {
-          path: ':tutorId/waiting',
+          path: ':userId/waiting',
           name: 'waitingRoom',
           component: TutorCallPage
         }
