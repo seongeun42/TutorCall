@@ -22,7 +22,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
   @Transactional
   public Long writeQuestion(QuestionWriteDto questionWriteDto, User user, Tag tag) {
 
-<<<<<<< HEAD
+
         Question question = Question.
                 builder().
                 title(questionWriteDto.getQuestionTitle()).
@@ -35,20 +35,9 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
         entityManager.flush();
         return question.getId();
     }
-=======
-    // user가 null이어도 insert가 진행되어서 억지로 막아놓음..
 
-    Question question =
-        Question.builder()
-            .title(questionWriteDto.getQuestionTitle())
-            .content(questionWriteDto.getQuestionContent())
-            .tag(tag)
-            .writer(user)
-            .build();
-    entityManager.persist(question);
-    return question.getId();
-  }
->>>>>>> origin/backend
+
+
 
   @Override
   @Transactional
