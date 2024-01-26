@@ -59,12 +59,7 @@ public class User {
 
   @CreatedDate private LocalDateTime joinDate;
 
-<<<<<<< HEAD
-    // 양방향 연관 관계
-    @JsonManagedReference
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Inquiry> inquiryList = new ArrayList<>();
-=======
+
   // 양방향 연관 관계
   @JsonManagedReference
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -77,7 +72,7 @@ public class User {
   @JsonManagedReference
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private List<PointHistory> pointHistoryList = new ArrayList<>();
->>>>>>> origin/backend
+
 
   @JsonManagedReference
   @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
