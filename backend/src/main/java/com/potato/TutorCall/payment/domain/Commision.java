@@ -11,21 +11,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Commision {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private int grade;
+  private int grade;
 
-    private double commision;
+  private double commision;
 
-
-
-
-    // 생성자
-    @Builder
-    public Commision(int grade, double commision) {
-        this.grade = grade;
-        this.commision = commision;
-    }
-
+  // 생성자
+  @Builder
+  public Commision(int grade, double commision) {
+    this.grade = grade;
+    this.commision = commision;
+  }
 }

@@ -1,4 +1,3 @@
 package com.potato.TutorCall.review.dto;
 
-public class ReviewDto {
-}
+public class ReviewDto {}

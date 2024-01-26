@@ -24,7 +24,7 @@ spotless {
 		googleJavaFormat()
 //
 		indentWithTabs(2)
-		indentWithSpaces(4)
+		indentWithSpaces(2)
 		// 공백 제거
 		trimTrailingWhitespace()
 		// 끝부분 New Line 처리

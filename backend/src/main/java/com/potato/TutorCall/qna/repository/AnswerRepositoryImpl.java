@@ -9,21 +9,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
-public class AnswerRepositoryImpl implements AnswerRepositoryCustom{
+public class AnswerRepositoryImpl implements AnswerRepositoryCustom {
 
-    private final EntityManager entityManager;
-    @Override
-    @Transactional
-    public Long writeAnswer(AnswerWriteDto answerWriteDto, Tutor tutor, Question question) {
-        Answer answer = Answer.builder()
-                .content(answerWriteDto.getAnswerContent())
-                .tutor(tutor)
-                .question(question)
-                .build();
+  private final EntityManager entityManager;
 
-        entityManager.persist(answer);
-        entityManager.flush();
+  @Override
+  @Transactional
+  public Long writeAnswer(AnswerWriteDto answerWriteDto, Tutor tutor, Question question) {
+    Answer answer =
+        Answer.builder()
+            .content(answerWriteDto.getAnswerContent())
+            .tutor(tutor)
+            .question(question)
+            .build();
 
-        return answer.getId();
-    }
+    entityManager.persist(answer);
+    entityManager.flush();
+
+    return answer.getId();
+  }
 }

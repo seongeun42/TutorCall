@@ -12,25 +12,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TutorTag {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Tutor tutor;
+  @JsonBackReference
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Tutor tutor;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Tag tag;
+  @JsonBackReference
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Tag tag;
 
-
-
-
-    // 생성자
-    @Builder
-    public TutorTag(Tutor tutor, Tag tag) {
-        this.tutor = tutor;
-        this.tag = tag;
-    }
-
+  // 생성자
+  @Builder
+  public TutorTag(Tutor tutor, Tag tag) {
+    this.tutor = tutor;
+    this.tag = tag;
+  }
 }

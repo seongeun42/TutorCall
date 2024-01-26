@@ -16,3 +16,4 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
     @Query(value="UPDATE Lecture l set l.isDelete=:isDelete where l.id=:lectureId")
     int updateLecturerByIdAndisDelete(@Param("lectureId") long lectureId, @Param("isDelete") boolean isDelete);
 }
+

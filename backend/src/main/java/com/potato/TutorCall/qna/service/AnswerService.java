@@ -17,76 +17,79 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AnswerService {
 
-    private final TutorRepository tutorRepository;
-    private final QuestionRepository questionRepository;
-    private final AnswerRepository answerRepository;
+  private final TutorRepository tutorRepository;
+  private final QuestionRepository questionRepository;
+  private final AnswerRepository answerRepository;
 
-    public AnswerService(TutorRepository tutorRepository, QuestionRepository questionRepository, AnswerRepository answerRepository) {
-        this.tutorRepository = tutorRepository;
-        this.questionRepository = questionRepository;
-        this.answerRepository = answerRepository;
-    }
+  public AnswerService(
+      TutorRepository tutorRepository,
+      QuestionRepository questionRepository,
+      AnswerRepository answerRepository) {
+    this.tutorRepository = tutorRepository;
+    this.questionRepository = questionRepository;
+    this.answerRepository = answerRepository;
+  }
 
-    public ResponseEntity<?> writeAnswer(AnswerWriteDto answerWriteDto, long userId){
+  public ResponseEntity<?> writeAnswer(AnswerWriteDto answerWriteDto, long userId) {
 
-        answerWriteDto.setTutorUserId(userId);
-        Tutor tutor = tutorRepository.findById(answerWriteDto.getTutorUserId())
-                .orElseThrow(()-> new NotFoundException("답변 작성 실패"));
-        Question targetQuestion = questionRepository.findById(answerWriteDto.getQuestionId())
-                .orElseThrow(()-> new NotFoundException("답변 작성 실패"));
+    answerWriteDto.setTutorUserId(userId);
+    Tutor tutor =
+        tutorRepository
+            .findById(answerWriteDto.getTutorUserId())
+            .orElseThrow(() -> new NotFoundException("답변 작성 실패"));
+    Question targetQuestion =
+        questionRepository
+            .findById(answerWriteDto.getQuestionId())
+            .orElseThrow(() -> new NotFoundException("답변 작성 실패"));
 
-        Long answerId = null;
-        CommonResponseDto commonResponseDto;
+    Long answerId = null;
+    CommonResponseDto commonResponseDto;
 
-        answerId = answerRepository.writeAnswer(answerWriteDto, tutor, targetQuestion);
+    answerId = answerRepository.writeAnswer(answerWriteDto, tutor, targetQuestion);
 
-        if (answerId == null) throw new NotFoundException("질문 작성 실패");
+    if (answerId == null) throw new NotFoundException("질문 작성 실패");
 
-        commonResponseDto = CommonResponseDto.builder()
-                        .answerId(answerId)
-                .message("답변이 생성되었습니다.")
-                .build();
+    commonResponseDto =
+        CommonResponseDto.builder().answerId(answerId).message("답변이 생성되었습니다.").build();
 
-        return ResponseEntity.ok(commonResponseDto);
-    }
+    return ResponseEntity.ok(commonResponseDto);
+  }
 
-    @Transactional
-    public ResponseEntity<?> deleteAnswer(int answerId, long userId){
+  @Transactional
+  public ResponseEntity<?> deleteAnswer(int answerId, long userId) {
 
-        CommonResponseDto commonResponseDto;
-        Answer targetAnswer = answerRepository.findById((long) answerId)
-                .orElseThrow(()->new NotFoundException("질문 삭제 실패"));
+    CommonResponseDto commonResponseDto;
+    Answer targetAnswer =
+        answerRepository
+            .findById((long) answerId)
+            .orElseThrow(() -> new NotFoundException("질문 삭제 실패"));
 
-        if(!targetAnswer.getTutor().getId().equals(userId))
-            throw new InvalidException("삭제 권한 없음");
+    if (!targetAnswer.getTutor().getId().equals(userId)) throw new InvalidException("삭제 권한 없음");
 
-        int count = answerRepository.updateAnswerByIdAndIsDelete((long) answerId, true);
-        if (count ==0) throw new NotFoundException("질문 삭제 실패");
+    int count = answerRepository.updateAnswerByIdAndIsDelete((long) answerId, true);
+    if (count == 0) throw new NotFoundException("질문 삭제 실패");
 
-        commonResponseDto = CommonResponseDto.builder().
-                message("답변 삭제 완료.")
-                .build();
-        return ResponseEntity.ok(commonResponseDto);
-    }
+    commonResponseDto = CommonResponseDto.builder().message("답변 삭제 완료.").build();
+    return ResponseEntity.ok(commonResponseDto);
+  }
 
-    @Transactional
-    public ResponseEntity<?> chooseAnswer(int answerId, long userId){
+  @Transactional
+  public ResponseEntity<?> chooseAnswer(int answerId, long userId) {
 
-        CommonResponseDto commonResponseDto;
+    CommonResponseDto commonResponseDto;
 
-        Answer targetAnswer = answerRepository.findById((long) answerId)
-                .orElseThrow(()-> new NotFoundException("답변 채택 실패"));
+    Answer targetAnswer =
+        answerRepository
+            .findById((long) answerId)
+            .orElseThrow(() -> new NotFoundException("답변 채택 실패"));
 
-        if(!targetAnswer.getQuestion().getWriter().getId().equals(userId))
-            throw new InvalidException("권한 없음");
+    if (!targetAnswer.getQuestion().getWriter().getId().equals(userId))
+      throw new InvalidException("권한 없음");
 
-        int count = answerRepository.updateAnswerByIdAndIsChosen((long) answerId, true);
-        if (count ==0) throw new NotFoundException("답변 채택 실패");
+    int count = answerRepository.updateAnswerByIdAndIsChosen((long) answerId, true);
+    if (count == 0) throw new NotFoundException("답변 채택 실패");
 
-        commonResponseDto = CommonResponseDto.builder().
-                message("답변 채택 완료.")
-                .build();
-        return ResponseEntity.ok(commonResponseDto);
-
-    }
+    commonResponseDto = CommonResponseDto.builder().message("답변 채택 완료.").build();
+    return ResponseEntity.ok(commonResponseDto);
+  }
 }

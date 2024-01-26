@@ -5,10 +5,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.TutorCall.auth.SessionKey;
+import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.mypage.datautil.MypageDataInitializer;
-import com.potato.TutorCall.tutor.repository.TagRepository;
-import com.potato.TutorCall.tutor.repository.TutorRepository;
-import com.potato.TutorCall.tutor.repository.TutorTagRepository;
+import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.repository.UserRepository;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,10 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UpdateNickNameTest {
   @Autowired private UserRepository userRepository;
-  @Autowired private TutorRepository tutorRepository;
-  @Autowired private TutorTagRepository tutorTagRepository;
-  @Autowired private TagRepository tagRepository;
-
+  @Autowired private MypageDataInitializer dataInitializer;
   @Autowired private WebApplicationContext wc;
 
   private MockHttpSession session;
@@ -40,9 +37,7 @@ class UpdateNickNameTest {
 
   @BeforeEach
   void addTestData() {
-    MypageDataInitializer.addUser(userRepository);
-    MypageDataInitializer.addTutor(
-        userRepository, tutorRepository, tutorTagRepository, tagRepository);
+    dataInitializer.addUser(userRepository);
 
     mockMvc = MockMvcBuilders.webAppContextSetup(wc).build();
   }
@@ -57,14 +52,16 @@ class UpdateNickNameTest {
     mockMvc
         .perform(
             patch("/mypage/nickname").contentType(MediaType.APPLICATION_JSON).content(requestBody))
-        .andExpect(status().is5xxServerError());
+        .andExpect(status().isForbidden());
   }
 
   @Test
   @DisplayName("사용자는 본인의 닉네임을 변경할 수 있음")
   void updateNickname() throws Exception {
+    UserSessionDto userSession = UserSessionDto.builder().id(1L).roleType(RoleType.USER).build();
+
     session = new MockHttpSession();
-    session.setAttribute("user", 1L);
+    session.setAttribute(SessionKey.USER, userSession);
 
     Map<String, String> requestMap = new HashMap<>();
     requestMap.put("nickname", "new_nickname");
