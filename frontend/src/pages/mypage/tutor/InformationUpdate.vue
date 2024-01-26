@@ -3,7 +3,9 @@
   <div class="flex mx-20">
     <img src="@/img/default_profile.png" class="w-28 h-28 rounded-full" alt="" />
     <div class="mx-10 my-3">
-      <button class="border-4 border-blue-300 w-40 h-16 text-blue-500">사진 업로드</button>
+      <button class="border-4 border-blue-300 w-40 h-16 text-blue-500 rounded-lg">
+        사진 업로드
+      </button>
       <p class="text-center mt-2 text-lg">삭제</p>
     </div>
     <p class="border-2 mx-20"></p>
