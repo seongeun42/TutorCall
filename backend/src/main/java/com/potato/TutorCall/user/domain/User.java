@@ -57,7 +57,8 @@ public class User {
 
   private boolean unjoin;
 
-  @CreatedDate private LocalDateTime joinDate;
+  @CreatedDate
+  private LocalDateTime joinDate;
 
 
   // 양방향 연관 관계

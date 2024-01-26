@@ -65,8 +65,6 @@ public class ReportService {
                         .reportId(reportId)
                         .build();
 
-        System.out.println(commonResponseDto.toString());
-
         return ResponseEntity.ok(commonResponseDto);
     }
 
@@ -195,7 +193,7 @@ public class ReportService {
             }
         }
 
-        if (count == 0) throw new NotFoundException("잘못된 신고 대상");
+//        if (count == 0) throw new NotFoundException("잘못된 신고 대상");
 
         count = reportRepository.updateReportById(reportId);
         if (count == 0) throw new NotFoundException("신고 처리 실패");
