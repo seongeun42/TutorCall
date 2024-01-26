@@ -2,10 +2,7 @@ package com.potato.TutorCall.mypage.controller;
 
 import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.UserSessionDto;
-import com.potato.TutorCall.mypage.dto.req.MyPagePaginationDto;
-import com.potato.TutorCall.mypage.dto.req.NicknameUpdateReqDto;
-import com.potato.TutorCall.mypage.dto.req.PasswordUpdateReqDto;
-import com.potato.TutorCall.mypage.dto.req.ProfileUpdateReqDto;
+import com.potato.TutorCall.mypage.dto.req.*;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
 import com.potato.TutorCall.mypage.dto.res.UpdateSuccessResDto;
 import com.potato.TutorCall.mypage.service.MypageService;
@@ -87,8 +84,10 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/notification")
-  public ResponseEntity<?> updateNotificationConfig() {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> updateNotificationConfig(@SessionAttribute(name = SessionKey.USER) UserSessionDto userSession, @RequestBody NotificationUpdateReqDto notificationUpdateReq) {
+    mypageService.updaetNotification(userSession.getId(), notificationUpdateReq.getNotificationOption());
+
+    return ResponseEntity.ok(new UpdateSuccessResDto("알림 설정이 변경되었습니다."));
   }
 
   /**
