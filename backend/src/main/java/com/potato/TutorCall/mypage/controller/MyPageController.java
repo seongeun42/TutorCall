@@ -85,7 +85,7 @@ public class MyPageController {
    */
   @PatchMapping("/notification")
   public ResponseEntity<?> updateNotificationConfig(@SessionAttribute(name = SessionKey.USER) UserSessionDto userSession, @RequestBody NotificationUpdateReqDto notificationUpdateReq) {
-    mypageService.updaetNotification(userSession.getId(), notificationUpdateReq.getExistNotification());
+    mypageService.updaetNotification(userSession.getId(), notificationUpdateReq.getNotificationOption());
 
     return ResponseEntity.ok(new UpdateSuccessResDto("알림 설정이 변경되었습니다."));
   }

@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class NotificationUpdateReqDto {
-    Boolean existNotification;
+    Boolean notificationOption;
 }

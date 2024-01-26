@@ -67,4 +67,11 @@ public class MypageService {
 
     currentUser.changePassword(bCryptPasswordEncoder.encode(newPassword));
   }
+
+    public void updaetNotification(Long id, Boolean notificationOption) {
+      User currentUser =
+              userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
+
+      currentUser.changeNoPushNotification(notificationOption);
+    }
 }
