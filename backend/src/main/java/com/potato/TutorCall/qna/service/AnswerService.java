@@ -66,7 +66,7 @@ public class AnswerService {
 
     if (!targetAnswer.getTutor().getId().equals(userId)) throw new InvalidException("삭제 권한 없음");
 
-    int count = answerRepository.updateAnswerByIdAndIsDelete((long) answerId, true);
+    int count = answerRepository.deleteQuestion((long) answerId, true);
     if (count == 0) throw new NotFoundException("질문 삭제 실패");
 
     commonResponseDto = CommonResponseDto.builder().message("답변 삭제 완료.").build();
@@ -86,7 +86,7 @@ public class AnswerService {
     if (!targetAnswer.getQuestion().getWriter().getId().equals(userId))
       throw new InvalidException("권한 없음");
 
-    int count = answerRepository.updateAnswerByIdAndIsChosen((long) answerId, true);
+    int count = answerRepository.chooseAnswer((long) answerId, true);
     if (count == 0) throw new NotFoundException("답변 채택 실패");
 
     commonResponseDto = CommonResponseDto.builder().message("답변 채택 완료.").build();

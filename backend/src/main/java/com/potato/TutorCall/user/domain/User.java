@@ -57,7 +57,9 @@ public class User {
 
   private boolean unjoin;
 
-  @CreatedDate private LocalDateTime joinDate;
+  @CreatedDate
+  private LocalDateTime joinDate;
+
 
   // 양방향 연관 관계
   @JsonManagedReference
@@ -71,6 +73,7 @@ public class User {
   @JsonManagedReference
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private List<PointHistory> pointHistoryList = new ArrayList<>();
+
 
   @JsonManagedReference
   @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)

@@ -75,7 +75,7 @@ public class QuestionService {
     Page<Question> list = null;
     CommonResponseDto commonResponseDto;
     list =
-        questionRepository.findAllByContentContainsAndTag_IdAndIsEndAndIsDelete(
+        questionRepository.findAllByContentContainsAndTag_IdAndIsEndAndIsDeleteOrderByCreatedAt(
             pageable,
             searchFormDto.getKeyword(),
             searchFormDto.getTagId(),
@@ -133,8 +133,8 @@ public class QuestionService {
 
     CommonResponseDto commonResponseDto;
     int count =
-        questionRepository.updateQuestionByIdAndWriter_IdAndIsDelete(
-            (long) questionId, false, userId);
+        questionRepository.deleteQuestion(
+            (long) questionId, false);
 
     if (count == 0) throw new NotFoundException("질문 삭제 실패");
 
