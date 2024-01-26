@@ -61,9 +61,9 @@ function handleMode(show: boolean, mode: string) {
           </button>
         </div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <div class="flex flex-shrink-0 items-center">
+          <RouterLink to="/" class="flex flex-shrink-0 items-center">
             <img class="h-8 w-auto" src="@/img/logo.png" alt="Your Company" />
-          </div>
+          </RouterLink>
           <div class="hidden sm:ml-6 sm:block flex-1 justify-evenly">
             <div class="flex space-x-4 justify-evenly">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
@@ -145,7 +145,7 @@ function handleMode(show: boolean, mode: string) {
 
           <!-- Profile dropdown -->
           <div class="relative ml-3">
-            <div>
+            <RouterLink to="/login">
               <button
                 type="button"
                 class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -161,7 +161,7 @@ function handleMode(show: boolean, mode: string) {
                   alt=""
                 />
               </button>
-            </div>
+            </RouterLink>
 
             <!--
             Dropdown menu, show/hide based on menu state.

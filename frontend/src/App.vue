@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import NavBar from '@/components/NavBar.vue'
-import MainPage from '@/pages/mainpage/MainPage.vue'
 </script>
 
 <template>
   <NavBar />
-  <MainPage />>
+  <RouterView />
 </template>
 
 <style scoped></style>
