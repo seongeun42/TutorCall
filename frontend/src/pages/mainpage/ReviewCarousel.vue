@@ -8,8 +8,6 @@
         <ReviewDetail :data="slide" />
         <!-- <div class="carousel__item">{{ slide }}</div> -->
       </Slide>
-
-      <!-- ... -->
     </Carousel>
   </div>
 </template>
@@ -38,6 +36,7 @@ export default defineComponent({
 
 .carousel__viewport {
   perspective: 2000px;
+  padding-top: 2rem;
 }
 
 .carousel__track {
