@@ -5,24 +5,38 @@
   />
   <div class="review-container">
     <div class="user-profile">
-      <img src="@\img\default_profile.png" alt="프로필 사진" class="profile-picture" />
-      <span class="username">사용자 닉네임</span>
+      <img :src="data.profileUrl" alt="프로필 사진" class="profile-picture" />
+      <span class="username">{{ data.nickname }}</span>
     </div>
     <div class="star-rating">
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star-half-alt"></i>
+      <i v-for="i in Math.floor(data.rating)" class="fas fa-star"></i>
+      <i v-if="data.rating % 1 !== 0" class="fas fa-star-half-alt"></i>
     </div>
     <div class="user-review">
       <p class="review-text">
-        별점 리뷰 내용이 길어지면 어떻게될까요 어떻게 되긴요 항상 이렇게 되는거죠
-        라라라라라라라라라루루루루루라라라라
+        {{ data.content }}
       </p>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { defineProps } from 'vue'
+
+interface Review {
+  profileUrl: string
+  nickname: string
+  rating: number
+  content: string
+}
+
+defineProps({
+  data: {
+    type: Object as () => Review,
+    required: true
+  }
+})
+</script>
 
 <style>
 .review-container {
