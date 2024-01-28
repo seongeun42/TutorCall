@@ -5,4 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TutorcallRepository extends JpaRepository<TutorCall, Long> {}
+public interface TutorCallRepository extends JpaRepository<TutorCall, Long> {}
