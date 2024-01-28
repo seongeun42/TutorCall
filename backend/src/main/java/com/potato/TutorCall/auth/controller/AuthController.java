@@ -21,6 +21,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,7 +36,7 @@ public class AuthController {
 
   @PostMapping("/login")
   public ResponseEntity<?> login(
-      AuthLoginRequestDto authLoginRequestDto, HttpServletRequest httpServletRequest)
+          @RequestBody AuthLoginRequestDto authLoginRequestDto, HttpServletRequest httpServletRequest)
       throws Exception {
     // 유저 확인 메소드
     User user = this.authService.login(authLoginRequestDto);
@@ -52,7 +53,7 @@ public class AuthController {
   }
 
   @PostMapping("/email")
-  public ResponseEntity<?> sendEmail(SendEmailRequestDto sendEmailRequestDto)
+  public ResponseEntity<?> sendEmail(@RequestBody SendEmailRequestDto sendEmailRequestDto)
       throws MessagingException, UnsupportedEncodingException {
     Map<String, String> response = new HashMap<>();
 
@@ -78,7 +79,7 @@ public class AuthController {
   }
 
   @PostMapping("/email/check")
-  public ResponseEntity<?> emailCheck(EmailCheckResponseDto emailCheckResponseDto)
+  public ResponseEntity<?> emailCheck(@RequestBody EmailCheckResponseDto emailCheckResponseDto)
       throws BadRequestException {
     // email , code
     boolean emailCheckSuccess =
@@ -100,7 +101,7 @@ public class AuthController {
   }
 
   @PostMapping("/nick-check")
-  public ResponseEntity<?> nickCheck(NickCheckResponseDto nickCheckResponseDto)
+  public ResponseEntity<?> nickCheck(@RequestBody NickCheckResponseDto nickCheckResponseDto)
       throws BadRequestException {
     User user = this.userService.findByNickname(nickCheckResponseDto.getNickname());
 
@@ -114,7 +115,7 @@ public class AuthController {
   }
 
   @PostMapping("signup")
-  public ResponseEntity<?> signup(SignupRequestDto signupRequestDto) {
+  public ResponseEntity<?> signup(@RequestBody SignupRequestDto signupRequestDto) {
     User user = this.userService.signup(signupRequestDto);
 
     Map<String, String> response = new HashMap<>();
