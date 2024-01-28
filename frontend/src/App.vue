@@ -1,17 +1,11 @@
 <script setup lang="ts">
 import NavBar from '@/components/NavBar.vue'
-import OnlineLecture from '@/pages/onlinelecture/OnlineLecture.vue'
-import ChatBox from './components/chatting/ChatBox.vue'
+import MainPage from '@/pages/mainpage/MainPage.vue'
 </script>
 
 <template>
-  <!-- <NavBar /> -->
-  <!-- <OnlineLecture/> -->
-  <ChatBox />
+  <NavBar />
+  <MainPage />>
 </template>
 
-<style scoped>
-.test {
-  height: 100%;
-}
-</style>
+<style scoped></style>
