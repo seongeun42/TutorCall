@@ -3,6 +3,7 @@ package com.potato.TutorCall.auth.dto;
 import jakarta.mail.internet.InternetAddress;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Setter;
 
 @Data
 public class SendEmailDto {

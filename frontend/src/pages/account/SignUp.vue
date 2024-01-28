@@ -2,10 +2,12 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import SelectRole from './SelectRole.vue'
+import * as api from '@/api/login/signUp'
 // import exp from 'constants'
 
 const isSignUp: Ref<boolean> = ref(false)
 const isSignIn: Ref<boolean> = ref(true)
+const emailAddr: Ref<string> = ref("");
 
 function toggle(): void {
   isSignUp.value = !isSignUp.value
@@ -16,6 +18,21 @@ function toggle(): void {
 function handleFormStatus(): void {
   isSignUp.value = !isSignUp.value
   isSignIn.value = !isSignIn.value
+}
+
+async function receiveEmailCode(){
+  console.log("click!");
+  console.log("현재 입력된 이메일 값: "+emailAddr.value);
+
+  await api.sendEmailCode(emailAddr.value)
+  .then((response)=>{
+    console.log(response);
+  })
+  .catch((error)=>{
+    console.log(error);
+  })
+
+
 }
 </script>
 
@@ -41,18 +58,19 @@ function handleFormStatus(): void {
             </div>
             <div class="input-group" style="position: relative">
               <i class="bx bx-mail-send"></i>
-              <input type="email" placeholder="이메일" required />
+              <input type="email" placeholder="이메일" required v-model="emailAddr"/>
               <div
                 class="bg-[#6181ad] rounded-lg w-14 h-9 text-white flex items-center justify-center font-semibold"
                 style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%)"
+                @click="receiveEmailCode"
               >
                 <!--@click 추가해서 이메일 인증 발송에 사용 예정-->
-                발송
+                  발송
               </div>
             </div>
             <div class="input-group" style="position: relative">
               <i class="bx bxs-user"></i>
-              <input type="text" placeholder="이메일 인증" required />
+              <input type="text" placeholder="이메일 인증" required/>
               <div
                 class="bg-[#43766C] rounded-lg w-14 h-9 text-white flex items-center justify-center font-semibold"
                 style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%)"

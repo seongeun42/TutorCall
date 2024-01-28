@@ -21,6 +21,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,8 +53,10 @@ public class AuthController {
   }
 
   @PostMapping("/email")
-  public ResponseEntity<?> sendEmail(SendEmailRequestDto sendEmailRequestDto)
+  public ResponseEntity<?> sendEmail(@RequestBody SendEmailRequestDto sendEmailRequestDto)
       throws MessagingException, UnsupportedEncodingException {
+
+    System.out.println(sendEmailRequestDto.toString());
     Map<String, String> response = new HashMap<>();
 
     String email = sendEmailRequestDto.getEmail();

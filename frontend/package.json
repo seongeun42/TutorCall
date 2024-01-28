@@ -13,6 +13,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
+    "axios": "^1.6.7",
     "chart.js": "^4.4.1",
     "chartjs": "^0.3.24",
     "gsap": "^3.12.4",
