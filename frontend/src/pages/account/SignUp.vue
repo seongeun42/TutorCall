@@ -3,11 +3,19 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 import SelectRole from './SelectRole.vue'
 import * as api from '@/api/login/signUp'
+import router from '@/router/index'
 // import exp from 'constants'
 
 const isSignUp: Ref<boolean> = ref(false)
 const isSignIn: Ref<boolean> = ref(true)
 const emailAddr: Ref<string> = ref("");
+const vaildCode: Ref<string> = ref("");
+const nickname: Ref<string> = ref("");
+const password: Ref<string> = ref("");
+const passwordCheck : Ref<string> = ref("");
+const recommander: Ref<string> = ref("");
+const isEmailChecked: Ref<boolean> = ref(false);
+const isNickNameUsed: Ref<boolean> = ref(false);
 
 function toggle(): void {
   isSignUp.value = !isSignUp.value
@@ -20,18 +28,83 @@ function handleFormStatus(): void {
   isSignIn.value = !isSignIn.value
 }
 
+function isValidEmail():boolean{
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(emailAddr.value);
+}
 async function receiveEmailCode(){
-  console.log("click!");
+
   console.log("현재 입력된 이메일 값: "+emailAddr.value);
+
+  if(!isValidEmail()){
+    alert("이메일 형식이 아닙니다.");
+    return;
+  }
 
   await api.sendEmailCode(emailAddr.value)
   .then((response)=>{
-    console.log(response);
+    if(response.status == 201) alert(response.data.message);
   })
   .catch((error)=>{
-    console.log(error);
+    alert(error.response.data.message);
   })
 
+}
+
+async function checkEmailValidCode(){
+  const param = {
+    'email':emailAddr.value,
+    'code':vaildCode.value
+  };
+  await api.checkCode(param)
+  .then((response)=>{
+    alert(response.data.message);
+    isEmailChecked.value = true;
+  })
+  .catch((error)=>{
+    alert(error.response.data.message);
+  })
+
+}
+
+function checkPassword(){
+  if(password.value != passwordCheck.value) return false;
+  return true;
+}
+
+async function doSignUp(event:any){
+
+  event.preventDefault();
+
+  const nickcheck = {
+    'nickname': nickname.value
+  }
+
+  await api.nickDupCheck(nickcheck)
+  .catch((error)=>{
+    console.log(error);
+    alert(error.response.data.message);
+    isNickNameUsed.value = true;
+  })
+
+  const param = {
+    'nickname': nickname.value,
+    'password': password.value,
+    'email': emailAddr.value,
+  }
+
+  if(checkPassword() == true && isEmailChecked.value && !isNickNameUsed.value){
+    await api.signUp(param)
+    .then((response)=>{
+      alert(response.data.message);
+      router.push({"name":"signform"});
+    })
+    .catch((error)=>{
+      alert(error.response.data.message);
+    })
+  }else{
+    alert("입력 다시 확인");
+  }
 
 }
 </script>
@@ -43,18 +116,19 @@ async function receiveEmailCode(){
       <!-- SIGN UP -->
       <div class="col align-items-center flex-col sign-up">
         <div class="form-wrapper align-items-center">
+          <form>
           <div class="form sign-up">
             <div class="input-group">
               <i class="bx bxs-user"></i>
-              <input type="text" placeholder="닉네임" required />
+              <input type="text" placeholder="닉네임" required v-model="nickname"/>
             </div>
             <div class="input-group">
               <i class="bx bxs-lock-alt"></i>
-              <input type="password" placeholder="비밀번호" required />
+              <input type="password" placeholder="비밀번호" required v-model="password"/>
             </div>
             <div class="input-group">
               <i class="bx bxs-lock-alt"></i>
-              <input type="password" placeholder="비밀번호 확인" required />
+              <input type="password" placeholder="비밀번호 확인" required v-model="passwordCheck"/>
             </div>
             <div class="input-group" style="position: relative">
               <i class="bx bx-mail-send"></i>
@@ -70,10 +144,11 @@ async function receiveEmailCode(){
             </div>
             <div class="input-group" style="position: relative">
               <i class="bx bxs-user"></i>
-              <input type="text" placeholder="이메일 인증" required/>
+              <input type="text" placeholder="이메일 인증" required v-model="vaildCode"/>
               <div
                 class="bg-[#43766C] rounded-lg w-14 h-9 text-white flex items-center justify-center font-semibold"
                 style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%)"
+                @click="checkEmailValidCode"
               >
                 <!--@click 추가해서 이메일 인증에 사용 예정-->
                 인증
@@ -81,9 +156,9 @@ async function receiveEmailCode(){
             </div>
             <div class="input-group">
               <i class="bx bxs-user"></i>
-              <input type="text" placeholder="추천인" />
+              <input type="text" placeholder="추천인" v-model="recommander"/>
             </div>
-            <button>회원 가입</button>
+            <button type="submit" @click="doSignUp">회원 가입</button>
             <p>
               <span> 이미 계정이 있으신가요? </span>
               <b
@@ -100,6 +175,7 @@ async function receiveEmailCode(){
               </b>
             </p>
           </div>
+          </form>
         </div>
       </div>
       <!-- END SIGN UP -->

@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-  User findByEmail(String email);
+    User findByEmail(String email);
     User findByNickname(String nickname);
     @Modifying
     @Query(value="UPDATE User u set u.block = :block where u.id = :userId")

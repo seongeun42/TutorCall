@@ -36,7 +36,7 @@ public class AuthController {
 
   @PostMapping("/login")
   public ResponseEntity<?> login(
-      AuthLoginRequestDto authLoginRequestDto, HttpServletRequest httpServletRequest)
+      @RequestBody AuthLoginRequestDto authLoginRequestDto, HttpServletRequest httpServletRequest)
       throws Exception {
     // 유저 확인 메소드
     User user = this.authService.login(authLoginRequestDto);
@@ -56,7 +56,6 @@ public class AuthController {
   public ResponseEntity<?> sendEmail(@RequestBody SendEmailRequestDto sendEmailRequestDto)
       throws MessagingException, UnsupportedEncodingException {
 
-    System.out.println(sendEmailRequestDto.toString());
     Map<String, String> response = new HashMap<>();
 
     String email = sendEmailRequestDto.getEmail();
@@ -81,7 +80,7 @@ public class AuthController {
   }
 
   @PostMapping("/email/check")
-  public ResponseEntity<?> emailCheck(EmailCheckResponseDto emailCheckResponseDto)
+  public ResponseEntity<?> emailCheck(@RequestBody EmailCheckResponseDto emailCheckResponseDto)
       throws BadRequestException {
     // email , code
     boolean emailCheckSuccess =
@@ -103,11 +102,11 @@ public class AuthController {
   }
 
   @PostMapping("/nick-check")
-  public ResponseEntity<?> nickCheck(NickCheckResponseDto nickCheckResponseDto)
+  public ResponseEntity<?> nickCheck(@RequestBody NickCheckResponseDto nickCheckResponseDto)
       throws BadRequestException {
     User user = this.userService.findByNickname(nickCheckResponseDto.getNickname());
 
-    if (user == null) throw new BadRequestException("이미 존재하는 닉네임입니다.");
+    if (user != null) throw new BadRequestException("이미 존재하는 닉네임입니다.");
 
     Map<String, String> response = new HashMap<>();
 
@@ -117,7 +116,7 @@ public class AuthController {
   }
 
   @PostMapping("signup")
-  public ResponseEntity<?> signup(SignupRequestDto signupRequestDto) {
+  public ResponseEntity<?> signup(@RequestBody SignupRequestDto signupRequestDto) {
     User user = this.userService.signup(signupRequestDto);
 
     Map<String, String> response = new HashMap<>();
