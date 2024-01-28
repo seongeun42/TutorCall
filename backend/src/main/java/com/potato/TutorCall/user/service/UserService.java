@@ -32,9 +32,7 @@ public class UserService {
   public User signup(SignupRequestDto signupRequestDto) throws DuplicateKeyException {
     User user = this.userRepository.findByEmail(signupRequestDto.getEmail());
     if (user != null) throw new DuplicateKeyException("이미 존재하는 이메일입니다.");
-    // user nickname도 중복체크???
-    if (user.getNickname().equals(signupRequestDto.getNickname()))
-      throw new DuplicateKeyException("이미 존재하는 닉네임입니다..");
+
     user =
         User.builder()
             .email(signupRequestDto.getEmail())

@@ -105,7 +105,7 @@ public class AuthController {
       throws BadRequestException {
     User user = this.userService.findByNickname(nickCheckResponseDto.getNickname());
 
-    if (user == null) throw new BadRequestException("이미 존재하는 닉네임입니다.");
+    if (user != null) throw new BadRequestException("이미 존재하는 닉네임입니다.");
 
     Map<String, String> response = new HashMap<>();
 
