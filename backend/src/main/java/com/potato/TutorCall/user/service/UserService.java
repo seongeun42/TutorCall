@@ -1,6 +1,8 @@
 package com.potato.TutorCall.user.service;
 
 import com.potato.TutorCall.auth.dto.request.SignupRequestDto;
+import com.potato.TutorCall.exception.customException.ForbiddenException;
+import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.repository.UserRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
@@ -20,7 +23,7 @@ public class UserService {
     return userRepository.findByEmail(email);
   }
 
-  @Transactional()
+  @Transactional
   public User save(User user) {
     return this.userRepository.save(user);
   }
@@ -45,4 +48,14 @@ public class UserService {
 
     return user;
   }
+
+  public User findById(Long id) {
+    User user = userRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("존재하지 않는 회원입니다."));
+    if (user.isUnjoin()) {
+      throw new ForbiddenException("탈퇴한 회원입니다.");
+    }
+    return user;
+  }
+
 }
