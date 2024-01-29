@@ -56,8 +56,8 @@ dependencies {
 	// Spring Session을 Redis에 저장하기 위한 의존성입니다.
 	implementation 'org.springframework.session:spring-session-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.0.7'
 	implementation 'org.springframework.boot:spring-boot-starter-security:3.0.5'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.0.7'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -71,6 +71,7 @@ dependencies {
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 	// -- queryDSL --
+
 
 	//mybatis
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
@@ -93,12 +94,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
 	//test
-
-	//Moskito
-	testImplementation 'org.mockito:mockito-core'
-	testImplementation 'org.mockito:mockito-junit-jupiter'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
 	testImplementation 'org.junit.platform:junit-platform-launcher'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
