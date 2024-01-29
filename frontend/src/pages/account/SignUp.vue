@@ -4,6 +4,8 @@ import type { Ref } from 'vue'
 import SelectRole from './SelectRole.vue'
 import * as api from '@/api/login/signUp'
 import router from '@/router/index'
+import { useUserStore } from '@/store/userStore'
+
 // import exp from 'constants'
 
 const isSignUp: Ref<boolean> = ref(false)
@@ -16,7 +18,32 @@ const passwordCheck : Ref<string> = ref("");
 const recommander: Ref<string> = ref("");
 const isEmailChecked: Ref<boolean> = ref(false);
 const isNickNameUsed: Ref<boolean> = ref(false);
+const loginEmail: Ref<string> = ref("");
+const loginPassword: Ref<string> = ref("");
+const userStore = useUserStore();
 
+const status = router.currentRoute.value.query.signUp;
+// init 
+if(status){
+  if(status == "true"){
+    isSignUp.value=true;
+    isSignIn.value = false;
+  }else{
+    isSignUp.value= false;
+    isSignIn.value = true;
+  }
+}
+
+
+function clearRegistInputValue():void {
+  emailAddr.value = "";
+  vaildCode.value = "";
+  nickname.value = "";
+  password.value = "";
+  passwordCheck.value = "";
+  recommander.value = "";
+
+}
 function toggle(): void {
   isSignUp.value = !isSignUp.value
   isSignIn.value = !isSignIn.value
@@ -32,6 +59,7 @@ function isValidEmail():boolean{
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(emailAddr.value);
 }
+
 async function receiveEmailCode(){
 
   console.log("현재 입력된 이메일 값: "+emailAddr.value);
@@ -43,6 +71,7 @@ async function receiveEmailCode(){
 
   await api.sendEmailCode(emailAddr.value)
   .then((response)=>{
+    console.log(response);
     if(response.status == 201) alert(response.data.message);
   })
   .catch((error)=>{
@@ -97,7 +126,11 @@ async function doSignUp(event:any){
     await api.signUp(param)
     .then((response)=>{
       alert(response.data.message);
-      router.push({"name":"signform"});
+      isSignUp.value=false;
+      isSignIn.value = true;
+      clearRegistInputValue()
+      router.push({"name":"signUp", query:{"signUp":"false"}});
+      return
     })
     .catch((error)=>{
       alert(error.response.data.message);
@@ -107,6 +140,41 @@ async function doSignUp(event:any){
   }
 
 }
+
+async function doLogin(event:any){
+  event.preventDefault();
+  const param = {
+    "email": loginEmail.value,
+    "password" : loginPassword.value
+  }
+
+  console.log(param);
+  await api.login(param)
+  .then((response)=>{
+    const roleType:string = response.data.roleType;
+    if(roleType == "TUTOR"){
+      userStore.login(true, loginEmail.value);
+    }else{
+      userStore.login(false, loginEmail.value);
+    }
+    router.push("/");
+  })
+  .catch((error)=>{
+    console.log(error);
+  })
+
+}
+
+async function doSNSLogin(event:any, snsType:string){
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const redirectUrl = import.meta.env.VITE_GOOGLE_REDIRECT_URL;
+  const scope = 'profile email';
+  const responseType = 'token';
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope}&response_type=${responseType}`;
+  console.log(authUrl);
+
+}
+
 </script>
 
 <template>
@@ -182,16 +250,18 @@ async function doSignUp(event:any){
       <!-- SIGN IN -->
       <div class="col align-items-center flex-col sign-in">
         <div class="form-wrapper align-items-center">
+          <form>
           <div class="form sign-in">
             <div class="input-group">
               <i class="bx bxs-user"></i>
-              <input type="email" placeholder="이메일" required />
+              <input type="email" placeholder="이메일" required v-model="loginEmail" />
             </div>
             <div class="input-group">
               <i class="bx bxs-lock-alt"></i>
-              <input type="password" placeholder="비밀번호" required />
+              <input type="password" placeholder="비밀번호" required v-model="loginPassword"/>
             </div>
-            <button>로그인</button>
+            <button type="submit" @click="doLogin">로그인</button>
+
             <p>
               <b> or continue with </b>
               <span>
@@ -200,16 +270,19 @@ async function doSignUp(event:any){
                     src="@/img/google_logo.png"
                     alt="구글계정로그인"
                     style="margin-left: 5px; margin-right: 5px"
+                    @click="doSNSLogin($event, 'google')"
                   />
                   <img
                     src="@/img/naver_logo.png"
                     alt="네이버계정로그인"
                     style="margin-left: 5px; margin-right: 5px"
+                    @click="doSNSLogin($event, 'naver')"
                   />
                   <img
                     src="@/img/kakao_logo.png"
                     alt="카카오계정로그인"
                     style="margin-left: 5px; margin-right: 5px"
+                    @click="doSNSLogin($event, 'kakao')"
                   />
                   <img
                     src="@/img/insta_logo.png"
@@ -226,6 +299,7 @@ async function doSignUp(event:any){
               </b>
             </p>
           </div>
+          </form>
         </div>
         <div class="form-wrapper"></div>
       </div>
@@ -259,6 +333,7 @@ async function doSignUp(event:any){
     <!-- END CONTENT SECTION -->
   </div>
 </template>
+
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
 

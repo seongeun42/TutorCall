@@ -25,7 +25,8 @@ const router = createRouter({
       // 로그인 및 회원가입
       path: '/login',
       name: 'signform',
-      component: SignUp
+      component: SignUp,
+      props: true
     },
     // {
     //   // 마이페이지 및 하부요소는 수정 후 반영 예정

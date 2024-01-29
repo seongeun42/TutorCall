@@ -4,6 +4,7 @@ import com.potato.TutorCall.auth.CodeRepositorty;
 import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.constant.SendEmailConfig;
 import com.potato.TutorCall.auth.dto.SendEmailDto;
+import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.auth.dto.request.*;
 import com.potato.TutorCall.auth.service.AuthService;
 import com.potato.TutorCall.auth.service.EmailService;
@@ -39,6 +40,7 @@ public class AuthController {
       @RequestBody AuthLoginRequestDto authLoginRequestDto, HttpServletRequest httpServletRequest)
       throws Exception {
     // 유저 확인 메소드
+
     User user = this.authService.login(authLoginRequestDto);
 
     // 세션 얻기
@@ -48,8 +50,8 @@ public class AuthController {
 
     // 유저 세션를 세션에 넣는다.
     authService.saveUserInfoToSession(session, SessionKey.USER, user);
-
-    return new ResponseEntity<>(HttpStatus.OK);
+    UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+    return new ResponseEntity<>(userSessionDto, HttpStatus.OK);
   }
 
   @PostMapping("/email")

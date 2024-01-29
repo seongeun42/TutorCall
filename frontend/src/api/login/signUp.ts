@@ -29,3 +29,7 @@ export async function signUp(param: any):Promise<any>{
 
 }
 
+export async function login(param:any){
+    const url:string = import.meta.env.VITE_VUE_API_URL+"/auth/login";
+    return instance.post(url, param);
+}

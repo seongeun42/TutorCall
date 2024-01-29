@@ -5,8 +5,10 @@ import com.potato.TutorCall.user.domain.enums.RoleType;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @Getter
-public class UserSessionDto {
+public class UserSessionDto implements Serializable {
   private Long id;
   private RoleType roleType;
 
