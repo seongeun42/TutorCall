@@ -2,7 +2,7 @@ package com.potato.TutorCall.mypage.dto.res;
 
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
-import com.potato.TutorCall.tutor.dto.TutorDto;
+import com.potato.TutorCall.tutor.dto.TutorDetailDto;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ public class MyPageProfileResDto {
   private final Integer point;
   private final String profile;
   private final LocalDateTime joinDate;
-  private TutorDto tutor = null;
+  private TutorDetailDto tutor = null;
 
   @Builder
   public MyPageProfileResDto(User user, Tutor tutor, List<Tag> tags) {
@@ -31,6 +31,6 @@ public class MyPageProfileResDto {
     this.point = user.getPoint();
     this.profile = user.getProfile();
     this.joinDate = user.getJoinDate();
-    if (tutor != null) this.tutor = new TutorDto(tutor, tags);
+    if (tutor != null) this.tutor = new TutorDetailDto(tutor, tags);
   }
 }

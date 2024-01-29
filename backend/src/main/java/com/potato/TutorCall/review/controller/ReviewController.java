@@ -2,8 +2,8 @@ package com.potato.TutorCall.review.controller;
 
 import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.UserSessionDto;
-import com.potato.TutorCall.review.dto.CreatedResponseDto;
-import com.potato.TutorCall.review.dto.MessageResponseDto;
+import com.potato.TutorCall.common.dto.CreatedResponseDto;
+import com.potato.TutorCall.common.dto.MessageResponseDto;
 import com.potato.TutorCall.review.dto.ReviewRequestDto;
 import com.potato.TutorCall.review.service.ReviewService;
 import jakarta.servlet.http.HttpSession;

@@ -1,4 +1,4 @@
-package com.potato.TutorCall.review.dto;
+package com.potato.TutorCall.common.dto;
 
 import lombok.Data;
 
