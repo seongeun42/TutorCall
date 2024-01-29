@@ -2,11 +2,48 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import SelectRole from './SelectRole.vue'
+import * as api from '@/api/login/signUp'
+import router from '@/router/index'
+import { useUserStore } from '@/store/userStore'
+
 // import exp from 'constants'
 
 const isSignUp: Ref<boolean> = ref(false)
 const isSignIn: Ref<boolean> = ref(true)
+const emailAddr: Ref<string> = ref("");
+const vaildCode: Ref<string> = ref("");
+const nickname: Ref<string> = ref("");
+const password: Ref<string> = ref("");
+const passwordCheck : Ref<string> = ref("");
+const recommander: Ref<string> = ref("");
+const isEmailChecked: Ref<boolean> = ref(false);
+const isNickNameUsed: Ref<boolean> = ref(false);
+const loginEmail: Ref<string> = ref("");
+const loginPassword: Ref<string> = ref("");
+const userStore = useUserStore();
 
+const status = router.currentRoute.value.query.signUp;
+// init 
+if(status){
+  if(status == "true"){
+    isSignUp.value=true;
+    isSignIn.value = false;
+  }else{
+    isSignUp.value= false;
+    isSignIn.value = true;
+  }
+}
+
+
+function clearRegistInputValue():void {
+  emailAddr.value = "";
+  vaildCode.value = "";
+  nickname.value = "";
+  password.value = "";
+  passwordCheck.value = "";
+  recommander.value = "";
+
+}
 function toggle(): void {
   isSignUp.value = !isSignUp.value
   isSignIn.value = !isSignIn.value
@@ -17,6 +54,127 @@ function handleFormStatus(): void {
   isSignUp.value = !isSignUp.value
   isSignIn.value = !isSignIn.value
 }
+
+function isValidEmail():boolean{
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(emailAddr.value);
+}
+
+async function receiveEmailCode(){
+
+  console.log("현재 입력된 이메일 값: "+emailAddr.value);
+
+  if(!isValidEmail()){
+    alert("이메일 형식이 아닙니다.");
+    return;
+  }
+
+  await api.sendEmailCode(emailAddr.value)
+  .then((response)=>{
+    console.log(response);
+    if(response.status == 201) alert(response.data.message);
+  })
+  .catch((error)=>{
+    alert(error.response.data.message);
+  })
+
+}
+
+async function checkEmailValidCode(){
+  const param = {
+    'email':emailAddr.value,
+    'code':vaildCode.value
+  };
+  await api.checkCode(param)
+  .then((response)=>{
+    alert(response.data.message);
+    isEmailChecked.value = true;
+  })
+  .catch((error)=>{
+    alert(error.response.data.message);
+  })
+
+}
+
+function checkPassword(){
+  if(password.value != passwordCheck.value) return false;
+  return true;
+}
+
+async function doSignUp(event:any){
+
+  event.preventDefault();
+
+  const nickcheck = {
+    'nickname': nickname.value
+  }
+
+  await api.nickDupCheck(nickcheck)
+  .catch((error)=>{
+    console.log(error);
+    alert(error.response.data.message);
+    isNickNameUsed.value = true;
+  })
+
+  const param = {
+    'nickname': nickname.value,
+    'password': password.value,
+    'email': emailAddr.value,
+  }
+
+  if(checkPassword() == true && isEmailChecked.value && !isNickNameUsed.value){
+    await api.signUp(param)
+    .then((response)=>{
+      alert(response.data.message);
+      isSignUp.value=false;
+      isSignIn.value = true;
+      clearRegistInputValue()
+      router.push({"name":"signUp", query:{"signUp":"false"}});
+      return
+    })
+    .catch((error)=>{
+      alert(error.response.data.message);
+    })
+  }else{
+    alert("입력 다시 확인");
+  }
+
+}
+
+async function doLogin(event:any){
+  event.preventDefault();
+  const param = {
+    "email": loginEmail.value,
+    "password" : loginPassword.value
+  }
+
+  console.log(param);
+  await api.login(param)
+  .then((response)=>{
+    const roleType:string = response.data.roleType;
+    if(roleType == "TUTOR"){
+      userStore.login(true, loginEmail.value);
+    }else{
+      userStore.login(false, loginEmail.value);
+    }
+    router.push("/");
+  })
+  .catch((error)=>{
+    console.log(error);
+  })
+
+}
+
+async function doSNSLogin(event:any, snsType:string){
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const redirectUrl = import.meta.env.VITE_GOOGLE_REDIRECT_URL;
+  const scope = 'profile email';
+  const responseType = 'token';
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope}&response_type=${responseType}`;
+  console.log(authUrl);
+
+}
+
 </script>
 
 <template>
@@ -26,36 +184,39 @@ function handleFormStatus(): void {
       <!-- SIGN UP -->
       <div class="col align-items-center flex-col sign-up">
         <div class="form-wrapper align-items-center">
+          <form>
           <div class="form sign-up">
             <div class="input-group">
               <i class="bx bxs-user"></i>
-              <input type="text" placeholder="닉네임" required />
+              <input type="text" placeholder="닉네임" required v-model="nickname"/>
             </div>
             <div class="input-group">
               <i class="bx bxs-lock-alt"></i>
-              <input type="password" placeholder="비밀번호" required />
+              <input type="password" placeholder="비밀번호" required v-model="password"/>
             </div>
             <div class="input-group">
               <i class="bx bxs-lock-alt"></i>
-              <input type="password" placeholder="비밀번호 확인" required />
+              <input type="password" placeholder="비밀번호 확인" required v-model="passwordCheck"/>
             </div>
             <div class="input-group" style="position: relative">
               <i class="bx bx-mail-send"></i>
-              <input type="email" placeholder="이메일" required />
+              <input type="email" placeholder="이메일" required v-model="emailAddr"/>
               <div
                 class="bg-[#6181ad] rounded-lg w-14 h-9 text-white flex items-center justify-center font-semibold"
                 style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%)"
+                @click="receiveEmailCode"
               >
                 <!--@click 추가해서 이메일 인증 발송에 사용 예정-->
-                발송
+                  발송
               </div>
             </div>
             <div class="input-group" style="position: relative">
               <i class="bx bxs-user"></i>
-              <input type="text" placeholder="이메일 인증" required />
+              <input type="text" placeholder="이메일 인증" required v-model="vaildCode"/>
               <div
                 class="bg-[#43766C] rounded-lg w-14 h-9 text-white flex items-center justify-center font-semibold"
                 style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%)"
+                @click="checkEmailValidCode"
               >
                 <!--@click 추가해서 이메일 인증에 사용 예정-->
                 인증
@@ -63,9 +224,9 @@ function handleFormStatus(): void {
             </div>
             <div class="input-group">
               <i class="bx bxs-user"></i>
-              <input type="text" placeholder="추천인" />
+              <input type="text" placeholder="추천인" v-model="recommander"/>
             </div>
-            <button>회원 가입</button>
+            <button type="submit" @click="doSignUp">회원 가입</button>
             <p>
               <span> 이미 계정이 있으신가요? </span>
               <b
@@ -82,22 +243,25 @@ function handleFormStatus(): void {
               </b>
             </p>
           </div>
+          </form>
         </div>
       </div>
       <!-- END SIGN UP -->
       <!-- SIGN IN -->
       <div class="col align-items-center flex-col sign-in">
         <div class="form-wrapper align-items-center">
+          <form>
           <div class="form sign-in">
             <div class="input-group">
               <i class="bx bxs-user"></i>
-              <input type="email" placeholder="이메일" required />
+              <input type="email" placeholder="이메일" required v-model="loginEmail" />
             </div>
             <div class="input-group">
               <i class="bx bxs-lock-alt"></i>
-              <input type="password" placeholder="비밀번호" required />
+              <input type="password" placeholder="비밀번호" required v-model="loginPassword"/>
             </div>
-            <button>로그인</button>
+            <button type="submit" @click="doLogin">로그인</button>
+
             <p>
               <b> or continue with </b>
               <span>
@@ -106,16 +270,19 @@ function handleFormStatus(): void {
                     src="@/img/google_logo.png"
                     alt="구글계정로그인"
                     style="margin-left: 5px; margin-right: 5px"
+                    @click="doSNSLogin($event, 'google')"
                   />
                   <img
                     src="@/img/naver_logo.png"
                     alt="네이버계정로그인"
                     style="margin-left: 5px; margin-right: 5px"
+                    @click="doSNSLogin($event, 'naver')"
                   />
                   <img
                     src="@/img/kakao_logo.png"
                     alt="카카오계정로그인"
                     style="margin-left: 5px; margin-right: 5px"
+                    @click="doSNSLogin($event, 'kakao')"
                   />
                   <img
                     src="@/img/insta_logo.png"
@@ -132,6 +299,7 @@ function handleFormStatus(): void {
               </b>
             </p>
           </div>
+          </form>
         </div>
         <div class="form-wrapper"></div>
       </div>
@@ -165,6 +333,7 @@ function handleFormStatus(): void {
     <!-- END CONTENT SECTION -->
   </div>
 </template>
+
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
 
