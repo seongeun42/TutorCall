@@ -17,8 +17,8 @@ const isLogin: Ref<boolean> = ref(false)
     <NavBar v-if="isTutor" />
     <StudentNavBar v-else />
   </div>
-  <!-- <MainPage /> -->
-  <Mypage />
+  <MainPage />
+  <!-- <Mypage /> -->
 </template>
 
 <style scoped></style>
