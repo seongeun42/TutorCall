@@ -11,7 +11,7 @@
     <div class="star-rating">
       <i
         v-for="i in Math.floor(data.rating)"
-        :key="`${data.reviewId}-${i}`"
+        :key="`${data.reviewId}+${i}-${i}`"
         class="fas fa-star"
       ></i>
       <i v-if="data.rating % 1 !== 0" class="fas fa-star-half-alt"></i>
