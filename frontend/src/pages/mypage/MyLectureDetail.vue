@@ -1,6 +1,6 @@
 <template>
-  <div class="mx-14">
-    <p class="font-bold text-2xl">과외 정보</p>
+  <div class="mx-12">
+    <p class="font-bold text-2xl mt-8">과외 정보</p>
     <div class="flex my-5">
       <img :src="reviews.Infos.img" alt="" class="w-24 h-24 rounded-full" />
       <div class="mx-5">
@@ -11,28 +11,34 @@
             <p class="bg-blue-500 mr-2 rounded-3xl w-16 text-white text-center">수학</p>
             <p class="bg-green-500 w-16 text-white rounded-3xl text-center">고3</p>
           </div>
-          <button class="ml-32 bg-blue-700 rounded-xl w-28 h-10 text-white">과외룸 입장</button>
+          <div v-if="isTutor">
+            <button class="ml-32 bg-red-700 rounded-xl w-28 h-10 text-white">과외 시작하기</button>
+          </div>
+          <div v-else>
+            <button class="ml-32 bg-blue-700 rounded-xl w-28 h-10 text-white">과외룸 입장</button>
+          </div>
         </div>
       </div>
     </div>
     <div class="flex ml-8">
-      <p class="font-bold text-xl mr-8">과외 기간</p>
+      <p class="font-bold text-lg mr-8">과외 기간</p>
       <p class="text-xl">{{ startDate }} ~ {{ endDate }}</p>
     </div>
     <div class="flex ml-8">
-      <p class="font-bold text-xl mr-8">회당 가격</p>
+      <p class="font-bold text-lg mr-8">회당 가격</p>
       <p class="text-xl">{{ point }} point</p>
     </div>
 
-    <div class="mt-10 font-bold text-2xl mb-3">
+    <div class="mt-10 font-semibold text-xl mb-5">
       <p>과외 리뷰</p>
     </div>
     <div class="review-box rounded-xl shadow-md">
       <div v-for="index in 4" :key="index" class="flex items-center mb-8">
         <img :src="reviews.Infos.img" alt="" class="w-12 h-12 rounded-full" />
         <p class="mx-2">{{ reviews.Infos.name }}</p>
-        <p class="flex mx-2">평점 <StarScore :score="reviews.Infos.rates" /></p>
-        <p class="mx-4">{{ reviews.Infos.content }}</p>
+        <p class="flex mx-4">평점</p>
+        <StarScore :score="reviews.Infos.rates" />
+        <p class="ml-6">{{ reviews.Infos.content }}</p>
       </div>
     </div>
   </div>
@@ -40,11 +46,11 @@
 
 <script setup lang="ts">
 import { ref, type Ref } from 'vue'
-import StarScore from '../../tutor/StarScore.vue'
+import StarScore from './tutor/StarScore.vue'
 const startDate: Ref<string> = ref('2024.01.10')
 const endDate: Ref<string> = ref('2024.01.14')
 const point: Ref<number> = ref(1000)
-
+const isTutor: Ref<boolean> = ref(true)
 const reviews = defineProps({
   Infos: {
     type: Object,
@@ -72,5 +78,6 @@ const reviews = defineProps({
 <style scoped>
 .review-box {
   background-color: #faf6ef;
+  min-width: 480px;
 }
 </style>
