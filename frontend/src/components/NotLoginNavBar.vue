@@ -11,31 +11,32 @@
           <div class="hidden sm:ml-6 sm:block flex-1 justify-evenly">
             <div class="flex space-x-4 justify-evenly">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              <a
-                href="#"
+              <router-link
+                to="/lecturespromotion"
                 class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
                 aria-current="page"
-                >과외 모집</a
+                >과외 모집</router-link
               >
-              <a
-                href="#"
+              <router-link
+                to="/qna"
                 class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
-                >문제 Q&A</a
+                >문제 Q&A</router-link
               >
-              <a
-                href="#"
+              <router-link
+                to="/notice"
                 class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
-                >공지사항</a
+                >공지사항</router-link
               >
             </div>
           </div>
         </div>
         <div class="flex">
-          <div
+          <RouterLink
+            :to="{ name: 'signform' }"
             class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
           >
             로그인 / 회원가입
-          </div>
+          </RouterLink>
         </div>
       </div>
     </div>

@@ -19,9 +19,10 @@ const isLogin: Ref<boolean> = ref(false)
       <NavBar v-if="isTutor" />
       <StudentNavBar v-else />
     </div>
-    <div class="content">
+    <!-- <div class="content">
       <Mypage />
-    </div>
+    </div> -->
+    <RouterView />
     <FooterBar />
   </div>
 </template>

@@ -11,15 +11,15 @@ import QA from '@/pages/board/q&a/QA.vue'
 import DetailQA from '@/pages/board/q&a/DetailQA.vue'
 import OnlineLecture from '@/pages/onlinelecture/OnlineLecture.vue'
 import TutorCallPage from '@/pages/tutorcall/TutorCallPage.vue'
-import InformationUpdate from '@/pages/mypage/tutor/InformationUpdate.vue'
-import ReviewCheck from '@/pages/mypage/tutor/ReviewCheck.vue'
-import ProfitCheck from '@/pages/mypage/tutor/ProfitCheck.vue'
-import WithdrawlPage from '@/pages/mypage/tutor/WithdrawlPage.vue'
-import MyLectureList from '@/pages/mypage/tutor/MyLectureList.vue'
-import StudentInformationUpdate from '@/pages/mypage/student/StudentInformationUpdate.vue'
-import PointUsage from '@/pages/mypage/student/PointUsage.vue'
-import StudentMyLecture from '@/pages/mypage/student/StudentMyLecture.vue'
-import MyPaymentInfo from '@/pages/mypage/student/MyPaymentInfo.vue'
+// import InformationUpdate from '@/pages/mypage/tutor/InformationUpdate.vue'
+// import ReviewCheck from '@/pages/mypage/tutor/ReviewCheck.vue'
+// import ProfitCheck from '@/pages/mypage/tutor/ProfitCheck.vue'
+// import WithdrawlPage from '@/pages/mypage/tutor/WithdrawlPage.vue'
+// import MyLectureList from '@/pages/mypage/tutor/MyLectureList.vue'
+// import StudentInformationUpdate from '@/pages/mypage/student/StudentInformationUpdate.vue'
+// import PointUsage from '@/pages/mypage/student/PointUsage.vue'
+// import StudentMyLecture from '@/pages/mypage/student/StudentMyLecture.vue'
+// import MyPaymentInfo from '@/pages/mypage/student/MyPaymentInfo.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,81 +36,81 @@ const router = createRouter({
       name: 'signform',
       component: SignUp
     },
-    {
-      // 마이페이지 및 하부요소는 수정 후 반영 예정
-      path: '/mypage',
-      name: 'mypage',
-      children: [
-        {
-          // 선생님 마이페이지
-          path: '/tutor',
-          name: 'tutorMyPage',
-          children: [
-            // 개인정보 수정
-            {
-              path: '/update',
-              name: 'tutorUpdate',
-              component: InformationUpdate
-            },
-            // 리뷰 확인
-            {
-              path: '/reviews',
-              name: 'reviewCheck',
-              component: ReviewCheck
-            },
-            // 수익 통계
-            {
-              path: '/profits',
-              name: '/profitCheck',
-              component: ProfitCheck
-            },
-            // 출금
-            {
-              path: '/withdrawl',
-              name: 'withdrawl',
-              component: WithdrawlPage
-            },
-            // 내 과외
-            {
-              path: '/lectures',
-              name: 'tutorMyLectures',
-              component: MyLectureList
-            }
-          ]
-        },
-        {
-          // 학생 마이페이지
-          path: '/user',
-          name: 'userMyPage',
-          children: [
-            // 개인정보 수정
-            {
-              path: '/update',
-              name: 'userUpdate',
-              component: StudentInformationUpdate
-            },
-            // 포인트 내역
-            {
-              path: '/points',
-              name: 'pointUsage',
-              component: PointUsage
-            },
-            // 내 과외
-            {
-              path: '/lectures',
-              name: 'userMyLectures',
-              component: StudentMyLecture
-            },
-            // 결제 정보
-            {
-              path: '/payments',
-              name: 'paymentInfo',
-              component: MyPaymentInfo
-            }
-          ]
-        }
-      ]
-    },
+    // {
+    //   // 마이페이지 및 하부요소는 수정 후 반영 예정
+    //   path: '/mypage',
+    //   name: 'mypage',
+    //   children: [
+    //     {
+    //       // 선생님 마이페이지
+    //       path: '/tutor',
+    //       name: 'tutorMyPage',
+    //       children: [
+    //         // 개인정보 수정
+    //         {
+    //           path: '/update',
+    //           name: 'tutorUpdate',
+    //           component: InformationUpdate
+    //         },
+    //         // 리뷰 확인
+    //         {
+    //           path: '/reviews',
+    //           name: 'reviewCheck',
+    //           component: ReviewCheck
+    //         },
+    //         // 수익 통계
+    //         {
+    //           path: '/profits',
+    //           name: '/profitCheck',
+    //           component: ProfitCheck
+    //         },
+    //         // 출금
+    //         {
+    //           path: '/withdrawl',
+    //           name: 'withdrawl',
+    //           component: WithdrawlPage
+    //         },
+    //         // 내 과외
+    //         {
+    //           path: '/lectures',
+    //           name: 'tutorMyLectures',
+    //           component: MyLectureList
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       // 학생 마이페이지
+    //       path: '/user',
+    //       name: 'userMyPage',
+    //       children: [
+    //         // 개인정보 수정
+    //         {
+    //           path: '/update',
+    //           name: 'userUpdate',
+    //           component: StudentInformationUpdate
+    //         },
+    //         // 포인트 내역
+    //         {
+    //           path: '/points',
+    //           name: 'pointUsage',
+    //           component: PointUsage
+    //         },
+    //         // 내 과외
+    //         {
+    //           path: '/lectures',
+    //           name: 'userMyLectures',
+    //           component: StudentMyLecture
+    //         },
+    //         // 결제 정보
+    //         {
+    //           path: '/payments',
+    //           name: 'paymentInfo',
+    //           component: MyPaymentInfo
+    //         }
+    //       ]
+    //     }
+    //   ]
+    // },
     {
       // 공지사항 게시판
       path: '/notice',
