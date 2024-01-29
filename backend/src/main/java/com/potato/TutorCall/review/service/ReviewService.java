@@ -36,7 +36,6 @@ public class ReviewService {
      * @return 저장된 Review의 id
      */
     public Long saveTutorCallReview(Long userId, Long tutorCallId, ReviewRequestDto dto) {
-        System.out.println("여기 오긴 함?");
         TutorCall tutorCall = tutorcallService.findById(tutorCallId);
         if (!userId.equals(tutorCall.getUser().getId())) {
             throw new ForbiddenException("해당 튜터콜을 수강한 학생이 아닙니다.");
