@@ -104,13 +104,13 @@ public class MyPageController {
   public ResponseEntity<?> updateLectureTag(
       @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
       @RequestBody TagUpdateReqDto tagUpdateReq) {
-    if (userSession.getRoleType().equals(RoleType.TUTOR)) {
+    if (!userSession.getRoleType().equals(RoleType.TUTOR)) {
       throw new ForbiddenException("수정 권한이 없습니다");
     }
 
     mypageService.updateTag(userSession.getId(), tagUpdateReq.getTags());
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(new UpdateSuccessResDto("강의 범위를 수정했습니다."));
   }
 
   /**

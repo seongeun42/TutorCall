@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MypageService {
 
   private final UserRepository userRepository;
@@ -39,7 +40,6 @@ public class MypageService {
     return userInfo;
   }
 
-  @Transactional
   public void updateProfile(Long id, String profile) {
     User currentUser =
         userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다."));
@@ -47,7 +47,6 @@ public class MypageService {
     currentUser.changeProfile(profile);
   }
 
-  @Transactional
   public void updateNickname(Long id, String nickname) {
     User currentUser =
         userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다."));
@@ -55,7 +54,6 @@ public class MypageService {
     currentUser.changeNickname(nickname);
   }
 
-  @Transactional
   public void updatePassword(Long id, String password, String newPassword)
       throws AuthenticationException {
     User currentUser =
@@ -68,11 +66,18 @@ public class MypageService {
     currentUser.changePassword(bCryptPasswordEncoder.encode(newPassword));
   }
 
-  @Transactional
-    public void updaetNotification(Long id, Boolean notificationOption) {
-      User currentUser =
-              userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
+  public void updaetNotification(Long id, Boolean notificationOption) {
+    User currentUser =
+        userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
 
-      currentUser.changeNoPushNotification(notificationOption);
-    }
+    currentUser.changeNoPushNotification(notificationOption);
+  }
+
+  public void updateTag(Long id, List<Long> tags) {
+    userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
+
+    Tutor tutor = tutorService.findById(id);
+
+    tutorService.changeTags(tutor, tags);
+  }
 }

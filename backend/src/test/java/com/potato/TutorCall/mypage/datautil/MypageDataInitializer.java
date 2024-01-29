@@ -63,4 +63,11 @@ public class MypageDataInitializer {
     tutorTagRepository.save(testTutorTag1);
     tutorTagRepository.save(testTutorTag2);
   }
+
+  public void addExtraTags(TagRepository tagRepository) {
+    Tag tag3 = Tag.builder().grade(1).level(SchoolType.ELEMENTARY).subject("Korean").build();
+    Tag tag4 = Tag.builder().grade(3).level(SchoolType.MIDDLE).subject("English").build();
+    tagRepository.save(tag3);
+    tagRepository.save(tag4);
+  }
 }
