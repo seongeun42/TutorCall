@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import { ref, type Ref } from 'vue'
-import MyLectureDetail from './MyLectureDetail.vue'
+import MyLectureDetail from '../../MyLectureDetail.vue'
 
 const showDetail: Ref<boolean> = ref(false)
 const selectedLecture: Ref<object> = ref([])
