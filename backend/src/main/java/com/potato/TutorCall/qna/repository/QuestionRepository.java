@@ -2,6 +2,8 @@ package com.potato.TutorCall.qna.repository;
 
 import com.potato.TutorCall.qna.domain.Question;
 import java.util.Optional;
+
+import com.potato.TutorCall.tutor.domain.Tag;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +19,7 @@ public interface QuestionRepository
     @Modifying
     @Query("UPDATE Question q set q.isDelete = :isDelete where q.id = :questionId")
     int deleteQuestion(@Param("questionId") Long questionId, @Param("isDelete") boolean isDelete);
-    Page<Question> findAllByContentContainsAndTag_IdAndIsEndAndIsDeleteOrderByCreatedAt(Pageable pageable, String keyword, Long tagId, boolean isEnd, boolean isDelete);
+    Page<Question> findAllByContentContainsAndTagAndIsEndAndIsDeleteOrderByCreatedAt(Pageable pageable, String keyword, Tag tag, boolean isEnd, boolean isDelete);
     Optional<Object> findQuestionByIdAndIsDelete(long questionId, boolean isDelete);
 
 
