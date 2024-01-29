@@ -27,20 +27,83 @@ const router = createRouter({
       name: 'signform',
       component: SignUp
     },
-    // {
-    //   // 마이페이지 및 하부요소는 수정 후 반영 예정
-    //   path: "/mypage",
-    //   name: 'mypage',
-    //   component: MyPage,
-    //   children: [
-    //     {
-    //       // 하위
-    //       path: "-",
-    //       name: "-",
-    //       component: -,
-    //     },
-    //   ],
-    // },
+    {
+      // 마이페이지 및 하부요소는 수정 후 반영 예정
+      path: "/mypage",
+      name: 'mypage',
+      children: [
+        {
+          // 선생님 마이페이지
+          path: "/tutor",
+          name: "-",
+          component: -,
+          children: [
+            // 개인정보 수정
+            {
+              path: "",
+              name: "",
+              component: ,
+            },
+            // 리뷰 확인
+            {
+              path: "",
+              name: "",
+              component: ,
+            },
+            // 수익 통계
+            {
+              path: "",
+              name: "",
+              component: ,
+            },
+            // 출금
+            {
+              path: "",
+              name: "",
+              component: ,
+            },
+            // 내 과외
+            {
+              path: "",
+              name: "",
+              component
+            },
+          ]
+        },
+        {
+          // 학생 마이페이지
+          path: "/user",
+          name: "",
+          component: ,
+          children: [
+            // 개인정보 수정
+            {
+              path: "",
+              name: "",
+              component: ,
+            },
+            // 포인트 내역
+            { 
+              path: "",
+              name: "",
+              component: ,
+            },
+            // 내 과외
+            {
+              path: "",
+              name: "",
+              component: ,
+            },
+            // 결제 정보
+            {
+              path: "",
+              name: "",
+              component: ,              
+            },
+          ]
+        }
+      ],
+    },
     {
       // 공지사항 게시판
       path: '/notice',
