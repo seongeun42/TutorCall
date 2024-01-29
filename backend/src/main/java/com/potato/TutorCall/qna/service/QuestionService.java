@@ -74,11 +74,13 @@ public class QuestionService {
 
     Page<Question> list = null;
     CommonResponseDto commonResponseDto;
+    Tag tag = tagRepository.findById(searchFormDto.getTagId())
+            .orElseThrow(()->new NotFoundException("질문 조회 실패"));
     list =
-        questionRepository.findAllByContentContainsAndTag_IdAndIsEndAndIsDeleteOrderByCreatedAt(
+        questionRepository.findAllByContentContainsAndTagAndIsEndAndIsDeleteOrderByCreatedAt(
             pageable,
             searchFormDto.getKeyword(),
-            searchFormDto.getTagId(),
+            tag,
             searchFormDto.isEnd(),
             false);
 
