@@ -6,9 +6,10 @@
         <p class="text-4xl font-bold mb-10">{{ title }}</p>
         <div class="container p-12 bg-white">
           <!-- <MyLectureList /> -->
-          <InformationUpdate />
-          <!-- <MyPaymentInfo />
-          <NewPaymentAdd /> -->
+          <StudentMyLecture />
+          <!-- <InformationUpdate /> -->
+          <!-- <MyPaymentInfo /> -->
+          <!-- <NewPaymentAdd /> -->
           <!-- <ReviewCheck /> -->
           <!-- <WithdrawlPage /> -->
           <!-- <ProfitCheck /> -->
@@ -30,7 +31,7 @@ import InformationUpdate from './tutor/InformationUpdate.vue'
 import ReviewCheck from './tutor/ReviewCheck.vue'
 import WithdrawlPage from './tutor/WithdrawlPage.vue'
 import ProfitCheck from './tutor/ProfitCheck.vue'
-
+import StudentMyLecture from './student/information/StudentMyLecture.vue'
 const title: Ref<String> = ref('개인정보 수정')
 </script>
 
@@ -39,5 +40,7 @@ const title: Ref<String> = ref('개인정보 수정')
   margin: 0 auto;
   border-radius: 20px;
   position: relative;
+  min-width: 1000px;
+  min-height: 1000px;
 }
 </style>
