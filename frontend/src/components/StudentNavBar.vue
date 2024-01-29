@@ -23,9 +23,9 @@ function handleMode(show: boolean, mode: string) {
       <div class="relative flex h-16 items-center justify-between">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden"></div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <RouterLink to="/" class="flex flex-shrink-0 items-center">
+          <div class="flex flex-shrink-0 items-center">
             <img class="h-8 w-auto" src="@/img/logo.png" alt="Your Company" />
-          </RouterLink>
+          </div>
           <div class="hidden sm:ml-6 sm:block flex-1 justify-evenly">
             <div class="flex space-x-4 justify-evenly">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
@@ -45,18 +45,6 @@ function handleMode(show: boolean, mode: string) {
                 class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
                 >공지사항</a
               >
-              <div class="flex items-center">
-                <p class="ms-3 text-sm font-semibold text-black-500 dark:text-gray-300">
-                  화상과외 활성화
-                </p>
-
-                <label class="ml-3 relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" value="" class="sr-only peer" checked />
-                  <div
-                    class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-                  ></div>
-                </label>
-              </div>
             </div>
           </div>
         </div>
@@ -95,10 +83,9 @@ function handleMode(show: boolean, mode: string) {
               </ul>
             </div>
           </div>
-
           <!-- Profile dropdown -->
           <div class="relative ml-3">
-            <RouterLink to="/login">
+            <div>
               <button
                 type="button"
                 class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -114,7 +101,7 @@ function handleMode(show: boolean, mode: string) {
                   alt=""
                 />
               </button>
-            </RouterLink>
+            </div>
 
             <!--
             Dropdown menu, show/hide based on menu state.
@@ -126,15 +113,15 @@ function handleMode(show: boolean, mode: string) {
               From: "transform opacity-100 scale-100"
               To: "transform opacity-0 scale-95"
           -->
-            <!-- <div
+            <div
               class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="user-menu-button"
               tabindex="-1"
-            > -->
-            <!-- Active: "bg-gray-100", Not Active: "" -->
-            <!-- <a
+            >
+              <!-- Active: "bg-gray-100", Not Active: "" -->
+              <!-- <a
                 href="#"
                 class="block px-4 py-2 text-sm text-gray-700"
                 role="menuitem"
@@ -158,7 +145,7 @@ function handleMode(show: boolean, mode: string) {
                 id="user-menu-item-2"
                 >Sign out</a
               > -->
-            <!-- </div> -->
+            </div>
           </div>
         </div>
       </div>
