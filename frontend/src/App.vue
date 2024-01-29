@@ -3,8 +3,6 @@ import { ref, type Ref } from 'vue'
 import NavBar from '@/components/NavBar.vue'
 import { RouterView } from "vue-router";
 
-import StudentIndex from '@/pages/mainpage/StudentIndex.vue'
-import TutorIndex from '@/pages/mainpage/TutorIndex.vue'
 import MyPage from './pages/mypage/MyPage.vue'
 </script>
 

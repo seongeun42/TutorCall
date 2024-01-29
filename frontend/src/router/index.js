@@ -16,10 +16,10 @@ import ReviewCheck from '@/pages/mypage/tutor/ReviewCheck.vue'
 import ProfitCheck from '@/pages/mypage/tutor/ProfitCheck.vue'
 import WithdrawlPage from '@/pages/mypage/tutor/WithdrawlPage.vue'
 import MyLectureList from '@/pages/mypage/tutor/MyLectureList.vue'
-import StudentInformationUpdate from '@/pages/mypage/student/StudentInformationUpdate.vue'
-import PointUsage from '@/pages/mypage/student/PointUsage.vue'
-import StudentMyLecture from '@/pages/mypage/student/StudentMyLecture.vue'
-import MyPaymentInfo from '@/pages/mypage/student/MyPaymentInfo.vue'
+import StudentInformationUpdate from '@/pages/mypage/student/information/StudentInformationUpdate.vue'
+import PointUsage from '@/pages/mypage/student/point/PointUsage.vue'
+import StudentMyLecture from '@/pages/mypage/student/information/StudentMyLecture.vue'
+import MyPaymentInfo from '@/pages/mypage/payment/MyPaymentInfo.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
