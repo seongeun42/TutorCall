@@ -28,8 +28,6 @@ stagedFiles=$(git diff --staged --name-only)
 # Backend auto formatting
 echo "Formatting Backend code..."
 
-cd backend/
-
 echo "Running Google Java Format..."
 
 # Google Java 형식을 사용하여 사용하지 않는 import제거
@@ -38,7 +36,6 @@ java -jar "google-java-format-1.19.2-all-deps.jar" -i $(git diff --cached --name
 # FrontEnd auto formatting
 echo "Formatting Frontend code..."
 
-cd ..
 cd frontend/
 
 # Prettier 실행

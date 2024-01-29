@@ -188,7 +188,7 @@ public class ReportService {
                 break;
             }
             case PROMOTION -> {
-                count = lectureRepository.deleteLecture(report.getReported(), true);
+                count = lectureRepository.updateLecturerByIdAndisDelete(report.getReported(), true);
                 break;
             }
         }

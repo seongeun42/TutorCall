@@ -419,7 +419,7 @@ docs/_book
 
 ### Vuejs ###
 # Recommended template: Node.gitignore
-
+package-lock.json
 dist/
 npm-debug.log
 yarn-error.log
