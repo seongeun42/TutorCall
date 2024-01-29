@@ -415,10 +415,11 @@ dist
 docs/_book
 
 # TODO: where does this rule come from?
-# test/
+test/
 
 ### Vuejs ###
 # Recommended template: Node.gitignore
+package-lock.json
 dist/
 npm-debug.log
 yarn-error.log
@@ -508,6 +509,3 @@ coverage
 *.sw?
 
 *.tsbuildinfo
-
-# 설정파일 무시
-**/resources/application*.yml
