@@ -4,7 +4,9 @@ import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.common.dto.CreatedResponseDto;
 import com.potato.TutorCall.lecture.domain.Lecture;
+import com.potato.TutorCall.lecture.dto.LectureListResponseDto;
 import com.potato.TutorCall.lecture.dto.LectureRequestDto;
+import com.potato.TutorCall.lecture.dto.LectureSearchCondition;
 import com.potato.TutorCall.lecture.service.LectureService;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
@@ -13,6 +15,8 @@ import com.potato.TutorCall.tutor.service.TutorService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,6 +68,20 @@ public class LectureController {
         lectureService.deleteLecture(user.getId(), lectureId);
         log.info(user.getId() + "회원이 과외" + lectureId + "를 삭제했습니다.");
         return ResponseEntity.ok().body(new CreatedResponseDto(lectureId, "과외 모집글을 삭제했습니다."));
+    }
+
+    @GetMapping()
+    public ResponseEntity<?> getLectureList(@RequestParam(required = false) String keyword,
+                                            @RequestParam(required = false) Long tag,
+                                            @RequestParam(required = false) Boolean state,
+                                            Pageable pageable) {
+        LectureSearchCondition condition = LectureSearchCondition.builder()
+                .keyword(keyword)
+                .tag(tag)
+                .state(state)
+                .build();
+        Page<LectureListResponseDto> result = lectureService.getLectureList(condition, pageable);
+        return ResponseEntity.ok().body(result);
     }
 
 }
