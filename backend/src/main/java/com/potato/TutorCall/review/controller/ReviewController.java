@@ -6,9 +6,11 @@ import com.potato.TutorCall.common.dto.CreatedResponseDto;
 import com.potato.TutorCall.common.dto.MessageResponseDto;
 import com.potato.TutorCall.review.dto.ReviewRequestDto;
 import com.potato.TutorCall.review.service.ReviewService;
+import com.potato.TutorCall.tutorcall.service.TutorCallService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final TutorCallService tutorCallService;
 
     @PostMapping("/tutorcall/{tutorCallId}")
     public ResponseEntity<?> saveTutorCallReview(@PathVariable("tutorCallId") Long id,
@@ -52,4 +55,9 @@ public class ReviewController {
         return ResponseEntity.ok(new MessageResponseDto("리뷰가 수정되었습니다."));
     }
 
+
+    @GetMapping("/tutor/{tutorId}")
+    public ResponseEntity<?> getTutorReview (@PathVariable("tutorId") Long id, Pageable page){
+        return new ResponseEntity<>(this.reviewService.tutorReviews(id, page), HttpStatus.OK);
+    }
 }

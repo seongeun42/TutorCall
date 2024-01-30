@@ -43,6 +43,8 @@ public class Review {
 
   private String content;
 
+  private StudyType type;
+
   @CreatedDate private LocalDateTime createdAt;
 
   // 생성자
@@ -54,8 +56,10 @@ public class Review {
       int mannerRate,
       int communicationRate,
       int professionalismRate,
+      StudyType studyType,
       String content) {
     this.tutor = tutor;
+    this.type = studyType;
     this.reviewer = reviewer;
     this.lecture = lecture;
     this.mannerRate = mannerRate;
