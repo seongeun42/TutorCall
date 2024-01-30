@@ -55,8 +55,6 @@ public class LectureSearchRepository {
                         isDelete()
                 ).fetch().get(0);
 
-        System.out.println("개수 : " + result.size() + ", " + total);
-
         return new PageImpl<>(result, pageable, total);
     }
 
