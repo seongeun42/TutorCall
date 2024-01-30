@@ -7,6 +7,7 @@ import com.potato.TutorCall.tutor.domain.TutorTag;
 import com.potato.TutorCall.tutor.repository.TagRepository;
 import com.potato.TutorCall.tutor.repository.TutorRepository;
 import com.potato.TutorCall.tutor.repository.TutorTagRepository;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -84,28 +85,35 @@ public class TutorService {
    */
   @Transactional
   public void changeTags(Tutor tutor, List<Long> idList) {
-    // 태그가 기존 테이블에 존재하는지 확인
+    // 새로 설정될 태그들
     List<Tag> newTags = tagRepository.findTagsByIdIn(idList);
 
+    // 태그가 기존 테이블에 존재하는지 확인
     if (newTags.size() != idList.size()) {
       throw new RuntimeException("태그 정보가 잘못됐습니다.");
     }
 
     // 현재 선생의 태그 리스트
-    List<TutorTag> currentTutorTags = tutorTagRepository.findByTutor(tutor);
+    List<TutorTag> currentTutorTags = tutor.getTutorTagList();
+    // 삭제할 태그들 목록
+    List<TutorTag> deleteTutorTags = new ArrayList<>();
 
-    // 기존 리스트에 존재하는 태그들 중 새 태그 목록에 존재하지 않는 태그들은 제거
-    currentTutorTags.removeIf(t -> !idList.contains(t.getTag().getId()));
-    System.out.println(currentTutorTags.size());
-
-    // 테이블에 새로 추가돼야 할 태그들 삽입
-    for (Tag tag : newTags) {
-      TutorTag newTutorTag = TutorTag.builder().tag(tag).tutor(tutor).build();
-      currentTutorTags.add(newTutorTag);
+    for (TutorTag tutorTag : currentTutorTags) {
+      if (newTags.contains(tutorTag.getTag())) {
+        newTags.remove(tutorTag.getTag());
+      } else {
+        deleteTutorTags.add(tutorTag);
+      }
     }
-    System.out.println(currentTutorTags.size());
+    currentTutorTags.retainAll(deleteTutorTags);
 
-    //    tutorRepository.save(tutor);
+    for (Tag tag : newTags) {
+      TutorTag tutorTag = TutorTag.builder().tutor(tutor).tag(tag).build();
+
+      currentTutorTags.add(tutorTag);
+    }
+
     tutorTagRepository.saveAll(currentTutorTags);
+    tutorTagRepository.deleteAllInBatch(deleteTutorTags);
   }
 }

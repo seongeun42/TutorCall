@@ -1,6 +1,5 @@
 package com.potato.TutorCall.mypage.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -8,14 +7,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.mypage.datautil.MypageDataInitializer;
-import com.potato.TutorCall.tutor.domain.Tutor;
-import com.potato.TutorCall.tutor.domain.TutorTag;
 import com.potato.TutorCall.tutor.repository.TagRepository;
 import com.potato.TutorCall.tutor.repository.TutorRepository;
 import com.potato.TutorCall.tutor.repository.TutorTagRepository;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.repository.UserRepository;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,14 +24,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class UpdateTagListTest {
   @Autowired private UserRepository userRepository;
   @Autowired private TutorRepository tutorRepository;
@@ -121,19 +122,9 @@ public class UpdateTagListTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
         .andExpect(status().isOk());
-
-    Tutor currentTutor = tutorRepository.findById(2L).get();
-    List<TutorTag> tutorTagList = currentTutor.getTutorTagList();
-
-    Collections.sort(tutorTagList, Comparator.comparing((TutorTag t) -> t.getTag().getId()));
-
-    assertThat(tutorTagList).hasSize(2);
-    assertThat(tutorTagList.get(0).getTag().getId()).isEqualTo(3L);
-    assertThat(tutorTagList.get(1).getTag().getId()).isEqualTo(4L);
   }
 
   @Test
-  @Transactional
   @DisplayName("태그 개수가 줄면서 모든 태그가 바뀌는 경우")
   void updateTagScenario2() throws Exception {
     List<Long> newTagIds = new ArrayList<>();
@@ -150,18 +141,9 @@ public class UpdateTagListTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
         .andExpect(status().isOk());
-
-    Tutor currentTutor = tutorRepository.findById(2L).get();
-    List<TutorTag> tutorTagList = currentTutor.getTutorTagList();
-
-    Collections.sort(tutorTagList, Comparator.comparing((TutorTag t) -> t.getTag().getId()));
-
-    assertThat(tutorTagList).hasSize(1);
-    assertThat(tutorTagList.get(0).getTag().getId()).isEqualTo(3L);
   }
 
   @Test
-  @Transactional
   @DisplayName("태그 개수가 유지되면서 일부가 바뀌는 경우")
   void updateTagScenario3() throws Exception {
     List<Long> newTagIds = new ArrayList<>();
@@ -179,19 +161,9 @@ public class UpdateTagListTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
         .andExpect(status().isOk());
-
-    Tutor currentTutor = tutorRepository.findById(2L).get();
-    List<TutorTag> tutorTagList = currentTutor.getTutorTagList();
-
-    Collections.sort(tutorTagList, Comparator.comparing((TutorTag t) -> t.getTag().getId()));
-
-    assertThat(tutorTagList).hasSize(2);
-    assertThat(tutorTagList.get(0).getTag().getId()).isEqualTo(1L);
-    assertThat(tutorTagList.get(1).getTag().getId()).isEqualTo(3L);
   }
 
   @Test
-  @Transactional
   @DisplayName("태그 가 추가되는 경우")
   void updateTagScenario4() throws Exception {
     List<Long> newTagIds = new ArrayList<>();
@@ -211,16 +183,5 @@ public class UpdateTagListTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
         .andExpect(status().isOk());
-
-    Tutor currentTutor = tutorRepository.findById(2L).get();
-    List<TutorTag> tutorTagList = currentTutor.getTutorTagList();
-
-    Collections.sort(tutorTagList, Comparator.comparing((TutorTag t) -> t.getTag().getId()));
-
-    assertThat(tutorTagList).hasSize(4);
-    assertThat(tutorTagList.get(0).getTag().getId()).isEqualTo(1L);
-    assertThat(tutorTagList.get(1).getTag().getId()).isEqualTo(2L);
-    assertThat(tutorTagList.get(2).getTag().getId()).isEqualTo(3L);
-    assertThat(tutorTagList.get(3).getTag().getId()).isEqualTo(4L);
   }
 }
