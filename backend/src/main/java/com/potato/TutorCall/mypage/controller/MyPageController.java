@@ -2,10 +2,12 @@ package com.potato.TutorCall.mypage.controller;
 
 import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.UserSessionDto;
+import com.potato.TutorCall.exception.customException.ForbiddenException;
 import com.potato.TutorCall.mypage.dto.req.*;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
 import com.potato.TutorCall.mypage.dto.res.UpdateSuccessResDto;
 import com.potato.TutorCall.mypage.service.MypageService;
+import com.potato.TutorCall.user.domain.enums.RoleType;
 import javax.naming.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -84,8 +86,11 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/notification")
-  public ResponseEntity<?> updateNotificationConfig(@SessionAttribute(name = SessionKey.USER) UserSessionDto userSession, @RequestBody NotificationUpdateReqDto notificationUpdateReq) {
-    mypageService.updaetNotification(userSession.getId(), notificationUpdateReq.getNotificationOption());
+  public ResponseEntity<?> updateNotificationConfig(
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
+      @RequestBody NotificationUpdateReqDto notificationUpdateReq) {
+    mypageService.updaetNotification(
+        userSession.getId(), notificationUpdateReq.getNotificationOption());
 
     return ResponseEntity.ok(new UpdateSuccessResDto("알림 설정이 변경되었습니다."));
   }
@@ -96,8 +101,16 @@ public class MyPageController {
    * @return
    */
   @PutMapping("/tutor/tag")
-  public ResponseEntity<?> updateLectureTag() {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> updateLectureTag(
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
+      @RequestBody TagUpdateReqDto tagUpdateReq) {
+    if (!userSession.getRoleType().equals(RoleType.TUTOR)) {
+      throw new ForbiddenException("수정 권한이 없습니다");
+    }
+
+    mypageService.updateTag(userSession.getId(), tagUpdateReq.getTags());
+
+    return ResponseEntity.ok(new UpdateSuccessResDto("강의 범위를 수정했습니다."));
   }
 
   /**
