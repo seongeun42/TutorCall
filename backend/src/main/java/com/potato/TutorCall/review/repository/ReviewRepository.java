@@ -39,5 +39,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query(value = "select avg(r.professionalismRate) from Review r where r.tutor = :tutor")
     double getTutorProfessionalismAvg(@Param("tutor") Tutor tutor);
 
-    Page<Review> findReviewsByTutor_IdAndCreatedAtBetweenOrderByCreatedAtDesc(Long tutorId, LocalDateTime statDate, LocalDateTime end, Pageable pageable);
+    Page<Review> findReviewsByTutor_IdAndCreatedAtBetweenOrderByCreatedAtDesc(Long tutorId, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
 }

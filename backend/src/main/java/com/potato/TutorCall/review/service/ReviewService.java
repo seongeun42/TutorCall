@@ -134,7 +134,7 @@ public class ReviewService {
     }
 
     public Page<TutorReviewResponseDto> tutorReviews(Long id, Pageable pageable) {
-        LocalDateTime start = LocalDateTime.of(LocalDate.now().minusMonths(30), LocalTime.of(0,0,0) );
+        LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(30), LocalTime.of(0,0,0) );
         LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
         return reviewRepository.findReviewsByTutor_IdAndCreatedAtBetweenOrderByCreatedAtDesc(id,start, end, pageable).map(TutorReviewResponseDto::new);
     }
