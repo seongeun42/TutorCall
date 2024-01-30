@@ -6,6 +6,7 @@ import com.potato.TutorCall.lecture.domain.Lecture;
 import com.potato.TutorCall.lecture.service.LectureParticipantService;
 import com.potato.TutorCall.lecture.service.LectureService;
 import com.potato.TutorCall.review.domain.Review;
+import com.potato.TutorCall.review.domain.StudyType;
 import com.potato.TutorCall.review.dto.ReviewRequestDto;
 import com.potato.TutorCall.review.dto.TutorReviewResponseDto;
 import com.potato.TutorCall.review.repository.ReviewRepository;
@@ -43,7 +44,7 @@ public class ReviewService {
             throw new ForbiddenException("해당 튜터콜을 수강한 학생이 아닙니다.");
         }
         // 리뷰 저장
-        Long reviewId = save(tutorCall.getTutor(), tutorCall.getUser(), dto);
+        Long reviewId = save(tutorCall.getTutor(), tutorCall.getUser(), dto, StudyType.TUTORCALL);
         // 선생님의 평가 점수에 반영
         tutorRateUpdate(tutorCall.getTutor());
         return reviewId;
@@ -63,7 +64,7 @@ public class ReviewService {
             throw new ForbiddenException("해당 과외를 수강한 학생이 아닙니다.");
         }
         // 리뷰 저장
-        Long reviewId = save(lecture.getTutor(), user, dto);
+        Long reviewId = save(lecture.getTutor(), user, dto, StudyType.LECTURE);
         // 선생님의 평가 점수에 반영
         tutorRateUpdate(lecture.getTutor());
         return reviewId;
@@ -105,8 +106,9 @@ public class ReviewService {
      * @param dto Review 내용
      * @return 저장된 Review id
      */
-    private Long save(Tutor tutor, User user, ReviewRequestDto dto) {
+    private Long save(Tutor tutor, User user, ReviewRequestDto dto, StudyType type) {
         Review review = Review.builder()
+                .studyType(type)
                 .tutor(tutor)
                 .reviewer(user)
                 .mannerRate(dto.getMannerRate())
