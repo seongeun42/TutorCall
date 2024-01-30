@@ -24,7 +24,7 @@ public class AuthService {
     User user = userService.findUserByEmail(authLoginRequestDto.getEmail());
 
     // 유저 존재하지 않을 경우
-    if (user != null) throw new DuplicateKeyException("이미 존재하는 이메일입니다.");
+    if (user == null) throw new DuplicateKeyException("이미 존재하는 이메일입니다.");
 
     // 소셜 로그인 이메일일 경우
     if (user.getSns() != null) throw new InvalidKeyException("잘못된 로그인 방법입니다.");

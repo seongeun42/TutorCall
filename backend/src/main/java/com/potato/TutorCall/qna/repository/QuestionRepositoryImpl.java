@@ -1,16 +1,27 @@
 package com.potato.TutorCall.qna.repository;
 
-import static com.potato.TutorCall.qna.domain.QQuestion.question;
 
 import com.potato.TutorCall.qna.domain.Question;
+import com.potato.TutorCall.qna.dto.QuestionDto;
 import com.potato.TutorCall.qna.dto.QuestionWriteDto;
+import com.potato.TutorCall.qna.dto.SearchFormDto;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.user.domain.User;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.impl.JPAUpdateClause;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static com.potato.TutorCall.qna.domain.QQuestion.question;
+
 
 @RequiredArgsConstructor
 public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
@@ -35,6 +46,42 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
         return question.getId();
     }
 
+  @Override
+  public Page<Question> getList(Pageable pageable, SearchFormDto searchFormDto) {
+
+    List<Question> list =
+            queryFactory
+                    .selectFrom(question)
+                    .where(
+                        tagEq(searchFormDto.getTagId()),
+                            keywordContains(searchFormDto.getKeyword()),
+                            question.isEnd.eq(searchFormDto.isEnd()),
+                            question.isDelete.eq(false)
+                    )
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetch();
+
+    Long count = queryFactory
+            .select(question.count())
+            .from(question)
+            .where(
+                    tagEq(searchFormDto.getTagId()),
+                    keywordContains(searchFormDto.getKeyword()),
+                    question.isEnd.eq(searchFormDto.isEnd()),
+                    question.isDelete.eq(false)
+            )
+            .fetchOne();
+
+    return new PageImpl<>(list, pageable, count);
+  }
+
+  private BooleanExpression tagEq(Long TagId){
+    return TagId != null ? question.tag.id.eq(TagId) : null;
+  }
+  private BooleanExpression keywordContains(String keyword){
+    return keyword!= null ? question.content.contains(keyword) : null;
+  }
 
 
 

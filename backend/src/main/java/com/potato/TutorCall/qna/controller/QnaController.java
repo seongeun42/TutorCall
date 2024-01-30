@@ -39,6 +39,7 @@ public class QnaController {
   @Operation(summary = "Q&A 게시판 전체 조회", description = "전체 게시글 가져옴")
   @GetMapping("/question")
   public ResponseEntity<?> questionAll(Pageable pageable, SearchFormDto pageNationDto) {
+
     return questionService.questionAll(pageable, pageNationDto);
   }
 
