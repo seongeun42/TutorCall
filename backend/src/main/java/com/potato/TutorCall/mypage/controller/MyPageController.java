@@ -119,8 +119,15 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/tutor/intro")
-  public ResponseEntity<?> updateIntroduction() {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> updateIntroduction(@SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
+                                              @RequestBody IntrodutionUpdateReqDto introdutionUpdateReq) {
+    if (!userSession.getRoleType().equals(RoleType.TUTOR)) {
+      throw new ForbiddenException("수정 권한이 없습니다");
+    }
+
+    mypageService.updateIntroduction(userSession.getId(), introdutionUpdateReq.getIntroduction());
+
+    return ResponseEntity.ok(new UpdateSuccessResDto("소개문구를 수정했습니다"));
   }
 
   /**
