@@ -2,10 +2,14 @@ package com.potato.TutorCall.review.repository;
 
 import com.potato.TutorCall.review.domain.Review;
 import com.potato.TutorCall.tutor.domain.Tutor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
@@ -34,4 +38,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query(value = "select avg(r.professionalismRate) from Review r where r.tutor = :tutor")
     double getTutorProfessionalismAvg(@Param("tutor") Tutor tutor);
 
+    Page<Review> findReviewsByTutor_Id(Long tutorId, Pageable pageable);
 }

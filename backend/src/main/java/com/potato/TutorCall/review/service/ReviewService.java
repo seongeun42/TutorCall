@@ -7,6 +7,7 @@ import com.potato.TutorCall.lecture.service.LectureParticipantService;
 import com.potato.TutorCall.lecture.service.LectureService;
 import com.potato.TutorCall.review.domain.Review;
 import com.potato.TutorCall.review.dto.ReviewRequestDto;
+import com.potato.TutorCall.review.dto.TutorReviewResponseDto;
 import com.potato.TutorCall.review.repository.ReviewRepository;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutorcall.domain.TutorCall;
@@ -14,6 +15,8 @@ import com.potato.TutorCall.tutorcall.service.TutorCallService;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final TutorCallService tutorcallService;
     private final LectureService lectureService;
     private final UserService userService;
     private final LectureParticipantService lectureParticipantService;
-
+    private final TutorCallService tutorCallService;
     /**
      * 튜터콜 리뷰를 저장하는 함수
      * @param userId
@@ -36,7 +38,7 @@ public class ReviewService {
      * @return 저장된 Review의 id
      */
     public Long saveTutorCallReview(Long userId, Long tutorCallId, ReviewRequestDto dto) {
-        TutorCall tutorCall = tutorcallService.findById(tutorCallId);
+        TutorCall tutorCall = tutorCallService.findById(tutorCallId);
         if (!userId.equals(tutorCall.getUser().getId())) {
             throw new ForbiddenException("해당 튜터콜을 수강한 학생이 아닙니다.");
         }
@@ -123,6 +125,10 @@ public class ReviewService {
         tutor.changeMannerRate(reviewRepository.getTutorMannerAvg(tutor));
         tutor.changeCommunicationRate(reviewRepository.getTutorCommnunicationAvg(tutor));
         tutor.changeProfessionalismRate(reviewRepository.getTutorProfessionalismAvg(tutor));
+    }
+
+    public Page<TutorReviewResponseDto> tutorReviews(Long id, Pageable pageable) {
+        return reviewRepository.findReviewsByTutor_Id(id, pageable).map(TutorReviewResponseDto::new);
     }
 
 }
