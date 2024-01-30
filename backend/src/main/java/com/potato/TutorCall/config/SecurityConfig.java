@@ -12,7 +12,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@EnableWebMvc
+//@EnableWebMvc
 public class SecurityConfig {
   @Bean
   public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -32,7 +32,9 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable()) // csrf설정 비활성화
         .formLogin(form -> form.disable()) // form login 비활성화
         .httpBasic(basic -> basic.disable()) // http basic 비활성화
-        .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()); // 어떤 요청이든 허용
+        .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/test/data").authenticated()
+                .anyRequest().permitAll()); // 어떤 요청이든 허용
     return http.build();
   }
 

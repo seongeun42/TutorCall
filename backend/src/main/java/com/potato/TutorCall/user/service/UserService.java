@@ -1,6 +1,7 @@
 package com.potato.TutorCall.user.service;
 
 import com.potato.TutorCall.auth.dto.request.SignupRequestDto;
+import com.potato.TutorCall.exception.customException.DuplicatedException;
 import com.potato.TutorCall.exception.customException.ForbiddenException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.user.domain.User;
@@ -20,7 +21,8 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
 
   public User findUserByEmail(String email) {
-    return userRepository.findByEmail(email);
+    return userRepository.findByEmail(email)
+            .orElseThrow(() -> new NotFoundException("이메일을 확인해주세요."));
   }
 
   @Transactional
@@ -32,11 +34,12 @@ public class UserService {
     return this.userRepository.findByNickname(nickname);
   }
 
+  @Transactional
   public User signup(SignupRequestDto signupRequestDto) throws DuplicateKeyException {
-    User user = this.userRepository.findByEmail(signupRequestDto.getEmail());
-    if (user != null) throw new DuplicateKeyException("이미 존재하는 이메일입니다.");
+    if (userRepository.existsByEmail(signupRequestDto.getEmail()))
+      throw new DuplicatedException("중복된 이메일입니다.");
 
-    user =
+    User user =
         User.builder()
             .email(signupRequestDto.getEmail())
             .nickname(signupRequestDto.getNickname())

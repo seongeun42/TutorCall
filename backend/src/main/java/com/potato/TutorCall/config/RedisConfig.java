@@ -10,6 +10,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @NoArgsConstructor
@@ -33,15 +34,16 @@ public class RedisConfig {
     return new LettuceConnectionFactory(redisStandaloneConfiguration);
   }
 
-  @Bean
-  public RedisSerializer<Object> springSessionDefaultRedisSerializer() {
-    return new GenericJackson2JsonRedisSerializer();
-  }
+//  @Bean
+//  public RedisSerializer<Object> springSessionDefaultRedisSerializer() {
+//    return new GenericJackson2JsonRedisSerializer();
+//  }
 
   @Bean
   public RedisTemplate<?, ?> redisTemplate() {
     RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
     redisTemplate.setConnectionFactory(redisConnectionFactory());
+    redisTemplate.setDefaultSerializer(new StringRedisSerializer());
     return redisTemplate;
   }
 }
