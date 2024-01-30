@@ -37,16 +37,17 @@ public class QuestionService {
     this.userRepository = userRepository;
   }
 
+@Transactional
   public ResponseEntity<?> question(int questionId) {
 
     CommonResponseDto commonResponseDto;
-    Question q =
-        (Question)
+    Question q = (Question)
             questionRepository
                 .findQuestionByIdAndIsDelete((long) questionId, false)
                 .orElseThrow(() -> new NotFoundException("질문 조회 실패"));
-
-    commonResponseDto = CommonResponseDto.builder().question(q).build();
+    QuestionDto questionDto = new QuestionDto(q);
+    questionDto.setAnswerList(q.getAnswerList());
+    commonResponseDto = CommonResponseDto.builder().question(questionDto).build();
     return ResponseEntity.ok(commonResponseDto);
   }
 

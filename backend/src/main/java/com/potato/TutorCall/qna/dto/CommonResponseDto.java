@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 @Data
 public class CommonResponseDto {
 
-  Question question;
+  QuestionDto question;
   Page<QuestionDto> questions;
   String message;
   LocalDate timestamp;
