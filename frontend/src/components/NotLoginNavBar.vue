@@ -34,7 +34,12 @@
           <div
             class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
           >
-            로그인 / 회원가입
+            로그인
+          </div>
+          <div
+            class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
+          >
+            회원가입
           </div>
         </div>
       </div>
