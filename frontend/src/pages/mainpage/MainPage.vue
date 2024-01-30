@@ -24,7 +24,7 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 
 // 추후 로직 구현 필요(비회원 & 학생 / 선생님 회원 구분)
-const isTutor: Ref<boolean> = ref(false)
+const isTutor: Ref<boolean> = ref(true)
 </script>
 
 <style scoped></style>
