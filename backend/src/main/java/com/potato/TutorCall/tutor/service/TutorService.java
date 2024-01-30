@@ -80,11 +80,12 @@ public class TutorService {
   /**
    * Tutor의 Tag list를 업데이트
    *
-   * @param tutor Tutor
+   * @param id id
    * @param idList 새로운 Tag들의 id list
    */
   @Transactional
-  public void changeTags(Tutor tutor, List<Long> idList) {
+  public void changeTags(Long id, List<Long> idList) {
+    Tutor tutor = tutorRepository.findById(id).get();
     // 새로 설정될 태그들
     List<Tag> newTags = tagRepository.findTagsByIdIn(idList);
 

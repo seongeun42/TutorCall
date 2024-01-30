@@ -76,8 +76,12 @@ public class MypageService {
   public void updateTag(Long id, List<Long> tags) {
     userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
 
-    Tutor tutor = tutorService.findById(id);
+    tutorService.changeTags(id, tags);
+  }
 
-    tutorService.changeTags(tutor, tags);
+  public void updateIntroduction(Long id, String introduction) {
+    userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
+
+    tutorService.changeIntroduction(id, introduction);
   }
 }
