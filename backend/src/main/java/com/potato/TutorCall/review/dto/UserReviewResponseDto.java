@@ -1,12 +1,10 @@
 package com.potato.TutorCall.review.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.potato.TutorCall.review.domain.Review;
 import com.potato.TutorCall.review.domain.StudyType;
-import com.potato.TutorCall.tutor.domain.Tutor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 import java.time.LocalDateTime;
 
@@ -31,13 +29,7 @@ public class UserReviewResponseDto {
                 review.getTutor().getProfessionalismRate()
         );
 
-        /*
-        *    this.introduction = introduction;
-            this.isActive = isActive;
-            this.reliablity = reliablity;
-            this.mannerRate = mannerRate;
-            this.communicationRate = communicationRate;
-            this.professionalismRate = professionalismRate;*/
+
         this.reviewer = new ReviewerDto(review.getReviewer());
         this.type = review.getType();
         this.mannerRate = review.getMannerRate();
