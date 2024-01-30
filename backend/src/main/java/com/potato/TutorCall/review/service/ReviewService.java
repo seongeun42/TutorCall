@@ -64,7 +64,7 @@ public class ReviewService {
     public Long saveLectureReview(Long userId, Long lectureId, ReviewRequestDto dto) {
         Lecture lecture = lectureService.findById(lectureId);
         User user = userService.findById(userId);
-        if (!lectureParticipantService.existParticipant(lecture, user)) {
+        if (!lectureParticipantService.existParticipant(lecture.getId(), user.getId())) {
             throw new ForbiddenException("해당 과외를 수강한 학생이 아닙니다.");
         }
         // 리뷰 저장
