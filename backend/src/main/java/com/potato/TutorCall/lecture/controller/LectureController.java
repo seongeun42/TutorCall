@@ -4,9 +4,7 @@ import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.common.dto.CreatedResponseDto;
 import com.potato.TutorCall.lecture.domain.Lecture;
-import com.potato.TutorCall.lecture.dto.LectureListResponseDto;
-import com.potato.TutorCall.lecture.dto.LectureRequestDto;
-import com.potato.TutorCall.lecture.dto.LectureSearchCondition;
+import com.potato.TutorCall.lecture.dto.*;
 import com.potato.TutorCall.lecture.service.LectureService;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
@@ -71,9 +69,9 @@ public class LectureController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> getLectureList(@RequestParam(required = false) String keyword,
-                                            @RequestParam(required = false) Long tag,
-                                            @RequestParam(required = false) Boolean state,
+    public ResponseEntity<?> getLectureList(@RequestParam(value = "keyword", required = false) String keyword,
+                                            @RequestParam(value = "tag", required = false) Long tag,
+                                            @RequestParam(value = "state", required = false) Boolean state,
                                             Pageable pageable) {
         LectureSearchCondition condition = LectureSearchCondition.builder()
                 .keyword(keyword)
@@ -81,7 +79,16 @@ public class LectureController {
                 .state(state)
                 .build();
         Page<LectureListResponseDto> result = lectureService.getLectureList(condition, pageable);
+        log.info("과외 모집 게시판을 조회했습니다.");
         return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/promotion/{lectureId}")
+    public ResponseEntity<?> getLecture(@PathVariable("lectureId") Long lectureId) {
+        Lecture lecture = lectureService.findById(lectureId);
+        LecturePromotionResponseDto dto = new LecturePromotionResponseDto(lecture);
+        log.info("과외 모집글을 조회했습니다.");
+        return ResponseEntity.ok().body(dto);
     }
 
 }
