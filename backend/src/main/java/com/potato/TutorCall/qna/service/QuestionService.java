@@ -4,6 +4,7 @@ import com.potato.TutorCall.exception.customException.InvalidException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.qna.domain.Question;
 import com.potato.TutorCall.qna.dto.CommonResponseDto;
+import com.potato.TutorCall.qna.dto.QuestionDto;
 import com.potato.TutorCall.qna.dto.QuestionWriteDto;
 import com.potato.TutorCall.qna.dto.SearchFormDto;
 import com.potato.TutorCall.qna.repository.QuestionRepository;
@@ -16,6 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.function.Function;
+
 
 @Service
 public class QuestionService {
@@ -72,15 +76,11 @@ public class QuestionService {
 
   public ResponseEntity<?> questionAll(Pageable pageable, SearchFormDto searchFormDto) {
 
-    Page<Question> list = null;
     CommonResponseDto commonResponseDto;
-    list =
-        questionRepository.findAllByContentContainsAndTag_IdAndIsEndAndIsDeleteOrderByCreatedAt(
-            pageable,
-            searchFormDto.getKeyword(),
-            searchFormDto.getTagId(),
-            searchFormDto.isEnd(),
-            false);
+    Page<QuestionDto> list =
+            questionRepository.getList(pageable, searchFormDto)
+                    .map(QuestionDto::new);
+
 
     commonResponseDto = CommonResponseDto.builder().questions(list).build();
     return ResponseEntity.ok(commonResponseDto);

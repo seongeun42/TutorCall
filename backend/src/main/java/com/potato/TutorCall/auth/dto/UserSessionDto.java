@@ -15,6 +15,7 @@ public class UserSessionDto {
     this.id = id;
     this.roleType = roleType;
   }
+  public UserSessionDto(){}
 
   public static UserSessionDto of(User user) {
     return UserSessionDto.builder().id(user.getId()).roleType(user.getRole()).build();
