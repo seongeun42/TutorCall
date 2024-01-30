@@ -3,13 +3,19 @@ package com.potato.TutorCall.lecture.controller;
 import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.common.dto.CreatedResponseDto;
+import com.potato.TutorCall.common.dto.MessageResponseDto;
+import com.potato.TutorCall.exception.customException.ForbiddenException;
 import com.potato.TutorCall.lecture.domain.Lecture;
+import com.potato.TutorCall.lecture.domain.LectureParticipant;
 import com.potato.TutorCall.lecture.dto.*;
+import com.potato.TutorCall.lecture.service.LectureParticipantService;
 import com.potato.TutorCall.lecture.service.LectureService;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutor.service.TagService;
 import com.potato.TutorCall.tutor.service.TutorService;
+import com.potato.TutorCall.user.domain.User;
+import com.potato.TutorCall.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +31,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/lecture")
 public class LectureController {
 
-    private final LectureService lectureService;
-    private final TutorService tutorService;
     private final TagService tagService;
+    private final UserService userService;
+    private final TutorService tutorService;
+    private final LectureService lectureService;
+    private final LectureParticipantService participantService;
 
     @PostMapping("/promotion")
     public ResponseEntity<?> saveLecture(@RequestBody LectureRequestDto dto, HttpSession session) {
@@ -89,6 +97,25 @@ public class LectureController {
         LecturePromotionResponseDto dto = new LecturePromotionResponseDto(lecture);
         log.info("과외 모집글을 조회했습니다.");
         return ResponseEntity.ok().body(dto);
+    }
+
+    @PostMapping("/participant/{lectureId}")
+    public ResponseEntity<?> registLecture(@PathVariable("lectureId") Long lectureId, HttpSession session) {
+        UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+        Lecture lecture = lectureService.findById(lectureId);
+        User user = userService.findById(userSessionDto.getId());
+        Long id = participantService.registLecture(lecture, user);
+        log.info(userSessionDto.getId() + "님이 과외" + lectureId + "를 신청했습니다.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CreatedResponseDto(id, "과외에 등록되었습니다."));
+    }
+
+    @DeleteMapping("/participant/{lectureId}")
+    public ResponseEntity<?> unRegistLecture(@PathVariable("lectureId") Long lectureId, HttpSession session) {
+        UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+        Lecture lecture = lectureService.findById(lectureId);
+        participantService.unRegistLecture(lecture, userSessionDto.getId());
+        log.info("회원" + userSessionDto.getId() + "님이 과외" + lectureId + "를 신청 취소했습니다.");
+        return ResponseEntity.ok().body(new MessageResponseDto("과외 등록이 취소되었습니다."));
     }
 
 }
