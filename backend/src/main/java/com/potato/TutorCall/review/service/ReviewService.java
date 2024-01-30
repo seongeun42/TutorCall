@@ -21,6 +21,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -130,7 +134,9 @@ public class ReviewService {
     }
 
     public Page<TutorReviewResponseDto> tutorReviews(Long id, Pageable pageable) {
-        return reviewRepository.findReviewsByTutor_Id(id, pageable).map(TutorReviewResponseDto::new);
+        LocalDateTime start = LocalDateTime.of(LocalDate.now().minusMonths(30), LocalTime.of(0,0,0) );
+        LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
+        return reviewRepository.findReviewsByTutor_IdAndCreatedAtBetweenOrderByCreatedAtDesc(id,start, end, pageable).map(TutorReviewResponseDto::new);
     }
 
 }

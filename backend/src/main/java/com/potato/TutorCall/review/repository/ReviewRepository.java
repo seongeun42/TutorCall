@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -38,5 +39,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query(value = "select avg(r.professionalismRate) from Review r where r.tutor = :tutor")
     double getTutorProfessionalismAvg(@Param("tutor") Tutor tutor);
 
-    Page<Review> findReviewsByTutor_Id(Long tutorId, Pageable pageable);
+    Page<Review> findReviewsByTutor_IdAndCreatedAtBetweenOrderByCreatedAtDesc(Long tutorId, LocalDateTime statDate, LocalDateTime end, Pageable pageable);
 }
