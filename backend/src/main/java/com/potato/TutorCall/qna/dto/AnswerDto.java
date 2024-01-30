@@ -10,7 +10,10 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class AnswerDto {
+public class
+
+
+AnswerDto {
     private Long id;
     private UserSimpleDto tutor;
     private String content;
