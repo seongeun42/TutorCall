@@ -14,5 +14,6 @@
     },
     "allowJs": true,
     "esModuleInterop": true
-  }
+  },
+  "noImplicitAny": false
 }
