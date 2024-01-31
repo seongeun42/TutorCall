@@ -5,7 +5,7 @@ import MainPage from '@/pages/mainpage/MainPage.vue'
 
 <template>
   <NavBar />
-  <MainPage />>
+  <MainPage />
 </template>
 
 <style scoped></style>
