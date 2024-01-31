@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="w-1/2 block mb-8 bg-white">
-      <img src="https://via.placeholder.com/1200x800" class="w-full h-auto opacity-75" />
+      <img src="@\img\main2.png" class="w-full h-auto opacity-75" />
       <div style="text-align: center; background-color: white; margin-top: 10px">
         <div class="flex justify-center align-middle">
           <button

@@ -4,24 +4,22 @@
       학생들의 리뷰를 확인하세요
     </div>
     <Carousel :autoplay="2000" :itemsToShow="3.95" :wrapAround="true" :transition="500">
-      <Slide v-for="(slide, index) in 10" :key="index">
+      <Slide v-for="(slide, index) in Reviews" :key="index">
         <ReviewDetail :data="slide" />
-        <!-- <div class="carousel__item">{{ slide }}</div> -->
       </Slide>
-
-      <!-- ... -->
     </Carousel>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, defineComponent } from 'vue'
+import type { Ref } from 'vue'
 import { Carousel, Pagination, Slide } from 'vue3-carousel'
 import ReviewDetail from './ReviewDetail.vue'
 
 import 'vue3-carousel/dist/carousel.css'
 
-export default defineComponent({
+defineComponent({
   name: 'AutoPlay',
   components: {
     Carousel,
@@ -29,6 +27,74 @@ export default defineComponent({
     ReviewDetail
   }
 })
+
+interface Review {
+  reviewId: number
+  profileUrl: string
+  nickname: string
+  rating: number
+  content: string
+}
+
+const Reviews: Ref<Review[]> = ref([
+  {
+    reviewId: 1,
+    profileUrl: 'src/img/default_profile.png',
+    nickname: '닉네임1',
+    rating: 1,
+    content:
+      '하나쯤은 리뷰 내용이 길어질때 어떻게 표시되는지 테스트하는 내용입니다. 단순히 내용 채우기용입니다. 내용은 내용입니다. 내용. 내 안의 용.'
+  },
+  {
+    reviewId: 2,
+    profileUrl: 'src/img/google_logo.png',
+    nickname: '닉네임2',
+    rating: 1.7,
+    content: '리뷰 내용2'
+  },
+  {
+    reviewId: 3,
+    profileUrl: 'src/img/insta_logo.png',
+    nickname: '닉네임3',
+    rating: 2,
+    content: '리뷰 내용1'
+  },
+  {
+    reviewId: 4,
+    profileUrl: 'src/img/naver_logo.png',
+    nickname: '닉네임4',
+    rating: 2.4,
+    content: '리뷰 내용2'
+  },
+  {
+    reviewId: 5,
+    profileUrl: 'src/img/google_logo.png',
+    nickname: '닉네임5',
+    rating: 3,
+    content: '리뷰 내용1'
+  },
+  {
+    reviewId: 6,
+    profileUrl: 'src/img/google_logo.png',
+    nickname: '닉네임6',
+    rating: 3.2,
+    content: '리뷰 내용2'
+  },
+  {
+    reviewId: 7,
+    profileUrl: 'src/img/google_logo.png',
+    nickname: '닉네임7',
+    rating: 4.5,
+    content: '리뷰 내용1'
+  },
+  {
+    reviewId: 8,
+    profileUrl: 'src/img/google_logo.png',
+    nickname: '닉네임8',
+    rating: 4,
+    content: '리뷰 내용2'
+  }
+])
 </script>
 
 <style scoped>
@@ -38,6 +104,7 @@ export default defineComponent({
 
 .carousel__viewport {
   perspective: 2000px;
+  padding-top: 2rem;
 }
 
 .carousel__track {

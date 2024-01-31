@@ -15,8 +15,8 @@
         </div>
       </div>
     </div>
-    <div class="w-1/2 block mb-8 bg-black hover:bg-gray-700">
-      <img src="https://via.placeholder.com/1200x800" class="w-full h-auto opacity-75" />
+    <div class="w-1/2 block mb-8">
+      <img src="@\img\main1.png" class="w-full h-auto opacity-75" />
     </div>
   </div>
 </template>
