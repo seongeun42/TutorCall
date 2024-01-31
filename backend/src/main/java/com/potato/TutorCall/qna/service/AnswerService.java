@@ -1,5 +1,6 @@
 package com.potato.TutorCall.qna.service;
 
+import com.potato.TutorCall.exception.customException.DuplicatedException;
 import com.potato.TutorCall.exception.customException.InvalidException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.qna.domain.Answer;
@@ -76,11 +77,20 @@ public class AnswerService {
             .findById((long) answerId)
             .orElseThrow(() -> new NotFoundException("답변 채택 실패"));
 
+    Question targetQuestion =
+            questionRepository.findById(targetAnswer.getQuestion().getId())
+                    .orElseThrow(()-> new NotFoundException("답변 채택 실패"));
+
+    if(targetQuestion.isEnd())
+      throw new DuplicatedException("이미 채택된 질문입니다.");
+
     if (!targetAnswer.getQuestion().getWriter().getId().equals(userId))
       throw new InvalidException("권한 없음");
 
     int count = answerRepository.chooseAnswer((long) answerId, true);
     if (count == 0) throw new NotFoundException("답변 채택 실패");
+
+    targetQuestion.ended();
 
     return CommonResponseDto.builder().message("답변 채택 완료.").build();
   }
