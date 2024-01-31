@@ -1,7 +1,9 @@
 package com.potato.TutorCall.auth.handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.UserSessionDto;
+import com.potato.TutorCall.auth.service.AuthService;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.domain.enums.SnsType;
@@ -12,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.jackson.JsonObjectSerializer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -26,6 +29,7 @@ import java.util.Map;
 public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
       private final UserService userService;
+      private final AuthService authService;
 
       @Value("${frontend.url}:${frontend.port}")
       private String frontendUrl;
@@ -43,6 +47,8 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
           //SNSTYPE
           //SnsType snsType = attributes.getOrDefault();
 
+          System.out.println(new ObjectMapper().writeValueAsString(attributes));
+
           //TODO: 전체적 모듈화 필요
           String email = (String) attributes.getOrDefault("email", "");
           String nickname = (String) attributes.getOrDefault("nickname", "");
@@ -54,7 +60,6 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
           User user = this.userService.findUserByEmail(email);
 
           if(user == null){
-              //TODO: 바꾸기
               SnsType snsType;
               if("kakao".equals(snsTypeAsString)) snsType = SnsType.KAKAO;
               if("naver".equals(snsTypeAsString)) snsType = SnsType.NAVER;
@@ -69,17 +74,13 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
               user = this.userService.save(newUser);
           }
 
-          HttpSession session = request.getSession(true);
-          UserSessionDto userSessionDto = UserSessionDto
-                  .builder()
-                  .id(user.getId())
-                  .roleType(user.getRole())
-                  .build();
-          session.setAttribute(SessionKey.USER, userSessionDto);
-          this.setAlwaysUseDefaultTargetUrl(true);
-          this.setDefaultTargetUrl(frontendUrl);
-          // 성공 시 FRONTEND 주소로 리다이렉트
+//          this.setAlwaysUseDefaultTargetUrl(true);
+//          this.setDefaultTargetUrl(frontendUrl);
+
           // TODO: SESSION설정
+          HttpSession session = request.getSession(true);
+          authService.saveUserInfoToSession(session, SessionKey.USER, user);
+
           response.sendRedirect(frontendUrl);
 
       }
