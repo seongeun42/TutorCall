@@ -45,7 +45,7 @@ public class ReportService {
     }
 
     @Transactional
-    public ResponseEntity<?> returnResponseEntity(long reportedId, User reporter,
+    public CommonResponseDto returnResponseEntity(long reportedId, User reporter,
                                                   ReportForm reportForm, ReportType reportType){
         Report report = Report.builder()
                 .reported(reportedId)
@@ -60,13 +60,10 @@ public class ReportService {
         if(reportId == null)
             throw new NotFoundException("신고 접수 실패");
 
-        CommonResponseDto commonResponseDto =
-                CommonResponseDto.builder()
-                        .message("신고 접수 성공")
-                        .reportId(reportId)
-                        .build();
-
-        return ResponseEntity.ok(commonResponseDto);
+        return  CommonResponseDto.builder()
+                .message("신고 접수 성공")
+                .reportId(reportId)
+                .build();
     }
 
     public boolean isDuplicatedReport(User reporter, long reportedId, ReportType reportType){
@@ -78,7 +75,7 @@ public class ReportService {
     }
 
     @Transactional
-    public ResponseEntity<?> reportUser(long reporterId, long reportedId, ReportForm reportForm){
+    public CommonResponseDto reportUser(long reporterId, long reportedId, ReportForm reportForm){
 
         User reporter =
                 userRepository.findById(reporterId)
@@ -95,7 +92,7 @@ public class ReportService {
     }
 
     @Transactional
-    public ResponseEntity<?> reportQuestion(long reporterId, long questionId, ReportForm reportForm){
+    public CommonResponseDto reportQuestion(long reporterId, long questionId, ReportForm reportForm){
         User reporter =
                 userRepository.findById(reporterId)
                         .orElseThrow(()-> new NotFoundException("잘못된 유저 접근"));
@@ -110,7 +107,7 @@ public class ReportService {
     }
 
     @Transactional
-    public ResponseEntity<?> reportPromotion(long reporterId, long lectureId, ReportForm reportForm){
+    public CommonResponseDto reportPromotion(long reporterId, long lectureId, ReportForm reportForm){
         User reporter =
                 userRepository.findById(reporterId)
                         .orElseThrow(()-> new NotFoundException("잘못된 유저 접근"));
@@ -125,7 +122,7 @@ public class ReportService {
     }
 
     @Transactional
-    public ResponseEntity<?> reportAnswer(long reporterId, long answerId, ReportForm reportForm){
+    public CommonResponseDto reportAnswer(long reporterId, long answerId, ReportForm reportForm){
         User reporter =
                 userRepository.findById(reporterId)
                         .orElseThrow(()-> new NotFoundException("잘못된 유저 접근"));
@@ -139,7 +136,7 @@ public class ReportService {
         return returnResponseEntity(answerId, reporter, reportForm, ReportType.ANSWER);
     }
 
-    public ResponseEntity<?> findAllReport(long userId, Pageable pageable, ReportListDto reportListDto){
+    public CommonResponseDto findAllReport(long userId, Pageable pageable, ReportListDto reportListDto){
 
         User user =
                 userRepository.findById(userId)
@@ -151,14 +148,12 @@ public class ReportService {
         Page<ReportDto> list = reportRepository.findAllByTypeAndProceedStateOrderByIdDesc(pageable, reportListDto.getType(),
                 reportListDto.isState()).map(ReportDto::new);
 
-        CommonResponseDto commonResponseDto = CommonResponseDto.builder()
+        return CommonResponseDto.builder()
                 .reports(list).build();
-
-        return ResponseEntity.ok(commonResponseDto);
     }
 
     @Transactional
-    public ResponseEntity<?> acceptReport(long userId, long reportId){
+    public CommonResponseDto acceptReport(long userId, long reportId){
 
         User user =
                 userRepository.findById(userId)
@@ -196,11 +191,9 @@ public class ReportService {
         count = reportRepository.updateReportById(reportId);
         if (count == 0) throw new NotFoundException("신고 처리 실패");
 
-        CommonResponseDto commonResponseDto = CommonResponseDto.builder()
+        return CommonResponseDto.builder()
                 .reportId(reportId)
                 .message("신고가 처리되었습니다").build();
-
-        return ResponseEntity.ok(commonResponseDto);
     }
 
 }

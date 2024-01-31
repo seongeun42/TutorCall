@@ -37,60 +37,55 @@ public class QuestionService {
     this.userRepository = userRepository;
   }
 
-  public ResponseEntity<?> question(int questionId) {
+@Transactional
+  public CommonResponseDto question(int questionId) {
 
-    CommonResponseDto commonResponseDto;
-    Question q =
-        (Question)
+    Question q = (Question)
             questionRepository
                 .findQuestionByIdAndIsDelete((long) questionId, false)
                 .orElseThrow(() -> new NotFoundException("질문 조회 실패"));
+    QuestionDto questionDto = new QuestionDto(q);
+    questionDto.setAnswerList(q.getAnswerList());
 
-    commonResponseDto = CommonResponseDto.builder().question(q).build();
-    return ResponseEntity.ok(commonResponseDto);
+    return CommonResponseDto.builder().question(questionDto).build();
   }
 
-  public ResponseEntity<?> writeQuestion(QuestionWriteDto questionWriteDto) {
+  public CommonResponseDto writeQuestion(QuestionWriteDto questionWriteDto) {
 
     Tag tag =
-        tagRepository
-            .findById(questionWriteDto.getTagId())
-            .orElseThrow(() -> new NotFoundException("질문 작성 실패"));
+            tagRepository
+                    .findById(questionWriteDto.getTagId())
+                    .orElseThrow(() -> new NotFoundException("질문 작성 실패"));
     User user =
-        userRepository
-            .findById(questionWriteDto.getWriterId())
-            .orElseThrow(() -> new NotFoundException("질문 작성 실패"));
+            userRepository
+                    .findById(questionWriteDto.getWriterId())
+                    .orElseThrow(() -> new NotFoundException("질문 작성 실패"));
 
-    CommonResponseDto commonResponseDto;
+
+
     Long questionId = null;
 
     questionId = questionRepository.writeQuestion(questionWriteDto, user, tag);
 
     if (questionId == null) throw new NotFoundException("질문 작성 실패");
 
-    commonResponseDto =
-        CommonResponseDto.builder().questionId(questionId).message("질문 게시글이 생성되었습니다.").build();
-
-    return ResponseEntity.ok(commonResponseDto);
+    return CommonResponseDto.builder().questionId(questionId).message("질문 게시글이 생성되었습니다.").build();
   }
 
-  public ResponseEntity<?> questionAll(Pageable pageable, SearchFormDto searchFormDto) {
+  public CommonResponseDto questionAll(Pageable pageable, SearchFormDto searchFormDto) {
 
-    CommonResponseDto commonResponseDto;
     Page<QuestionDto> list =
             questionRepository.getList(pageable, searchFormDto)
                     .map(QuestionDto::new);
 
-
-    commonResponseDto = CommonResponseDto.builder().questions(list).build();
-    return ResponseEntity.ok(commonResponseDto);
+    return CommonResponseDto.builder().questions(list).build();
   }
 
-  public ResponseEntity<?> editQuestion(
+  public CommonResponseDto editQuestion(
       int questionId, QuestionWriteDto questionWriteDto, long userId) {
 
     Long count = null;
-    CommonResponseDto commonResponseDto;
+
     Tag tag =
         tagRepository
             .findById(questionWriteDto.getTagId())
@@ -115,12 +110,11 @@ public class QuestionService {
     count = questionRepository.editQuestion(questionId, questionWriteDto, user, tag);
     if (count == 0) throw new NotFoundException("질문 수정 실패");
 
-    commonResponseDto = CommonResponseDto.builder().message("질문 게시글이 수정되었습니다.").build();
-    return ResponseEntity.ok(commonResponseDto);
+    return CommonResponseDto.builder().message("질문 게시글이 수정되었습니다.").build();
   }
 
   @Transactional
-  public ResponseEntity<?> deleteQuestion(int questionId, long userId) {
+  public CommonResponseDto deleteQuestion(int questionId, long userId) {
 
     User requestUser =
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("질문 삭제 실패"));
@@ -131,14 +125,12 @@ public class QuestionService {
 
     if (!editTarget.getId().equals(requestUser.getId())) throw new InvalidException("수정 권한 없음");
 
-    CommonResponseDto commonResponseDto;
     int count =
         questionRepository.deleteQuestion(
             (long) questionId, false);
 
     if (count == 0) throw new NotFoundException("질문 삭제 실패");
 
-    commonResponseDto = CommonResponseDto.builder().message("질문 삭제 완료.").build();
-    return ResponseEntity.ok(commonResponseDto);
+    return CommonResponseDto.builder().message("질문 삭제 완료.").build();
   }
 }

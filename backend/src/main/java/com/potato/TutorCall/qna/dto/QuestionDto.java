@@ -1,18 +1,20 @@
 package com.potato.TutorCall.qna.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.potato.TutorCall.qna.domain.Answer;
 import com.potato.TutorCall.qna.domain.Question;
-import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.dto.TagDto;
-import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.dto.UserSimpleDto;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-
+import java.util.List;
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class QuestionDto {
+    private Long questionId;
     private UserSimpleDto writer;
     private String title;
     private String content;
@@ -21,9 +23,11 @@ public class QuestionDto {
     private boolean isDelete;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private List<AnswerDto> answerList;
 
     @Builder
     public QuestionDto(Question question){
+        this.questionId = question.getId();
         this.writer = new UserSimpleDto(question.getWriter());
         this.title = question.getTitle();
         this.content = question.getContent();
@@ -34,4 +38,7 @@ public class QuestionDto {
         this.modifiedAt = question.getModifiedAt();
     }
 
+    public void setAnswerList(List<Answer> answerList) {
+        this.answerList = answerList.stream().map(AnswerDto::new).toList();
+    }
 }

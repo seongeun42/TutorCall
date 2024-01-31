@@ -28,7 +28,8 @@ public class ReportController {
                                         @RequestBody ReportForm reportForm,
                                         HttpSession httpSession) {
         UserSessionDto userSessionDto = (UserSessionDto) httpSession.getAttribute(SessionKey.USER);
-        return reportService.reportUser(userSessionDto.getId(), userId, reportForm);
+        return ResponseEntity.ok(
+                reportService.reportUser(userSessionDto.getId(), userId, reportForm));
     }
 
     @Operation(summary = "Question Type 신고", description = "Question 신고")
@@ -38,7 +39,9 @@ public class ReportController {
                                             HttpSession httpSession) {
 
         UserSessionDto userSessionDto = (UserSessionDto) httpSession.getAttribute(SessionKey.USER);
-        return reportService.reportQuestion(userSessionDto.getId(), questionId, reportForm);
+        return ResponseEntity.ok(
+                reportService.reportQuestion(userSessionDto.getId(), questionId, reportForm)
+                );
     }
 
     @Operation(summary = "lecture Type 신고", description = "lecture 신고")
@@ -48,7 +51,9 @@ public class ReportController {
                                            HttpSession httpSession) {
 
         UserSessionDto userSessionDto = (UserSessionDto) httpSession.getAttribute(SessionKey.USER);
-        return reportService.reportPromotion(userSessionDto.getId(), lectureId, reportForm);
+        return ResponseEntity.ok(
+                reportService.reportPromotion(userSessionDto.getId(), lectureId, reportForm)
+                );
     }
 
 
@@ -58,7 +63,9 @@ public class ReportController {
                                           @RequestBody ReportForm reportForm,
                                           HttpSession httpSession) {
         UserSessionDto userSessionDto = (UserSessionDto) httpSession.getAttribute(SessionKey.USER);
-        return reportService.reportAnswer(userSessionDto.getId(), answerId, reportForm);
+        return ResponseEntity.ok(
+                reportService.reportAnswer(userSessionDto.getId(), answerId, reportForm)
+            );
     }
 
     @Operation(summary = "신고 목록 조회", description = "Admin은 신고 목록 조회한다.")
@@ -67,7 +74,9 @@ public class ReportController {
                                            ReportListDto reportListDto,
                                            HttpSession httpSession) {
         UserSessionDto userSessionDto = (UserSessionDto) httpSession.getAttribute(SessionKey.USER);
-        return reportService.findAllReport(userSessionDto.getId(), pageable, reportListDto);
+        return ResponseEntity.ok(
+                reportService.findAllReport(userSessionDto.getId(), pageable, reportListDto)
+        );
     }
 
     @Operation(summary = "신고 처리", description = "Admin은 신고 처리를 한다.")
@@ -75,7 +84,9 @@ public class ReportController {
     public ResponseEntity<?> acceptReport(@PathVariable("reportId") int reportId,
                                           HttpSession httpSession) {
         UserSessionDto userSessionDto = (UserSessionDto) httpSession.getAttribute(SessionKey.USER);
-        return reportService.acceptReport(userSessionDto.getId(), reportId);
+        return ResponseEntity.ok(
+                reportService.acceptReport(userSessionDto.getId(), reportId)
+        );
     }
 
 }

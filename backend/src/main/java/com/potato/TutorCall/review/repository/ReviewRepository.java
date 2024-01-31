@@ -44,4 +44,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findAllByLecture(Lecture lecture);
 
+    Page<Review> findReviewsByReviewerId(Long userId, Pageable pageable);
+    
 }

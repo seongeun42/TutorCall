@@ -9,6 +9,7 @@ import com.potato.TutorCall.review.domain.Review;
 import com.potato.TutorCall.review.domain.StudyType;
 import com.potato.TutorCall.review.dto.ReviewRequestDto;
 import com.potato.TutorCall.review.dto.TutorReviewResponseDto;
+import com.potato.TutorCall.review.dto.UserReviewResponseDto;
 import com.potato.TutorCall.review.repository.ReviewRepository;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutorcall.domain.TutorCall;
@@ -134,6 +135,7 @@ public class ReviewService {
         tutor.changeProfessionalismRate(reviewRepository.getTutorProfessionalismAvg(tutor));
     }
 
+    @Transactional(readOnly = true)
     public Page<TutorReviewResponseDto> tutorReviews(Long id, Pageable pageable) {
         LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(30), LocalTime.of(0,0,0) );
         LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
@@ -143,6 +145,11 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public List<Review> getLectureReviews(Lecture lecture) {
         return reviewRepository.findAllByLecture(lecture);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserReviewResponseDto> userReview(Long id, Pageable pageable) {
+        return reviewRepository.findReviewsByReviewerId(id, pageable).map(UserReviewResponseDto::new);
     }
 
 }
