@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,7 +51,7 @@ public class ReviewService {
             throw new ForbiddenException("해당 튜터콜을 수강한 학생이 아닙니다.");
         }
         // 리뷰 저장
-        Long reviewId = save(tutorCall.getTutor(), tutorCall.getUser(), dto, StudyType.TUTORCALL);
+        Long reviewId = save(tutorCall.getTutor(), tutorCall.getUser(), dto, StudyType.TUTORCALL, null);
         // 선생님의 평가 점수에 반영
         tutorRateUpdate(tutorCall.getTutor());
         return reviewId;
@@ -70,7 +71,7 @@ public class ReviewService {
             throw new ForbiddenException("해당 과외를 수강한 학생이 아닙니다.");
         }
         // 리뷰 저장
-        Long reviewId = save(lecture.getTutor(), user, dto, StudyType.LECTURE);
+        Long reviewId = save(lecture.getTutor(), user, dto, StudyType.LECTURE, lecture);
         // 선생님의 평가 점수에 반영
         tutorRateUpdate(lecture.getTutor());
         return reviewId;
@@ -112,11 +113,12 @@ public class ReviewService {
      * @param dto Review 내용
      * @return 저장된 Review id
      */
-    private Long save(Tutor tutor, User user, ReviewRequestDto dto, StudyType type) {
+    private Long save(Tutor tutor, User user, ReviewRequestDto dto, StudyType type, Lecture lecture) {
         Review review = Review.builder()
                 .studyType(type)
                 .tutor(tutor)
                 .reviewer(user)
+                .lecture(lecture)
                 .mannerRate(dto.getMannerRate())
                 .communicationRate(dto.getCommunicationRate())
                 .professionalismRate(dto.getProfessionalismRate())
@@ -143,8 +145,16 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public List<Review> getLectureReviews(Lecture lecture) {
-        return reviewRepository.findAllByLecture(lecture);
+    public List<Review> getLectureReviews(Lecture lecture, Long userId) {
+        List<Review> reviews = new ArrayList<>();
+        if (userId != null) {
+            Review review = reviewRepository.findByLectureAndReviewerId(lecture, userId);
+            if (review != null)
+                reviews.add(review);
+        } else {
+            reviews = reviewRepository.findAllByLecture(lecture);
+        }
+        return reviews;
     }
 
     @Transactional(readOnly = true)

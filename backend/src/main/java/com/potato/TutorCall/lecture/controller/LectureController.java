@@ -155,11 +155,14 @@ public class LectureController {
         UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
         Lecture lecture = lectureService.findById(lectureId);
         Tutor tutor = lecture.getTutor();
-        if (!userSessionDto.getId().equals(tutor.getId())
-                && !participantService.existParticipant(lectureId, userSessionDto.getId())) {
+        List<Review> reviews;
+        if (userSessionDto.getId().equals(tutor.getId())) {
+            reviews = reviewService.getLectureReviews(lecture, null);
+        } else if (participantService.existParticipant(lectureId, userSessionDto.getId())) {
+            reviews = reviewService.getLectureReviews(lecture, userSessionDto.getId());
+        } else {
             throw new ForbiddenException("과외 조회 권한이 없습니다.");
         }
-        List<Review> reviews = reviewService.getLectureReviews(lecture);
         LectureResponseDto result = new LectureResponseDto(lecture, tutor.getUser(), reviews);
         log.info("유저" + userSessionDto.getId() + "님이 과외" + lectureId + "를 조회했습니다.");
         return ResponseEntity.ok().body(result);

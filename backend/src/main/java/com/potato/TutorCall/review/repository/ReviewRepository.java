@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
@@ -43,6 +44,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findReviewsByTutor_IdAndCreatedAtBetweenOrderByCreatedAtDesc(Long tutorId, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
 
     List<Review> findAllByLecture(Lecture lecture);
+
+    Review findByLectureAndReviewerId(Lecture lecture, Long reviewerId);
 
     Page<Review> findReviewsByReviewerId(Long userId, Pageable pageable);
     
