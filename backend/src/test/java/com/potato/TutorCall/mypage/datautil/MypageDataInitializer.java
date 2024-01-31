@@ -13,15 +13,16 @@ import com.potato.TutorCall.tutor.domain.enums.SchoolType;
 import com.potato.TutorCall.tutor.repository.TagRepository;
 import com.potato.TutorCall.tutor.repository.TutorRepository;
 import com.potato.TutorCall.tutor.repository.TutorTagRepository;
+import com.potato.TutorCall.tutorcall.domain.TutorCall;
+import com.potato.TutorCall.tutorcall.repository.TutorCallRepository;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.domain.enums.SnsType;
 import com.potato.TutorCall.user.repository.UserRepository;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 
 /** Mypage 테스트용 데이터 추가를 위한 클래스 */
 @Component
@@ -79,8 +80,14 @@ public class MypageDataInitializer {
     tagRepository.save(tag4);
   }
 
-  public void addLecture(LectureRepository lectureRepository, LectureParticipantRepository lectureParticipantRepository, TagRepository tagRepository, UserRepository userRepository, TutorRepository tutorRepository) {
-    Lecture lecture1 = Lecture.builder()
+  public void addLecture(
+      LectureRepository lectureRepository,
+      LectureParticipantRepository lectureParticipantRepository,
+      TagRepository tagRepository,
+      UserRepository userRepository,
+      TutorRepository tutorRepository) {
+    Lecture lecture1 =
+        Lecture.builder()
             .price(1000)
             .tag(tagRepository.findById(1L).get())
             .maxParticipants(4)
@@ -91,10 +98,15 @@ public class MypageDataInitializer {
             .build();
 
     lectureRepository.save(lecture1);
-    LectureParticipant lectureParticipant1 = LectureParticipant.builder().lecture(lecture1).user(userRepository.findById(1L).get()).build();
+    LectureParticipant lectureParticipant1 =
+        LectureParticipant.builder()
+            .lecture(lecture1)
+            .user(userRepository.findById(1L).get())
+            .build();
     lectureParticipantRepository.save(lectureParticipant1);
 
-    Lecture lecture2 = Lecture.builder()
+    Lecture lecture2 =
+        Lecture.builder()
             .price(5000)
             .tag(tagRepository.findById(3L).get())
             .maxParticipants(6)
@@ -104,12 +116,72 @@ public class MypageDataInitializer {
             .tutor(tutorRepository.findById(2L).get())
             .build();
     lectureRepository.save(lecture2);
-    LectureParticipant lectureParticipant2 = LectureParticipant.builder().lecture(lecture2).user(userRepository.findById(1L).get()).build();
+    LectureParticipant lectureParticipant2 =
+        LectureParticipant.builder()
+            .lecture(lecture2)
+            .user(userRepository.findById(1L).get())
+            .build();
     lectureParticipantRepository.save(lectureParticipant2);
   }
 
-  public void addReview(ReviewRepository reviewRepository, UserRepository userRepository, LectureRepository lectureRepository) {
-    Review review = Review.builder().reviewer(userRepository.findById(1L).get()).lecture(lectureRepository.findById(2L).get()).build();
+  public void addLectureReview(
+      ReviewRepository reviewRepository,
+      UserRepository userRepository,
+      LectureRepository lectureRepository) {
+    Review review =
+        Review.builder()
+            .reviewer(userRepository.findById(1L).get())
+            .lecture(lectureRepository.findById(2L).get())
+            .build();
+
+    reviewRepository.save(review);
+  }
+
+  public void addTutorCall(
+      TutorCallRepository tutorCallRepository,
+      TutorRepository tutorRepository,
+      UserRepository userRepository,
+      TagRepository tagRepository) {
+    TutorCall tutorCall1 =
+        TutorCall.builder()
+            .tutor(tutorRepository.findById(2L).get())
+            .price(1000)
+            .user(userRepository.findById(1L).get())
+            .tag(tagRepository.findById(1L).get())
+            .liveState(Boolean.FALSE)
+            .liveUrl("liveUrl1")
+            .problemContent("content1")
+            .replayVideo("replay1")
+            .build();
+    tutorCallRepository.save(tutorCall1);
+    TutorCall tutorCall2 =
+        TutorCall.builder()
+            .tutor(tutorRepository.findById(2L).get())
+            .price(2000)
+            .user(userRepository.findById(1L).get())
+            .tag(tagRepository.findById(2L).get())
+            .liveState(Boolean.TRUE)
+            .liveUrl("liveUrl2")
+            .problemContent("content2")
+            .replayVideo("replay2")
+            .build();
+    tutorCallRepository.save(tutorCall2);
+  }
+
+  public void addTutorCallReview(
+      ReviewRepository reviewRepository,
+      UserRepository userRepository,
+      TutorCallRepository tutorCallRepository) {
+    Review review =
+        Review.builder()
+            .reviewer(userRepository.findById(1L).get())
+            .tutor(tutorCallRepository.findById(2L).get().getTutor())
+            .mannerRate(3)
+            .communicationRate(2)
+            .professionalismRate(5)
+            .tutorCall(tutorCallRepository.findById(2L).get())
+            .content("test content")
+            .build();
 
     reviewRepository.save(review);
   }

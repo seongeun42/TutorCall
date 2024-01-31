@@ -7,6 +7,7 @@ import com.potato.TutorCall.mypage.dto.res.MyLectureListResDto;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
 import com.potato.TutorCall.mypage.dto.res.MyTutorCallResDto;
 import com.potato.TutorCall.review.domain.Review;
+import com.potato.TutorCall.review.service.ReviewService;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutor.service.TutorService;
@@ -15,7 +16,6 @@ import com.potato.TutorCall.tutorcall.service.TutorCallService;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.repository.UserRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.AuthenticationException;
@@ -37,6 +37,7 @@ public class MypageService {
   private final TutorService tutorService;
   private final LectureService lectureService;
   private final TutorCallService tutorCallService;
+  private final ReviewService reviewService;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
   public MyPageProfileResDto getUserProfile(Long id) {
@@ -102,17 +103,21 @@ public class MypageService {
 
   @Transactional(readOnly = true)
   public Page<MyLectureListResDto> getLectureList(Long id, Pageable pageable) {
-    User currentUser = userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
+    User currentUser =
+        userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
     List<MyLectureListResDto> lectures = new ArrayList<>();
 
     // 내 강의 정보 가져오기
     List<Lecture> myLectures = lectureService.findUserLectures(currentUser);
     // TODO: 루프문 개선이 필요할 것으로 판단됨(쿼리가 너무 많이 나가는 것 같은)
-    for(Lecture lecture : myLectures) {
+    for (Lecture lecture : myLectures) {
       MyLectureListResDto myLecture = new MyLectureListResDto(lecture);
 
       // 선생의 정보 가져오기
-      User user = userRepository.findById(lecture.getTutor().getId()).orElseThrow(() -> new NotFoundException("선생님 정보가 없습니다"));
+      User user =
+          userRepository
+              .findById(lecture.getTutor().getId())
+              .orElseThrow(() -> new NotFoundException("선생님 정보가 없습니다"));
       myLecture.setTutorInfo(user);
 
       // 강의의 태그 정보 가져오기
@@ -120,37 +125,55 @@ public class MypageService {
 
       // 리뷰 작성 여부 체크
       List<Review> reviews = lecture.getReviewList();
-      for(Review review : reviews) {
-        if(currentUser.equals(review.getReviewer())) {
+      for (Review review : reviews) {
+        if (currentUser.equals(review.getReviewer())) {
           myLecture.setReviewInfo();
           break;
         }
       }
-      
+
       lectures.add(myLecture);
     }
 
-    PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-    int start = (int) pageRequest.getOffset();
-    int end = Math.min((start + pageRequest.getPageSize()), lectures.size());
-    return new PageImpl<>(lectures.subList(start, end), pageRequest, lectures.size());
+    return listToPage(lectures, pageable);
   }
 
   @Transactional(readOnly = true)
   public Page<MyTutorCallResDto> getTutorCall(Long id, Pageable pageable) {
-    User currentUser = userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
+    User currentUser =
+        userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
     List<MyTutorCallResDto> tutorCalls = new ArrayList<>();
 
     // 튜터콜 정보 가져오기
-    List<TutorCall> myTutorCalls =  tutorCallService.findUserTutorCalls(currentUser);
+    List<TutorCall> myTutorCalls = tutorCallService.findUserTutorCalls(currentUser);
     // TODO: 루프문 개선이 필요할 것으로 판단됨(쿼리가 너무 많이 나가는 것 같은)
-    for(TutorCall tutorCall: myTutorCalls) {
-      tutorCalls.add(new MyTutorCallResDto(tutorCall));
+    for (TutorCall tutorCall : myTutorCalls) {
+      MyTutorCallResDto myTutorCall = new MyTutorCallResDto(tutorCall);
+
+      // 만약 리뷰가 있다면, 그 리뷰 정보도 추가
+      Review review = reviewService.getTutorCallReview(tutorCall);
+      if (review != null) {
+        myTutorCall.setReviewInfo(review);
+      }
+
+      tutorCalls.add(myTutorCall);
     }
 
+    return listToPage(tutorCalls, pageable);
+  }
+
+  /**
+   * 응답 리스트들 Page로 변환해주는 함수
+   *
+   * @param responseList 응답 리스트
+   * @param pageable 페이지네이션 옵션
+   * @return
+   * @param <T>
+   */
+  private <T> PageImpl<T> listToPage(List<T> responseList, Pageable pageable) {
     PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
     int start = (int) pageRequest.getOffset();
-    int end = Math.min((start + pageRequest.getPageSize()), tutorCalls.size());
-    return new PageImpl<>(tutorCalls.subList(start, end), pageRequest, tutorCalls.size());
+    int end = Math.min((start + pageRequest.getPageSize()), responseList.size());
+    return new PageImpl<>(responseList.subList(start, end), pageRequest, responseList.size());
   }
 }

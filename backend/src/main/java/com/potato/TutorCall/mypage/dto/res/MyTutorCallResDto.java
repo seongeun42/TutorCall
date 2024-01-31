@@ -3,10 +3,8 @@ package com.potato.TutorCall.mypage.dto.res;
 import com.potato.TutorCall.review.domain.Review;
 import com.potato.TutorCall.tutorcall.domain.TutorCall;
 import com.potato.TutorCall.user.dto.UserSimpleDto;
-import lombok.Builder;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
+import lombok.Getter;
 
 @Getter
 public class MyTutorCallResDto {
@@ -23,9 +21,7 @@ public class MyTutorCallResDto {
 
   public MyTutorCallResDto(TutorCall tutorCall) {
     this.tutoringId = tutorCall.getId();
-    this.tutor = UserSimpleDto.builder()
-            .user(tutorCall.getTutor().getUser())
-            .build();
+    this.tutor = UserSimpleDto.builder().user(tutorCall.getTutor().getUser()).build();
     this.user = UserSimpleDto.builder().user(tutorCall.getUser()).build();
     this.problem = tutorCall.getProblemContent();
     this.replayVideo = tutorCall.getReplayVideo();
@@ -33,23 +29,33 @@ public class MyTutorCallResDto {
     this.liveUrl = tutorCall.getLiveUrl();
     this.liveState = tutorCall.isLiveState();
     this.price = tutorCall.getPrice();
+  }
 
-    Review tutorCallReview = tutorCall.getReview();
-    this.review = ReviewInfoDto.builder()
-            .mannerRate(tutorCallReview.getMannerRate())
-            .communicationRate(tutorCallReview.getCommunicationRate())
-            .professionalismRate(tutorCallReview.getProfessionalismRate())
-            .content(tutorCallReview.getContent())
-            .build();
+  public void setReviewInfo(Review review) {
+    this.review =
+        new ReviewInfoDto(
+            review.getMannerRate(),
+            review.getCommunicationRate(),
+            review.getProfessionalismRate(),
+            review.getContent());
   }
 
   @Getter
-  @Builder
-  class ReviewInfoDto{
+  class ReviewInfoDto {
     Integer mannerRate;
     Integer communicationRate;
     Integer professionalismRate;
     String content;
-  }
 
+    ReviewInfoDto(
+        Integer mannerRate,
+        Integer communicationRate,
+        Integer professionalismRate,
+        String content) {
+      this.mannerRate = mannerRate;
+      this.communicationRate = communicationRate;
+      this.professionalismRate = professionalismRate;
+      this.content = content;
+    }
+  }
 }
