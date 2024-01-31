@@ -7,4 +7,8 @@ import org.springframework.data.domain.Page;
 @Getter
 public class MyLectureListResDto {
  Page<MyLectureListDto> lectures;
+
+ public MyLectureListResDto(Page<MyLectureListDto> lectures) {
+  this.lectures = lectures;
+ }
 }

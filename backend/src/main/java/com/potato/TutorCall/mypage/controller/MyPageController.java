@@ -3,20 +3,18 @@ package com.potato.TutorCall.mypage.controller;
 import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.exception.customException.ForbiddenException;
-import com.potato.TutorCall.lecture.dto.LectureListResponseDto;
 import com.potato.TutorCall.mypage.dto.req.*;
-import com.potato.TutorCall.mypage.dto.res.MyLectureListResDto;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
 import com.potato.TutorCall.mypage.dto.res.UpdateSuccessResDto;
 import com.potato.TutorCall.mypage.service.MypageService;
 import com.potato.TutorCall.user.domain.enums.RoleType;
-import javax.naming.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
+import javax.naming.AuthenticationException;
 
 /** 마이페이지 기능에 대한 컨트롤러 */
 @Slf4j

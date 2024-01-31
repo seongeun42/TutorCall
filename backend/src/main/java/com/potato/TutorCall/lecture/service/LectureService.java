@@ -3,6 +3,7 @@ package com.potato.TutorCall.lecture.service;
 import com.potato.TutorCall.exception.customException.ForbiddenException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.lecture.domain.Lecture;
+import com.potato.TutorCall.lecture.domain.LectureParticipant;
 import com.potato.TutorCall.lecture.dto.LectureListResponseDto;
 import com.potato.TutorCall.lecture.dto.LectureRequestDto;
 import com.potato.TutorCall.lecture.dto.LectureSearchCondition;
@@ -10,11 +11,14 @@ import com.potato.TutorCall.lecture.repository.LectureParticipantRepository;
 import com.potato.TutorCall.lecture.repository.LectureRepository;
 import com.potato.TutorCall.lecture.repository.LectureSearchRepository;
 import com.potato.TutorCall.tutor.service.TagService;
+import com.potato.TutorCall.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -67,4 +71,7 @@ public class LectureService {
         return lectureSearchRepository.search(condition, pageable);
     }
 
+    public List<Lecture> findUserLectures(User user) {
+        return lectureParticipantRepository.findByUser(user).stream().map(LectureParticipant::getLecture).toList();
+    }
 }
