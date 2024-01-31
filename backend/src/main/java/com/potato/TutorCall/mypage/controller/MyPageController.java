@@ -167,8 +167,8 @@ public class MyPageController {
    *
    * @return
    */
-  @GetMapping("/tutorcall")
-  public ResponseEntity<?> getTutorcallHistory() {
-    return ResponseEntity.badRequest().build();
+  @GetMapping("/tutorCall")
+  public ResponseEntity<?> getTutorCallHistory(@SessionAttribute(name = SessionKey.USER)UserSessionDto userSession, Pageable pageable) {
+    return ResponseEntity.ok(mypageService.getTutorCall(userSession.getId(), pageable))
   }
 }
