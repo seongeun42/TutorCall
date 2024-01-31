@@ -4,11 +4,14 @@ import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.common.dto.CreatedResponseDto;
 import com.potato.TutorCall.common.dto.MessageResponseDto;
+import com.potato.TutorCall.exception.customException.ForbiddenException;
 import com.potato.TutorCall.exception.customException.InvalidException;
 import com.potato.TutorCall.lecture.domain.Lecture;
 import com.potato.TutorCall.lecture.dto.*;
 import com.potato.TutorCall.lecture.service.LectureParticipantService;
 import com.potato.TutorCall.lecture.service.LectureService;
+import com.potato.TutorCall.review.domain.Review;
+import com.potato.TutorCall.review.service.ReviewService;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutor.service.TagService;
@@ -24,6 +27,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -33,6 +38,7 @@ public class LectureController {
     private final TagService tagService;
     private final UserService userService;
     private final TutorService tutorService;
+    private final ReviewService reviewService;
     private final LectureService lectureService;
     private final LectureParticipantService participantService;
 
@@ -141,6 +147,22 @@ public class LectureController {
         lectureService.changeLectureTerm(lectureId, tutor, dto.getStart(), dto.getEnd());
         log.info("선생님" + userSessionDto.getId() + "님이 과외" + lectureId + " 의 과외 기간을 변경했습니다.");
         return ResponseEntity.ok().body(new MessageResponseDto("과외 기간이 변경되었습니다."));
+    }
+
+    @GetMapping("/{lectureId}")
+    private ResponseEntity<?> getLecture(@PathVariable("lectureId") Long lectureId,
+                                         HttpSession session) {
+        UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+        Lecture lecture = lectureService.findById(lectureId);
+        Tutor tutor = lecture.getTutor();
+        if (!userSessionDto.getId().equals(tutor.getId())
+                && !participantService.existParticipant(lectureId, userSessionDto.getId())) {
+            throw new ForbiddenException("과외 조회 권한이 없습니다.");
+        }
+        List<Review> reviews = reviewService.getLectureReviews(lecture);
+        LectureResponseDto result = new LectureResponseDto(lecture, tutor.getUser(), reviews);
+        log.info("유저" + userSessionDto.getId() + "님이 과외" + lectureId + "를 조회했습니다.");
+        return ResponseEntity.ok().body(result);
     }
 
 }

@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -137,6 +138,11 @@ public class ReviewService {
         LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(30), LocalTime.of(0,0,0) );
         LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
         return reviewRepository.findReviewsByTutor_IdAndCreatedAtBetweenOrderByCreatedAtDesc(id,start, end, pageable).map(TutorReviewResponseDto::new);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Review> getLectureReviews(Lecture lecture) {
+        return reviewRepository.findAllByLecture(lecture);
     }
 
 }

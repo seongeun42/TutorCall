@@ -1,5 +1,6 @@
 package com.potato.TutorCall.review.repository;
 
+import com.potato.TutorCall.lecture.domain.Lecture;
 import com.potato.TutorCall.review.domain.Review;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import org.springframework.data.domain.Page;
@@ -40,4 +41,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     double getTutorProfessionalismAvg(@Param("tutor") Tutor tutor);
 
     Page<Review> findReviewsByTutor_IdAndCreatedAtBetweenOrderByCreatedAtDesc(Long tutorId, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+
+    List<Review> findAllByLecture(Lecture lecture);
+
 }
