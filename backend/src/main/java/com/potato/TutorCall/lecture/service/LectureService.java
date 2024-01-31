@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -84,6 +85,22 @@ public class LectureService {
             throw new ForbiddenException("기간 변경 권한이 없습니다.");
         lecture.updateLectureStartAt(start);
         lecture.updateLectureEndAt(end);
+    }
+
+    public void changePromotionState() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        lectureRepository.changeLecturePromotionState(
+                yesterday.atTime(0, 0, 0),
+                yesterday.atTime(23, 59, 59)
+        );
+    }
+
+    public void changeLectureState() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        lectureRepository.changeLectureState(
+                yesterday.atTime(0, 0, 0),
+                yesterday.atTime(23, 59, 59)
+        );
     }
 
 }
