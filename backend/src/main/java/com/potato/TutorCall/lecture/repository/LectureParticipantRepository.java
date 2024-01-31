@@ -45,5 +45,5 @@ public interface LectureParticipantRepository extends JpaRepository<LectureParti
      * @param user
      * @return
      */
-    List<LectureParticipant> findByUser(User user);
+    List<LectureParticipant> findLectureByUserOrderByIdDesc(User user);
 }

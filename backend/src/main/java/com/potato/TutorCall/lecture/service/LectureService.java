@@ -72,6 +72,6 @@ public class LectureService {
     }
 
     public List<Lecture> findUserLectures(User user) {
-        return lectureParticipantRepository.findByUser(user).stream().map(LectureParticipant::getLecture).toList();
+        return lectureParticipantRepository.findLectureByUserOrderByIdDesc(user).stream().map(LectureParticipant::getLecture).toList();
     }
 }

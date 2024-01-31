@@ -3,9 +3,9 @@ package com.potato.TutorCall.mypage.service;
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.lecture.domain.Lecture;
 import com.potato.TutorCall.lecture.service.LectureService;
-import com.potato.TutorCall.mypage.dto.MyLectureListDto;
 import com.potato.TutorCall.mypage.dto.res.MyLectureListResDto;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
+import com.potato.TutorCall.review.domain.Review;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutor.service.TutorService;
@@ -97,25 +97,32 @@ public class MypageService {
   }
 
   @Transactional(readOnly = true)
-  public MyLectureListResDto getLectureList(Long id, Pageable pageable) {
+  public Page<MyLectureListResDto> getLectureList(Long id, Pageable pageable) {
     User currentUser = userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
-    List<MyLectureListDto> lectures = new ArrayList<>();
+    List<MyLectureListResDto> lectures = new ArrayList<>();
 
     // 내 강의 정보 가져오기
     List<Lecture> myLectures = lectureService.findUserLectures(currentUser);
     for(Lecture lecture : myLectures) {
-      MyLectureListDto myLecture = new MyLectureListDto();
+      MyLectureListResDto myLecture = new MyLectureListResDto();
       myLecture.setLectureInfo(lecture);
 
       // 선생의 정보 가져오기
       User user = userRepository.findById(lecture.getTutor().getId()).orElseThrow(() -> new NotFoundException("선생님 정보가 없습니다"));
       myLecture.setTutorInfo(user);
-      
+
       // 강의의 태그 정보 가져오기
       myLecture.setTagInfo(lecture.getTag());
 
       // 리뷰 작성 여부 체크
-      myLecture.setReviewInfo(lecture.getReviewList());
+      // 내가 작성한 리뷰가 있는지 봐야함...
+      List<Review> reviews = lecture.getReviewList();
+      for(Review review : reviews) {
+        if(currentUser.equals(review.getReviewer())) {
+          myLecture.setReviewInfo();
+          break;
+        }
+      }
       
       lectures.add(myLecture);
     }
@@ -123,8 +130,6 @@ public class MypageService {
     PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
     int start = (int) pageRequest.getOffset();
     int end = Math.min((start + pageRequest.getPageSize()), lectures.size());
-    Page<MyLectureListDto> lecturePage = new PageImpl<>(lectures.subList(start, end), pageRequest, lectures.size());
-
-    return new MyLectureListResDto(lecturePage);
+    return new PageImpl<>(lectures.subList(start, end), pageRequest, lectures.size());
   }
 }
