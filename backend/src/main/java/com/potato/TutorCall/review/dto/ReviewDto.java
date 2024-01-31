@@ -17,13 +17,13 @@ public class ReviewDto {
     private final String content;
 
     @Builder
-    public ReviewDto(Review test, User tutor, User reviewer) {
-        this.tutor = new UserSimpleDto(tutor != null ? tutor : test.getTutor().getUser());
-        this.reviewer = new UserSimpleDto(reviewer != null ? reviewer : test.getReviewer());
-        this.mannerRate = test.getMannerRate();
-        this.communicationRate = test.getCommunicationRate();
-        this.professionalismRate = test.getProfessionalismRate();
-        this.content = test.getContent();
+    public ReviewDto(Review review, User tutor, User reviewer) {
+        this.tutor = new UserSimpleDto(tutor != null ? tutor : review.getTutor().getUser());
+        this.reviewer = new UserSimpleDto(reviewer != null ? reviewer : review.getReviewer());
+        this.mannerRate = review.getMannerRate();
+        this.communicationRate = review.getCommunicationRate();
+        this.professionalismRate = review.getProfessionalismRate();
+        this.content = review.getContent();
     }
 
 }
