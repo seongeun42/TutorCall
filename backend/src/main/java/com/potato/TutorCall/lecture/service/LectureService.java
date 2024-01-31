@@ -10,6 +10,7 @@ import com.potato.TutorCall.lecture.dto.LectureSearchCondition;
 import com.potato.TutorCall.lecture.repository.LectureParticipantRepository;
 import com.potato.TutorCall.lecture.repository.LectureRepository;
 import com.potato.TutorCall.lecture.repository.LectureSearchRepository;
+import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutor.service.TagService;
 import com.potato.TutorCall.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -67,11 +70,43 @@ public class LectureService {
         lectureParticipantRepository.deleteAllByLecture(lecture);
     }
 
+    @Transactional(readOnly = true)
     public Page<LectureListResponseDto> getLectureList(LectureSearchCondition condition, Pageable pageable) {
         return lectureSearchRepository.search(condition, pageable);
     }
 
     public List<Lecture> findUserLectures(User user) {
         return lectureParticipantRepository.findLectureByUserOrderByIdDesc(user).stream().map(LectureParticipant::getLecture).toList();
+    }
+
+    public void changePromotionState(Long lectureId, Tutor tutor, Boolean state) {
+        Lecture lecture = this.findById(lectureId);
+        if (!lecture.getTutor().equals(tutor))
+            throw new ForbiddenException("상태 변경 권한이 없습니다.");
+        lecture.changePromotionState(state);
+    }
+
+    public void changeLectureTerm(Long lectureId, Tutor tutor, LocalDateTime start, LocalDateTime end) {
+        Lecture lecture = this.findById(lectureId);
+        if (!lecture.getTutor().equals(tutor))
+            throw new ForbiddenException("기간 변경 권한이 없습니다.");
+        lecture.updateLectureStartAt(start);
+        lecture.updateLectureEndAt(end);
+    }
+
+    public void changePromotionState() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        lectureRepository.changeLecturePromotionState(
+                yesterday.atTime(0, 0, 0),
+                yesterday.atTime(23, 59, 59)
+        );
+    }
+
+    public void changeLectureState() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        lectureRepository.changeLectureState(
+                yesterday.atTime(0, 0, 0),
+                yesterday.atTime(23, 59, 59)
+        );
     }
 }
