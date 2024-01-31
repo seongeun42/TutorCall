@@ -3,6 +3,7 @@ package com.potato.TutorCall.lecture.service;
 import com.potato.TutorCall.exception.customException.ForbiddenException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.lecture.domain.Lecture;
+import com.potato.TutorCall.lecture.domain.LectureParticipant;
 import com.potato.TutorCall.lecture.dto.LectureListResponseDto;
 import com.potato.TutorCall.lecture.dto.LectureRequestDto;
 import com.potato.TutorCall.lecture.dto.LectureSearchCondition;
@@ -11,12 +12,14 @@ import com.potato.TutorCall.lecture.repository.LectureRepository;
 import com.potato.TutorCall.lecture.repository.LectureSearchRepository;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutor.service.TagService;
+import com.potato.TutorCall.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -72,6 +75,10 @@ public class LectureService {
         return lectureSearchRepository.search(condition, pageable);
     }
 
+    public List<Lecture> findUserLectures(User user) {
+        return lectureParticipantRepository.findLectureByUserOrderByIdDesc(user).stream().map(LectureParticipant::getLecture).toList();
+    }
+
     public void changePromotionState(Long lectureId, Tutor tutor, Boolean state) {
         Lecture lecture = this.findById(lectureId);
         if (!lecture.getTutor().equals(tutor))
@@ -102,5 +109,4 @@ public class LectureService {
                 yesterday.atTime(23, 59, 59)
         );
     }
-
 }

@@ -8,11 +8,13 @@ import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
 import com.potato.TutorCall.mypage.dto.res.UpdateSuccessResDto;
 import com.potato.TutorCall.mypage.service.MypageService;
 import com.potato.TutorCall.user.domain.enums.RoleType;
-import javax.naming.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.naming.AuthenticationException;
 
 /** 마이페이지 기능에 대한 컨트롤러 */
 @Slf4j
@@ -133,22 +135,20 @@ public class MyPageController {
   /**
    * 내 쿠폰 내역 조회
    *
-   * @param paginationOption pageNo(페이지 번호), size(한 페이지의 크기)
    * @return
    */
   @GetMapping("/coupon")
-  public ResponseEntity<?> getCouponHistory(MyPagePaginationDto paginationOption) {
+  public ResponseEntity<?> getCouponHistory() {
     return ResponseEntity.badRequest().build();
   }
 
   /**
    * 내 포인트 내역 조회
    *
-   * @param paginationOption pageNo(페이지 번호), size(한 페이지의 크기)
    * @return
    */
   @GetMapping("/point")
-  public ResponseEntity<?> getPointHistory(MyPagePaginationDto paginationOption) {
+  public ResponseEntity<?> getPointHistory() {
     return ResponseEntity.badRequest().build();
   }
 
@@ -158,8 +158,8 @@ public class MyPageController {
    * @return
    */
   @GetMapping("/lecture")
-  public ResponseEntity<?> getLectureList() {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> getLectureList(@SessionAttribute(name = SessionKey.USER)UserSessionDto userSession, Pageable pageable) {
+    return ResponseEntity.ok(mypageService.getLectureList(userSession.getId(), pageable));
   }
 
   /**
