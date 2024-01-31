@@ -3,6 +3,7 @@ package com.potato.TutorCall.review.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.potato.TutorCall.lecture.domain.Lecture;
 import com.potato.TutorCall.tutor.domain.Tutor;
+import com.potato.TutorCall.tutorcall.domain.TutorCall;
 import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -35,6 +36,9 @@ public class Review {
   @ManyToOne(fetch = FetchType.LAZY)
   private Lecture lecture;
 
+  @OneToOne(fetch = FetchType.LAZY)
+  private TutorCall tutorCall;
+
   private int mannerRate;
 
   private int communicationRate;
@@ -53,6 +57,7 @@ public class Review {
       Tutor tutor,
       User reviewer,
       Lecture lecture,
+      TutorCall tutorCall,
       int mannerRate,
       int communicationRate,
       int professionalismRate,
@@ -61,6 +66,7 @@ public class Review {
     this.tutor = tutor;
     this.type = studyType;
     this.reviewer = reviewer;
+    this.tutorCall = tutorCall;
     this.lecture = lecture;
     this.mannerRate = mannerRate;
     this.communicationRate = communicationRate;
