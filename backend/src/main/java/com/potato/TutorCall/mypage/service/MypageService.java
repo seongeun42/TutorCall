@@ -1,6 +1,7 @@
 package com.potato.TutorCall.mypage.service;
 
 import com.potato.TutorCall.exception.customException.NotFoundException;
+import com.potato.TutorCall.mypage.dto.res.MyLectureListResDto;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
@@ -8,6 +9,8 @@ import com.potato.TutorCall.tutor.service.TutorService;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.repository.UserRepository;
+
+import java.awt.print.Pageable;
 import java.util.List;
 import javax.naming.AuthenticationException;
 import lombok.RequiredArgsConstructor;
@@ -83,5 +86,9 @@ public class MypageService {
     userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
 
     tutorService.changeIntroduction(id, introduction);
+  }
+
+  public MyLectureListResDto getLectureList(Long id, Pageable pageable) {
+    return null;
   }
 }
