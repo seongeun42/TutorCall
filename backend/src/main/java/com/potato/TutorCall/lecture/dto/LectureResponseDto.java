@@ -37,8 +37,9 @@ public class LectureResponseDto {
         this.lectureStartAt = lecture.getLectureStartAt();
         this.lectureEndAt = lecture.getLectureEndAt();
         this.price = lecture.getPrice();
-        if (reviews != null)
+        if (reviews != null) {
             this.reviews = reviews.stream().map(r -> ReviewDto.builder().review(r).tutor(tutor).build()).toList();
+        }
     }
 
 }
