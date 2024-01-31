@@ -3,6 +3,7 @@ package com.potato.TutorCall.review.repository;
 import com.potato.TutorCall.lecture.domain.Lecture;
 import com.potato.TutorCall.review.domain.Review;
 import com.potato.TutorCall.tutor.domain.Tutor;
+import com.potato.TutorCall.tutorcall.domain.TutorCall;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -48,5 +49,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Review findByLectureAndReviewerId(Lecture lecture, Long reviewerId);
 
     Page<Review> findReviewsByReviewerId(Long userId, Pageable pageable);
+
+    Review findByTutorCall(TutorCall tutorCall);
     
 }

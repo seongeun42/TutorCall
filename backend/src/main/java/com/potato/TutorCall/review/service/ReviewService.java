@@ -38,6 +38,7 @@ public class ReviewService {
     private final UserService userService;
     private final LectureParticipantService lectureParticipantService;
     private final TutorCallService tutorCallService;
+
     /**
      * 튜터콜 리뷰를 저장하는 함수
      * @param userId
@@ -51,7 +52,17 @@ public class ReviewService {
             throw new ForbiddenException("해당 튜터콜을 수강한 학생이 아닙니다.");
         }
         // 리뷰 저장
-        Long reviewId = save(tutorCall.getTutor(), tutorCall.getUser(), dto, StudyType.TUTORCALL, null);
+        Review review = Review.builder()
+                .studyType(StudyType.TUTORCALL)
+                .tutor(tutorCall.getTutor())
+                .reviewer(tutorCall.getUser())
+                .tutorCall(tutorCall)
+                .mannerRate(dto.getMannerRate())
+                .communicationRate(dto.getCommunicationRate())
+                .professionalismRate(dto.getProfessionalismRate())
+                .content(dto.getContent())
+                .build();
+        Long reviewId = reviewRepository.save(review).getId();
         // 선생님의 평가 점수에 반영
         tutorRateUpdate(tutorCall.getTutor());
         return reviewId;
@@ -71,7 +82,17 @@ public class ReviewService {
             throw new ForbiddenException("해당 과외를 수강한 학생이 아닙니다.");
         }
         // 리뷰 저장
-        Long reviewId = save(lecture.getTutor(), user, dto, StudyType.LECTURE, lecture);
+        Review review = Review.builder()
+                .studyType(StudyType.LECTURE)
+                .tutor(lecture.getTutor())
+                .reviewer(user)
+                .lecture(lecture)
+                .mannerRate(dto.getMannerRate())
+                .communicationRate(dto.getCommunicationRate())
+                .professionalismRate(dto.getProfessionalismRate())
+                .content(dto.getContent())
+                .build();
+        Long reviewId = reviewRepository.save(review).getId();
         // 선생님의 평가 점수에 반영
         tutorRateUpdate(lecture.getTutor());
         return reviewId;
@@ -105,38 +126,6 @@ public class ReviewService {
         tutorRateUpdate(review.getTutor());
     }
 
-    // private 함수
-    /**
-     * 리뷰 저장하는 함수
-     * @param tutor
-     * @param user
-     * @param dto Review 내용
-     * @return 저장된 Review id
-     */
-    private Long save(Tutor tutor, User user, ReviewRequestDto dto, StudyType type, Lecture lecture) {
-        Review review = Review.builder()
-                .studyType(type)
-                .tutor(tutor)
-                .reviewer(user)
-                .lecture(lecture)
-                .mannerRate(dto.getMannerRate())
-                .communicationRate(dto.getCommunicationRate())
-                .professionalismRate(dto.getProfessionalismRate())
-                .content(dto.getContent())
-                .build();
-        return reviewRepository.save(review).getId();
-    }
-
-    /**
-     * Tutor의 평가 점수에 리뷰 점수 반영하는 함수
-     * @param tutor
-     */
-    private void tutorRateUpdate(Tutor tutor) {
-        tutor.changeMannerRate(reviewRepository.getTutorMannerAvg(tutor));
-        tutor.changeCommunicationRate(reviewRepository.getTutorCommnunicationAvg(tutor));
-        tutor.changeProfessionalismRate(reviewRepository.getTutorProfessionalismAvg(tutor));
-    }
-
     @Transactional(readOnly = true)
     public Page<TutorReviewResponseDto> tutorReviews(Long id, Pageable pageable) {
         LocalDateTime start = LocalDateTime.of(LocalDate.now().minusDays(30), LocalTime.of(0,0,0) );
@@ -160,6 +149,22 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public Page<UserReviewResponseDto> userReview(Long id, Pageable pageable) {
         return reviewRepository.findReviewsByReviewerId(id, pageable).map(UserReviewResponseDto::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Review getTutorCallReview(TutorCall tutorCall) {
+        return reviewRepository.findByTutorCall(tutorCall);
+    }
+
+    // private 함수
+    /**
+     * Tutor의 평가 점수에 리뷰 점수 반영하는 함수
+     * @param tutor
+     */
+    private void tutorRateUpdate(Tutor tutor) {
+        tutor.changeMannerRate(reviewRepository.getTutorMannerAvg(tutor));
+        tutor.changeCommunicationRate(reviewRepository.getTutorCommnunicationAvg(tutor));
+        tutor.changeProfessionalismRate(reviewRepository.getTutorProfessionalismAvg(tutor));
     }
 
 }
