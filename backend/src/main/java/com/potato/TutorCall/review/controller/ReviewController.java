@@ -60,4 +60,9 @@ public class ReviewController {
     public ResponseEntity<?> getTutorReview (@PathVariable("tutorId") Long id, Pageable page){
         return new ResponseEntity<>(this.reviewService.tutorReviews(id, page), HttpStatus.OK);
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getUserReview (@PathVariable("userId") Long id, Pageable page){
+        return new ResponseEntity<>(this.reviewService.userReview(id, page), HttpStatus.OK);
+    }
 }

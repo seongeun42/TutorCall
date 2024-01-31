@@ -40,4 +40,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     double getTutorProfessionalismAvg(@Param("tutor") Tutor tutor);
 
     Page<Review> findReviewsByTutor_IdAndCreatedAtBetweenOrderByCreatedAtDesc(Long tutorId, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+
+    Page<Review> findReviewsByReviewerId(Long userId, Pageable pageable);
 }

@@ -9,6 +9,7 @@ import com.potato.TutorCall.review.domain.Review;
 import com.potato.TutorCall.review.domain.StudyType;
 import com.potato.TutorCall.review.dto.ReviewRequestDto;
 import com.potato.TutorCall.review.dto.TutorReviewResponseDto;
+import com.potato.TutorCall.review.dto.UserReviewResponseDto;
 import com.potato.TutorCall.review.repository.ReviewRepository;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutorcall.domain.TutorCall;
@@ -138,5 +139,11 @@ public class ReviewService {
         LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
         return reviewRepository.findReviewsByTutor_IdAndCreatedAtBetweenOrderByCreatedAtDesc(id,start, end, pageable).map(TutorReviewResponseDto::new);
     }
+
+    @Transactional(readOnly = true)
+    public Page<UserReviewResponseDto> userReview(Long id, Pageable pageable) {
+        return reviewRepository.findReviewsByReviewerId(id, pageable).map(UserReviewResponseDto::new);
+    }
+
 
 }
