@@ -25,15 +25,28 @@ pipeline {
         stage('build spring project') {
             steps {
                 sh 'ls -al'
-                dir('potato'){                
+                dir('potato'){         
+                    sh 'ls -al'  
+                    sh 'echo test1'
+                    sh 'echo ======'  
                     dir('build/libs') {
-                       sh 'rm -rf *.jar'
-                    }
+                        sh 'echo ======'  
+                        sh 'echo test2'
 
+                        sh 'ls -al'  
+                        sh 'echo test2'
+                       sh 'rm -rf *.jar'
+                       sh 'echo ======'  
+                    }
+                    sh 'echo test3'
+                    sh 'echo ======'  
+                    sh 'ls -al' 
                     sh 'chmod +x ./gradlew'
                     sh "./gradlew ${env.BUILD_CMD}"
                     
                     dir('build/libs'){
+                        sh 'echo ======'  
+                        sh 'ls -al' 
                         sh "mv *.jar ${env.RENAME_JAR}.jar"
                     }
                 }
