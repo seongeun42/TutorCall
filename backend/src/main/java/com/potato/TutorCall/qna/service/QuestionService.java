@@ -125,7 +125,7 @@ public class QuestionService {
 
     int count =
         questionRepository.deleteQuestion(
-            (long) questionId, false);
+            (long) questionId, true);
 
     if (count == 0) throw new NotFoundException("질문 삭제 실패");
 
