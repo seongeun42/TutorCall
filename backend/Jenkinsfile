@@ -14,7 +14,7 @@ pipeline {
                     try {
                         // sh 'docker image prune -a -f'
                         sh "docker ps -q --filter name=${env.BACKEND} | grep -q . && docker stop springboot && docker rm ${env.BACKEND}"
-                        sh "docker rmi $(docker images --filter=reference='${env.TAG}' -q)"
+                        sh "docker rmi \$(docker images --filter=reference='${env.TAG}' -q)"
                     } catch(e){
                         echo 'remove spring docker image&container fail!'
                     }
