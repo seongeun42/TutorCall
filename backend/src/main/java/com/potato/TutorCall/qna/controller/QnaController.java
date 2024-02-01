@@ -68,6 +68,7 @@ public class QnaController {
       @PathVariable("questionId") int questionId, HttpSession session) {
 
     UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+    System.out.println(userSessionDto.getId());
     return ResponseEntity.ok(questionService.deleteQuestion(questionId, userSessionDto.getId()));
   }
 

@@ -103,9 +103,7 @@ public class QuestionService {
             .findById((long) questionId)
             .orElseThrow(() -> new NotFoundException("질문 수정 실패"));
 
-    if (!editTarget.getId().equals(user.getId())) throw new InvalidException("수정 권한 없음");
-
-    if (!requestUser.getId().equals(editTarget.getId())) throw new InvalidException("수정 권한 없음");
+    if (!editTarget.getWriter().getId().equals(user.getId())) throw new InvalidException("수정 권한 없음");
 
     count = questionRepository.editQuestion(questionId, questionWriteDto, user, tag);
     if (count == 0) throw new NotFoundException("질문 수정 실패");
@@ -123,7 +121,7 @@ public class QuestionService {
             .findById((long) questionId)
             .orElseThrow(() -> new NotFoundException("질문 삭제 실패"));
 
-    if (!editTarget.getId().equals(requestUser.getId())) throw new InvalidException("수정 권한 없음");
+    if (!editTarget.getWriter().getId().equals(requestUser.getId())) throw new InvalidException("수정 권한 없음");
 
     int count =
         questionRepository.deleteQuestion(
