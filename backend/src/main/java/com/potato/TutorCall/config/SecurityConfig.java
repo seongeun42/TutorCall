@@ -15,7 +15,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@EnableWebMvc
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -26,10 +25,12 @@ public class SecurityConfig {
     http.oauth2Login(
             oauth2 ->
                 oauth2.authorizationEndpoint(
-                    endpoint -> endpoint.baseUri("/auth/login/"))
-                        .successHandler(successHandler) // auth 요청 보낼 URI
+                    endpoint -> endpoint.baseUri("/auth/login"))
+                        .successHandler(successHandler)
+                        // auth 요청 보낼 URI
                     // TODO .failureHandler() 구현하기
             )
+
         .cors(cors -> cors.configurationSource(this.configurationSource())) // cors 설정
         .csrf(csrf -> csrf.disable()) // csrf설정 비활성화
         .formLogin(form -> form.disable()) // form login 비활성화

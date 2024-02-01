@@ -3,6 +3,7 @@ package com.potato.TutorCall.auth.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.UserSessionDto;
+import com.potato.TutorCall.auth.dto.oauth.CommonInfo;
 import com.potato.TutorCall.auth.service.AuthService;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.domain.enums.RoleType;
@@ -22,6 +23,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -30,6 +32,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
       private final UserService userService;
       private final AuthService authService;
+      private final List<ProviderHandler> providerHandlers;
 
       @Value("${frontend.url}:${frontend.port}")
       private String frontendUrl;
@@ -41,41 +44,39 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
    authentication;
           //        super.onAuthenticationSuccess(request, response, authentication);
 
-          DefaultOAuth2User principal = (DefaultOAuth2User)
-   oAuth2AuthenticationToken.getPrincipal();
-          Map<String, Object> attributes = principal.getAttributes();
-          //SNSTYPE
-          //SnsType snsType = attributes.getOrDefault();
+          DefaultOAuth2User principal = (DefaultOAuth2User) oAuth2AuthenticationToken.getPrincipal();
 
-          System.out.println(new ObjectMapper().writeValueAsString(attributes));
-
-          //TODO: 전체적 모듈화 필요
-          String email = (String) attributes.getOrDefault("email", "");
-          String nickname = (String) attributes.getOrDefault("nickname", "");
-          String snsTypeAsString = (String)
-   oAuth2AuthenticationToken.getAuthorizedClientRegistrationId();
-          String profile = (String) attributes.getOrDefault("profile","");
+          String provider = oAuth2AuthenticationToken.getAuthorizedClientRegistrationId();
+          ProviderHandler providerHandler = providerHandlers
+                  .stream()
+                  .filter(h -> h
+                          .getClass()
+                          .getSimpleName()
+                          .toLowerCase()
+                          .startsWith(provider))
+                  .findFirst().
+                  orElseThrow(() -> new IllegalArgumentException("제공하지 않는 Provider입니다."));
+          CommonInfo comm = providerHandler.get(principal);
 
           //유저 있는 지 확인
-          User user = this.userService.findUserByEmail(email);
+          User user = this.userService.findUserByEmail(comm.getEmail());
 
           if(user == null){
-              SnsType snsType;
-              if("kakao".equals(snsTypeAsString)) snsType = SnsType.KAKAO;
-              if("naver".equals(snsTypeAsString)) snsType = SnsType.NAVER;
+
               User newUser= User
                       .builder()
-                      .email(email)
-                      .nickname(nickname)
-                      .sns(SnsType.KAKAO)
+                      .email(comm.getEmail())
+                      .nickname(comm.getName())
+                      .sns(comm.getSnsType())
                       .role(RoleType.USER)
-                      .profile(profile)
+                      .profile(comm.getProfile())
+                      .role(RoleType.USER)
+
                       .build();
               user = this.userService.save(newUser);
           }
-
-//          this.setAlwaysUseDefaultTargetUrl(true);
-//          this.setDefaultTargetUrl(frontendUrl);
+          this.setAlwaysUseDefaultTargetUrl(true);
+          this.setDefaultTargetUrl(frontendUrl);
 
           // TODO: SESSION설정
           HttpSession session = request.getSession(true);
