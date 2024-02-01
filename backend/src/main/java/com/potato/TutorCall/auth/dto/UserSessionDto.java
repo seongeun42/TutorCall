@@ -4,9 +4,13 @@ import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 @Getter
-public class UserSessionDto {
+@NoArgsConstructor
+public class UserSessionDto implements Serializable {
   private Long id;
   private RoleType roleType;
 
