@@ -12,7 +12,8 @@ import com.potato.TutorCall.user.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jackson.JsonObjectSerializer;
@@ -34,15 +35,16 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
       private final AuthService authService;
       private final List<ProviderHandler> providerHandlers;
 
-      @Value("${frontend.url}:${frontend.port}")
-      private String frontendUrl;
+  @Value("${frontend.url}:${frontend.port}")
+  private String frontendUrl;
 
-      @Override
-      public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse
-   response, Authentication authentication) throws ServletException, IOException {
-          OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken)
-   authentication;
-          //        super.onAuthenticationSuccess(request, response, authentication);
+  @Override
+  public void onAuthenticationSuccess(
+      HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+      throws ServletException, IOException {
+    OAuth2AuthenticationToken oAuth2AuthenticationToken =
+        (OAuth2AuthenticationToken) authentication;
+    //        super.onAuthenticationSuccess(request, response, authentication);
 
           DefaultOAuth2User principal = (DefaultOAuth2User) oAuth2AuthenticationToken.getPrincipal();
 

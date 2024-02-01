@@ -17,7 +17,6 @@ public interface QuestionRepository
     @Modifying
     @Query("UPDATE Question q set q.isDelete = :isDelete where q.id = :questionId")
     int deleteQuestion(@Param("questionId") Long questionId, @Param("isDelete") boolean isDelete);
-    Page<Question> findAllByContentContainsAndTag_IdAndIsEndAndIsDeleteOrderByCreatedAt(Pageable pageable, String keyword, Long tagId, boolean isEnd, boolean isDelete);
     Optional<Object> findQuestionByIdAndIsDelete(long questionId, boolean isDelete);
 
 

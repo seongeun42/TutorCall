@@ -2,13 +2,16 @@ package com.potato.TutorCall.mypage.controller;
 
 import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.UserSessionDto;
+import com.potato.TutorCall.exception.customException.ForbiddenException;
 import com.potato.TutorCall.mypage.dto.req.*;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
 import com.potato.TutorCall.mypage.dto.res.UpdateSuccessResDto;
 import com.potato.TutorCall.mypage.service.MypageService;
+import com.potato.TutorCall.user.domain.enums.RoleType;
 import javax.naming.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,8 +87,11 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/notification")
-  public ResponseEntity<?> updateNotificationConfig(@SessionAttribute(name = SessionKey.USER) UserSessionDto userSession, @RequestBody NotificationUpdateReqDto notificationUpdateReq) {
-    mypageService.updaetNotification(userSession.getId(), notificationUpdateReq.getNotificationOption());
+  public ResponseEntity<?> updateNotificationConfig(
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
+      @RequestBody NotificationUpdateReqDto notificationUpdateReq) {
+    mypageService.updaetNotification(
+        userSession.getId(), notificationUpdateReq.getNotificationOption());
 
     return ResponseEntity.ok(new UpdateSuccessResDto("알림 설정이 변경되었습니다."));
   }
@@ -96,8 +102,16 @@ public class MyPageController {
    * @return
    */
   @PutMapping("/tutor/tag")
-  public ResponseEntity<?> updateLectureTag() {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> updateLectureTag(
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
+      @RequestBody TagUpdateReqDto tagUpdateReq) {
+    if (!userSession.getRoleType().equals(RoleType.TUTOR)) {
+      throw new ForbiddenException("수정 권한이 없습니다");
+    }
+
+    mypageService.updateTag(userSession.getId(), tagUpdateReq.getTags());
+
+    return ResponseEntity.ok(new UpdateSuccessResDto("강의 범위를 수정했습니다."));
   }
 
   /**
@@ -106,29 +120,35 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/tutor/intro")
-  public ResponseEntity<?> updateIntroduction() {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> updateIntroduction(
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
+      @RequestBody IntrodutionUpdateReqDto introdutionUpdateReq) {
+    if (!userSession.getRoleType().equals(RoleType.TUTOR)) {
+      throw new ForbiddenException("수정 권한이 없습니다");
+    }
+
+    mypageService.updateIntroduction(userSession.getId(), introdutionUpdateReq.getIntroduction());
+
+    return ResponseEntity.ok(new UpdateSuccessResDto("소개문구를 수정했습니다"));
   }
 
   /**
    * 내 쿠폰 내역 조회
    *
-   * @param paginationOption pageNo(페이지 번호), size(한 페이지의 크기)
    * @return
    */
   @GetMapping("/coupon")
-  public ResponseEntity<?> getCouponHistory(MyPagePaginationDto paginationOption) {
+  public ResponseEntity<?> getCouponHistory() {
     return ResponseEntity.badRequest().build();
   }
 
   /**
    * 내 포인트 내역 조회
    *
-   * @param paginationOption pageNo(페이지 번호), size(한 페이지의 크기)
    * @return
    */
   @GetMapping("/point")
-  public ResponseEntity<?> getPointHistory(MyPagePaginationDto paginationOption) {
+  public ResponseEntity<?> getPointHistory() {
     return ResponseEntity.badRequest().build();
   }
 
@@ -138,8 +158,9 @@ public class MyPageController {
    * @return
    */
   @GetMapping("/lecture")
-  public ResponseEntity<?> getLectureList() {
-    return ResponseEntity.badRequest().build();
+  public ResponseEntity<?> getLectureList(
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession, Pageable pageable) {
+    return ResponseEntity.ok(mypageService.getLectureList(userSession.getId(), pageable));
   }
 
   /**
@@ -147,8 +168,9 @@ public class MyPageController {
    *
    * @return
    */
-  @GetMapping("/tutorcall")
-  public ResponseEntity<?> getTutorcallHistory() {
-    return ResponseEntity.badRequest().build();
+  @GetMapping("/tutorCall")
+  public ResponseEntity<?> getTutorCallHistory(
+      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession, Pageable pageable) {
+    return ResponseEntity.ok(mypageService.getTutorCall(userSession.getId(), pageable));
   }
 }

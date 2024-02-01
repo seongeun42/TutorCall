@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CodeRepositorty {
+public class CodeRepository {
   private final RedisTemplate<String, String> redisTemplate;
   private static final String hash_key = "email-";
   private static final Long expiredTime = 300L; // 5분
