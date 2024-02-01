@@ -25,40 +25,27 @@ pipeline {
         stage('build spring project') {
             steps {
                 sh 'ls -al'
-                dir('potato'){         
-                    sh 'ls -al'  
-                    sh 'echo test1'
-                    sh 'echo ======'  
-                    dir('build/libs') {
-                        sh 'echo ======'  
-                        sh 'echo test2'
-
-                        sh 'ls -al'  
-                        sh 'echo test2'
-                       sh 'rm -rf *.jar'
-                       sh 'echo ======'  
-                    }
+                sh 'pwd'
+               
+                dir('backend'){
                     sh 'echo test3'
+                    sh 'pwd'
                     sh 'echo ======'  
-                    sh 'ls -al' 
                     sh 'chmod +x ./gradlew'
                     sh "./gradlew ${env.BUILD_CMD}"
-                    
-                    dir('build/libs'){
-                        sh 'echo ======'  
-                        sh 'ls -al' 
-                        sh "mv *.jar ${env.RENAME_JAR}.jar"
-                    }
+                    sh "mv ./build/libs/*.SHOT.jar ./"
+    
                 }
+                
             }
         }
 
-        stage('deploy'){
-            steps{
-                sh 'docker build -t test:v1.0 .'
-                sh "docker run -d -p 8088:8080 --name ${env.BACKEND} ${env.TAG}:v1.0"
-            }
-        }
+        //stage('deploy'){
+        //    steps{
+        //        sh 'docker build -t test:v1.0 .'
+        //        sh "docker run -d -p 8088:8080 --name ${env.BACKEND} ${env.TAG}:v1.0"
+        //    }
+        //}
     }
 }
 
