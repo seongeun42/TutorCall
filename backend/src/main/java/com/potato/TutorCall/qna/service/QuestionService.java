@@ -2,6 +2,7 @@ package com.potato.TutorCall.qna.service;
 
 import com.potato.TutorCall.exception.customException.InvalidException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
+import com.potato.TutorCall.qna.domain.Answer;
 import com.potato.TutorCall.qna.domain.Question;
 import com.potato.TutorCall.qna.dto.CommonResponseDto;
 import com.potato.TutorCall.qna.dto.QuestionDto;
@@ -45,7 +46,10 @@ public class QuestionService {
                 .findQuestionByIdAndIsDelete((long) questionId, false)
                 .orElseThrow(() -> new NotFoundException("질문 조회 실패"));
     QuestionDto questionDto = new QuestionDto(q);
-    questionDto.setAnswerList(q.getAnswerList());
+    questionDto.setAnswerList(q.getAnswerList()
+            .stream().filter(
+                    (answer -> !answer.isDelete())
+            ).toList());
 
     return CommonResponseDto.builder().question(questionDto).build();
   }
@@ -128,6 +132,8 @@ public class QuestionService {
             (long) questionId, true);
 
     if (count == 0) throw new NotFoundException("질문 삭제 실패");
+
+    for(Answer answer: editTarget.getAnswerList()) answer.deleted();
 
     return CommonResponseDto.builder().message("질문 삭제 완료.").build();
   }
