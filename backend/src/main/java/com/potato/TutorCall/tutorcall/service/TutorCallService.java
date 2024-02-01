@@ -17,9 +17,7 @@ public class TutorCallService {
 
   @Transactional(readOnly = true)
   public TutorCall findById(Long id) {
-    return tutorcallRepository
-        .findById(id)
-        .orElseThrow(() -> new NotFoundException("존재하지 않는 튜터콜입니다."));
+    return tutorcallRepository.findById(id).get();
   }
 
   @Transactional(readOnly = true)

@@ -114,22 +114,15 @@ public class MypageService {
       MyLectureListResDto myLecture = new MyLectureListResDto(lecture);
 
       // 선생의 정보 가져오기
-      User user =
-          userRepository
-              .findById(lecture.getTutor().getId())
-              .orElseThrow(() -> new NotFoundException("선생님 정보가 없습니다"));
-      myLecture.setTutorInfo(user);
+      myLecture.setTutorInfo(lecture.getTutor().getUser());
 
       // 강의의 태그 정보 가져오기
       myLecture.setTagInfo(lecture.getTag());
 
       // 리뷰 작성 여부 체크
-      List<Review> reviews = lecture.getReviewList();
-      for (Review review : reviews) {
-        if (currentUser.equals(review.getReviewer())) {
-          myLecture.setReviewInfo();
-          break;
-        }
+      List<Review> reviews = reviewService.getLectureReviews(lecture, id);
+      if(!reviews.isEmpty()) {
+        myLecture.setReviewInfo();
       }
 
       lectures.add(myLecture);
@@ -141,7 +134,11 @@ public class MypageService {
   @Transactional(readOnly = true)
   public Page<MyTutorCallResDto> getTutorCall(Long id, Pageable pageable) {
     User currentUser =
-        userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
+        userRepository.findById(id).orElse(null);
+    if(currentUser == null) {
+      return Page.empty();
+    }
+
     List<MyTutorCallResDto> tutorCalls = new ArrayList<>();
 
     // 튜터콜 정보 가져오기
