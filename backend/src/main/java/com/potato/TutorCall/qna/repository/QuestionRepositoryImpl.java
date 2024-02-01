@@ -55,7 +55,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
                     .where(
                         tagEq(searchFormDto.getTagId()),
                             keywordContains(searchFormDto.getKeyword()),
-                            question.isEnd.eq(searchFormDto.isEnd()),
+                            isEndEq(searchFormDto.getIsEnd()),
                             question.isDelete.eq(false)
                     )
                     .offset(pageable.getOffset())
@@ -68,7 +68,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
             .where(
                     tagEq(searchFormDto.getTagId()),
                     keywordContains(searchFormDto.getKeyword()),
-                    question.isEnd.eq(searchFormDto.isEnd()),
+                    isEndEq(searchFormDto.getIsEnd()),
                     question.isDelete.eq(false)
             )
             .fetchOne();
@@ -81,6 +81,9 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
   }
   private BooleanExpression keywordContains(String keyword){
     return keyword!= null ? question.content.contains(keyword) : null;
+  }
+  private BooleanExpression isEndEq(Boolean isEnd){
+    return isEnd!=null ? question.isEnd.eq(isEnd) : null;
   }
 
 
