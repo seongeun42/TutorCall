@@ -1,7 +1,6 @@
 package com.potato.TutorCall.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.potato.TutorCall.chat.domain.ChatParticipant;
 import com.potato.TutorCall.inquiry.domain.Inquiry;
 import com.potato.TutorCall.lecture.domain.LectureParticipant;
 import com.potato.TutorCall.notification.domain.Notification;
@@ -57,9 +56,7 @@ public class User {
 
   private boolean unjoin;
 
-  @CreatedDate
-  private LocalDateTime joinDate;
-
+  @CreatedDate private LocalDateTime joinDate;
 
   // 양방향 연관 관계
   @JsonManagedReference
@@ -73,7 +70,6 @@ public class User {
   @JsonManagedReference
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private List<PointHistory> pointHistoryList = new ArrayList<>();
-
 
   @JsonManagedReference
   @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
@@ -94,10 +90,6 @@ public class User {
   @JsonManagedReference
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private List<TutorCall> tutorCallList = new ArrayList<>();
-
-  @JsonManagedReference
-  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  private List<ChatParticipant> chatroomList = new ArrayList<>();
 
   @JsonManagedReference
   @OneToMany(mappedBy = "caller", fetch = FetchType.LAZY)
@@ -183,7 +175,7 @@ public class User {
    * @param noPushNotification 푸시 알림
    */
   public void changeNoPushNotification(boolean noPushNotification) {
-      this.noPushNotification = noPushNotification;
+    this.noPushNotification = noPushNotification;
   }
 
   /** 탈퇴 처리 */

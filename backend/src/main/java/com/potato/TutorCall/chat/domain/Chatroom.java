@@ -1,17 +1,16 @@
 package com.potato.TutorCall.chat.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.potato.TutorCall.chat.domain.enums.ChatroomType;
+import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.redis.core.RedisHash;
 
 @Getter
@@ -26,6 +25,8 @@ public class Chatroom {
   private String name;
 
   private ChatroomType type;
+
+  private Set<User> participants = new HashSet<>();
 
   @CreatedDate private LocalDateTime createdAt;
 
