@@ -1,7 +1,6 @@
 package com.potato.TutorCall.mypage.dto.res;
 
 import com.potato.TutorCall.lecture.domain.Lecture;
-import com.potato.TutorCall.review.domain.Review;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.dto.TagDto;
 import com.potato.TutorCall.user.domain.User;
@@ -9,7 +8,6 @@ import com.potato.TutorCall.user.dto.UserSimpleDto;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 public class MyLectureListResDto {
@@ -22,7 +20,7 @@ public class MyLectureListResDto {
   LocalDateTime lectureEndAt;
   Boolean review = Boolean.FALSE;
 
-  public void setLectureInfo(Lecture lecture) {
+  public MyLectureListResDto(Lecture lecture) {
     this.lectureId = lecture.getId();
     this.promotionTitle = lecture.getPromotionTitle();
     this.promotionState = lecture.isPromotionState();

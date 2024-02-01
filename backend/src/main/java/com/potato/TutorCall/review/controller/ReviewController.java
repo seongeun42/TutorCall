@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewController {
 
     private final ReviewService reviewService;
-    private final TutorCallService tutorCallService;
 
     @PostMapping("/tutorcall/{tutorCallId}")
     public ResponseEntity<?> saveTutorCallReview(@PathVariable("tutorCallId") Long id,
