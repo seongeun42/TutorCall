@@ -1,31 +1,26 @@
 package com.potato.TutorCall.auth.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.TutorCall.auth.SessionKey;
-import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.auth.dto.oauth.CommonInfo;
 import com.potato.TutorCall.auth.service.AuthService;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.domain.enums.RoleType;
-import com.potato.TutorCall.user.domain.enums.SnsType;
 import com.potato.TutorCall.user.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
+
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.jackson.JsonObjectSerializer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor

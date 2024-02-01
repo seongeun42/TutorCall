@@ -2,7 +2,6 @@ package com.potato.TutorCall.config;
 
 import java.util.Arrays;
 
-import com.potato.TutorCall.auth.handler.OAuth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 //@EnableWebMvc
+@RequiredArgsConstructor
 public class SecurityConfig {
 
   private final SavedRequestAwareAuthenticationSuccessHandler successHandler;
