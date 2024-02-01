@@ -1,3 +1,5 @@
+<script setup lang="ts">
+</script>
 <template>
   <div class="md flex flex-col bg-white border rounded-xl w-60">
     <div class="flex-grow">
@@ -100,7 +102,4 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts"></script>
-
 <style scoped></style>

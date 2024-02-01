@@ -1,28 +1,73 @@
+<script setup lang="ts">
+import Comments from './Comments.vue'
+import DetailProblem from './DetailProblem.vue'
+import router from '@/router/index'
+import { onMounted, ref } from 'vue';
+import type{Ref} from 'vue';
+import * as api from '@/api/qna/qna'
+import{ type AxiosResponse, type AxiosError, isAxiosError } from 'axios';
+import type{ questionInfo, questionResponse, errorResponse } from '@/interface/qna/interface'
+import type { commonResponse } from '@/interface/account/interface';
+
+const questionData:Ref<questionInfo|null> = ref(null);
+const questionId:string = 
+  router.currentRoute.value.params['qnaNum'][0];
+
+onMounted(async():Promise<void> =>{
+
+  await api.getOneQuestionData(questionId)
+  .then((response: AxiosResponse<{question:questionInfo}>)=>{
+    questionData.value = response.data.question;
+  })
+  .catch((error: unknown)=>{
+    if(isAxiosError<errorResponse>(error)){
+      alert(error.response?.data.message);
+    }
+  })
+
+})
+
+async function deleteQuestion(event:Event):Promise<void> {
+  event.preventDefault();
+  await api.deleteQuestion(questionId)
+  .then((response: AxiosResponse<commonResponse>)=>{
+    router.push({"name":"qna"});
+  })
+  .catch((error: unknown)=>{
+    if(isAxiosError<errorResponse>(error)){
+      alert(error.response?.data.message);
+    }
+  })
+}
+
+</script>
 <template>
   <div class="container mx-auto my-10">
     <div class="mx-20 my-10">
       <div class="flex justify-between items-center">
         <div class="flex items-center justify-center rounded-full w-20 h-8 bg-green-200">
-          <p>과목</p>
+          <p>{{questionData?.tag.subject }}</p>
         </div>
         <div class="flex">
-          <a href="" class="mr-3">글 삭제</a>
+          <a href="" class="mr-3" @click="deleteQuestion($event)">글 삭제</a>
           <a href="">글 수정</a>
         </div>
       </div>
-      <h5 class="font-bold text-[1.5rem] my-3">수능수학 30번 질문합니다.</h5>
+      <h5 class="font-bold text-[1.5rem] my-3">{{ questionData?.title }}</h5>
       <div class="flex justify-between items-center">
         <div class="flex items-center mb-5">
-          <img src="@/img/student.jpg" alt="" class="w-10 h-10 rounded-full" />
-          <p class="ml-1">김잼민</p>
-          <p class="ml-3">3시간 전</p>
+          <img :src="questionData?.writer.profile" alt="" class="w-10 h-10 rounded-full" />
+          <p class="ml-1">{{ questionData?.writer.nickname }}</p>
+          <p class="ml-3">
+            {{ questionData?.createDate }}
+          </p>
         </div>
       </div>
       <hr />
-      <DetailProblem />
+      <DetailProblem :content="questionData?.content"/>
       <div class="bg-gray-200 pb-10 rounded-xl">
         <p class="mx-10 my-10 pt-5 font-bold text-xl">댓글</p>
-        <Comments />
+        <Comments v-for="answer in questionData?.answerList" :answer="answer"/>
       </div>
       <div class="mt-20 flex justify-center">
         <img src="@/img/teacher.png" alt="" class="w-20 h-20 rounded-full mr-10" />
@@ -53,9 +98,5 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import Comments from './Comments.vue'
-import DetailProblem from './DetailProblem.vue'
-</script>
 
 <style scoped></style>

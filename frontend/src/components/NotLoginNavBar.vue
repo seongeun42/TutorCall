@@ -1,4 +1,16 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import router from '@/router/index'
+
+function goLoginPage():void{
+  // router.push({"name":"signform", query:{"signUp":"false"}});
+  router.push({"name":"signform"});
+}
+
+function goSignUpPage():void{
+  router.push({"name":"signform", query:{"signUp":"true"}});
+}
+
+</script>
 <template>
   <nav class="bg-white">
     <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -33,11 +45,13 @@
         <div class="flex">
           <div
             class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
+            @click="goLoginPage"
           >
             로그인
           </div>
           <div
             class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
+            @click="goSignUpPage"
           >
             회원가입
           </div>

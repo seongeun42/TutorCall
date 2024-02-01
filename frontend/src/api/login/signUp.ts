@@ -1,35 +1,37 @@
 import { instance } from '@/axios/axiosCofig'
+import type{ AxiosResponse } from 'axios';
+import type{ commonResponse, emailSend, emailCodeCheck,
+    nickCheck, loginForm, signUpForm, signUpResponse, user } from '@/interface/account/interface'
 
-export async function sendEmailCode(param:any):Promise<any> {
+export async function sendEmailCode(param:emailSend):Promise<AxiosResponse<commonResponse>> {
 
     const url:string = import.meta.env.VITE_VUE_API_URL+"/auth/email";
-    const data = {"email":param};
-    return instance.post(url, data);
+    return instance.post<commonResponse>(url, param);
 
 }
 
-export async function checkCode(param:any):Promise<any>{
+export async function checkCode(param:emailCodeCheck):Promise<AxiosResponse<commonResponse>>{
 
     const url:string = import.meta.env.VITE_VUE_API_URL+"/auth/email/check";
-    return instance.post(url, param);
+    return instance.post<commonResponse>(url, param);
     
 }
 
-export async function nickDupCheck(param:any):Promise<any>{
+export async function nickDupCheck(param:nickCheck):Promise<AxiosResponse<commonResponse>>{
 
     const url:string = import.meta.env.VITE_VUE_API_URL+"/auth/nick-check";
-    return instance.post(url, param);
+    return instance.post<commonResponse>(url, param);
 
 }
 
-export async function signUp(param: any):Promise<any>{
+export async function signUp(param: signUpForm):Promise<AxiosResponse<signUpResponse>>{
 
     const url:string = import.meta.env.VITE_VUE_API_URL+"/auth/signup";
-    return instance.post(url, param);
+    return instance.post<signUpResponse>(url, param);
 
 }
 
-export async function login(param:any){
+export async function login(param:loginForm):Promise<AxiosResponse<user>>{
     const url:string = import.meta.env.VITE_VUE_API_URL+"/auth/login";
-    return instance.post(url, param);
+    return instance.post<user>(url, param);
 }

@@ -1,3 +1,61 @@
+<script setup lang="ts">
+import ProblemCard from './ProblemCard.vue'
+import * as api from '@/api/qna/qna'
+import {ref, onMounted } from 'vue';
+import type {Ref} from 'vue';
+import router from '@/router/index'
+import{ type AxiosResponse, type AxiosError, isAxiosError } from 'axios';
+import type{ questionInfo, questionResponse, errorResponse } from '@/interface/qna/interface'
+
+let selectedSubject: string = ''
+let currentPage: number = 1
+const totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
+const tag:string = "";
+const keyword:string = "";
+const status:string = "";
+
+const questionData:Ref<questionInfo[]> = ref([]);
+
+
+const prevPage = (): void => {
+  if (currentPage > 1) {
+    currentPage--
+  }
+}
+const nextPage = (): void => {
+  if (currentPage < totalPages) {
+    currentPage++
+  }
+}
+
+async function init():Promise<void>{
+
+  const param:string = `?page=${currentPage-1}&size=${totalPages}&isEnd=${status}&keyword=${keyword}&tagId=${tag}`
+  await api.getQnAData(param)
+  .then((response: AxiosResponse<questionResponse>)=>{
+    if(response.status == 200){
+      questionData.value = response.data.questions.content;
+    }
+  })
+  .catch((error: unknown) =>{
+    if(isAxiosError<errorResponse>(error)){
+      alert(error.response?.data.message);
+    }
+  })
+}
+
+function goQnADetail(id:number):void{
+  router.push({"name":"qnaDetail", "params":{"qnaNum":id}});
+}
+
+onMounted(async():Promise<void> =>{
+  await init();
+})
+
+
+
+</script>
+
 <template>
   <div class="container mx-auto">
     <h2 class="font-bold text-[1.7rem] ml-20 mt-5">문제 Q&A</h2>
@@ -37,7 +95,12 @@
       </div>
     </div>
 
-    <ProblemCard />
+    <div class="grid grid-cols-3 gap-3">
+      <ProblemCard v-for="data in questionData" :data="data"
+      class="mb-10"
+      @click="goQnADetail(data.questionId)"
+      /> 
+    </div>
     <div class="flex justify-center mt-8">
       <button
         type="button"
@@ -59,25 +122,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import ProblemCard from './ProblemCard.vue'
-let selectedSubject: string = ''
-let currentPage: number = 1
-const totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
-
-const prevPage = (): void => {
-  if (currentPage > 1) {
-    currentPage--
-  }
-}
-
-const nextPage = (): void => {
-  if (currentPage < totalPages) {
-    currentPage++
-  }
-}
-</script>
 
 <style scoped>
 .menulist {
