@@ -56,6 +56,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
                           .startsWith(provider))
                   .findFirst().
                   orElseThrow(() -> new IllegalArgumentException("제공하지 않는 Provider입니다."));
+
           CommonInfo comm = providerHandler.get(principal);
 
           //유저 있는 지 확인
@@ -83,6 +84,5 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
           authService.saveUserInfoToSession(session, SessionKey.USER, user);
 
           response.sendRedirect(frontendUrl);
-
       }
 }
