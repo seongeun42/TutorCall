@@ -102,10 +102,10 @@ const dummydata5: chatForm = {
       </div>
     </div>
     <div class="grid grid-cols-9 gap-4 max-h-[500px]">
-      <div class="col-span-7 grid grid-rows-9 max-h-[500px]">
-        <div class="row-span-8">
+      <div class="col-span-7 grid grid-rows-9 max-h-[600px]">
+        <div class="row-span-8 max-h-[600px]">
           <!-- 화면 컨텐츠 변환-->
-          <img v-if="videoSideView" class="" src="../../img/video.png" alt="" />
+          <img v-if="videoSideView" class="w-full h-full" src="../../img/video.png" alt="" />
           <img v-else class="h-full w-full" src="../../img/whitepage.jpg" alt="" />
         </div>
         <div class="row-span-1">
@@ -113,14 +113,14 @@ const dummydata5: chatForm = {
         </div>
       </div>
       <div class="col-span-2">
-        <div class="border-4 grid grid-rows-8 max-h-[500px]">
+        <div class="border-4 grid grid-rows-8 max-h-[600px]">
           <div v-if="chatSideView">
-            <div class="row-start-1 row-end-6 row-span-5 overflow-auto max-h-[430px] min-h-[430px]">
+            <div class="row-start-1 row-end-7 row-span-7 min-h-[520px] overflow-auto">
               <OnlineLectureChatForm :data="dummydata4" />
               <OnlineLectureChatForm :data="dummydata5" />
               <OnlineLectureSystemMsg message="시스템 메세지" />
             </div>
-            <div class="row-start-7 row-span-1">
+            <div class="row-start-8 row-span-1">
               <OnlineLectureChatInput />
             </div>
           </div>
