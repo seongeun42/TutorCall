@@ -27,7 +27,6 @@ public class SecurityConfig {
                 oauth2.authorizationEndpoint(
                     endpoint -> endpoint.baseUri("/auth/login"))
                         .successHandler(successHandler)
-                        // auth 요청 보낼 URI
                     // TODO .failureHandler() 구현하기
             )
 
