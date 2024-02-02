@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import router from '@/router/index'
+import { useUserStore } from '@/store/userStore'
 import { ref, type Ref } from 'vue'
 import CallNotification from '@/components/CallNotification.vue'
 
@@ -14,6 +16,12 @@ const modalShow: Ref<boolean> = ref(false)
 function handleMode(show: boolean, mode: string) {
   modalShow.value = show
   //mode에 따라 수행할 기능이 다름.
+}
+
+const userStore = useUserStore();
+
+function goQnABoard():void{
+  router.push({"name":"qna"});
 }
 </script>
 
@@ -38,6 +46,7 @@ function handleMode(show: boolean, mode: string) {
               <a
                 href="#"
                 class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
+                @click="goQnABoard"
                 >문제 Q&A</a
               >
               <a

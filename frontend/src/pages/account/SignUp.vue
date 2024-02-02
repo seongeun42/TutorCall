@@ -5,6 +5,9 @@ import SelectRole from './SelectRole.vue'
 import * as api from '@/api/login/signUp'
 import router from '@/router/index'
 import { useUserStore } from '@/store/userStore'
+import type{ commonResponse, emailSend, emailCodeCheck,
+    nickCheck, loginForm, signUpForm, signUpResponse, user, errorResponse } from '@/interface/account/interface'
+import { isAxiosError, type AxiosResponse } from 'axios'
 
 // import exp from 'constants'
 
@@ -23,6 +26,7 @@ const loginPassword: Ref<string> = ref("");
 const userStore = useUserStore();
 
 const status = router.currentRoute.value.query.signUp;
+
 // init 
 if(status){
   if(status == "true"){
@@ -47,7 +51,6 @@ function clearRegistInputValue():void {
 function toggle(): void {
   isSignUp.value = !isSignUp.value
   isSignIn.value = !isSignIn.value
-  console.log('click event')
 }
 
 function handleFormStatus(): void {
@@ -56,67 +59,71 @@ function handleFormStatus(): void {
 }
 
 function isValidEmail():boolean{
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex:RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(emailAddr.value);
 }
 
 async function receiveEmailCode(){
-
-  console.log("현재 입력된 이메일 값: "+emailAddr.value);
 
   if(!isValidEmail()){
     alert("이메일 형식이 아닙니다.");
     return;
   }
 
-  await api.sendEmailCode(emailAddr.value)
-  .then((response)=>{
-    console.log(response);
+  await api.sendEmailCode({email:emailAddr.value})
+  .then((response: AxiosResponse<commonResponse>)=>{
     if(response.status == 201) alert(response.data.message);
   })
-  .catch((error)=>{
-    alert(error.response.data.message);
+  .catch((error: unknown)=>{
+    if(isAxiosError<errorResponse>(error)){
+      alert(error.response?.data.message);
+    }
   })
 
 }
 
 async function checkEmailValidCode(){
-  const param = {
+
+  const param:emailCodeCheck = {
     'email':emailAddr.value,
     'code':vaildCode.value
   };
+
   await api.checkCode(param)
-  .then((response)=>{
+  .then((response: AxiosResponse<commonResponse>)=>{
     alert(response.data.message);
     isEmailChecked.value = true;
   })
-  .catch((error)=>{
-    alert(error.response.data.message);
+  .catch((error: unknown)=>{
+    if(isAxiosError<errorResponse>(error)){
+      alert(error.response?.data.message);
+    }
   })
 
 }
 
-function checkPassword(){
+function checkPassword():boolean{
   if(password.value != passwordCheck.value) return false;
   return true;
 }
 
-async function doSignUp(event:any){
+async function doSignUp(event:Event){
 
   event.preventDefault();
 
-  const nickcheck = {
+  const nickcheck:nickCheck = {
     'nickname': nickname.value
   }
 
   await api.nickDupCheck(nickcheck)
-  .catch((error)=>{
-    console.log(error);
-    alert(error.response.data.message);
-    isNickNameUsed.value = true;
+  .catch((error: unknown)=>{
+    if(isAxiosError<errorResponse>(error)){
+      alert(error.response?.data.message);
+      isNickNameUsed.value = true;
+    }
   })
 
-  const param = {
+  const param:signUpForm = {
     'nickname': nickname.value,
     'password': password.value,
     'email': emailAddr.value,
@@ -124,34 +131,37 @@ async function doSignUp(event:any){
 
   if(checkPassword() == true && isEmailChecked.value && !isNickNameUsed.value){
     await api.signUp(param)
-    .then((response)=>{
+    .then((response: AxiosResponse<signUpResponse>)=>{
       alert(response.data.message);
       isSignUp.value=false;
       isSignIn.value = true;
       clearRegistInputValue()
-      router.push({"name":"signUp", query:{"signUp":"false"}});
+      router.push({"name":"signform", query:{"signUp":"false"}});
       return
     })
-    .catch((error)=>{
-      alert(error.response.data.message);
-    })
+    .catch((error: unknown)=>{
+    if(isAxiosError<errorResponse>(error)){
+      alert(error.response?.data.message);
+    }
+  })
   }else{
     alert("입력 다시 확인");
   }
 
 }
 
-async function doLogin(event:any){
+async function doLogin(event:Event){
+
   event.preventDefault();
-  const param = {
+
+  const param:loginForm = {
     "email": loginEmail.value,
     "password" : loginPassword.value
   }
 
-  console.log(param);
   await api.login(param)
-  .then((response)=>{
-    const roleType:string = response.data.roleType;
+  .then((response: AxiosResponse<user>)=>{
+    const roleType:string = response.data.role;
     if(roleType == "TUTOR"){
       userStore.login(true, loginEmail.value);
     }else{
@@ -159,8 +169,10 @@ async function doLogin(event:any){
     }
     router.push("/");
   })
-  .catch((error)=>{
-    console.log(error);
+  .catch((error: unknown)=>{
+    if(isAxiosError<errorResponse>(error)){
+      alert(error.response?.data.message);
+    }
   })
 
 }
@@ -171,8 +183,6 @@ async function doSNSLogin(event:any, snsType:string){
   const scope = 'profile email';
   const responseType = 'token';
   const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope}&response_type=${responseType}`;
-  console.log(authUrl);
-
 }
 
 </script>

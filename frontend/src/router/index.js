@@ -21,6 +21,7 @@ import PointUsage from '@/pages/mypage/student/point/PointUsage.vue'
 import StudentMyLecture from '@/pages/mypage/student/information/StudentMyLecture.vue'
 import MyPaymentInfo from '@/pages/mypage/payment/MyPaymentInfo.vue'
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -149,9 +150,14 @@ const router = createRouter({
       // 문제 질문 게시판
       path: '/qna',
       name: 'qna',
-      component: QA,
+      redirect: {name:'qnalist'},
       children: [
         // 질게 상세
+        {
+          path:'list',
+          name:'qnalist',
+          component: QA,
+        },
         {
           path: ':qnaNum',
           name: 'qnaDetail',
@@ -181,4 +187,4 @@ const router = createRouter({
   ]
 })
 
-export default router
+export default router;
