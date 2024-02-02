@@ -23,27 +23,27 @@ function handleMode(show: boolean, mode: string) {
       <div class="relative flex h-16 items-center justify-between">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden"></div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <div class="flex flex-shrink-0 items-center">
+          <RouterLink to="/" class="flex flex-shrink-0 items-center">
             <img class="h-8 w-auto" src="@/img/logo.png" alt="Your Company" />
-          </div>
+          </RouterLink>
           <div class="hidden sm:ml-6 sm:block flex-1 justify-evenly">
             <div class="flex space-x-4 justify-evenly">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              <a
-                href="#"
+              <router-link
+                to="/lecturespromotion"
                 class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
                 aria-current="page"
-                >과외 모집</a
+                >과외 모집</router-link
               >
-              <a
-                href="#"
+              <router-link
+                to="/qna"
                 class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
-                >문제 Q&A</a
+                >문제 Q&A</router-link
               >
-              <a
-                href="#"
+              <router-link
+                to="/notice"
                 class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
-                >공지사항</a
+                >공지사항</router-link
               >
               <div class="flex items-center">
                 <p class="ms-3 text-sm font-semibold text-black-500 dark:text-gray-300">
@@ -98,7 +98,7 @@ function handleMode(show: boolean, mode: string) {
 
           <!-- Profile dropdown -->
           <div class="relative ml-3">
-            <div>
+            <RouterLink to="/mypage/">
               <button
                 type="button"
                 class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -114,7 +114,7 @@ function handleMode(show: boolean, mode: string) {
                   alt=""
                 />
               </button>
-            </div>
+            </RouterLink>
 
             <!--
             Dropdown menu, show/hide based on menu state.

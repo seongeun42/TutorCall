@@ -21,7 +21,6 @@ import PointUsage from '@/pages/mypage/student/point/PointUsage.vue'
 import StudentMyLecture from '@/pages/mypage/student/information/StudentMyLecture.vue'
 import MyPaymentInfo from '@/pages/mypage/payment/MyPaymentInfo.vue'
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -157,8 +156,8 @@ const router = createRouter({
           path: ':qnaNum',
           name: 'qnaDetail',
           component: DetailQA
-        },
-      ],
+        }
+      ]
     },
     {
       // 튜터콜 (컴포넌트 없음)
@@ -182,4 +181,4 @@ const router = createRouter({
   ]
 })
 
-export default router;
+export default router

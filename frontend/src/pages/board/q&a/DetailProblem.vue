@@ -1,6 +1,5 @@
 <script setup lang="ts">
-
-const props = defineProps<{content:string|undefined}>()
+const props = defineProps<{ content: string | undefined }>()
 </script>
 <template>
   <div class="bg-slate-100 rounded-xl">

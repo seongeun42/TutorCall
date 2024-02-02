@@ -1,20 +1,26 @@
 <template>
   <div>
-    <div class="text-3xl text-center font-black text-neutral-700 mb-5">
-      학생들의 리뷰를 확인하세요
+    <div v-if="isTutor">
+      <div class="text-3xl text-center font-black text-neutral-700 mb-5">
+        내 강의를 들은 학생들의 리뷰를 확인하세요
+      </div>
+    </div>
+    <div v-else class="text-3xl text-center font-black text-neutral-700 mb-5">
+      내가 등록한 리뷰를 확인하세요
     </div>
     <Carousel :autoplay="2000" :itemsToShow="3.95" :wrapAround="true" :transition="500">
       <Slide v-for="(slide, index) in Reviews" :key="index">
         <ReviewDetail :data="slide" />
       </Slide>
     </Carousel>
+    <!-- <RouterLink :to="{ name: 'tutorMyLectures', params: { userId: 필요한가? }}" v-if="isTutor" class="more" > 더 보기 > </RouterLink> // 이 부분 선생마이페이지 리뷰 추가되면 작성하기 -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, defineComponent } from 'vue'
 import type { Ref } from 'vue'
-import { Carousel, Pagination, Slide } from 'vue3-carousel'
+import { Carousel, Slide } from 'vue3-carousel'
 import ReviewDetail from './ReviewDetail.vue'
 
 import 'vue3-carousel/dist/carousel.css'
@@ -95,6 +101,8 @@ const Reviews: Ref<Review[]> = ref([
     content: '리뷰 내용2'
   }
 ])
+
+const isTutor: Ref<boolean> = ref(true)
 </script>
 
 <style scoped>
@@ -137,5 +145,16 @@ const Reviews: Ref<Review[]> = ref([
 .carousel__slide--active {
   opacity: 1;
   transform: rotateY(0) scale(1.1);
+}
+
+.more {
+  color: #fff;
+  background: linear-gradient(315deg, #42d392 25%, #647eff);
+  border: none;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 8px;
+  cursor: pointer;
+  float: right;
 }
 </style>

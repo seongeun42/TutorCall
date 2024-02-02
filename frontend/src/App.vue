@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { ref, type Ref } from 'vue'
 import NavBar from '@/components/NavBar.vue'
-import MainPage from '@/pages/mainpage/MainPage.vue'
-import Mypage from '@/pages/mypage/MyPage.vue'
+import FooterBar from '@/components/FooterBar.vue'
 import StudentNavBar from './components/StudentNavBar.vue'
 import NotLoginNavBar from './components/NotLoginNavBar.vue'
-import { RouterView } from "vue-router";
-import {useUserStore} from "@/store/userStore";
+import { RouterView } from 'vue-router'
+import { useUserStore } from '@/store/userStore'
 
-const userStore = useUserStore();
-
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -20,8 +18,8 @@ const userStore = useUserStore();
     <NavBar v-if="userStore.isTutor" />
     <StudentNavBar v-else />
   </div>
-  <Router-View id="main" />
-  <!-- <Mypage /> -->
+  <RouterView id="main" />
+  <FooterBar />
 </template>
 
 <style scoped></style>
