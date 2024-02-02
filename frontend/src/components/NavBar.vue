@@ -98,7 +98,7 @@ function handleMode(show: boolean, mode: string) {
 
           <!-- Profile dropdown -->
           <div class="relative ml-3">
-            <RouterLink to="/login">
+            <RouterLink to="/mypage/">
               <button
                 type="button"
                 class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"

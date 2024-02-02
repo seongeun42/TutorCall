@@ -6,8 +6,7 @@
       <div class="p-4 pl-20">
         <p class="text-4xl font-bold mb-10">{{ title }}</p>
         <div class="container p-12 bg-white">
-          <StudentInformationUpdate v-if="!isTutor" />
-          <InformationUpdate v-if="isTutor" />
+          <RouterView />
         </div>
       </div>
     </div>
@@ -18,10 +17,12 @@
 import SideBar from '@/components/SideBar.vue'
 import StudentSideBar from '@/components/StudentSideBar.vue'
 import { ref, type Ref } from 'vue'
-import StudentInformationUpdate from '@/pages/mypage/student/information/StudentInformationUpdate.vue'
-import InformationUpdate from '@/pages/mypage/tutor/InformationUpdate.vue'
+import { useRoute } from 'vue-router'
+// import StudentInformationUpdate from '@/pages/mypage/student/information/StudentInformationUpdate.vue'
+// import InformationUpdate from '@/pages/mypage/tutor/InformationUpdate.vue'
 
-const title: Ref<String> = ref('개인정보 수정')
+const route = useRoute()
+const title = $route.params.title
 const isTutor: Ref<boolean> = ref(true)
 </script>
 
