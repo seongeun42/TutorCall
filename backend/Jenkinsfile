@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-        BACKEND = 'springboot'
-        TAG = 'test'
-        RENAME_JAR = 'springboot'
+        BACKEND = 'backend'
+        TAG = 'latest'
+        RENAME_JAR = 'backend'
         BUILD_CMD = 'bootJar'
         WORKSPACE_DIR = ''
     }
@@ -12,9 +12,11 @@ pipeline {
             steps {
                 script { 
                     try {
-                        // sh 'docker image prune -a -f'
-                        sh "docker ps -q --filter name=${env.BACKEND} | grep -q . && docker stop springboot && docker rm ${env.BACKEND}"
-                        sh "docker rmi \$(docker images --filter=reference='${env.TAG}' -q)"
+                        sh 'docker image prune -a -f'
+                        //sh "docker ps -q --filter name=${env.BACKEND} | grep -q . && docker stop ${env.BACKEND} && docker rm ${env.BACKEND}"
+                      //  sh "docker rmi \$(docker images --filter=reference='${env.BACKEND}:${env.TAG}' -q)"
+                        sh "docker rm -f \$(docker ps -aqf \"name=^/${env.BACKEND}\$\")"
+                        sh "docker rmi ${env.BACKEND}"
                     } catch(e){
                         echo 'remove spring docker image&container fail!'
                     }
@@ -26,26 +28,32 @@ pipeline {
             steps {
                 sh 'ls -al'
                 sh 'pwd'
-               
-                dir('backend'){
-                    sh 'echo test3'
-                    sh 'pwd'
-                    sh 'echo ======'  
-                    sh 'chmod +x ./gradlew'
-                    sh "./gradlew ${env.BUILD_CMD}"
-                    sh "mv ./build/libs/*.SHOT.jar ./"
-    
-                }
-                
+                sh 'rm -rf ./backend/src/main/resources'
+                sh 'mkdir ./backend/src/main/resources'
+                sh 'cp ./application.yml ./backend/src/main/resources'
+                sh 'cd ./backend/src/main && ls -al'
+                //dir('backend'){
+                    //sh 'docker 
+                    //sh 'echo test3'
+                    //sh 'pwd'
+                    //sh 'echo ======'  
+                    //sh 'chmod +x ./gradlew'
+                    //sh "./gradlew ${env.BUILD_CMD}"
+                    //sh "mv ./build/libs/*.SHOT.jar ./"
+                    //sh 'dockre 
+
+                //}
             }
         }
 
-        //stage('deploy'){
-        //    steps{
-        //        sh 'docker build -t test:v1.0 .'
-        //        sh "docker run -d -p 8088:8080 --name ${env.BACKEND} ${env.TAG}:v1.0"
-        //    }
-        //}
+        stage('deploy'){
+            steps{
+                sh 'pwd'
+                sh 'ls -al'
+                sh "docker build -t ${env.BACKEND} ./backend"
+                sh "docker run -d -it -p 8080:8080 --name ${env.BACKEND} ${env.BACKEND} /bin/sh"
+            }
+        }
     }
 }
 
