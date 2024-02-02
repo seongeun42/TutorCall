@@ -1,6 +1,7 @@
 package com.potato.TutorCall.qna.service;
 
 import com.potato.TutorCall.exception.customException.DuplicatedException;
+import com.potato.TutorCall.exception.customException.ForbiddenException;
 import com.potato.TutorCall.exception.customException.InvalidException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.qna.domain.Answer;
@@ -61,7 +62,7 @@ public class AnswerService {
             .findById((long) answerId)
             .orElseThrow(() -> new NotFoundException("질문 삭제 실패"));
 
-    if (!targetAnswer.getTutor().getId().equals(userId)) throw new InvalidException("삭제 권한 없음");
+    if (!targetAnswer.getTutor().getId().equals(userId)) throw new ForbiddenException("삭제 권한 없음");
 
     int count = answerRepository.deleteQuestion((long) answerId, true);
     if (count == 0) throw new NotFoundException("질문 삭제 실패");
@@ -85,7 +86,7 @@ public class AnswerService {
       throw new DuplicatedException("이미 채택된 질문입니다.");
 
     if (!targetAnswer.getQuestion().getWriter().getId().equals(userId))
-      throw new InvalidException("권한 없음");
+      throw new ForbiddenException("권한 없음");
 
     int count = answerRepository.chooseAnswer((long) answerId, true);
     if (count == 0) throw new NotFoundException("답변 채택 실패");

@@ -1,6 +1,7 @@
 package com.potato.TutorCall.report.service;
 
 import com.potato.TutorCall.exception.customException.DuplicatedException;
+import com.potato.TutorCall.exception.customException.ForbiddenException;
 import com.potato.TutorCall.exception.customException.InvalidException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.lecture.domain.Lecture;
@@ -142,7 +143,7 @@ public class ReportService {
                         .orElseThrow(()-> new NotFoundException("잘못된 유저 접근"));
 
         if(!user.getRole().equals(RoleType.ADMIN))
-            throw new InvalidException("권한이 존재하지 않습니다");
+            throw new ForbiddenException("권한이 존재하지 않습니다");
 
         Page<ReportDto> list = reportRepository.findAllByTypeAndProceedStateOrderByIdDesc(pageable, reportListDto.getType(),
                 reportListDto.isState()).map(ReportDto::new);
@@ -159,7 +160,7 @@ public class ReportService {
                         .orElseThrow(()-> new NotFoundException("잘못된 유저 접근"));
 
         if(!user.getRole().equals(RoleType.ADMIN))
-            throw new InvalidException("권한이 존재하지 않습니다");
+            throw new ForbiddenException("권한이 존재하지 않습니다");
 
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(()->new NotFoundException("존재하지 않는 report"));
