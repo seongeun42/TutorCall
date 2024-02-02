@@ -31,7 +31,11 @@
                     />
                   </svg>
 
-                  <RouterLink :to="{ name: 'userUpdate' }" class="ml-2">개인정보 수정</RouterLink>
+                  <RouterLink
+                    :to="{ name: 'userUpdate', state: { title: '개인정보 수정' } }"
+                    class="ml-2"
+                    >개인정보 수정</RouterLink
+                  >
                 </li>
                 <li class="my-5 flex">
                   <svg

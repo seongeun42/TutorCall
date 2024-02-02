@@ -16,14 +16,21 @@
 <script setup lang="ts">
 import SideBar from '@/components/SideBar.vue'
 import StudentSideBar from '@/components/StudentSideBar.vue'
-import { ref, type Ref } from 'vue'
-import { useRoute } from 'vue-router'
+import router from '@/router'
+import { ref, type Ref, onMounted } from 'vue'
 // import StudentInformationUpdate from '@/pages/mypage/student/information/StudentInformationUpdate.vue'
 // import InformationUpdate from '@/pages/mypage/tutor/InformationUpdate.vue'
 
-const route = useRoute()
-const title = $route.params.title
+const title: Ref<string> = ref(history.state.title)
 const isTutor: Ref<boolean> = ref(true)
+
+onMounted(() => {
+  if (isTutor.value == true) {
+    router.push({ name: 'tutorUpdate' })
+  } else if (isTutor.value == false) {
+    router.push({ name: 'userUpdate' })
+  }
+})
 </script>
 
 <style scoped>
