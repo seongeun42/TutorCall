@@ -6,6 +6,6 @@ WORKDIR /app
 COPY . .
 RUN chmod +x gradlew
 RUN ./gradlew :spotlessApply
-RUN ./gradlew clean build
+RUN ./gradlew bootJar
 RUN mv ./build/libs/*-SNAPSHOT.jar ./
 CMD ["java", "-jar", "*SNAPSHOT.jar"]
