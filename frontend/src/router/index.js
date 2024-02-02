@@ -48,7 +48,8 @@ const router = createRouter({
         {
           path: '/tutorupdate',
           name: 'tutorUpdate',
-          component: InformationUpdate
+          component: InformationUpdate,
+          props: true
         },
         // 리뷰 확인
         {
