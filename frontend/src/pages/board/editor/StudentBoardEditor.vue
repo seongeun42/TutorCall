@@ -1,3 +1,65 @@
+<script setup lang="ts">
+import { ref, type Ref, onMounted } from 'vue'
+import axios from 'axios'
+import CkEditor from '@/pages/board/editor/CkEditor.vue'
+const title: Ref<string> = ref('')
+const editorData: Ref<string> = ref('')
+const buttonClicked: Ref<string> = ref('')
+const selectedSubject: Ref<string> = ref('')
+const selectedSchool: Ref<string> = ref('')
+const selectedGrade: Ref<number> = ref(0)
+function selectSchool(school: string): void {
+  if (selectedSchool.value === school) {
+    selectedSchool.value = ''
+  } else {
+    selectedSchool.value = school
+    console.log(selectedSchool.value)
+  }
+}
+function selectGrade(grade: number): void {
+  if (selectedGrade.value === grade) {
+    selectedGrade.value = 0
+  } else {
+    selectedGrade.value = grade
+    console.log(selectedGrade.value) // 선택된 학년 값 출력
+  }
+}
+function selectSubject(subject: string): void {
+  if (selectedSubject.value === subject) {
+    selectedSubject.value = ''
+  } else {
+    selectedSubject.value = subject
+    console.log(selectedSubject.value)
+  }
+}
+function handleModelValueUpdate(newValue: string) {
+  // 값 변경 추적 로직을 작성합니다.
+  editorData.value = newValue
+  console.log(editorData.value)
+}
+function submitPost(buttonName: string): void {
+  buttonClicked.value = buttonName
+  const url: string = 'http://localhost:8080/'
+  const endpoint: string = buttonClicked.value === 'qna' ? 'qna/question' : 'tutorcall/'
+  axios
+    .post(url + endpoint, {
+      questionTitle: title.value,
+      questionContent: editorData.value,
+      tag: { subject: selectedSubject.value }
+    })
+    .then((response: any) => {
+      if (buttonName === 'tutorcall') {
+        // 대기실로 이동하는 라우터 구현해야 됨
+        window.alert('문제 등록이 완료되었습니다. 튜터콜 대기실로 이동합니다.')
+      } else {
+        window.alert('문제 등록이 완료되었습니다.')
+      }
+    })
+    .catch((error: any) => {
+      console.log(error)
+    })
+}
+</script>
 <template>
   <div class="mx-auto w-[1000px]">
     <div class="my-10">
@@ -6,27 +68,132 @@
       </div>
       <div class="my-10 flex h-[35px]">
         <button
-          class="bg-red-300 text-white text-center text-xl font-bold hover:bg-red-700 mx-1 rounded-xl w-[80px]"
+          @click="selectSchool('초')"
+          :class="[
+            'bg-red-300 text-white text-center text-xl font-bold hover:bg-red-700 mx-1 rounded-xl w-[80px]',
+            { 'bg-red-700': selectedSchool === '초' }
+          ]"
+        >
+          초
+        </button>
+        <button
+          @click="selectSchool('중')"
+          :class="[
+            'bg-red-300 text-white text-center text-xl font-bold hover:bg-red-700 mx-1 rounded-xl w-[80px]',
+            { 'bg-red-700': selectedSchool === '중' }
+          ]"
+        >
+          중
+        </button>
+        <button
+          @click="selectSchool('고')"
+          :class="[
+            'bg-red-300 text-white text-center text-xl font-bold hover:bg-red-700 mx-1 rounded-xl w-[80px]',
+            { 'bg-red-700': selectedSchool === '고' }
+          ]"
+        >
+          고
+        </button>
+      </div>
+      <div class="my-10 flex h-[35px]">
+        <button
+          @click="selectGrade(1)"
+          :class="[
+            'bg-blue-300 text-white  text-center text-xl font-bold hover:bg-blue-700 mx-1 rounded-xl w-[80px]',
+            { 'bg-blue-700 text-white': selectedGrade === 1 }
+          ]"
+        >
+          1학년
+        </button>
+        <button
+          @click="selectGrade(2)"
+          :class="[
+            'bg-blue-300 text-white text-center text-xl font-bold hover:bg-blue-700 mx-1 rounded-xl w-[80px]',
+            { 'bg-blue-700': selectedGrade === 2 }
+          ]"
+        >
+          2학년
+        </button>
+        <button
+          @click="selectGrade(3)"
+          :class="[
+            'bg-blue-300 text-white text-center text-xl font-bold hover:bg-blue-700 mx-1 rounded-xl w-[80px]',
+            { 'bg-blue-700': selectedGrade === 3 }
+          ]"
+        >
+          3학년
+        </button>
+        <button
+          @click="selectGrade(4)"
+          :class="[
+            'bg-blue-300 text-white text-center text-xl font-bold hover:bg-blue-700 mx-1 rounded-xl w-[80px]',
+            { 'bg-blue-700': selectedGrade === 4 }
+          ]"
+        >
+          4학년
+        </button>
+        <button
+          @click="selectGrade(5)"
+          :class="[
+            'bg-blue-300 text-white text-center text-xl font-bold hover:bg-blue-700 mx-1 rounded-xl w-[80px]',
+            { 'bg-blue-700': selectedGrade === 5 }
+          ]"
+        >
+          5학년
+        </button>
+        <button
+          @click="selectGrade(6)"
+          :class="[
+            'bg-blue-300 text-white text-center text-xl font-bold hover:bg-blue-700 mx-1 rounded-xl w-[80px]',
+            { 'bg-blue-700': selectedGrade === 6 }
+          ]"
+        >
+          6학년
+        </button>
+      </div>
+      <div class="my-10 flex h-[35px]">
+        <button
+          :class="[
+            'bg-green-300 text-white text-center text-xl font-bold hover:bg-green-700 mx-1 rounded-xl w-[80px]',
+            { 'bg-green-700': selectedSubject === '국어' }
+          ]"
+          @click="selectSubject('국어')"
         >
           국어
         </button>
         <button
-          class="bg-yellow-300 text-white text-center text-xl font-bold hover:bg-yellow-500 mx-1 rounded-xl w-[80px]"
+          :class="[
+            'bg-green-300 text-white text-center text-xl font-bold hover:bg-green-500 mx-1 rounded-xl w-[80px]',
+            { 'bg-green-700': selectedSubject === '영어' }
+          ]"
+          @click="selectSubject('영어')"
         >
           영어
         </button>
         <button
-          class="bg-blue-300 text-white text-center text-xl font-bold hover:bg-blue-800 mx-1 rounded-xl w-[80px]"
+          :class="[
+            'bg-green-300 text-white text-center text-xl font-bold hover:bg-green-800 mx-1 rounded-xl w-[80px]',
+            { 'bg-green-700': selectedSubject === '수학' }
+          ]"
+          @click="selectSubject('수학')"
         >
           수학
         </button>
         <button
-          class="bg-purple-300 text-white text-center text-xl font-bold hover:bg-purple-800 mx-1 rounded-xl w-[80px]"
+          :class="[
+            'bg-green-300 text-white text-center text-xl font-bold hover:bg-green-800 mx-1 rounded-xl w-[80px]',
+            { 'bg-green-700': selectedSubject === '과학' }
+          ]"
+          @click="selectSubject('과학')"
         >
           과학
         </button>
         <button
-          class="bg-gray-300 text-white text-center text-xl font-bold hover:bg-gray-800 mx-1 rounded-xl w-[80px]"
+          :class="[
+            'bg-green-300 text-white text-center text-xl font-bold hover:bg-green-800 mx-1 rounded-xl w-[80px]',
+            { 'bg-green-700': selectedSubject === '사회' }
+          ]"
+          @click="selectSubject('사회')"
         >
           사회
         </button>
@@ -54,43 +221,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, type Ref, onMounted } from 'vue'
-import axios from 'axios'
-import CkEditor from '@/pages/board/editor/CkEditor.vue'
-const title: Ref<string> = ref('')
-const editorData: Ref<string> = ref('')
-const buttonClicked: Ref<string> = ref('')
-const selctedSubject: Ref<string> = ref('')
-function handleModelValueUpdate(newValue: string) {
-  // 값 변경 추적 로직을 작성합니다.
-  editorData.value = newValue
-  console.log(editorData.value)
-}
-function submitPost(buttonName: string): void {
-  buttonClicked.value = buttonName
-  const url: string = 'http://localhost:8080/'
-  const endpoint: string = buttonClicked.value === 'qna' ? 'qna/' : 'tutorcall/'
-  axios
-    .post(url + endpoint, {
-      questionTitle: title.value,
-      questionContent: editorData.value,
-      tag: { subject: selctedSubject.value }
-    })
-    .then((response: any) => {
-      if (buttonName === 'tutorcall') {
-        // 대기실로 이동하는 라우터 구현해야 됨
-        window.alert('문제 등록이 완료되었습니다. 튜터콜 대기실로 이동합니다.')
-      } else {
-        window.alert('문제 등록이 완료되었습니다.')
-      }
-    })
-    .catch((error: any) => {
-      console.log(error)
-    })
-}
-</script>
 
 <style scoped>
 .title {
