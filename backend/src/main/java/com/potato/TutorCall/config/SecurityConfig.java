@@ -20,7 +20,11 @@ public class SecurityConfig {
 
   private final SavedRequestAwareAuthenticationSuccessHandler successHandler;
 
-  @Bean
+    public SecurityConfig(SavedRequestAwareAuthenticationSuccessHandler successHandler) {
+        this.successHandler = successHandler;
+    }
+
+    @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.oauth2Login(
             oauth2 ->

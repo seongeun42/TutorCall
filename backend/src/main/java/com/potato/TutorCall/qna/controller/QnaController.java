@@ -82,7 +82,7 @@ public class QnaController {
 
   @CommonResponses
   @Operation(summary = "답변 삭제", description = "답변을 삭제한다")
-  @PatchMapping("/answer/{answerId}")
+  @DeleteMapping("/answer/{answerId}")
   public ResponseEntity<?> deleteAnswer(
       @PathVariable("answerId") int answerId, HttpSession session) {
     UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
