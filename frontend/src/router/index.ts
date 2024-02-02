@@ -150,20 +150,15 @@ const router = createRouter({
       // 문제 질문 게시판
       path: '/qna',
       name: 'qna',
-      redirect: {name:'qnalist'},
+      component: QA,
       children: [
         // 질게 상세
-        {
-          path:'list',
-          name:'qnalist',
-          component: QA,
-        },
         {
           path: ':qnaNum',
           name: 'qnaDetail',
           component: DetailQA
-        }
-      ]
+        },
+      ],
     },
     {
       // 튜터콜 (컴포넌트 없음)
