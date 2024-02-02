@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="h-[69px] w-72">
+  <div class="h-20 w-72">
     <span
       class="-mb-px hover:cursor-pointer grid justify-items-stretch content-center border-b-[#d8dfe3] border-b-2 border-solid"
     >
@@ -46,6 +46,7 @@
   @apply m-0 p-0;
 }
 span {
-  @apply float-left w-36 h-[70px] hover:border-b-blue-500;
+  @apply float-left w-1/2 h-full hover:border-b-blue-500;
 }
+/* stroke를 바꾸면 색이 변함... */
 </style>
