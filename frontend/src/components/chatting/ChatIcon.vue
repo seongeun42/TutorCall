@@ -1,12 +1,24 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { type Ref, ref } from 'vue'
+import ChatBox from './ChatBox.vue'
+
+const show: Ref<boolean> = ref(false)
+const onClick: any = () => {
+  console.log('test')
+  show.value = !show.value
+}
+</script>
 
 <template>
   <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
   <div
     class="group fixed bottom-10 right-10 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-blue-500 uppercase leading-normal text-white"
   >
+    <div v-if="show" class="w-[300px] h-[500px] absolute w-50 h-50 bg-slate-100 right-10 bottom-10">
+      <ChatBox />
+    </div>
     <a
-      href="#"
+      @click="onClick()"
       data-te-ripple-init
       data-te-ripple-color="light"
       class="cursor-pointer rounded-full p-5"

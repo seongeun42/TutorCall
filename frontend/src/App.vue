@@ -5,6 +5,7 @@ import MainPage from '@/pages/mainpage/MainPage.vue'
 import Mypage from '@/pages/mypage/MyPage.vue'
 import StudentNavBar from './components/StudentNavBar.vue'
 import NotLoginNavBar from './components/NotLoginNavBar.vue'
+import ChatIcon from './components/chatting/ChatIcon.vue'
 const isTutor: Ref<boolean> = ref(false)
 const isLogin: Ref<boolean> = ref(false)
 </script>
@@ -19,6 +20,7 @@ const isLogin: Ref<boolean> = ref(false)
   </div>
   <!-- <MainPage /> -->
   <Mypage />
+  <ChatIcon />
 </template>
 
 <style scoped></style>
