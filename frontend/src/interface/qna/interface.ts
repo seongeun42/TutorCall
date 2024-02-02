@@ -36,7 +36,8 @@ export interface questionInfo{
 
 export interface questionResponse{
   questions:{
-    content: questionInfo[]
+    content: questionInfo[],
+    totalPages: number
   }
 }
 
@@ -47,4 +48,13 @@ export interface errorResponse{
 
 export interface commonResponse{
   message: string
+}
+
+export interface answerForm{
+  questionId: number,
+  answerContent: string
+}
+
+export interface answerResponse extends commonResponse{
+  questionId: number
 }

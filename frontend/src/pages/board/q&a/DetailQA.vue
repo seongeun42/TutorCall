@@ -6,12 +6,14 @@ import { onMounted, ref } from 'vue';
 import type{Ref} from 'vue';
 import * as api from '@/api/qna/qna'
 import{ type AxiosResponse, type AxiosError, isAxiosError } from 'axios';
-import type{ questionInfo, questionResponse, errorResponse } from '@/interface/qna/interface'
-import type { commonResponse } from '@/interface/account/interface';
+import type{ questionInfo, questionResponse, errorResponse, commonResponse, answerForm, answerResponse } from '@/interface/qna/interface'
+
 
 const questionData:Ref<questionInfo|null> = ref(null);
-const questionId:string = 
-  router.currentRoute.value.params['qnaNum'][0];
+  const questionId:number = Number( 
+  router.currentRoute.value.params['qnaNum']);
+
+const answerInput:Ref<string> = ref("");
 
 onMounted(async():Promise<void> =>{
 
@@ -38,6 +40,37 @@ async function deleteQuestion(event:Event):Promise<void> {
       alert(error.response?.data.message);
     }
   })
+}
+
+async function registAnswer(event:Event)
+:Promise<void>{
+  event.preventDefault();
+
+  if(answerInput.value.length==0){
+    alert("내용을 입력해 주세요!");
+    return;
+  }
+
+  const param:answerForm = {
+    questionId: questionId,
+    answerContent: answerInput.value
+  }
+
+  await api.registAnswer(param)
+  .then((response: AxiosResponse<answerResponse>)=>{
+    alert(response.data.message);
+    router.go(0);
+  })
+  .catch((error: unknown)=>{
+    if(isAxiosError<errorResponse>(error)){
+      alert(error.response?.data.message);
+    }
+  })
+  
+}
+
+function goList():void{
+  router.push({"name":'qna'});
 }
 
 </script>
@@ -76,11 +109,13 @@ async function deleteQuestion(event:Event):Promise<void> {
           placeholder="풀이를 입력해주세요"
           class="border-2 border-gray-300 mr-10 rounded-md"
           style="width: 800px; height: 80px"
+          v-model="answerInput"
         />
         <button
           type="button"
           class="inline-block rounded bg-blue-800 mt-4 px-6 py-3 pb-2 pt-2.5 text-md uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
           style="width: calc(2 * 3rem); height: 3rem"
+          @click="registAnswer($event)"
         >
           작성
         </button>
@@ -91,6 +126,7 @@ async function deleteQuestion(event:Event):Promise<void> {
         type="button"
         class="items-center rounded bg-primary mt-4 px-6 py-3 pb-2 pt-2.5 text-2xl font-bold uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
         style="width: calc(3 * 3rem); height: 3rem"
+        @click="goList"
       >
         목록
       </button>

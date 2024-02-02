@@ -1,7 +1,30 @@
 <script setup lang="ts">
-import type { answerInfo } from '@/interface/qna/interface';
+import { type errorResponse, type answerInfo, type commonResponse } from '@/interface/qna/interface';
+import * as api from '@/api/qna/qna'
+import { isAxiosError, type AxiosResponse } from 'axios';
+import router from '@/router';
+
 
 const props = defineProps<{answer:answerInfo}>();
+const questionId:number = Number( 
+  router.currentRoute.value.params['qnaNum']);
+
+async function deleteAnswer(event: Event):Promise<void>{
+
+  event.preventDefault();
+
+  await api.deleteAnswer(props.answer.id)
+  .then((response:AxiosResponse<commonResponse>)=>{
+    console.log(response);
+    alert(response.data.message);
+    router.go(0);
+  })
+  .catch((error:unknown)=>{
+    if(isAxiosError<errorResponse>(error)){
+      alert(error.response?.data.message);
+    }
+  })
+}
 </script>
 <template>
   <div class="bg-gray-100 mt-10 mb-5 mx-10 pt-5">
@@ -15,7 +38,8 @@ const props = defineProps<{answer:answerInfo}>();
           </div>
         </div>
         <div>
-          <a href="" class="text-sm mr-10">댓글 삭제</a>
+          <a href="" class="text-sm mr-10"
+          @click="deleteAnswer">댓글 삭제</a>
           <a href="" class="text-sm mr-5">수정</a>
         </div>
       </div>
