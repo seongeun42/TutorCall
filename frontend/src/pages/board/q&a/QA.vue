@@ -46,10 +46,9 @@ const nextPage = (): void => {
 async function init():Promise<void>{
 
   const param:string = `?page=${currentPage-1}&size=${size}&isEnd=${status}&keyword=${keyword.value}&tagId=${tag}`
-  console.log(param);
+  
   await api.getQnAData(param)
   .then((response: AxiosResponse<questionResponse>)=>{
-    console.log(response);
     if(response.status == 200){
       totalPages = response.data.questions.totalPages;
       questionData.value = response.data.questions.content;
