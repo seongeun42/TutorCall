@@ -2,84 +2,87 @@
 import Comments from './Comments.vue'
 import DetailProblem from './DetailProblem.vue'
 import router from '@/router/index'
-import { onMounted, ref } from 'vue';
-import type{Ref} from 'vue';
+import { onMounted, ref } from 'vue'
+import type { Ref } from 'vue'
 import * as api from '@/api/qna/qna'
-import{ type AxiosResponse, type AxiosError, isAxiosError } from 'axios';
-import type{ questionInfo, questionResponse, errorResponse, commonResponse, answerForm, answerResponse } from '@/interface/qna/interface'
+import { type AxiosResponse, type AxiosError, isAxiosError } from 'axios'
+import type {
+  questionInfo,
+  questionResponse,
+  errorResponse,
+  commonResponse,
+  answerForm,
+  answerResponse
+} from '@/interface/qna/interface'
 
+const questionData: Ref<questionInfo | null> = ref(null)
+const questionId: number = Number(router.currentRoute.value.params['qnaNum'])
 
-const questionData:Ref<questionInfo|null> = ref(null);
-  const questionId:number = Number( 
-  router.currentRoute.value.params['qnaNum']);
+const answerInput: Ref<string> = ref('')
 
-const answerInput:Ref<string> = ref("");
-
-onMounted(async():Promise<void> =>{
-
-  await api.getOneQuestionData(questionId)
-  .then((response: AxiosResponse<{question:questionInfo}>)=>{
-    questionData.value = response.data.question;
-  })
-  .catch((error: unknown)=>{
-    if(isAxiosError<errorResponse>(error)){
-      alert(error.response?.data.message);
-    }
-  })
-
+onMounted(async (): Promise<void> => {
+  await api
+    .getOneQuestionData(questionId)
+    .then((response: AxiosResponse<{ question: questionInfo }>) => {
+      questionData.value = response.data.question
+    })
+    .catch((error: unknown) => {
+      if (isAxiosError<errorResponse>(error)) {
+        alert(error.response?.data.message)
+      }
+    })
 })
 
-async function deleteQuestion(event:Event):Promise<void> {
-  event.preventDefault();
-  await api.deleteQuestion(questionId)
-  .then((response: AxiosResponse<commonResponse>)=>{
-    router.push({"name":"qna"});
-  })
-  .catch((error: unknown)=>{
-    if(isAxiosError<errorResponse>(error)){
-      alert(error.response?.data.message);
-    }
-  })
+async function deleteQuestion(event: Event): Promise<void> {
+  event.preventDefault()
+  await api
+    .deleteQuestion(questionId)
+    .then((response: AxiosResponse<commonResponse>) => {
+      router.push({ name: 'qna' })
+    })
+    .catch((error: unknown) => {
+      if (isAxiosError<errorResponse>(error)) {
+        alert(error.response?.data.message)
+      }
+    })
 }
 
-async function registAnswer(event:Event)
-:Promise<void>{
-  event.preventDefault();
+async function registAnswer(event: Event): Promise<void> {
+  event.preventDefault()
 
-  if(answerInput.value.length==0){
-    alert("내용을 입력해 주세요!");
-    return;
+  if (answerInput.value.length == 0) {
+    alert('내용을 입력해 주세요!')
+    return
   }
 
-  const param:answerForm = {
+  const param: answerForm = {
     questionId: questionId,
     answerContent: answerInput.value
   }
 
-  await api.registAnswer(param)
-  .then((response: AxiosResponse<answerResponse>)=>{
-    alert(response.data.message);
-    router.go(0);
-  })
-  .catch((error: unknown)=>{
-    if(isAxiosError<errorResponse>(error)){
-      alert(error.response?.data.message);
-    }
-  })
-  
+  await api
+    .registAnswer(param)
+    .then((response: AxiosResponse<answerResponse>) => {
+      alert(response.data.message)
+      router.go(0)
+    })
+    .catch((error: unknown) => {
+      if (isAxiosError<errorResponse>(error)) {
+        alert(error.response?.data.message)
+      }
+    })
 }
 
-function goList():void{
-  router.push({"name":'qna'});
+function goList(): void {
+  router.push({ name: 'qna' })
 }
-
 </script>
 <template>
   <div class="container mx-auto my-10">
     <div class="mx-20 my-10">
       <div class="flex justify-between items-center">
         <div class="flex items-center justify-center rounded-full w-20 h-8 bg-green-200">
-          <p>{{questionData?.tag.subject }}</p>
+          <p>{{ questionData?.tag.subject }}</p>
         </div>
         <div class="flex">
           <a href="" class="mr-3" @click="deleteQuestion($event)">글 삭제</a>
@@ -97,10 +100,10 @@ function goList():void{
         </div>
       </div>
       <hr />
-      <DetailProblem :content="questionData?.content"/>
+      <DetailProblem :content="questionData?.content" />
       <div class="bg-gray-200 pb-10 rounded-xl">
         <p class="mx-10 my-10 pt-5 font-bold text-xl">댓글</p>
-        <Comments v-for="answer in questionData?.answerList" :answer="answer"/>
+        <Comments v-for="answer in questionData?.answerList" :answer="answer" />
       </div>
       <div class="mt-20 flex justify-center">
         <img src="@/img/teacher.png" alt="" class="w-20 h-20 rounded-full mr-10" />
@@ -133,6 +136,5 @@ function goList():void{
     </div>
   </div>
 </template>
-
 
 <style scoped></style>

@@ -1,143 +1,140 @@
 <script setup lang="ts">
 import ProblemCard from './ProblemCard.vue'
 import * as api from '@/api/qna/qna'
-import {ref, onMounted, computed, watch } from 'vue';
-import type {Ref} from 'vue';
+import { ref, onMounted, computed, watch } from 'vue'
+import type { Ref } from 'vue'
 import router from '@/router/index'
-import{ type AxiosResponse, type AxiosError, isAxiosError } from 'axios';
-import type{ questionInfo, questionResponse, errorResponse } from '@/interface/qna/interface'
+import { type AxiosResponse, type AxiosError, isAxiosError } from 'axios'
+import type { questionInfo, questionResponse, errorResponse } from '@/interface/qna/interface'
 
-
-interface selectform{
-  "value":number, "name":string
+interface selectform {
+  value: number
+  name: string
 }
 
-
 let currentPage: number = 1
-const size = 10;
+const size = 10
 let totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
-let tag:string = "";
-let status:string = "";
+let tag: string = ''
+let status: string = ''
 
-
-const questionData:Ref<questionInfo[]> = ref([]);
-const originData:Ref<questionInfo[]>=ref([]);
-const schoolSelected:Ref<selectform|string> = ref('');
-const gradeSelected:Ref<selectform|string> = ref('');
-const subjectSelected:Ref<selectform|string> = ref('');
-const gradeDisabled:Ref<boolean> = ref(true);
-const subjectDisabled:Ref<boolean> = ref(true);
-const keyword:Ref<string> = ref('');
-
+const questionData: Ref<questionInfo[]> = ref([])
+const originData: Ref<questionInfo[]> = ref([])
+const schoolSelected: Ref<selectform | string> = ref('')
+const gradeSelected: Ref<selectform | string> = ref('')
+const subjectSelected: Ref<selectform | string> = ref('')
+const gradeDisabled: Ref<boolean> = ref(true)
+const subjectDisabled: Ref<boolean> = ref(true)
+const keyword: Ref<string> = ref('')
 
 const prevPage = (): void => {
   if (currentPage > 1) {
-    currentPage--;
-    init();
+    currentPage--
+    init()
   }
 }
 const nextPage = (): void => {
   if (currentPage < totalPages) {
-    currentPage++;
-    init();
+    currentPage++
+    init()
   }
 }
 
-async function init():Promise<void>{
+async function init(): Promise<void> {
+  const param: string = `?page=${currentPage - 1}&size=${size}&isEnd=${status}&keyword=${keyword.value}&tagId=${tag}`
 
-  const param:string = `?page=${currentPage-1}&size=${size}&isEnd=${status}&keyword=${keyword.value}&tagId=${tag}`
-  
-  await api.getQnAData(param)
-  .then((response: AxiosResponse<questionResponse>)=>{
-    if(response.status == 200){
-      totalPages = response.data.questions.totalPages;
-      questionData.value = response.data.questions.content;
-      originData.value = questionData.value;
-    }
-  })
-  .catch((error: unknown) =>{
-    if(isAxiosError<errorResponse>(error)){
-      alert(error.response?.data.message);
-    }
-  })
+  await api
+    .getQnAData(param)
+    .then((response: AxiosResponse<questionResponse>) => {
+      if (response.status == 200) {
+        totalPages = response.data.questions.totalPages
+        questionData.value = response.data.questions.content
+        originData.value = questionData.value
+      }
+    })
+    .catch((error: unknown) => {
+      if (isAxiosError<errorResponse>(error)) {
+        alert(error.response?.data.message)
+      }
+    })
 }
 
-function goQnADetail(id:number):void{
-  router.push({"name":"qnaDetail", "params":{"qnaNum":id}});
+function goQnADetail(id: number): void {
+  router.push({ name: 'qnaDetail', params: { qnaNum: id } })
 }
 
-onMounted(async():Promise<void> =>{
-  await init();
+onMounted(async (): Promise<void> => {
+  await init()
 })
 
-function questionFilter(isEnd: boolean, event:Event):void{
-
-    event.preventDefault();
-    status = isEnd.toString();
-    currentPage = 1;
-    init();
-  
+function questionFilter(isEnd: boolean, event: Event): void {
+  event.preventDefault()
+  status = isEnd.toString()
+  currentPage = 1
+  init()
 }
 
-function reset(event:Event):void{
-  event.preventDefault();
-  status = "";
-  keyword.value = "";
-  tag = "";
-  currentPage = 1;
-  init();
+function reset(event: Event): void {
+  event.preventDefault()
+  status = ''
+  keyword.value = ''
+  tag = ''
+  currentPage = 1
+  init()
 }
 
+const school: selectform[] = [
+  { value: 1, name: '초등학교' },
+  { value: 25, name: '중학교' },
+  { value: 37, name: '고등학교' }
+]
 
-const school:selectform[] = [
-  { value: 1, name: "초등학교"},
-  { value: 25, name: "중학교"},
-  { value: 37, name: "고등학교"}
-];
-
-let grade:selectform[] = []
+let grade: selectform[] = []
 
 watch(
-  ()=>schoolSelected.value, (oldValue) =>{
-
-  if(Number(oldValue) == 1){
-    grade = [];
-    for(let i =0; i<6; i++) grade.push({value:i*4, name:`${i+1}학년`});
-    gradeDisabled.value = false;
-    gradeSelected.value = '';
-    subjectDisabled.value = true;
-    subjectSelected.value='';
+  () => schoolSelected.value,
+  (oldValue) => {
+    if (Number(oldValue) == 1) {
+      grade = []
+      for (let i = 0; i < 6; i++) grade.push({ value: i * 4, name: `${i + 1}학년` })
+      gradeDisabled.value = false
+      gradeSelected.value = ''
+      subjectDisabled.value = true
+      subjectSelected.value = ''
+    } else if (Number(oldValue) == 25 || Number(oldValue) == 37) {
+      grade = []
+      for (let i = 0; i < 3; i++) grade.push({ value: i * 4, name: `${i + 1}학년` })
+      gradeDisabled.value = false
+      gradeSelected.value = ''
+      subjectDisabled.value = true
+      subjectSelected.value = ''
+    }
   }
-  else if(Number(oldValue) == 25 || Number(oldValue) == 37){
-    grade = [];
-    for(let i =0; i<3; i++) grade.push({value:i*4, name:`${i+1}학년`});
-    gradeDisabled.value = false;
-    gradeSelected.value = '';
-    subjectDisabled.value = true;
-    subjectSelected.value='';
-  }
-})
+)
 
 watch(
-  ()=>gradeSelected.value, (newValue, oldValue)=>{
-    if(Number(newValue) >= 0){
-      subjectDisabled.value = false;
+  () => gradeSelected.value,
+  (newValue, oldValue) => {
+    if (Number(newValue) >= 0) {
+      subjectDisabled.value = false
     }
-})
+  }
+)
 
-async function keywordSearch(event: Event):Promise<void>{
-  
-  event.preventDefault();
-  if(subjectSelected.value == ''){
-    alert("검색 조건을 다시 설정해주세요!");
+async function keywordSearch(event: Event): Promise<void> {
+  event.preventDefault()
+  if (subjectSelected.value == '') {
+    alert('검색 조건을 다시 설정해주세요!')
     return
   }
 
-  tag = (Number(schoolSelected.value)+Number(gradeSelected.value)+Number(subjectSelected.value)).toString();
-  init();
-
+  tag = (
+    Number(schoolSelected.value) +
+    Number(gradeSelected.value) +
+    Number(subjectSelected.value)
+  ).toString()
+  init()
 }
-
 </script>
 
 <template>
@@ -145,12 +142,9 @@ async function keywordSearch(event: Event):Promise<void>{
     <h2 class="font-bold text-[1.7rem] ml-20 mt-5">문제 Q&A</h2>
     <div class="flex justify-between items-center space-x-4 my-10">
       <div class="menulist">
-        <a href="" class="mr-5"
-        @click="reset">전체</a>
-        <a href="" class="mr-5"
-        @click="questionFilter(true, $event)">해결</a>
-        <a href="" class="mr-5"
-        @click="questionFilter(false, $event)">미해결</a>
+        <a href="" class="mr-5" @click="reset">전체</a>
+        <a href="" class="mr-5" @click="questionFilter(true, $event)">해결</a>
+        <a href="" class="mr-5" @click="questionFilter(false, $event)">미해결</a>
       </div>
 
       <div class="flex items-center">
@@ -158,7 +152,7 @@ async function keywordSearch(event: Event):Promise<void>{
           class="p-2 border border-gray-300 rounded-md mr-1 appearance-none"
           v-model="schoolSelected"
         >
-        <!--tag 부분 수정 필요-->
+          <!--tag 부분 수정 필요-->
           <option value="" disabled>학교 선택</option>
           <option v-for="s in school" v-bind:value="s.value">{{ s.name }}</option>
 
@@ -167,15 +161,15 @@ async function keywordSearch(event: Event):Promise<void>{
         <select
           class="p-2 border border-gray-300 rounded-md mr-1 appearance-none"
           v-model="gradeSelected"
-          :disabled = "gradeDisabled"
+          :disabled="gradeDisabled"
         >
           <option value="" disabled>학년 선택</option>
-          <option v-for = "g in grade" v-bind:value="g.value">{{ g.name }}</option>         
+          <option v-for="g in grade" v-bind:value="g.value">{{ g.name }}</option>
         </select>
         <select
           class="p-2 border border-gray-300 rounded-md mr-1 appearance-none"
           v-model="subjectSelected"
-          :disabled = "subjectDisabled"
+          :disabled="subjectDisabled"
         >
           <option value="" disabled>과목 선택</option>
           <option value="0">수학</option>
@@ -204,10 +198,12 @@ async function keywordSearch(event: Event):Promise<void>{
     </div>
 
     <div class="grid grid-cols-3 gap-3">
-      <ProblemCard v-for="data in questionData" :data="data"
-      class="mb-10"
-      @click="goQnADetail(data.questionId)"
-      /> 
+      <ProblemCard
+        v-for="data in questionData"
+        :data="data"
+        class="mb-10"
+        @click="goQnADetail(data.questionId)"
+      />
     </div>
     <div class="flex justify-center mt-8">
       <button

@@ -1,5 +1,4 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 <template>
   <div class="md flex flex-col bg-white border rounded-xl w-60">
     <div class="flex-grow">
@@ -33,7 +32,11 @@
                     />
                   </svg>
 
-                  <a href="#" class="ml-2">개인정보 수정</a>
+                  <RouterLink
+                    :to="{ name: 'userUpdate', state: { title: '개인정보 수정' } }"
+                    class="ml-2"
+                    >개인정보 수정</RouterLink
+                  >
                 </li>
                 <li class="my-5 flex">
                   <svg
@@ -53,7 +56,7 @@
                     />
                   </svg>
 
-                  <a href="#" class="ml-2">포인트 내역</a>
+                  <RouterLink :to="{ name: 'pointUsage' }" class="ml-2">포인트 내역</RouterLink>
                 </li>
                 <li class="my-5 flex">
                   <svg
@@ -75,7 +78,7 @@
                     />
                   </svg>
 
-                  <a href="#" class="ml-2">내 과외</a>
+                  <RouterLink :to="{ name: 'userMyLectures' }" class="ml-2">내 과외</RouterLink>
                 </li>
                 <li class="my-5 flex">
                   <svg
@@ -91,7 +94,7 @@
                     />
                   </svg>
 
-                  <a href="#" class="ml-2">결제정보</a>
+                  <RouterLink :to="{ name: 'paymentInfo' }" class="ml-2">결제정보</RouterLink>
                 </li>
                 <li class="my-5 flex"></li>
               </div>

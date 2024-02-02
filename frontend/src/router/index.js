@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainPage from '@/pages/mainpage/MainPage.vue'
 import SignUp from '@/pages/account/SignUp.vue'
-// import MyPage from '@/pages/mypage/MyPage.vue'
+import MyPage from '@/pages/mypage/MyPage.vue'
 import Notice from '@/pages/board/notice/Notice.vue'
 import DetailNotice from '@/pages/board/notice/DetailNotice.vue'
 import FAQArticle from '@/pages/board/notice/FAQArticle.vue'
@@ -20,7 +20,6 @@ import StudentInformationUpdate from '@/pages/mypage/student/information/Student
 import PointUsage from '@/pages/mypage/student/point/PointUsage.vue'
 import StudentMyLecture from '@/pages/mypage/student/information/StudentMyLecture.vue'
 import MyPaymentInfo from '@/pages/mypage/payment/MyPaymentInfo.vue'
-
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,74 +40,67 @@ const router = createRouter({
       // 마이페이지 및 하부요소는 수정 후 반영 예정
       path: '/mypage',
       name: 'mypage',
+      component: MyPage,
+      props: true,
       children: [
+        // 선생님 마이페이지
+        // 개인정보 수정
         {
-          // 선생님 마이페이지
-          path: '/tutor',
-          name: 'tutorMyPage',
-          children: [
-            // 개인정보 수정
-            {
-              path: '/update',
-              name: 'tutorUpdate',
-              component: InformationUpdate
-            },
-            // 리뷰 확인
-            {
-              path: '/reviews',
-              name: 'reviewCheck',
-              component: ReviewCheck
-            },
-            // 수익 통계
-            {
-              path: '/profits',
-              name: '/profitCheck',
-              component: ProfitCheck
-            },
-            // 출금
-            {
-              path: '/withdrawl',
-              name: 'withdrawl',
-              component: WithdrawlPage
-            },
-            // 내 과외
-            {
-              path: '/lectures',
-              name: 'tutorMyLectures',
-              component: MyLectureList
-            }
-          ]
+          path: '/tutorupdate',
+          name: 'tutorUpdate',
+          component: InformationUpdate,
+          props: true
         },
+        // 리뷰 확인
         {
-          // 학생 마이페이지
-          path: '/user',
-          name: 'userMyPage',
-          children: [
-            // 개인정보 수정
-            {
-              path: '/update',
-              name: 'userUpdate',
-              component: StudentInformationUpdate
-            },
-            // 포인트 내역
-            {
-              path: '/points',
-              name: 'pointUsage',
-              component: PointUsage
-            },
-            // 내 과외
-            {
-              path: '/lectures',
-              name: 'userMyLectures',
-              component: StudentMyLecture
-            },
-            // 결제 정보
-            {
-              path: '/payments',
-              name: 'paymentInfo',
-              component: MyPaymentInfo
-            }
-          ]
+          path: '/reviews',
+          name: 'reviewCheck',
+          component: ReviewCheck,
+          props: true
+        },
+        // 수익 통계
+        {
+          path: '/profits',
+          name: 'profitCheck',
+          component: ProfitCheck
+        },
+        // 출금
+        {
+          path: '/withdrawl',
+          name: 'withdrawl',
+          component: WithdrawlPage
+        },
+        // 내 과외
+        {
+          path: '/lecturelists',
+          name: 'tutorMyLectures',
+          component: MyLectureList
+        },
+
+        // 학생 마이페이지
+        // 개인정보 수정
+        {
+          path: '/userupdate',
+          name: 'userUpdate',
+          component: StudentInformationUpdate
+        },
+        // 포인트 내역
+        {
+          path: '/points',
+          name: 'pointUsage',
+          component: PointUsage
+        },
+        // 내 과외
+        {
+          path: '/mylectures',
+          name: 'userMyLectures',
+          component: StudentMyLecture
+        },
+        // 결제 정보
+        {
+          path: '/payments',
+          name: 'paymentInfo',
+          component: MyPaymentInfo
         }
       ]
     },
@@ -150,13 +142,13 @@ const router = createRouter({
       // 문제 질문 게시판
       path: '/qna',
       name: 'qna',
-      redirect: {name:'qnalist'},
+      redirect: { name: 'qnalist' },
       children: [
         // 질게 상세
         {
-          path:'list',
-          name:'qnalist',
-          component: QA,
+          path: 'list',
+          name: 'qnalist',
+          component: QA
         },
         {
           path: ':qnaNum',
@@ -187,4 +179,4 @@ const router = createRouter({
   ]
 })
 
-export default router;
+export default router
