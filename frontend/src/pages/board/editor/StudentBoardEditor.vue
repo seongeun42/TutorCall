@@ -33,8 +33,7 @@
       </div>
     </div>
     <div class="my-10">
-      <!-- <CkEditor /> -->
-      <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+      <CkEditor @update:modelValue="handleModelValueUpdate" />
     </div>
 
     <div class="my-20 flex justify-center items-center">
@@ -58,24 +57,26 @@
 
 <script setup lang="ts">
 import { ref, type Ref, onMounted } from 'vue'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import axios from 'axios'
-import CkEditor from '@/pages/board/CkEditor.vue'
+import CkEditor from '@/pages/board/editor/CkEditor.vue'
 const title: Ref<string> = ref('')
-const editor = ClassicEditor
 const editorData: Ref<string> = ref('')
-const editorConfig: Ref<any> = ref({})
 const buttonClicked: Ref<string> = ref('')
 const selctedSubject: Ref<string> = ref('')
-
+function handleModelValueUpdate(newValue: string) {
+  // 값 변경 추적 로직을 작성합니다.
+  editorData.value = newValue
+  console.log(editorData.value)
+}
 function submitPost(buttonName: string): void {
   buttonClicked.value = buttonName
   const url: string = 'http://localhost:8080/'
   const endpoint: string = buttonClicked.value === 'qna' ? 'qna/' : 'tutorcall/'
   axios
     .post(url + endpoint, {
-      title: title.value,
-      editorData: editorData.value
+      questionTitle: title.value,
+      questionContent: editorData.value,
+      tag: { subject: selctedSubject.value }
     })
     .then((response: any) => {
       if (buttonName === 'tutorcall') {
@@ -99,17 +100,5 @@ function submitPost(buttonName: string): void {
   border-radius: 8px;
   width: 100%;
   height: 40px;
-}
-</style>
-
-<style>
-.ck-toolbar__items {
-  align-items: center;
-  justify-content: center;
-}
-
-.ck-editor__editable {
-  min-height: 400px;
-  max-height: 400px;
 }
 </style>

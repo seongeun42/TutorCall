@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import './style.css'
+import './ckeditor-reset.css'
 import App from './App.vue'
 import CKEditor from '@ckeditor/ckeditor5-vue'
 

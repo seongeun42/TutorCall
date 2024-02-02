@@ -6,6 +6,8 @@ import Mypage from '@/pages/mypage/MyPage.vue'
 import StudentNavBar from '@/components/StudentNavBar.vue'
 import NotLoginNavBar from '@/components/NotLoginNavBar.vue'
 import FooterBar from '@/components/FooterBar.vue'
+import BoardEditor from './pages/board/editor/StudentBoardEditor.vue'
+import OnlineLecture from './pages/onlinelecture/OnlineLecture.vue'
 const isTutor: Ref<boolean> = ref(false)
 const isLogin: Ref<boolean> = ref(false)
 </script>
@@ -20,9 +22,10 @@ const isLogin: Ref<boolean> = ref(false)
       <StudentNavBar v-else />
     </div>
     <div class="content">
-      <Mypage />
+      <BoardEditor />
+      <!-- <OnlineLecture /> -->
     </div>
-    <FooterBar />
+    <!-- <FooterBar /> -->
   </div>
 </template>
 
