@@ -12,7 +12,7 @@ pipeline {
 
         stage('build spring project') {
             steps {
-                updateGitlabCommitStatus name: 'build', state: 'success'
+                updateGitlabCommitStatus name: 'build', state: 'pending'
                 sh 'ls -al'
             
             }
