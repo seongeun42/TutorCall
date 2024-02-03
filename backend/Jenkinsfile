@@ -14,23 +14,20 @@ pipeline {
             when {
                 expression { env.GIT_BRANCH == 'origin/backend' || env.GIT_BRANCH == 'origin/master' }
             }
-            steps {
-								updateGitlabCommitStatus name: 'test build', state: 'running'
-								
+            steps {								
                 sh 'rm -rf ./backend/src/main/resources'
                 sh 'mkdir ./backend/src/main/resources'
                 sh 'cp application.yml backend/src/main/resources'
-                sh 'cd ./backend/src/main && ls -al'
+                sh 'cd ./backend/src/main/resources && ls -al'
             }
             post {
-                success {
-										updateGitlabCommitStatus name: 'test build', state: 'success'
-                    echo "테스트 - build 성공"
-                }
-                failure {
-										updateGitlabCommitStatus name: 'test build', state: 'failed'
-                    echo "테스트 - build 실패"
-                }
+		           success {
+								echo "application.yml 복사 성공"
+							}
+							failure{
+								echo "application.yml 복사 실패"
+
+							}
             }
         }
         
@@ -39,16 +36,22 @@ pipeline {
                 expression { env.GIT_BRANCH == 'origin/backend' || env.GIT_BRANCH == 'origin/master' }
             }
             steps {
-                dir('./backend') {
+                dir('backend') {
+                    updateGitlabCommitStatus name: 'build', state: 'running'
+
                     sh 'chmod +x ./gradlew'
                     sh "./gradlew ${env.BUILD_CMD}"
                 }
             }
             post {
                 success {
+                    updateGitlabCommitStatus name: 'build', state: 'success'
+
                     echo "build 성공"
                 }
                 failure {
+                    updateGitlabCommitStatus name: 'build', state: 'failed'
+
                     echo "build 실패"
                 }
             }
