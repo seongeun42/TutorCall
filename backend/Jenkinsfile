@@ -12,6 +12,11 @@ pipeline {
 
         stage('build spring project') {
             steps {
+                gitLabCommitStatus(
+                    name: 'Deploy to Production',
+                    description: 'Deployed to production environment',
+                    state: 'success'
+                )
                 sh 'ls -al'
             
             }
