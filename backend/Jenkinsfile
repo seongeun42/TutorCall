@@ -2,22 +2,91 @@ pipeline {
     agent any
     environment {
         BACKEND = 'backend'
-        TAG = 'latest'
+        TAG = 'test'
         RENAME_JAR = 'backend'
         BUILD_CMD = 'bootJar'
         WORKSPACE_DIR = ''
+        TEST_BUILD_CMD = 'bootJar'
     }
-    stages {        
-       
-
-        stage('build spring project') {
+    
+    stages {
+        stage('application.yml 삭제') { // application.yml이 있는 경우 삭제
+            when {
+                expression { env.GIT_BRANCH == 'origin/backend' || env.GIT_BRANCH == 'origin/master' }
+            }
             steps {
-                updateGitlabCommitStatus name: 'build', state: 'success'
-                sh 'ls -al'
-            
+								updateGitlabCommitStatus name: 'test build', state: 'running'
+								
+                sh 'rm -rf ./backend/src/main/resources'
+                sh 'mkdir ./backend/src/main/resources'
+                sh 'cp application.yml backend/src/main/resources'
+                sh 'cd ./backend/src/main && ls -al'
+            }
+            post {
+                success {
+										updateGitlabCommitStatus name: 'test build', state: 'success'
+                    echo "테스트 - build 성공"
+                }
+                failure {
+										updateGitlabCommitStatus name: 'test build', state: 'failed'
+                    echo "테스트 - build 실패"
+                }
             }
         }
-
+        
+        stage('테스트 빌드하기') { // 테스트 빌드하기
+            when {
+                expression { env.GIT_BRANCH == 'origin/backend' || env.GIT_BRANCH == 'origin/master' }
+            }
+            steps {
+                dir('./backend') {
+                    sh 'chmod +x ./gradlew'
+                    sh "./gradlew ${env.BUILD_CMD}"
+                }
+            }
+            post {
+                success {
+                    echo "build 성공"
+                }
+                failure {
+                    echo "build 실패"
+                }
+            }
+        }
+        
+        stage('컨테이너 삭제') {
+            when {
+                expression { env.GIT_BRANCH == 'origin/master' }
+            }
+            steps {
+                script {
+                    try {
+                        sh 'docker image prune -a -f'
+												sh "docker rm -f \$(docker ps -aqf \"name=^/${env.BACKEND}\$\")"
+												sh "docker rmi ${env.BACKEND}"
+                    } catch(e) {
+                        echo 'docker clear fail!'
+                    }
+                }
+            }
+        }
+        
+        stage('배포') {
+            when {
+                expression { env.GIT_BRANCH == 'origin/master' }
+            }
+            steps {
+                sh 'docker build -t ${env.TAG}:v1.0 .'
+                sh "docker run -d -p 8088:8080 --name ${env.BACKEND} ${env.TAG}:v1.0"
+            }
+            post {
+                success {
+                    echo "성공적으로 배포되었습니다."
+                }
+                failure {
+                    echo "배포 실패"
+                }
+            }
+        }
     }
 }
-
