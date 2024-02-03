@@ -18,7 +18,9 @@ const userStore = useUserStore()
     <NavBar v-if="userStore.isTutor" />
     <StudentNavBar v-else />
   </div>
-  <RouterView id="main" />
+  <div class="min-h-[1000px]">
+    <RouterView id="main" />
+  </div>
   <FooterBar />
 </template>
 
