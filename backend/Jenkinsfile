@@ -8,6 +8,7 @@ pipeline {
         WORKSPACE_DIR = ''
         TEST_BUILD_CMD = 'bootJar'
     }
+   
     stages {
         stage('프론트 테스트 빌드') {
             when {
@@ -32,8 +33,6 @@ pipeline {
                 }
             }
         }
-    }
-    stages {
         stage('application.yml 삭제') { // application.yml이 있는 경우 삭제
             when {
                 expression { env.GIT_BRANCH == 'origin/backend' || env.GIT_BRANCH == 'origin/master' }
