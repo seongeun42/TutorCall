@@ -8,6 +8,9 @@ import { useUserStore } from '@/store/userStore'
 import editor from '@/pages/board/editor/CkEditor.vue'
 
 const userStore = useUserStore()
+import ChatIcon from './components/chatting/ChatIcon.vue'
+const isTutor: Ref<boolean> = ref(false)
+const isLogin: Ref<boolean> = ref(false)
 </script>
 
 <template>
@@ -23,6 +26,7 @@ const userStore = useUserStore()
     <editor/>
   </div>
   <FooterBar />
+  <ChatIcon />
 </template>
 
 <style scoped></style>

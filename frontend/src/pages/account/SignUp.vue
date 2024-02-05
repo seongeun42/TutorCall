@@ -70,7 +70,6 @@ async function receiveEmailCode() {
     alert('이메일 형식이 아닙니다.')
     return
   }
-
   await api.sendEmailCode({email:emailAddr.value})
   .then((response: AxiosResponse<commonResponse>)=>{
     if(response.status == 201) alert(response.data.message);
