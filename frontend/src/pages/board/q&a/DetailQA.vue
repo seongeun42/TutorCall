@@ -5,22 +5,10 @@ import router from '@/router/index'
 import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import * as api from '@/api/qna/qna'
-<<<<<<< HEAD
-import { type AxiosResponse, type AxiosError, isAxiosError } from 'axios'
-import type {
-  questionInfo,
-  questionResponse,
-  errorResponse,
-  commonResponse,
-  answerForm,
-  answerResponse
-} from '@/interface/qna/interface'
-=======
 import{ type AxiosResponse, type AxiosError, isAxiosError } from 'axios';
 import type{ questionInfo, answerForm, answerResponse } from '@/interface/qna/interface'
 
 import type { errorResponse, commonResponse } from '@/interface/common/interface'
->>>>>>> cbf34da (Feat: 수정, 작성 빼고 연결)
 
 const questionData: Ref<questionInfo | null> = ref(null)
 const questionId: number = Number(router.currentRoute.value.params['qnaNum'])

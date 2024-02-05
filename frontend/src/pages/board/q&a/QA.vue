@@ -4,14 +4,9 @@ import * as api from '@/api/qna/qna'
 import { ref, onMounted, computed, watch } from 'vue'
 import type { Ref } from 'vue'
 import router from '@/router/index'
-<<<<<<< HEAD
-import { type AxiosResponse, type AxiosError, isAxiosError } from 'axios'
-import type { questionInfo, questionResponse, errorResponse } from '@/interface/qna/interface'
-=======
 import{ type AxiosResponse, type AxiosError, isAxiosError } from 'axios';
 import type{ questionInfo, questionResponse } from '@/interface/qna/interface'
 import type { errorResponse } from '@/interface/common/interface';
->>>>>>> cbf34da (Feat: 수정, 작성 빼고 연결)
 
 interface selectform {
   value: number
