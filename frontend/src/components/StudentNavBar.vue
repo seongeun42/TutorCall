@@ -18,7 +18,15 @@ function handleMode(show: boolean, mode: string) {
   //mode에 따라 수행할 기능이 다름.
 }
 
-const userStore = useUserStore()
+const userStore = useUserStore();
+
+function goQnABoard():void{
+  router.push({"name":"qna"});
+}
+
+function goLectureBoard():void{
+  router.push({"name":"lecturesPromo"});
+}
 </script>
 
 <template>
@@ -33,11 +41,12 @@ const userStore = useUserStore()
           <div class="hidden sm:ml-6 sm:block flex-1 justify-evenly">
             <div class="flex space-x-4 justify-evenly">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              <router-link
+              <a
                 to="/lecturespromotion"
                 class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
                 aria-current="page"
-                >과외 모집</router-link
+                @click="goLectureBoard"
+                >과외 모집</a
               >
               <router-link
                 to="/qna"
@@ -117,39 +126,6 @@ const userStore = useUserStore()
               From: "transform opacity-100 scale-100"
               To: "transform opacity-0 scale-95"
           -->
-            <div
-              class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-              role="menu"
-              aria-orientation="vertical"
-              aria-labelledby="user-menu-button"
-              tabindex="-1"
-            >
-              <!-- Active: "bg-gray-100", Not Active: "" -->
-              <!-- <a
-                href="#"
-                class="block px-4 py-2 text-sm text-gray-700"
-                role="menuitem"
-                tabindex="-1"
-                id="user-menu-item-0"
-                >Your Profile</a
-              >
-              <a
-                href="#"
-                class="block px-4 py-2 text-sm text-gray-700"
-                role="menuitem"
-                tabindex="-1"
-                id="user-menu-item-1"
-                >Settings</a
-              >
-              <a
-                href="#"
-                class="block px-4 py-2 text-sm text-gray-700"
-                role="menuitem"
-                tabindex="-1"
-                id="user-menu-item-2"
-                >Sign out</a
-              > -->
-            </div>
           </div>
         </div>
       </div>

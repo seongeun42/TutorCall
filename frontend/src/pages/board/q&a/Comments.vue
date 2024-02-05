@@ -1,5 +1,10 @@
 <script setup lang="ts">
+<<<<<<< HEAD
 import { type errorResponse, type answerInfo, type commonResponse } from '@/interface/qna/interface'
+=======
+import {type answerInfo } from '@/interface/qna/interface';
+import {type errorResponse, type commonResponse} from '@/interface/common/interface'
+>>>>>>> cbf34da (Feat: 수정, 작성 빼고 연결)
 import * as api from '@/api/qna/qna'
 import { isAxiosError, type AxiosResponse } from 'axios'
 import router from '@/router'

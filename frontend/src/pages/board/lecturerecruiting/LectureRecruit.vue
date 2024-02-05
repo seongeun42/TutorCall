@@ -1,3 +1,51 @@
+<script setup lang="ts">
+import TutorCard from './TutorCard.vue'
+import { onMounted, ref, type Ref } from 'vue';
+import * as api from '@/api/lectureBoard/lectureBoard'
+import type { lecture, lectureResponse } from '@/interface/lectureBoard/interface';
+import { isAxiosError, type AxiosResponse } from 'axios';
+import type { errorResponse } from '@/interface/common/interface';
+
+let selectedSubject: string = ''
+let currentPage: number = 1
+let tag:string = "";
+const size = 10;
+const totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
+const searchKeyword = ref("");
+const lectureData:Ref<lecture[]> = ref([]); 
+
+const prevPage = (): void => {
+  if (currentPage > 1) {
+    currentPage--
+  }
+}
+
+const nextPage = (): void => {
+  if (currentPage < totalPages) {
+    currentPage++
+  }
+}
+
+async function init():Promise<void>{
+
+  const param:string = `page=${currentPage-1}&tag=${tag}&keyword=${searchKeyword.value}&state=true&size=${size}`
+
+  await api.lectureList(param)
+  .then((response: AxiosResponse<lectureResponse>)=>{
+    lectureData.value = response.data.content;
+  })
+  .catch((error: unknown)=>{
+    if(isAxiosError<errorResponse>(error)){
+      alert(error.response?.data.message);
+    }
+  })
+  
+}
+
+onMounted(()=>{
+  init();
+})
+</script>
 <template>
   <div class="container mx-auto">
     <h2 class="font-bold text-[1.7rem] mt-5 ml-20">과외 모집</h2>
@@ -30,7 +78,7 @@
         </button>
       </div>
     </div>
-    <TutorCard />
+    <TutorCard v-for="lecture in lectureData" :data="lecture"/>
     <div class="flex justify-center mt-8">
       <button
         type="button"
@@ -52,26 +100,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import TutorCard from './TutorCard.vue'
-let selectedSubject: string = ''
-let currentPage: number = 1
-const totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
-
-const prevPage = (): void => {
-  if (currentPage > 1) {
-    currentPage--
-  }
-}
-
-const nextPage = (): void => {
-  if (currentPage < totalPages) {
-    currentPage++
-  }
-}
-</script>
-
 <style scoped>
 /* 요소들을 감싸고 있는 div에 패딩 추가 */
 .container {
