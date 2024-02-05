@@ -12,6 +12,6 @@
     "noEmit": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "types": ["node", "pinia-plugin-persist"]
+    "types": ["node"]
   }
 }
