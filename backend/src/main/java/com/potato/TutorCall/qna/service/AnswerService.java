@@ -1,6 +1,7 @@
 package com.potato.TutorCall.qna.service;
 
-import com.potato.TutorCall.exception.customException.InvalidException;
+import com.potato.TutorCall.exception.customException.DuplicatedException;
+import com.potato.TutorCall.exception.customException.ForbiddenException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.qna.domain.Answer;
 import com.potato.TutorCall.qna.domain.Question;
@@ -10,7 +11,6 @@ import com.potato.TutorCall.qna.repository.AnswerRepository;
 import com.potato.TutorCall.qna.repository.QuestionRepository;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutor.repository.TutorRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +30,7 @@ public class AnswerService {
     this.answerRepository = answerRepository;
   }
 
-  public ResponseEntity<?> writeAnswer(AnswerWriteDto answerWriteDto, long userId) {
+  public CommonResponseDto writeAnswer(AnswerWriteDto answerWriteDto, long userId) {
 
     answerWriteDto.setTutorUserId(userId);
     Tutor tutor =
@@ -43,53 +43,53 @@ public class AnswerService {
             .orElseThrow(() -> new NotFoundException("답변 작성 실패"));
 
     Long answerId = null;
-    CommonResponseDto commonResponseDto;
 
     answerId = answerRepository.writeAnswer(answerWriteDto, tutor, targetQuestion);
 
     if (answerId == null) throw new NotFoundException("질문 작성 실패");
 
-    commonResponseDto =
-        CommonResponseDto.builder().answerId(answerId).message("답변이 생성되었습니다.").build();
-
-    return ResponseEntity.ok(commonResponseDto);
+    return CommonResponseDto.builder().answerId(answerId).message("답변이 생성되었습니다.").build();
   }
 
   @Transactional
-  public ResponseEntity<?> deleteAnswer(int answerId, long userId) {
+  public CommonResponseDto deleteAnswer(int answerId, long userId) {
 
-    CommonResponseDto commonResponseDto;
     Answer targetAnswer =
         answerRepository
             .findById((long) answerId)
             .orElseThrow(() -> new NotFoundException("질문 삭제 실패"));
 
-    if (!targetAnswer.getTutor().getId().equals(userId)) throw new InvalidException("삭제 권한 없음");
+    if (!targetAnswer.getTutor().getId().equals(userId)) throw new ForbiddenException("삭제 권한 없음");
 
     int count = answerRepository.deleteQuestion((long) answerId, true);
     if (count == 0) throw new NotFoundException("질문 삭제 실패");
 
-    commonResponseDto = CommonResponseDto.builder().message("답변 삭제 완료.").build();
-    return ResponseEntity.ok(commonResponseDto);
+    return CommonResponseDto.builder().message("답변 삭제 완료.").build();
   }
 
   @Transactional
-  public ResponseEntity<?> chooseAnswer(int answerId, long userId) {
-
-    CommonResponseDto commonResponseDto;
+  public CommonResponseDto chooseAnswer(int answerId, long userId) {
 
     Answer targetAnswer =
         answerRepository
             .findById((long) answerId)
             .orElseThrow(() -> new NotFoundException("답변 채택 실패"));
 
+    Question targetQuestion =
+        questionRepository
+            .findById(targetAnswer.getQuestion().getId())
+            .orElseThrow(() -> new NotFoundException("답변 채택 실패"));
+
+    if (targetQuestion.isEnd()) throw new DuplicatedException("이미 채택된 질문입니다.");
+
     if (!targetAnswer.getQuestion().getWriter().getId().equals(userId))
-      throw new InvalidException("권한 없음");
+      throw new ForbiddenException("권한 없음");
 
     int count = answerRepository.chooseAnswer((long) answerId, true);
     if (count == 0) throw new NotFoundException("답변 채택 실패");
 
-    commonResponseDto = CommonResponseDto.builder().message("답변 채택 완료.").build();
-    return ResponseEntity.ok(commonResponseDto);
+    targetQuestion.ended();
+
+    return CommonResponseDto.builder().message("답변 채택 완료.").build();
   }
 }

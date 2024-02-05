@@ -1,38 +1,42 @@
 package com.potato.TutorCall.config;
 
 import java.util.Arrays;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@EnableWebMvc
+// @EnableWebMvc
+@RequiredArgsConstructor
 public class SecurityConfig {
-  @Bean
-  public BCryptPasswordEncoder bCryptPasswordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+
+  private final SavedRequestAwareAuthenticationSuccessHandler successHandler;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.oauth2Login(
             oauth2 ->
-                oauth2.authorizationEndpoint(
-                    endpoint -> endpoint.baseUri("/api/v1/auth/oath2")) // auth 요청 보낼 URI
-            // TODO .successHandler() 구현하기
+                oauth2
+                    .authorizationEndpoint(endpoint -> endpoint.baseUri("/auth/login"))
+                    .successHandler(successHandler)
             // TODO .failureHandler() 구현하기
             )
         .cors(cors -> cors.configurationSource(this.configurationSource())) // cors 설정
         .csrf(csrf -> csrf.disable()) // csrf설정 비활성화
         .formLogin(form -> form.disable()) // form login 비활성화
         .httpBasic(basic -> basic.disable()) // http basic 비활성화
-        .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()); // 어떤 요청이든 허용
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers("/test/data")
+                    .authenticated()
+                    .anyRequest()
+                    .permitAll()); // 어떤 요청이든 허용
     return http.build();
   }
 

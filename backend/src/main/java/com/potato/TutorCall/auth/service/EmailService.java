@@ -1,6 +1,6 @@
 package com.potato.TutorCall.auth.service;
 
-import com.potato.TutorCall.auth.CodeRepositorty;
+import com.potato.TutorCall.auth.CodeRepository;
 import com.potato.TutorCall.auth.dto.SendEmailDto;
 import com.potato.TutorCall.user.service.UserService;
 import jakarta.mail.MessagingException;
@@ -20,7 +20,7 @@ public class EmailService {
 
   private final JavaMailSender emailSender;
   private final UserService userService;
-  private final CodeRepositorty codeRepositorty;
+  private final CodeRepository codeRepository;
 
   public void sendEmail(SendEmailDto sendEmailDto) throws MessagingException {
     MimeMessage message = emailSender.createMimeMessage();
@@ -50,10 +50,10 @@ public class EmailService {
 
   public boolean emailCheck(String email, String code) throws BadRequestException {
     // User user = this.userService.findUserByEmail(email);
-    String findCode = this.codeRepositorty.getCode(email); // 이메일로 받아옴
+    String findCode = this.codeRepository.getCode(email); // 이메일로 받아옴
     if (findCode == null) throw new BadRequestException("다시 시도해주세요.");
     if (!code.equals(findCode)) throw new BadRequestException("다시 시도해주세요.");
-    codeRepositorty.deleteCode(email);
+    codeRepository.deleteCode(email);
     return true;
   }
 }
