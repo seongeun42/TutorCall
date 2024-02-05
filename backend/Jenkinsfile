@@ -17,7 +17,7 @@ pipeline {
             steps {								
                 sh 'rm -rf ./backend/src/main/resources'
                 sh 'mkdir ./backend/src/main/resources'
-                sh 'cp application.yml backend/src/main/resources'
+                sh 'cp ../application.yml backend/src/main/resources'
                 sh 'cd ./backend/src/main/resources && ls -al'
             }
             post {
