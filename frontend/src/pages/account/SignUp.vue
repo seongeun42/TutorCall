@@ -5,17 +5,10 @@ import SelectRole from './SelectRole.vue'
 import * as api from '@/api/login/signUp'
 import router from '@/router/index'
 import { useUserStore } from '@/store/userStore'
-import type {
-  commonResponse,
-  emailSend,
-  emailCodeCheck,
-  nickCheck,
-  loginForm,
-  signUpForm,
-  signUpResponse,
-  user,
-  errorResponse
-} from '@/interface/account/interface'
+import type{ emailCodeCheck,
+    nickCheck, loginForm, signUpForm, signUpResponse, user, accountErrorResponse } from '@/interface/account/interface'
+
+import type { commonResponse, errorResponse } from '@/interface/common/interface'
 import { isAxiosError, type AxiosResponse } from 'axios'
 
 // import exp from 'constants'
@@ -78,35 +71,36 @@ async function receiveEmailCode() {
     return
   }
 
-  await api
-    .sendEmailCode({ email: emailAddr.value })
-    .then((response: AxiosResponse<commonResponse>) => {
-      if (response.status == 201) alert(response.data.message)
-    })
-    .catch((error: unknown) => {
-      if (isAxiosError<errorResponse>(error)) {
-        alert(error.response?.data.message)
-      }
-    })
+  await api.sendEmailCode({email:emailAddr.value})
+  .then((response: AxiosResponse<commonResponse>)=>{
+    if(response.status == 201) alert(response.data.message);
+  })
+  .catch((error: unknown)=>{
+    if(isAxiosError<accountErrorResponse>(error)){
+      alert(error.response?.data.message);
+    }
+  })
+
 }
 
-async function checkEmailValidCode() {
-  const param: emailCodeCheck = {
-    email: emailAddr.value,
-    code: vaildCode.value
-  }
+async function checkEmailValidCode(){
 
-  await api
-    .checkCode(param)
-    .then((response: AxiosResponse<commonResponse>) => {
-      alert(response.data.message)
-      isEmailChecked.value = true
-    })
-    .catch((error: unknown) => {
-      if (isAxiosError<errorResponse>(error)) {
-        alert(error.response?.data.message)
-      }
-    })
+  const param:emailCodeCheck = {
+    'email':emailAddr.value,
+    'code':vaildCode.value
+  };
+
+  await api.checkCode(param)
+  .then((response: AxiosResponse<commonResponse>)=>{
+    alert(response.data.message);
+    isEmailChecked.value = true;
+  })
+  .catch((error: unknown)=>{
+    if(isAxiosError<accountErrorResponse>(error)){
+      alert(error.response?.data.message);
+    }
+  })
+
 }
 
 function checkPassword(): boolean {
@@ -154,6 +148,7 @@ async function doSignUp(event: Event) {
     alert('입력 다시 확인')
   }
 }
+
 
 async function doLogin(event: Event) {
   event.preventDefault()

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue'
 import NavBar from '@/components/NavBar.vue'
 import FooterBar from '@/components/FooterBar.vue'
 import StudentNavBar from './components/StudentNavBar.vue'
 import NotLoginNavBar from './components/NotLoginNavBar.vue'
 import { RouterView } from 'vue-router'
 import { useUserStore } from '@/store/userStore'
+import editor from '@/pages/board/editor/CkEditor.vue'
 
 const userStore = useUserStore()
 </script>
@@ -19,7 +19,8 @@ const userStore = useUserStore()
     <StudentNavBar v-else />
   </div>
   <div class="min-h-[1000px]">
-    <RouterView id="main" />
+    <!-- <RouterView id="main" /> -->
+    <editor/>
   </div>
   <FooterBar />
 </template>

@@ -1,12 +1,7 @@
-import { instance } from '@/axios/axiosCofig'
-import type { AxiosResponse } from 'axios'
-import type {
-  questionInfo,
-  questionResponse,
-  commonResponse,
-  answerForm,
-  answerResponse
-} from '@/interface/qna/interface'
+import { instance } from '@/axios/axiosConfig'
+import type{ AxiosResponse } from 'axios';
+import type{ questionInfo, questionResponse, answerForm, answerResponse } from '@/interface/qna/interface'
+import type { commonResponse } from '@/interface/common/interface';
 
 export async function getQnAData(param: string): Promise<AxiosResponse<questionResponse>> {
   const url = import.meta.env.VITE_VUE_API_URL + '/qna/question' + param

@@ -1,7 +1,21 @@
+<script setup lang="ts">
+import type { lecture, detailLecture } from '@/interface/lectureBoard/interface';
+import * as api from '@/api/lectureBoard/lectureBoard'
+import type { AxiosResponse } from 'axios';
+import router from '@/router';
+
+const props = defineProps<{"data":lecture}>();
+
+function showDetail(event:Event):void{
+  event.preventDefault();
+  router.push({"name":'lectureDetail', params:{'promotionNum':props.data.id}});
+
+}
+</script>
 <template>
   <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->
   <div class="flex flex-wrap justify-around">
-    <div v-for="index in 9" :key="index" class="mb-4">
+    <div class="mb-4">
       <div
         class="w-250 h-200 block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700"
       >
@@ -16,26 +30,26 @@
             ></div>
           </a>
         </div>
-        <div class="p-6 mb-10">
+        <div class="p-6 mb-10" @click="showDetail($event)">
           <div class="flex mb-5">
             <div class="bg-blue-300 p-2 rounded-full aspect-w-2 aspect-h-1 mr-2">
-              <p class="text-white">수학</p>
+              <p class="text-white">{{ props.data.tag.subject }}</p>
             </div>
             <div class="bg-green-300 p-2 rounded-full aspect-w-2 aspect-h-1">
-              <p class="text-white">2/7</p>
+              <p class="text-white">{{ props.data.promotionState }}</p>
             </div>
           </div>
           <h5 class="mb-2 text-xl font-bold leading-tight text-neutral-800 dark:text-neutral-50">
-            제자 모집
+            {{ props.data.title }}
           </h5>
           <p class="mb-4 text-base text-neutral-600 dark:text-neutral-200">
-            수능 수학은 발로도 풉니다. 저만 믿고 따라오세요!
+            {{ props.data.content }}
           </p>
           <div class="flex justify-between items-center">
             <div class="flex items-center mb-5">
               <img src="@/img/teacher.png" alt="" class="w-10 h-10 rounded-full" />
-              <p>한석원</p>
-              <p class="ml-3 text-xs text-gray-500">3시간전</p>
+              <p>{{ props.data.tutor.nickname }}</p>
+              <p class="ml-3 text-xs text-gray-500">{{ props.data.createdAt }}</p>
             </div>
             <button
               type="button"
@@ -51,7 +65,4 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts"></script>
-
 <style></style>

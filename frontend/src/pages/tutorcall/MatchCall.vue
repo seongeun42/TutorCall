@@ -5,7 +5,7 @@ import MatchText from '@/pages/tutorcall/MatchText.vue'
 
 <template>
   <div>
-    <FloatObject position-y="50" size="300" position-x="50" />
+    <FloatObject :position-y="50" :size="300" :position-x="50" />
   </div>
 </template>
 

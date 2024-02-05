@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { type errorResponse, type answerInfo, type commonResponse } from '@/interface/qna/interface'
+import {type answerInfo } from '@/interface/qna/interface';
+import {type errorResponse, type commonResponse} from '@/interface/common/interface'
 import * as api from '@/api/qna/qna'
 import { isAxiosError, type AxiosResponse } from 'axios'
 import router from '@/router'
