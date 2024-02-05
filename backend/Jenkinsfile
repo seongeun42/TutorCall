@@ -20,16 +20,18 @@ pipeline {
                 }
             }
             post {
-		           success {
-								echo "프론트 빌드 성공"
-							}
-							failure{
-								echo "프론트 빌드 실패"
+                success {
+                    updateGitlabCommitStatus name: 'build', state: 'success'
 
-							}
+                    echo "build 성공"
+                }
+                failure {
+                    updateGitlabCommitStatus name: 'build', state: 'failed'
+
+                    echo "build 실패"
+                }
             }
         }
-
     }
     stages {
         stage('application.yml 삭제') { // application.yml이 있는 경우 삭제
