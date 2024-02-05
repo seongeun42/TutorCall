@@ -115,9 +115,13 @@ const router = createRouter({
       // 공지사항 게시판
       path: '/notice',
       name: 'notice',
-      component: Notice,
       children: [
         // 공지사항 상세
+        {
+          path:'',
+          name:'noticeList',
+          component: Notice
+        },
         {
           path: ':noticeNum',
           name: 'noticeDetail',
@@ -135,9 +139,13 @@ const router = createRouter({
       // 과외 구하는 모집 및 홍보 게시판
       path: '/lecturespromotion',
       name: 'lecturesPromo',
-      component: LectureRecruit,
       children: [
         // 모홍게 상세
+        {
+          path:'',
+          name:'lectureList',
+          component:LectureRecruit
+        },
         {
           path: ':promotionNum',
           name: 'lectureDetail',
@@ -149,9 +157,13 @@ const router = createRouter({
       // 문제 질문 게시판
       path: '/qna',
       name: 'qna',
-      component: QA,
       children: [
         // 질게 상세
+        {
+          path:'',
+          name:'qnaList',
+          component: QA
+        },
         {
           path: ':qnaNum',
           name: 'qnaDetail',

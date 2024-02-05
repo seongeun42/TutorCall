@@ -18,7 +18,15 @@ function handleMode(show: boolean, mode: string) {
   //mode에 따라 수행할 기능이 다름.
 }
 
-const userStore = useUserStore()
+const userStore = useUserStore();
+
+function goQnABoard():void{
+  router.push({"name":"qna"});
+}
+
+function goLectureBoard():void{
+  router.push({"name":"lecturesPromo"});
+}
 </script>
 
 <template>
@@ -33,11 +41,12 @@ const userStore = useUserStore()
           <div class="hidden sm:ml-6 sm:block flex-1 justify-evenly">
             <div class="flex space-x-4 justify-evenly">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              <router-link
+              <a
                 to="/lecturespromotion"
                 class="font-semibold inline-block text-black-500 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm"
                 aria-current="page"
-                >과외 모집</router-link
+                @click="goLectureBoard"
+                >과외 모집</a
               >
               <router-link
                 to="/qna"

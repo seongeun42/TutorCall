@@ -1,6 +1,4 @@
-export interface commonResponse {
-  message: string
-}
+import type{ commonResponse, errorResponse } from '@/interface/common/interface'
 
 export interface signUpResponse extends commonResponse {
   id: string
@@ -14,11 +12,9 @@ export interface user {
   profile: string
 }
 
-export interface errorResponse {
-  timestamp: string
-  status: number
-  error: string
-  message: string
+export interface accountErrorResponse extends errorResponse{
+    status: number,
+    error: string,
 }
 
 export interface emailSend {

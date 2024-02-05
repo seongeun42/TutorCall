@@ -1,15 +1,4 @@
-export interface tagInfo {
-  id: number
-  subject: string
-  level: string
-  grade: number
-}
-
-export interface user {
-  id: number
-  nickname: string
-  profile: string
-}
+import type{user, tagInfo, commonResponse} from '@/interface/common/interface'
 
 export interface answerInfo {
   chosen: boolean
@@ -40,14 +29,6 @@ export interface questionResponse {
   }
 }
 
-export interface errorResponse {
-  timestamp: string
-  message: string
-}
-
-export interface commonResponse {
-  message: string
-}
 
 export interface answerForm {
   questionId: number
