@@ -46,7 +46,9 @@ public class QnaController {
   @CommonResponses
   @Operation(summary = "새 질문 작성", description = "새 질문 작성")
   @PostMapping("/question")
-  public ResponseEntity<?> writeQuestion(@RequestBody QuestionWriteDto questionWriteDto) {
+  public ResponseEntity<?> writeQuestion(@RequestBody QuestionWriteDto questionWriteDto, HttpSession session) {
+    UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+    questionWriteDto.setWriterId(userSessionDto.getId());
     return ResponseEntity.ok(questionService.writeQuestion(questionWriteDto));
   }
 

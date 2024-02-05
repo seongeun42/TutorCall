@@ -22,8 +22,9 @@ public class LecturePromotionResponseDto {
     private final TutorDetailDto tutor;
     private final LocalDateTime promotionCreatedAt;
     private final LocalDateTime promotionDue;
+    private final boolean isParticipated;
 
-    public LecturePromotionResponseDto(Lecture lecture) {
+    public LecturePromotionResponseDto(Lecture lecture, boolean isParticipated) {
         this.id = lecture.getId();
         this.promotionTitle = lecture.getPromotionTitle();
         this.promotionContent = lecture.getPromotionContent();
@@ -35,6 +36,7 @@ public class LecturePromotionResponseDto {
         this.tutor = TutorDetailDto.builder().tutor(lecture.getTutor()).build();
         this.promotionCreatedAt = lecture.getPromotionCreatedAt();
         this.promotionDue = lecture.getPromotionDue();
+        this.isParticipated = isParticipated;
     }
 
 }
