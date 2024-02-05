@@ -1,10 +1,10 @@
 package com.potato.TutorCall.auth.dto.request;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
 public class SignupRequestDto {
-  private final String email;
-  private final String password;
-  private final String nickname;
+  private String email;
+  private String password;
+  private String nickname;
 }

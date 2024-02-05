@@ -7,9 +7,7 @@
 ```
 git config commit.template .gitmessage.txt
 ```
-test
-### 자바 auto lint
-
+## 자바 auto lint
 * 프로젝트의 .git/hooks/ 폴더 안에 **pre-commit** 파일 생성
 ```
 // bash에서
@@ -58,6 +56,7 @@ cd ..
 git add .
 ```
 edit
+
 
 * pre-commit 실행 권한 부여
 ```

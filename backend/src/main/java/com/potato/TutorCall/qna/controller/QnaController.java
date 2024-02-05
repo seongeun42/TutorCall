@@ -32,21 +32,25 @@ public class QnaController {
   @Operation(summary = "Q&A 게시글 선택 조회", description = "questionId에 맞는 q&a 게시글 스펙 반환")
   @GetMapping("/question/{questionId}")
   public ResponseEntity<?> question(@PathVariable("questionId") int questionId) {
-    return questionService.question(questionId);
+    return ResponseEntity.ok(questionService.question(questionId));
   }
 
   @CommonResponses
   @Operation(summary = "Q&A 게시판 전체 조회", description = "전체 게시글 가져옴")
   @GetMapping("/question")
   public ResponseEntity<?> questionAll(Pageable pageable, SearchFormDto pageNationDto) {
-    return questionService.questionAll(pageable, pageNationDto);
+
+    return ResponseEntity.ok(questionService.questionAll(pageable, pageNationDto));
   }
 
   @CommonResponses
   @Operation(summary = "새 질문 작성", description = "새 질문 작성")
   @PostMapping("/question")
-  public ResponseEntity<?> writeQuestion(@RequestBody QuestionWriteDto questionWriteDto) {
-    return questionService.writeQuestion(questionWriteDto);
+  public ResponseEntity<?> writeQuestion(
+      @RequestBody QuestionWriteDto questionWriteDto, HttpSession session) {
+    UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+    questionWriteDto.setWriterId(userSessionDto.getId());
+    return ResponseEntity.ok(questionService.writeQuestion(questionWriteDto));
   }
 
   @CommonResponses
@@ -57,7 +61,8 @@ public class QnaController {
       @RequestBody QuestionWriteDto questionWriteDto,
       HttpSession session) {
     UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
-    return questionService.editQuestion(questionId, questionWriteDto, userSessionDto.getId());
+    return ResponseEntity.ok(
+        questionService.editQuestion(questionId, questionWriteDto, userSessionDto.getId()));
   }
 
   @CommonResponses
@@ -67,7 +72,7 @@ public class QnaController {
       @PathVariable("questionId") int questionId, HttpSession session) {
 
     UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
-    return questionService.deleteQuestion(questionId, userSessionDto.getId());
+    return ResponseEntity.ok(questionService.deleteQuestion(questionId, userSessionDto.getId()));
   }
 
   @CommonResponses
@@ -76,16 +81,16 @@ public class QnaController {
   public ResponseEntity<?> writeAnswer(
       @RequestBody AnswerWriteDto answerWriteDto, HttpSession session) {
     UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
-    return answerService.writeAnswer(answerWriteDto, userSessionDto.getId());
+    return ResponseEntity.ok(answerService.writeAnswer(answerWriteDto, userSessionDto.getId()));
   }
 
   @CommonResponses
   @Operation(summary = "답변 삭제", description = "답변을 삭제한다")
-  @PatchMapping("/answer/{answerId}")
+  @DeleteMapping("/answer/{answerId}")
   public ResponseEntity<?> deleteAnswer(
       @PathVariable("answerId") int answerId, HttpSession session) {
     UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
-    return answerService.deleteAnswer(answerId, userSessionDto.getId());
+    return ResponseEntity.ok(answerService.deleteAnswer(answerId, userSessionDto.getId()));
   }
 
   @CommonResponses
@@ -94,6 +99,6 @@ public class QnaController {
   public ResponseEntity<?> chooseAnswer(
       @PathVariable("answerId") int answerId, HttpSession session) {
     UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
-    return answerService.chooseAnswer(answerId, userSessionDto.getId());
+    return ResponseEntity.ok(answerService.chooseAnswer(answerId, userSessionDto.getId()));
   }
 }

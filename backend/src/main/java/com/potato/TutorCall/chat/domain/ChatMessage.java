@@ -2,32 +2,29 @@ package com.potato.TutorCall.chat.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.potato.TutorCall.user.domain.User;
-import jakarta.persistence.*;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.redis.core.RedisHash;
 
-@Entity
-@Getter
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
+@RedisHash(value = "chat")
 public class ChatMessage {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @JsonBackReference
-  @ManyToOne(fetch = FetchType.LAZY)
-  private User user;
+  @JsonBackReference private User user;
 
-  @JsonBackReference
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Chatroom chatroom;
+  @JsonBackReference private Chatroom chatroom;
 
   private String message;
 

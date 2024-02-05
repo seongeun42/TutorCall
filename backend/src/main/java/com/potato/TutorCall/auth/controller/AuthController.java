@@ -1,6 +1,6 @@
 package com.potato.TutorCall.auth.controller;
 
-import com.potato.TutorCall.auth.CodeRepositorty;
+import com.potato.TutorCall.auth.CodeRepository;
 import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.constant.SendEmailConfig;
 import com.potato.TutorCall.auth.dto.SendEmailDto;
@@ -31,12 +31,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
   private final EmailService emailService;
   private final AuthService authService;
-  private final CodeRepositorty codeRepositorty;
+  private final CodeRepository codeRepository;
   private final UserService userService;
 
   @PostMapping("/login")
   public ResponseEntity<?> login(
-          @RequestBody AuthLoginRequestDto authLoginRequestDto, HttpServletRequest httpServletRequest)
+      @RequestBody AuthLoginRequestDto authLoginRequestDto, HttpServletRequest httpServletRequest)
       throws Exception {
     // 유저 확인 메소드
     User user = this.authService.login(authLoginRequestDto);
@@ -72,7 +72,7 @@ public class AuthController {
 
     this.emailService.sendEmail(sendEmailDto);
 
-    this.codeRepositorty.setCode(email, code);
+    this.codeRepository.setCode(email, code);
     response.put("message", "이메일 인증 코드를 발송했습니다.");
 
     return new ResponseEntity<>(response, HttpStatus.CREATED);
