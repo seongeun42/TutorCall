@@ -38,6 +38,14 @@ public class WebRtcService {
         return lectureSession.getSessionId();
     }
 
+    /**
+     * 특정 세션과 연결을 만드는 함수
+     * @param id
+     * @param userId
+     * @param type
+     * @param openVidu
+     * @return 연결 토큰
+     */
     public String getConnection(Long id, Long userId, StudyType type, OpenVidu openVidu) throws OpenViduJavaClientException, OpenViduHttpException {
         if (redisTemplate.opsForValue().get(type.getValue() + id) == null) {
             throw new NotFoundException("존재하지 않는 세션입니다.");
@@ -49,6 +57,14 @@ public class WebRtcService {
         return connection.getToken();
     }
 
+    /**
+     * 세션과의 연결을 끊는 함수
+     * @param id
+     * @param userId
+     * @param type
+     * @param openVidu
+     * @return 세션 삭제 여부
+     */
     public boolean removeConnection(Long id, Long userId, StudyType type, OpenVidu openVidu) throws OpenViduJavaClientException, OpenViduHttpException {
         if (redisTemplate.opsForValue().get(type.getValue() + id) == null) {
             throw new NotFoundException("존재하지 않는 세션입니다.");
