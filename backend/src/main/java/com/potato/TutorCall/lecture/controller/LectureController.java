@@ -97,9 +97,14 @@ public class LectureController {
     }
 
     @GetMapping("/promotion/{lectureId}")
-    public ResponseEntity<?> getLecture(@PathVariable("lectureId") Long lectureId) {
+    public ResponseEntity<?> getLecturePromotion(@PathVariable("lectureId") Long lectureId, HttpSession session) {
+        boolean isParticipated = false;
+        UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+        if (userSessionDto != null) {
+            isParticipated = participantService.existParticipant(lectureId, userSessionDto.getId());
+        }
         Lecture lecture = lectureService.findById(lectureId);
-        LecturePromotionResponseDto dto = new LecturePromotionResponseDto(lecture);
+        LecturePromotionResponseDto dto = new LecturePromotionResponseDto(lecture, isParticipated);
         log.info("과외 모집글을 조회했습니다.");
         return ResponseEntity.ok().body(dto);
     }
