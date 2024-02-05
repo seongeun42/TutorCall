@@ -5,6 +5,7 @@ import StudentNavBar from './components/StudentNavBar.vue'
 import NotLoginNavBar from './components/NotLoginNavBar.vue'
 import { RouterView } from 'vue-router'
 import { useUserStore } from '@/store/userStore'
+import editor from '@/pages/board/editor/CkEditor.vue'
 
 const userStore = useUserStore()
 </script>
@@ -18,7 +19,8 @@ const userStore = useUserStore()
     <StudentNavBar v-else />
   </div>
   <div class="min-h-[1000px]">
-    <RouterView id="main" />
+    <!-- <RouterView id="main" /> -->
+    <editor/>
   </div>
   <FooterBar />
 </template>
