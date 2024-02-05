@@ -108,6 +108,10 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-params'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
+	// openvidu-java-client
+	implementation 'io.openvidu:openvidu-java-client:2.29.0'
+
+
 }
 
 // queryDSL 추가설정 : 빌드 옵션
