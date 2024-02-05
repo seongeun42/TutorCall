@@ -103,4 +103,16 @@ public class LectureService {
         );
     }
 
+    public void startLectureLive(Long lectureId, String sessionId) {
+        Lecture lecture = this.findById(lectureId);
+        lecture.changeLectureState(true);
+        lecture.changeLiveUrl(sessionId);
+    }
+
+    public void endLectureLive(Long lectureId) {
+        Lecture lecture = this.findById(lectureId);
+        lecture.changeLectureState(false);
+        lecture.changeLiveUrl(null);
+    }
+
 }
