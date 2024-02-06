@@ -1,0 +1,137 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.1'
+	id 'io.spring.dependency-management' version '1.1.4'
+	id 'com.diffplug.spotless' version '6.24.0'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+group = 'com.potato'
+version = '0.0.1-SNAPSHOT'
+
+java {
+}
+
+// java code auto lint
+spotless {
+	java {
+//		// 사용하지 않는 import 제거
+		removeUnusedImports('cleanthat-javaparser-unnecessaryimport')
+		// import 순서 정의
+		importOrder()
+		cleanthat()
+		// 구글 자바 포맷 적용
+		googleJavaFormat()
+//
+		indentWithTabs(2)
+		indentWithSpaces(2)
+		// 공백 제거
+		trimTrailingWhitespace()
+		// 끝부분 New Line 처리
+		formatAnnotations()
+		endWithNewline()
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+test {
+	useJUnitPlatform()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// Spring Boot에서 Redis를 사용하기 위한 의존성입니다.
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	// Spring Session을 Redis에 저장하기 위한 의존성입니다.
+	implementation 'org.springframework.session:spring-session-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.0.7'
+	implementation 'org.springframework.boot:spring-boot-starter-security:3.0.5'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// queryDSL dependencies 추가
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+	// -- queryDSL --
+
+	//mybatis
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+
+	testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+
+	//swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	//
+
+	//test용 mysql 연결
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	//
+
+	testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+
+	//log4j2
+	testAnnotationProcessor 'org.projectlombok:lombok' // 테스트를 위한 세팅
+	testImplementation 'org.projectlombok:lombok' // 테스트를 위한 세팅
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+
+	//test
+
+	//Moskito
+	testImplementation 'org.mockito:mockito-core'
+	testImplementation 'org.mockito:mockito-junit-jupiter'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
+	testImplementation 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+	testImplementation 'org.junit.jupiter:junit-jupiter-params'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+	// openvidu-java-client
+	implementation 'io.openvidu:openvidu-java-client:2.29.0'
+
+}
+
+// queryDSL 추가설정 : 빌드 옵션
+def querydslSrcDir = 'build/generated'
+clean {
+	delete file(querydslSrcDir)
+}
+tasks.withType(JavaCompile) {
+	options.generatedSourceOutputDirectory = file(querydslSrcDir)
+}
+// -- queryDSL --
+
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+configurations {
+	all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	all*.exclude group: 'org.springframework.boot', module: 'logback-classic'
+}
+kotlin {
+    jvmToolchain(17)
+}
