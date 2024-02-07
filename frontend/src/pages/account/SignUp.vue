@@ -10,7 +10,6 @@ import type{ emailCodeCheck,
 
 import type { commonResponse, errorResponse } from '@/interface/common/interface'
 import { isAxiosError, type AxiosResponse } from 'axios'
-import Cookies from 'js-cookie';
 
 // import exp from 'constants'
 

@@ -27,7 +27,6 @@
     "ckeditor-tailwind-reset": "^1.0.5",
     "firebase": "^10.8.0",
     "gsap": "^3.12.4",
-    "js-cookie": "^3.0.5",
     "openvidu-browser": "^2.20.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
