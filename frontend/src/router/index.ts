@@ -3,6 +3,7 @@ import MainPage from '@/pages/mainpage/MainPage.vue'
 import SignUp from '@/pages/account/SignUp.vue'
 // import MyPage from '@/pages/mypage/MyPage.vue'
 import Notice from '@/pages/board/notice/Notice.vue'
+import NoticeArticle from '@/pages/board/notice/NoticeArticle.vue'
 import DetailNotice from '@/pages/board/notice/DetailNotice.vue'
 import FAQArticle from '@/pages/board/notice/FAQArticle.vue'
 import LectureRecruit from '@/pages/board/lecturerecruiting/LectureRecruit.vue'
@@ -25,6 +26,9 @@ import TutorBoardEditor from '@/pages/board/editor/TutorBoardEditor.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior(to, from, savedPosition) {
+    return { top: 0 }
+  },
   routes: [
     {
       // 메인화면
@@ -45,36 +49,36 @@ const router = createRouter({
       children: [
         {
           // 선생님 마이페이지
-          path: '/tutor',
+          path: 'tutor',
           name: 'tutorMyPage',
           children: [
             // 개인정보 수정
             {
-              path: '/update',
+              path: 'update',
               name: 'tutorUpdate',
               component: InformationUpdate
             },
             // 리뷰 확인
             {
-              path: '/reviews',
+              path: 'reviews',
               name: 'reviewCheck',
               component: ReviewCheck
             },
             // 수익 통계
             {
-              path: '/profits',
+              path: 'profits',
               name: '/profitCheck',
               component: ProfitCheck
             },
             // 출금
             {
-              path: '/withdrawl',
+              path: 'withdrawl',
               name: 'withdrawl',
               component: WithdrawlPage
             },
             // 내 과외
             {
-              path: '/lectures',
+              path: 'lectures',
               name: 'tutorMyLectures',
               component: MyLectureList
             }
@@ -87,25 +91,25 @@ const router = createRouter({
           children: [
             // 개인정보 수정
             {
-              path: '/update',
+              path: 'update',
               name: 'userUpdate',
               component: StudentInformationUpdate
             },
             // 포인트 내역
             {
-              path: '/points',
+              path: 'points',
               name: 'pointUsage',
               component: PointUsage
             },
             // 내 과외
             {
-              path: '/lectures',
+              path: 'lectures',
               name: 'userMyLectures',
               component: StudentMyLecture
             },
             // 결제 정보
             {
-              path: '/payments',
+              path: 'payments',
               name: 'paymentInfo',
               component: MyPaymentInfo
             }
@@ -114,10 +118,16 @@ const router = createRouter({
       ]
     },
     {
-      // 공지사항 게시판
+      // 공지사항과 FAQ 모음
       path: '/notice',
       name: 'notice',
       children: [
+        {
+          // 공지사항 게시판
+          path: '/articles',
+          name: 'noticeArticles',
+          component: NoticeArticle
+        },
         // 공지사항 상세
         {
           path:'',
@@ -128,14 +138,14 @@ const router = createRouter({
           path: ':noticeNum',
           name: 'noticeDetail',
           component: DetailNotice
+        },
+        {
+          // FAQ 게시판
+          path: '/faq',
+          name: 'faq',
+          component: FAQArticle
         }
       ]
-    },
-    {
-      // FAQ 게시판
-      path: '/faq',
-      name: 'faq',
-      component: FAQArticle
     },
     {
       // 과외 구하는 모집 및 홍보 게시판

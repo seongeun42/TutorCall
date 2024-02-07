@@ -49,36 +49,36 @@ const router = createRouter({
       children: [
         {
           // 선생님 마이페이지
-          path: '/tutor',
+          path: 'tutor',
           name: 'tutorMyPage',
           children: [
             // 개인정보 수정
             {
-              path: '/update',
+              path: 'update',
               name: 'tutorUpdate',
               component: InformationUpdate
             },
             // 리뷰 확인
             {
-              path: '/reviews',
+              path: 'reviews',
               name: 'reviewCheck',
               component: ReviewCheck
             },
             // 수익 통계
             {
-              path: '/profits',
+              path: 'profits',
               name: '/profitCheck',
               component: ProfitCheck
             },
             // 출금
             {
-              path: '/withdrawl',
+              path: 'withdrawl',
               name: 'withdrawl',
               component: WithdrawlPage
             },
             // 내 과외
             {
-              path: '/lectures',
+              path: 'lectures',
               name: 'tutorMyLectures',
               component: MyLectureList
             }
@@ -91,25 +91,25 @@ const router = createRouter({
           children: [
             // 개인정보 수정
             {
-              path: '/update',
+              path: 'update',
               name: 'userUpdate',
               component: StudentInformationUpdate
             },
             // 포인트 내역
             {
-              path: '/points',
+              path: 'points',
               name: 'pointUsage',
               component: PointUsage
             },
             // 내 과외
             {
-              path: '/lectures',
+              path: 'lectures',
               name: 'userMyLectures',
               component: StudentMyLecture
             },
             // 결제 정보
             {
-              path: '/payments',
+              path: 'payments',
               name: 'paymentInfo',
               component: MyPaymentInfo
             }
