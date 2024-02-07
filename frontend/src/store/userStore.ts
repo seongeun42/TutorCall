@@ -3,10 +3,10 @@ import { defineStore } from 'pinia'
 export const useUserStore = defineStore({
   id: 'user',
   state: () => ({
-    isLogin: true,
+    isLogin: false,
     email: '',
-    isTutor: true,
-    isActiveCall: false,
+    isTutor: false,
+    isActiveCall: false
   }),
   actions: {
     login(isTutor: boolean, email: string) {
