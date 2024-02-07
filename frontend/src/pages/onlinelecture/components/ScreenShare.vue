@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, type Ref, onMounted, watch } from 'vue'
 
 const props = defineProps({
   streamManager: Object
 })
-const videoRef = ref(null)
+const videoRef: Ref<any> = ref(null)
 
 watch(props, () => {
   if (props.streamManager) {
