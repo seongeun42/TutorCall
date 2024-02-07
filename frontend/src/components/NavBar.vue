@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, type Ref, reactive } from 'vue'
 import CallNotification from '@/components/CallNotification.vue'
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { useUserStore } from '@/store/userStore';
+import smallAlert from '@/components/tutorcallAlert/smallAlert.vue'
+import { type alertForm } from '@/interface/tutorcall/interface'
+import router from '@/router'
 
 const userStore = useUserStore();
 
@@ -11,17 +12,7 @@ function changeStatus() {
   userStore.isActiveCall = !userStore.isActiveCall
   // console.log(userStore.isActiveCall)
 }
-=======
-=======
->>>>>>> 148a638fad2a795c2289c9b585562a93b55cd553
-import smallAlert from '@/components/tutorcallAlert/smallAlert.vue'
-import { type alertForm } from '@/interface/tutorcall/interface'
-import { useUserStore } from '@/store/userStore'
-import router from '@/router'
-<<<<<<< HEAD
->>>>>>> 14e1b57 (Design: 튜터콜 알림창 디자인)
-=======
->>>>>>> 148a638fad2a795c2289c9b585562a93b55cd553
+
 
 interface notifyDate {
   message: string
@@ -42,7 +33,6 @@ function handleViewAlert():void{
   viewAlertModal.value = !viewAlertModal.value;
 }
 
-const userStore = useUserStore();
 function logout():void{
   userStore.logout();
   sessionStorage.clear();
