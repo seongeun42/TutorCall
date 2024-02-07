@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, type Ref } from 'vue'
 import CkEditor from './CkEditor.vue'
-import { routeLocationKey } from 'vue-router'
 import router from '@/router'
 const title: Ref<string> = ref('')
 const editorData: Ref<string> = ref('')
