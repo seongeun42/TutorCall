@@ -21,7 +21,13 @@ const props = defineProps<{ settings: videoSettingsProp }>()
 const emit = defineEmits<{
   'update:mikeChange': [boolean]
   'update:videoChange': [boolean]
+  'update:screenChange': [boolean]
 }>()
+const screenShare: Ref<boolean> = ref(false)
+function clickShare(): void {
+  screenShare.value = !screenShare.value
+  emit('update:screenChange', screenShare.value)
+}
 
 const mikeStatus: Ref<boolean> = ref(props.settings.onMike)
 const videoStatus: Ref<boolean> = ref(props.settings.onVideo)
@@ -172,7 +178,7 @@ function clickedVideo(): void {
           />
         </svg>
       </button>
-      <button class="btn btn-square mx-1" @click="">
+      <button class="btn btn-square mx-1" @click="clickShare">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
