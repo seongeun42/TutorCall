@@ -1,25 +1,28 @@
 <script setup lang="ts">
 import { ref, type Ref, onMounted } from 'vue'
-import { instance } from '@/axios/axiosConfig';
+import { instance } from '@/axios/axiosConfig'
 import CkEditor from '@/pages/board/editor/CkEditor.vue'
-import router from '@/router';
+import router from '@/router'
 import { useEditStore } from '@/store/editStore'
 import * as api from '@/api/qna/qna'
-import { isAxiosError, type AxiosResponse } from 'axios';
-import { type commonResponse, type errorResponse } from '@/interface/common/interface';
+import { isAxiosError, type AxiosResponse } from 'axios'
+import { type commonResponse, type errorResponse } from '@/interface/common/interface'
 
+const subjects: string[] = ['국어', '영어', '수학', '사회', '과학']
+const grades: number[] = [1, 2, 3, 4, 5, 6]
+const schools: string[] = ['초', '중', '고']
 const title: Ref<string> = ref('')
 const editorData: Ref<string> = ref('')
 const buttonClicked: Ref<string> = ref('')
 const selectedSubject: Ref<string> = ref('')
 const selectedSchool: Ref<string> = ref('')
 const selectedGrade: Ref<number> = ref(0)
-const editStore = useEditStore();
+const editStore = useEditStore()
 const questionId: number = Number(router.currentRoute.value.params['qnaNum'])
-onMounted(()=>{
-  if(editStore.needEdit){
-    title.value = editStore.title;
-    editorData.value = editStore.content;
+onMounted(() => {
+  if (editStore.needEdit) {
+    title.value = editStore.title
+    editorData.value = editStore.content
   }
 })
 
@@ -52,33 +55,33 @@ function handleModelValueUpdate(newValue: string) {
   editorData.value = newValue
   console.log(editorData.value)
 }
-async function submitPost(buttonName: string, event:Event): Promise<void> {
-
-  event.preventDefault();
+async function submitPost(buttonName: string, event: Event): Promise<void> {
+  event.preventDefault()
 
   buttonClicked.value = buttonName
   const url: string = 'http://localhost:8080/'
 
-  const param ={
-      questionTitle: title.value,
-      questionContent: editorData.value,
-      tagId: 1
-    } 
+  const param = {
+    questionTitle: title.value,
+    questionContent: editorData.value,
+    tagId: 1
+  }
 
   const endpoint: string = buttonClicked.value === 'qna' ? 'qna/question' : 'tutorcall/'
 
-  if(editStore.needEdit){
-    await api.editQuestion(param, questionId)
-    .then((response: AxiosResponse<commonResponse>)=>{
-      alert(response.data.message);
-      router.push({"name":"qnaDetail", params:{"qnaNum":questionId}});
-    })
-    .catch((error:unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-    })
-    return;
+  if (editStore.needEdit) {
+    await api
+      .editQuestion(param, questionId)
+      .then((response: AxiosResponse<commonResponse>) => {
+        alert(response.data.message)
+        router.push({ name: 'qnaDetail', params: { qnaNum: questionId } })
+      })
+      .catch((error: unknown) => {
+        if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+      })
+    return
   }
-  
+
   instance
     .post(url + endpoint, param)
     .then((response: any) => {
@@ -87,7 +90,7 @@ async function submitPost(buttonName: string, event:Event): Promise<void> {
         window.alert('문제 등록이 완료되었습니다. 튜터콜 대기실로 이동합니다.')
       } else {
         window.alert('문제 등록이 완료되었습니다.')
-        router.push({"name":"qnaList"});
+        router.push({ name: 'qnaList' })
       }
     })
     .catch((error: any) => {
@@ -101,141 +104,48 @@ async function submitPost(buttonName: string, event:Event): Promise<void> {
       <div class="flex items-center">
         <input class="title" type="text" v-model="title" />
       </div>
-      <div class="my-10 flex h-[35px]">
-        <button
-          @click="selectSchool('초')"
-          :class="[
-            'bg-red-300 text-white text-center text-xl font-bold hover:bg-red-700 mx-1 rounded-xl w-[80px]',
-            { 'bg-red-700': selectedSchool === '초' }
-          ]"
-        >
-          초
-        </button>
-        <button
-          @click="selectSchool('중')"
-          :class="[
-            'bg-red-300 text-white text-center text-xl font-bold hover:bg-red-700 mx-1 rounded-xl w-[80px]',
-            { 'bg-red-700': selectedSchool === '중' }
-          ]"
-        >
-          중
-        </button>
-        <button
-          @click="selectSchool('고')"
-          :class="[
-            'bg-red-300 text-white text-center text-xl font-bold hover:bg-red-700 mx-1 rounded-xl w-[80px]',
-            { 'bg-red-700': selectedSchool === '고' }
-          ]"
-        >
-          고
-        </button>
+      <div class="mt-10 mb-5 flex h-[35px]">
+        <div v-for="school in schools" :key="school">
+          <button
+            @click="selectSchool(school)"
+            :class="[
+              'bg-red-300 text-white text-center text-xl font-bold hover:bg-red-700 mx-1 rounded-xl w-[80px]',
+              { 'bg-red-700': selectedSchool === school }
+            ]"
+          >
+            {{ school }}
+          </button>
+        </div>
       </div>
-      <div class="my-10 flex h-[35px]">
-        <button
-          @click="selectGrade(1)"
-          :class="[
-            'bg-blue-300 text-white  text-center text-xl font-bold hover:bg-blue-700 mx-1 rounded-xl w-[80px]',
-            { 'bg-blue-700 text-white': selectedGrade === 1 }
-          ]"
-        >
-          1학년
-        </button>
-        <button
-          @click="selectGrade(2)"
-          :class="[
-            'bg-blue-300 text-white text-center text-xl font-bold hover:bg-blue-700 mx-1 rounded-xl w-[80px]',
-            { 'bg-blue-700': selectedGrade === 2 }
-          ]"
-        >
-          2학년
-        </button>
-        <button
-          @click="selectGrade(3)"
-          :class="[
-            'bg-blue-300 text-white text-center text-xl font-bold hover:bg-blue-700 mx-1 rounded-xl w-[80px]',
-            { 'bg-blue-700': selectedGrade === 3 }
-          ]"
-        >
-          3학년
-        </button>
-        <button
-          @click="selectGrade(4)"
-          :class="[
-            'bg-blue-300 text-white text-center text-xl font-bold hover:bg-blue-700 mx-1 rounded-xl w-[80px]',
-            { 'bg-blue-700': selectedGrade === 4 }
-          ]"
-        >
-          4학년
-        </button>
-        <button
-          @click="selectGrade(5)"
-          :class="[
-            'bg-blue-300 text-white text-center text-xl font-bold hover:bg-blue-700 mx-1 rounded-xl w-[80px]',
-            { 'bg-blue-700': selectedGrade === 5 }
-          ]"
-        >
-          5학년
-        </button>
-        <button
-          @click="selectGrade(6)"
-          :class="[
-            'bg-blue-300 text-white text-center text-xl font-bold hover:bg-blue-700 mx-1 rounded-xl w-[80px]',
-            { 'bg-blue-700': selectedGrade === 6 }
-          ]"
-        >
-          6학년
-        </button>
+      <div class="flex h-[35px] mb-5">
+        <div v-for="grade in grades" :key="grade">
+          <button
+            @click="selectGrade(grade)"
+            :class="[
+              'bg-blue-300 text-white  text-center text-xl font-bold hover:bg-blue-700 mx-1 rounded-xl w-[80px]',
+              { 'bg-blue-700 text-white': selectedGrade === grade }
+            ]"
+          >
+            {{ grade }}학년
+          </button>
+        </div>
       </div>
-      <div class="my-10 flex h-[35px]">
-        <button
-          :class="[
-            'bg-green-300 text-white text-center text-xl font-bold hover:bg-green-700 mx-1 rounded-xl w-[80px]',
-            { 'bg-green-700': selectedSubject === '국어' }
-          ]"
-          @click="selectSubject('국어')"
-        >
-          국어
-        </button>
-        <button
-          :class="[
-            'bg-green-300 text-white text-center text-xl font-bold hover:bg-green-500 mx-1 rounded-xl w-[80px]',
-            { 'bg-green-700': selectedSubject === '영어' }
-          ]"
-          @click="selectSubject('영어')"
-        >
-          영어
-        </button>
-        <button
-          :class="[
-            'bg-green-300 text-white text-center text-xl font-bold hover:bg-green-800 mx-1 rounded-xl w-[80px]',
-            { 'bg-green-700': selectedSubject === '수학' }
-          ]"
-          @click="selectSubject('수학')"
-        >
-          수학
-        </button>
-        <button
-          :class="[
-            'bg-green-300 text-white text-center text-xl font-bold hover:bg-green-800 mx-1 rounded-xl w-[80px]',
-            { 'bg-green-700': selectedSubject === '과학' }
-          ]"
-          @click="selectSubject('과학')"
-        >
-          과학
-        </button>
-        <button
-          :class="[
-            'bg-green-300 text-white text-center text-xl font-bold hover:bg-green-800 mx-1 rounded-xl w-[80px]',
-            { 'bg-green-700': selectedSubject === '사회' }
-          ]"
-          @click="selectSubject('사회')"
-        >
-          사회
-        </button>
+      <div class="flex h-[35px]">
+        <div v-for="subject in subjects" :key="subject">
+          <button
+            :class="[
+              'bg-green-300 text-white text-center text-xl font-bold hover:bg-green-700 mx-1 rounded-xl w-[80px]',
+              { 'bg-green-700': selectedSubject === subject }
+            ]"
+            @click="selectSubject(subject)"
+          >
+            {{ subject }}
+          </button>
+        </div>
       </div>
     </div>
     <div class="my-10">
-      <CkEditor @update:modelValue="handleModelValueUpdate"/>
+      <CkEditor @update:modelValue="handleModelValueUpdate" />
     </div>
 
     <div class="my-20 flex justify-center items-center">
@@ -265,5 +175,6 @@ async function submitPost(buttonName: string, event:Event): Promise<void> {
   border-radius: 8px;
   width: 100%;
   height: 40px;
+  text-align: center;
 }
 </style>

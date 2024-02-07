@@ -7,7 +7,7 @@ import OnlineLecture from './pages/onlinelecture/OnlineLecture.vue'
 import { RouterView } from 'vue-router'
 import { useUserStore } from '@/store/userStore'
 import ChatIcon from './components/chatting/ChatIcon.vue'
-
+import StudentBoardEditor from './pages/board/editor/StudentBoardEditor.vue'
 const userStore = useUserStore()
 </script>
 
@@ -22,9 +22,22 @@ const userStore = useUserStore()
   <div class="min-h-[1000px]">
     <RouterView id="main" />
     <!-- <OnlineLecture /> -->
+    <StudentBoardEditor />
   </div>
   <ChatIcon />
   <FooterBar />
 </template>
 
 <style scoped></style>
+<style>
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+    format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+div {
+  font-family: 'Pretendard-Regular';
+}
+</style>
