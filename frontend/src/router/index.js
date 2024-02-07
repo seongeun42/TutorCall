@@ -23,7 +23,7 @@ import StudentMyLecture from '@/pages/mypage/student/information/StudentMyLectur
 import MyPaymentInfo from '@/pages/mypage/payment/MyPaymentInfo.vue'
 import StudentBoardEditor from '@/pages/board/editor/StudentBoardEditor.vue'
 import TutorBoardEditor from '@/pages/board/editor/TutorBoardEditor.vue'
-
+import InquiryEditor from '@/pages/board/editor/InquiryEditor.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior(to, from, savedPosition) {
@@ -130,8 +130,8 @@ const router = createRouter({
         },
         // 공지사항 상세
         {
-          path:'',
-          name:'noticeList',
+          path: '',
+          name: 'noticeList',
           component: Notice
         },
         {
@@ -151,13 +151,13 @@ const router = createRouter({
       // 과외 구하는 모집 및 홍보 게시판
       path: '/lecturespromotion',
       name: 'lecturesPromo',
-      redirect: {"name":'lectureList'},
+      redirect: { name: 'lectureList' },
       children: [
         // 모홍게 상세
         {
-          path:'',
-          name:'lectureList',
-          component:LectureRecruit
+          path: '',
+          name: 'lectureList',
+          component: LectureRecruit
         },
         {
           path: ':promotionNum',
@@ -165,13 +165,13 @@ const router = createRouter({
           component: DetailLecture
         },
         {
-          path:'edit/:promotionNum',
-          name:'editlecture',
+          path: 'edit/:promotionNum',
+          name: 'editlecture',
           component: TutorBoardEditor
         },
         {
-          path:'write',
-          name:'writelecture',
+          path: 'write',
+          name: 'writelecture',
           component: TutorBoardEditor
         }
       ]
@@ -180,12 +180,12 @@ const router = createRouter({
       // 문제 질문 게시판
       path: '/qna',
       name: 'qna',
-      redirect: {"name":'qnaList'},
+      redirect: { name: 'qnaList' },
       children: [
         // 질게 상세
         {
-          path:'',
-          name:'qnaList',
+          path: '',
+          name: 'qnaList',
           component: QA
         },
         {
@@ -194,13 +194,13 @@ const router = createRouter({
           component: DetailQA
         },
         {
-          path:'edit/:qnaNum',
-          name:'editqna',
+          path: 'edit/:qnaNum',
+          name: 'editqna',
           component: StudentBoardEditor
         },
         {
-          path:'write',
-          name:'writeqna',
+          path: 'write',
+          name: 'writeqna',
           component: StudentBoardEditor
         }
       ]
@@ -223,6 +223,12 @@ const router = createRouter({
           component: TutorCallPage
         }
       ]
+    },
+    {
+      // 관리자 문의
+      path: '/inquiry',
+      name: 'inquiry',
+      component: InquiryEditor
     }
   ]
 })
