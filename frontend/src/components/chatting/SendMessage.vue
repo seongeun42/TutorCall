@@ -3,7 +3,7 @@
 <template>
   <div
     id="sendmessage"
-    class="h-[60px] absolute w-[290px] border-t-[#e7ebee] border-t border-solid right-0 bottom-0 bg-[#ffffff] pb-50px"
+    class="absolute w-full border-t-[#e7ebee] border-t border-solid right-0 bottom-0 bg-[#ffffff] pb-50px"
   >
     <input
       type="text"

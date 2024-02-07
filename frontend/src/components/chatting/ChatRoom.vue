@@ -5,37 +5,24 @@ import ChattingMessage from '@/components/chatting/ChattingMessage.vue'
 </script>
 
 <template>
-  <div
-    id="chatbox"
-    class="w-[290px] overflow-hidden h-[484px] absolute ml-[-155px] rounded-md left-2/4 top-[100px]"
-  >
     <div
       id="chatview"
-      class="p1 w-[290px] h-[484px] absolute left-0 top-0 overflow-hidden rounded-md"
+      class="w-full h-full absolute left-0 top-0 overflow-hidden rounded-md shadow-lg"
     >
-      <ChatProfile />
-      <div id="chat-messages">
+      <ChatProfile class="h-20" />
+      <div id="chat-messages" class="w-full h-[350px] font-sans bg-white overflow-scroll no-scrollbar overflow-x-hidden pr-5">
+        <ChattingMessage />
+        <ChattingMessage />
         <label
-          class="text-[#aab8c2] font-semibold text-xs text-center w-[290px] block mx-0 my-[15px]"
+          class="text-[#aab8c2] font-semibold text-xs text-center w-full block mx-0 mb-5"
           >Thursday 02</label
         >
         <ChattingMessage />
       </div>
 
-      <SendMessage />
+      <SendMessage class="h-14" />
     </div>
-  </div>
 </template>
 
 <style scoped>
-#chat-messages {
-  @apply opacity-0 w-[290px] h-[270px] overflow-y-scroll overflow-x-hidden transition-all duration-200 ease-[cubic-bezier(0.000,0.995,0.990,1.000)] mt-[30px] pr-5;
-  -webkit-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
-  -moz-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
-  -ms-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
-  -o-transition: all 200ms cubic-bezier(0, 0.995, 0.99, 1);
-}
-#chat-messages.animate {
-  @apply opacity-100 mt-0;
-}
 </style>
