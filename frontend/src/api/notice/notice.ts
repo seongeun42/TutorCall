@@ -1,4 +1,4 @@
-import { instance } from '@/axios/axiosCofig'
+import { instance } from '@/axios/axiosConfig'
 import type { AxiosResponse } from 'axios'
 import type { noticeInfo, noticeResponse, faqInfo, faqResponse } from '@/interface/notice/interface'
 

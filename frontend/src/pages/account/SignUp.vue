@@ -10,6 +10,7 @@ import type{ emailCodeCheck,
 
 import type { commonResponse, errorResponse } from '@/interface/common/interface'
 import { isAxiosError, type AxiosResponse } from 'axios'
+import Cookies from 'js-cookie';
 
 // import exp from 'constants'
 
@@ -152,7 +153,7 @@ async function doSignUp(event: Event) {
 
 async function doLogin(event: Event) {
   event.preventDefault()
-
+  console.log("login");
   const param: loginForm = {
     email: loginEmail.value,
     password: loginPassword.value
@@ -161,7 +162,8 @@ async function doLogin(event: Event) {
   await api
     .login(param)
     .then((response: AxiosResponse<user>) => {
-      const roleType: string = response.data.role
+      const roleType:string = response.data.role;
+      // 현재 서버에서 user 관련 data를 넘겨주고 있지 않음
       if (roleType == 'TUTOR') {
         userStore.login(true, loginEmail.value)
       } else {
@@ -176,13 +178,6 @@ async function doLogin(event: Event) {
     })
 }
 
-async function doSNSLogin(event: any, snsType: string) {
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
-  const redirectUrl = import.meta.env.VITE_GOOGLE_REDIRECT_URL
-  const scope = 'profile email'
-  const responseType = 'token'
-  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope}&response_type=${responseType}`
-}
 </script>
 
 <template>
@@ -283,19 +278,16 @@ async function doSNSLogin(event: any, snsType: string) {
                       src="@/img/google_logo.png"
                       alt="구글계정로그인"
                       style="margin-left: 5px; margin-right: 5px"
-                      @click="doSNSLogin($event, 'google')"
                     />
                     <img
                       src="@/img/naver_logo.png"
                       alt="네이버계정로그인"
                       style="margin-left: 5px; margin-right: 5px"
-                      @click="doSNSLogin($event, 'naver')"
                     />
                     <img
                       src="@/img/kakao_logo.png"
                       alt="카카오계정로그인"
                       style="margin-left: 5px; margin-right: 5px"
-                      @click="doSNSLogin($event, 'kakao')"
                     />
                     <img
                       src="@/img/insta_logo.png"
