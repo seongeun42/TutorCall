@@ -57,7 +57,6 @@ for file in $stagedFiles; do
     git add "$file"
   fi
 done
-
 ```
 
 
