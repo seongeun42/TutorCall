@@ -21,7 +21,8 @@ import StudentInformationUpdate from '@/pages/mypage/student/information/Student
 import PointUsage from '@/pages/mypage/student/point/PointUsage.vue'
 import StudentMyLecture from '@/pages/mypage/student/information/StudentMyLecture.vue'
 import MyPaymentInfo from '@/pages/mypage/payment/MyPaymentInfo.vue'
-
+import InquiryEditor from '@/pages/board/editor/InquiryEditor.vue'
+import path from 'path'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior(to, from, savedPosition) {
@@ -185,6 +186,11 @@ const router = createRouter({
           component: TutorCallPage
         }
       ]
+    },
+    {
+      path: '/inquiry',
+      name: 'inquiry',
+      component: InquiryEditor
     }
   ]
 })
