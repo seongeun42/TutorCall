@@ -20,3 +20,11 @@ export interface errorResponse{
 export interface commonResponse{
     message: string
   }
+
+export interface review{
+  mannerRate: number,
+  communicationRate: number,
+  professionalismRate: number,
+  content: string,
+  createAt: string,
+}

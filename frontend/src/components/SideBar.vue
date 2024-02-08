@@ -67,7 +67,7 @@
                     />
                   </svg>
 
-                  <RouterLink :to="{ name: 'profitCheck' }" class="ml-2">수익 통계</RouterLink>
+                  <!-- <RouterLink :to="{ name: 'profitCheck' }" class="ml-2">수익 통계</RouterLink> -->
                 </li>
                 <li class="my-5 flex">
                   <svg
