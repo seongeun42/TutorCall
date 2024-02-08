@@ -51,5 +51,6 @@ function cancelWrite(): void {
   border-radius: 8px;
   width: 100%;
   height: 40px;
+  text-align: center;
 }
 </style>

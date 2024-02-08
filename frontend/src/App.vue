@@ -3,11 +3,10 @@ import NavBar from '@/components/NavBar.vue'
 import FooterBar from '@/components/FooterBar.vue'
 import StudentNavBar from './components/StudentNavBar.vue'
 import NotLoginNavBar from './components/NotLoginNavBar.vue'
-import OnlineLecture from './pages/onlinelecture/OnlineLecture.vue'
 import { RouterView } from 'vue-router'
 import { useUserStore } from '@/store/userStore'
 import ChatIcon from './components/chatting/ChatIcon.vue'
-import StudentBoardEditor from './pages/board/editor/StudentBoardEditor.vue'
+
 const userStore = useUserStore()
 </script>
 
@@ -21,8 +20,6 @@ const userStore = useUserStore()
   </div>
   <div class="min-h-[1000px]">
     <RouterView id="main" />
-    <!-- <OnlineLecture /> -->
-    <StudentBoardEditor />
   </div>
   <ChatIcon />
   <FooterBar />

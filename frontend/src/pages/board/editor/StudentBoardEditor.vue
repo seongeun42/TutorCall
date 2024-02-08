@@ -25,7 +25,11 @@ onMounted(() => {
     editorData.value = editStore.content
   }
 })
-
+function cancelWrite(): void {
+  if (window.confirm('글 작성을 취소하시겠습니까?')) {
+    router.push('/')
+  }
+}
 function selectSchool(school: string): void {
   if (selectedSchool.value === school) {
     selectedSchool.value = ''
@@ -100,6 +104,7 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
 </script>
 <template>
   <div class="mx-auto w-[1000px]">
+    <div class="text-3xl font-bold">게시글 작성</div>
     <div class="my-10">
       <div class="flex items-center">
         <input class="title" type="text" v-model="title" />
@@ -149,6 +154,13 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
     </div>
 
     <div class="my-20 flex justify-center items-center">
+      <button
+        @click="cancelWrite"
+        type="button"
+        class="mr-6 py-2.5 px-5 me-2 mb-2 text-xl font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+      >
+        취소
+      </button>
       <button
         @click="submitPost('qna', $event)"
         type="button"
