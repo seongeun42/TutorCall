@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainPage from '@/pages/mainpage/MainPage.vue'
 import SignUp from '@/pages/account/SignUp.vue'
-// import MyPage from '@/pages/mypage/MyPage.vue'
+import MyPage from '@/pages/mypage/MyPage.vue'
 import Notice from '@/pages/board/notice/Notice.vue'
 import NoticeArticle from '@/pages/board/notice/NoticeArticle.vue'
 import DetailNotice from '@/pages/board/notice/DetailNotice.vue'
@@ -21,9 +21,7 @@ import StudentInformationUpdate from '@/pages/mypage/student/information/Student
 import PointUsage from '@/pages/mypage/student/point/PointUsage.vue'
 import StudentMyLecture from '@/pages/mypage/student/information/StudentMyLecture.vue'
 import MyPaymentInfo from '@/pages/mypage/payment/MyPaymentInfo.vue'
-import StudentBoardEditor from '@/pages/board/editor/StudentBoardEditor.vue'
-import TutorBoardEditor from '@/pages/board/editor/TutorBoardEditor.vue'
-import InquiryEditor from '@/pages/board/editor/InquiryEditor.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior(to, from, savedPosition) {
@@ -46,74 +44,67 @@ const router = createRouter({
       // 마이페이지 및 하부요소는 수정 후 반영 예정
       path: '/mypage',
       name: 'mypage',
+      component: MyPage,
+      props: true,
       children: [
+        // 선생님 마이페이지
+        // 개인정보 수정
         {
-          // 선생님 마이페이지
-          path: 'tutor',
-          name: 'tutorMyPage',
-          children: [
-            // 개인정보 수정
-            {
-              path: 'update',
-              name: 'tutorUpdate',
-              component: InformationUpdate
-            },
-            // 리뷰 확인
-            {
-              path: 'reviews',
-              name: 'reviewCheck',
-              component: ReviewCheck
-            },
-            // 수익 통계
-            {
-              path: 'profits',
-              name: '/profitCheck',
-              component: ProfitCheck
-            },
-            // 출금
-            {
-              path: 'withdrawl',
-              name: 'withdrawl',
-              component: WithdrawlPage
-            },
-            // 내 과외
-            {
-              path: 'lectures',
-              name: 'tutorMyLectures',
-              component: MyLectureList
-            }
-          ]
+          path: '/tutorupdate',
+          name: 'tutorUpdate',
+          component: InformationUpdate,
+          props: true
         },
+        // 리뷰 확인
         {
-          // 학생 마이페이지
-          path: '/user',
-          name: 'userMyPage',
-          children: [
-            // 개인정보 수정
-            {
-              path: 'update',
-              name: 'userUpdate',
-              component: StudentInformationUpdate
-            },
-            // 포인트 내역
-            {
-              path: 'points',
-              name: 'pointUsage',
-              component: PointUsage
-            },
-            // 내 과외
-            {
-              path: 'lectures',
-              name: 'userMyLectures',
-              component: StudentMyLecture
-            },
-            // 결제 정보
-            {
-              path: 'payments',
-              name: 'paymentInfo',
-              component: MyPaymentInfo
-            }
-          ]
+          path: '/reviews',
+          name: 'reviewCheck',
+          component: ReviewCheck,
+          props: true
+        },
+        // 수익 통계
+        {
+          path: '/profits',
+          name: 'profitCheck',
+          component: ProfitCheck
+        },
+        // 출금
+        {
+          path: '/withdrawl',
+          name: 'withdrawl',
+          component: WithdrawlPage
+        },
+        // 내 과외
+        {
+          path: '/lecturelists',
+          name: 'tutorMyLectures',
+          component: MyLectureList
+        },
+
+        // 학생 마이페이지
+        // 개인정보 수정
+        {
+          path: '/userupdate',
+          name: 'userUpdate',
+          component: StudentInformationUpdate
+        },
+        // 포인트 내역
+        {
+          path: '/points',
+          name: 'pointUsage',
+          component: PointUsage
+        },
+        // 내 과외
+        {
+          path: '/mylectures',
+          name: 'userMyLectures',
+          component: StudentMyLecture
+        },
+        // 결제 정보
+        {
+          path: '/payments',
+          name: 'paymentInfo',
+          component: MyPaymentInfo
         }
       ]
     },
@@ -121,6 +112,7 @@ const router = createRouter({
       // 공지사항과 FAQ 모음
       path: '/notice',
       name: 'notice',
+      component: Notice,
       children: [
         {
           // 공지사항 게시판
@@ -130,12 +122,7 @@ const router = createRouter({
         },
         // 공지사항 상세
         {
-          path: '',
-          name: 'noticeList',
-          component: Notice
-        },
-        {
-          path: ':noticeNum',
+          path: '/articles/:noticeNum',
           name: 'noticeDetail',
           component: DetailNotice
         },
@@ -151,28 +138,13 @@ const router = createRouter({
       // 과외 구하는 모집 및 홍보 게시판
       path: '/lecturespromotion',
       name: 'lecturesPromo',
-      redirect: { name: 'lectureList' },
+      component: LectureRecruit,
       children: [
         // 모홍게 상세
-        {
-          path: '',
-          name: 'lectureList',
-          component: LectureRecruit
-        },
         {
           path: ':promotionNum',
           name: 'lectureDetail',
           component: DetailLecture
-        },
-        {
-          path: 'edit/:promotionNum',
-          name: 'editlecture',
-          component: TutorBoardEditor
-        },
-        {
-          path: 'write',
-          name: 'writelecture',
-          component: TutorBoardEditor
         }
       ]
     },
@@ -180,28 +152,18 @@ const router = createRouter({
       // 문제 질문 게시판
       path: '/qna',
       name: 'qna',
-      redirect: { name: 'qnaList' },
+      redirect: { name: 'qnalist' },
       children: [
         // 질게 상세
         {
-          path: '',
-          name: 'qnaList',
+          path: 'list',
+          name: 'qnalist',
           component: QA
         },
         {
           path: ':qnaNum',
           name: 'qnaDetail',
           component: DetailQA
-        },
-        {
-          path: 'edit/:qnaNum',
-          name: 'editqna',
-          component: StudentBoardEditor
-        },
-        {
-          path: 'write',
-          name: 'writeqna',
-          component: StudentBoardEditor
         }
       ]
     },
@@ -223,12 +185,6 @@ const router = createRouter({
           component: TutorCallPage
         }
       ]
-    },
-    {
-      // 관리자 문의
-      path: '/inquiry',
-      name: 'inquiry',
-      component: InquiryEditor
     }
   ]
 })

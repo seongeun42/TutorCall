@@ -123,7 +123,7 @@ function hideAlert(item:{hide:boolean}):void{
         
           <!-- Profile dropdown -->
           <div class="relative ml-3">
-            <RouterLink to="/mypage/tutor/update">
+            <RouterLink :to="{name:'tutorUpdate'}">
               <button
                 type="button"
                 class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"

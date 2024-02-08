@@ -1,3 +1,25 @@
+<script setup lang="ts">
+
+import SideBar from '@/components/SideBar.vue'
+import StudentSideBar from '@/components/StudentSideBar.vue'
+import { ref, type Ref, onMounted, defineProps } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const router = useRouter()
+const isTutor: Ref<boolean> = ref(true)
+
+onMounted(async () => {
+  await router.isReady()
+  if (isTutor.value == true) {
+    router.push({ name: 'tutorUpdate', state: { title: '개인정보 수정' } })
+    console.log(history.state.title)
+  } else if (isTutor.value == false) {
+    router.push({ name: 'userUpdate' })
+  }
+})
+
+</script>
+
 <template>
   <div class="bg-blue-50">
     <div class="flex p-20">
@@ -12,32 +34,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import SideBar from '@/components/SideBar.vue'
-import StudentSideBar from '@/components/StudentSideBar.vue'
-// import router from '@/router'
-import { ref, type Ref, onMounted, defineProps } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-// import StudentInformationUpdate from '@/pages/mypage/student/information/StudentInformationUpdate.vue'
-// import InformationUpdate from '@/pages/mypage/tutor/InformationUpdate.vue'
-
-// const route = useRoute();
-const router = useRouter()
-// const props = defineProps(['title'])
-// const title: Ref<string> = ref(props.title)
-const isTutor: Ref<boolean> = ref(true)
-
-onMounted(async () => {
-  await router.isReady()
-  if (isTutor.value == true) {
-    router.push({ name: 'tutorUpdate', state: { title: '개인정보 수정' } })
-    console.log(history.state.title)
-  } else if (isTutor.value == false) {
-    router.push({ name: 'userUpdate' })
-  }
-})
-</script>
 
 <style scoped>
 .container {
