@@ -11,9 +11,20 @@ export default class UploadAdapter {
     return this.loader.file.then(
       (file: any) =>
         new Promise((resolve, reject) => {
-          this._initRequest()
-          this._initListeners(resolve, reject, file)
-          this._sendRequest(file)
+          const reader = new FileReader()
+          reader.addEventListener('load', () => {
+            const imageDataUrl = reader.result
+            resolve({
+              default: imageDataUrl
+            })
+          })
+          reader.addEventListener('error', () => {
+            reject(`Couldn't read file: ${file.name}.`)
+          })
+          reader.readAsDataURL(file)
+          // this._initRequest()
+          // this._initListeners(resolve, reject, file)
+          // this._sendRequest(file)
         })
     )
   }
