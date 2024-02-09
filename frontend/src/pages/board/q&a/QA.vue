@@ -16,7 +16,7 @@ interface selectform {
 let currentPage: number = 1
 const size = 10
 let totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
-let tag: string = ''
+let tag: number = 0;
 let status: string = ''
 
 const questionData: Ref<questionInfo[]> = ref([])
@@ -43,6 +43,7 @@ const nextPage = (): void => {
 
 async function init(): Promise<void> {
   const param: string = `?page=${currentPage - 1}&size=${size}&isEnd=${status}&keyword=${keyword.value}&tagId=${tag}`
+  console.log(param);
 
   await api
     .getQnAData(param)
@@ -79,15 +80,15 @@ function reset(event: Event): void {
   event.preventDefault()
   status = ''
   keyword.value = ''
-  tag = ''
+  tag = 0
   currentPage = 1
   init()
 }
 
 const school: selectform[] = [
   { value: 1, name: '초등학교' },
-  { value: 25, name: '중학교' },
-  { value: 37, name: '고등학교' }
+  { value: 31, name: '중학교' },
+  { value: 46, name: '고등학교' }
 ]
 
 let grade: selectform[] = []
@@ -97,14 +98,14 @@ watch(
   (oldValue) => {
     if (Number(oldValue) == 1) {
       grade = []
-      for (let i = 0; i < 6; i++) grade.push({ value: i * 4, name: `${i + 1}학년` })
+      for (let i = 0; i < 6; i++) grade.push({ value: i * 6, name: `${i + 1}학년` })
       gradeDisabled.value = false
       gradeSelected.value = ''
       subjectDisabled.value = true
       subjectSelected.value = ''
-    } else if (Number(oldValue) == 25 || Number(oldValue) == 37) {
+    } else if (Number(oldValue) == 31 || Number(oldValue) == 46) {
       grade = []
-      for (let i = 0; i < 3; i++) grade.push({ value: i * 4, name: `${i + 1}학년` })
+      for (let i = 0; i < 3; i++) grade.push({ value: i * 6, name: `${i + 1}학년` })
       gradeDisabled.value = false
       gradeSelected.value = ''
       subjectDisabled.value = true
@@ -124,16 +125,17 @@ watch(
 
 async function keywordSearch(event: Event): Promise<void> {
   event.preventDefault()
-  if (subjectSelected.value == '') {
+  console.log("keyword Search");
+  if (!subjectSelected.value) {
     alert('검색 조건을 다시 설정해주세요!')
     return
   }
 
-  tag = (
-    Number(schoolSelected.value) +
-    Number(gradeSelected.value) +
-    Number(subjectSelected.value)
-  ).toString()
+  if(typeof(schoolSelected.value)==="number" && typeof(gradeSelected.value)==="number" && 
+  typeof(subjectSelected.value)==="string"){
+    tag = schoolSelected.value+gradeSelected.value+Number(subjectSelected.value);
+  }
+
   init()
 }
 
@@ -158,8 +160,8 @@ function goEditor():void{
           v-model="schoolSelected"
         >
           <!--tag 부분 수정 필요-->
-          <option value="" disabled>학교 선택</option>
-          <option v-for="s in school" v-bind:value="s.value">{{ s.name }}</option>
+          <option value="" disabled selected>학교 선택</option>
+          <option v-for="(s, index) in school" :key="index" v-bind:value="s.value">{{ s.name }}</option>
 
           <!-- 다른 과목들도 추가할 수 있습니다. -->
         </select>
@@ -168,19 +170,21 @@ function goEditor():void{
           v-model="gradeSelected"
           :disabled="gradeDisabled"
         >
-          <option value="" disabled>학년 선택</option>
-          <option v-for="g in grade" v-bind:value="g.value">{{ g.name }}</option>
+          <option value="" disabled selected>학년 선택</option>
+          <option v-for="(g, index) in grade" :key="index" v-bind:value="g.value">{{ g.name }}</option>
         </select>
         <select
           class="p-2 border border-gray-300 rounded-md mr-1 appearance-none"
           v-model="subjectSelected"
           :disabled="subjectDisabled"
         >
-          <option value="" disabled>과목 선택</option>
-          <option value="0">수학</option>
-          <option value="1">과학</option>
-          <option value="2">국어</option>
-          <option value="3">영어</option>
+          <option value="" disabled selected>과목 선택</option>
+          <option value=1>국어</option>
+          <option value=2>수학</option>
+          <option value=3>사회</option>
+          <option value=4>과학</option>
+          <option value=5>영어</option>
+
         </select>
         <input
           type="text"
@@ -206,7 +210,8 @@ function goEditor():void{
 
     <div class="grid grid-cols-3 gap-3">
       <ProblemCard
-        v-for="data in questionData"
+        v-for="(data, index) in questionData"
+        :key = "index"
         :data="data"
         class="mb-10"
         @click="goQnADetail(data.questionId)"

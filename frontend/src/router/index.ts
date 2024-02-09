@@ -46,7 +46,7 @@ const router = createRouter({
       path: '/mypage',
       name: 'mypage',
       component: MyPage,
-      props: true,
+      // props: true,
       children: [
         // 선생님 마이페이지
         // 개인정보 수정
@@ -139,9 +139,15 @@ const router = createRouter({
       // 과외 구하는 모집 및 홍보 게시판
       path: '/lecturespromotion',
       name: 'lecturesPromo',
-      component: LectureRecruit,
+      redirect: {"name":'lectureList'},
       children: [
         // 모홍게 상세
+        {
+          path:'/list',
+          name:'lectureList',
+          component: LectureRecruit,
+
+        },
         {
           path: ':promotionNum',
           name: 'lectureDetail',

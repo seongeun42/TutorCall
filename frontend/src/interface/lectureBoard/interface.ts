@@ -25,6 +25,7 @@ export interface detailLecture extends lecture{
     lectureStartAt:string,
     lectureEndAt:string,
     participated: boolean,
+    price: number,
 }
 
 export interface detailTutor extends user{

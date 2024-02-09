@@ -172,9 +172,9 @@ function hideAlert(item:{hide:boolean}):void{
                 </svg>
               </button>
             </div>
-            <div v-for="d in data">
-              <smallAlert v-if="!d.hide" :data="d"
-              @change="hideAlert(d)"/>
+            <div v-for="(item, index) in data" :key="index">
+              <smallAlert v-if="!item.hide" :data="item"
+              @change="hideAlert(item)"/>
             </div>
           </div>
           <div class="ml-3 p-2 bg-sky-900 rounded-lg"

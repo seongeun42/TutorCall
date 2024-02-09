@@ -4,9 +4,11 @@ import SideBar from '@/components/SideBar.vue'
 import StudentSideBar from '@/components/StudentSideBar.vue'
 import { ref, type Ref, onMounted, defineProps } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useUserStore } from '@/store/userStore'
 
 const router = useRouter()
-const isTutor: Ref<boolean> = ref(true)
+const userStore = useUserStore();
+const isTutor: Ref<boolean> = ref(userStore.isTutor);
 
 onMounted(async () => {
   await router.isReady()
