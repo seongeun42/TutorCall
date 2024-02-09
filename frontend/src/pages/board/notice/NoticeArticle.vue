@@ -12,7 +12,7 @@
           </p>
         </div>
         <p class="font-bold text-xl">{{ data.title }}</p>
-        <p class="mx-10">{{ data.createdAt }}</p>
+        <p class="mx-10">{{ data.createdAt.slice(0, 10) }}</p>
       </div>
     </div>
   </div>
@@ -30,6 +30,7 @@ const router = useRouter()
 
 async function init(): Promise<void> {
   await api.getNoticeData().then((response: AxiosResponse<noticeResponse>) => {
+    console.log(response)
     if (response.status == 200) {
       noticeData.value = response.data.notices
     }
