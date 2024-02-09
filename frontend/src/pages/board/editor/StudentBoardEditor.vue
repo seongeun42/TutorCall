@@ -103,8 +103,8 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
 }
 </script>
 <template>
-  <div class="mx-auto w-[1000px]">
-    <div class="text-3xl font-bold">게시글 작성</div>
+  <div class="my-10 mx-auto w-[1000px]">
+    <div class="text-3xl font-bold">질문 작성</div>
     <div class="my-10">
       <div class="flex items-center">
         <input class="title" type="text" v-model="title" />

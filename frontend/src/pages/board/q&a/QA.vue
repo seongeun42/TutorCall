@@ -4,9 +4,9 @@ import * as api from '@/api/qna/qna'
 import { ref, onMounted, computed, watch } from 'vue'
 import type { Ref } from 'vue'
 import router from '@/router/index'
-import{ type AxiosResponse, type AxiosError, isAxiosError } from 'axios';
-import type{ questionInfo, questionResponse } from '@/interface/qna/interface'
-import type { errorResponse } from '@/interface/common/interface';
+import { type AxiosResponse, type AxiosError, isAxiosError } from 'axios'
+import type { questionInfo, questionResponse } from '@/interface/qna/interface'
+import type { errorResponse } from '@/interface/common/interface'
 
 interface selectform {
   value: number
@@ -137,8 +137,8 @@ async function keywordSearch(event: Event): Promise<void> {
   init()
 }
 
-function goEditor():void{
-  router.push({"name":"writeqna"});
+function goEditor(): void {
+  router.push({ name: 'studentRequestForm' })
 }
 </script>
 
@@ -196,9 +196,11 @@ function goEditor():void{
           검색
         </button>
 
-        <button type="button"
-        class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
-        @click="goEditor">
+        <button
+          type="button"
+          class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
+          @click="goEditor"
+        >
           글쓰기
         </button>
       </div>

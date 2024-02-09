@@ -33,8 +33,8 @@ function handleModelValueUpdate(newValue: string) {
 }
 </script>
 <template>
-  <div class="mx-auto w-[1000px]">
-    <div class="text-3xl font-bold">과외 모집</div>
+  <div class="my-10 mx-auto w-[1000px]">
+    <div class="text-3xl font-bold">과외 모집 홍보</div>
     <div class="my-10">
       <div class="flex items-center">
         <input class="title" type="text" v-model="title" />
