@@ -8,7 +8,7 @@ import axios from 'axios'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 const props = defineProps<{ screenShare: boolean }>()
 const APPLICATION_SERVER_URL =
-  import.meta.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/'
+  import.meta.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080/'
 const OV = ref<OpenVidu | undefined>(undefined)
 const session = ref<Session | undefined>(undefined)
 const mainStreamManager = ref<StreamManager | undefined>(undefined)
@@ -16,8 +16,8 @@ const shareStreamManager = ref<StreamManager | undefined>(undefined)
 const publisher = ref<Publisher | undefined>(undefined)
 const publisherScreen = ref<Publisher | undefined>(undefined)
 const subscribers = ref<Subscriber[]>([])
-const mySessionId = ref('SessionA')
-const myUserName = ref('Participant' + Math.floor(Math.random() * 100))
+const lectureId: Ref<number> = ref(1)
+const userName: Ref<string> = ref('Participant' + Math.floor(Math.random() * 100))
 const joinSession = () => {
   // --- 1) Get an OpenVidu object ---
   OV.value = new OpenVidu()
@@ -47,11 +47,11 @@ const joinSession = () => {
   session.value.on('exception', ({ exception }) => {
     console.warn(exception)
   })
-  getToken(mySessionId.value).then((token) => {
+  getToken(lectureId.value).then((token) => {
     // First param is the token. Second param can be retrieved by every user on event
     // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
     session.value
-      ?.connect(token, { clientData: myUserName.value })
+      ?.connect(token, { clientData: userName.value })
       .then(() => {
         // --- 5) Get your own camera stream with the desired properties ---
 
@@ -102,14 +102,14 @@ const updateMainVideoStreamManager = (stream: StreamManager) => {
   if (mainStreamManager.value === stream) return
   mainStreamManager.value = stream
 }
-const getToken = async (sessionId: string) => {
+const getToken = async (sessionId: number) => {
   const newSessionId = await createSession(sessionId)
   return await createToken(newSessionId)
 }
 
-const createSession = async (sessionId: string) => {
+const createSession = async (sessionId: number) => {
   const response = await axios.post(
-    `${APPLICATION_SERVER_URL}api/sessions`,
+    `${APPLICATION_SERVER_URL}tutorcall/${sessionId}/session`,
     { customSessionId: sessionId },
     {
       headers: { 'Content-Type': 'application/json' }
@@ -118,9 +118,9 @@ const createSession = async (sessionId: string) => {
   return response.data // The sessionId
 }
 
-const createToken = async (sessionId: string) => {
+const createToken = async (sessionId: number) => {
   const response = await axios.post(
-    `${APPLICATION_SERVER_URL}api/sessions/${sessionId}/connections`,
+    `${APPLICATION_SERVER_URL}tutorcall/${sessionId}/connection`,
     {},
     {
       headers: { 'Content-Type': 'application/json' }
