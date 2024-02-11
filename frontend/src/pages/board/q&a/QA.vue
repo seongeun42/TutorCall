@@ -16,7 +16,7 @@ interface selectform {
 let currentPage: number = 1
 const size = 10
 let totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
-let tag: string = ''
+let tag: number = 0
 let status: string = ''
 
 const questionData: Ref<questionInfo[]> = ref([])
@@ -43,7 +43,7 @@ const nextPage = (): void => {
 
 async function init(): Promise<void> {
   const param: string = `?page=${currentPage - 1}&size=${size}&isEnd=${status}&keyword=${keyword.value}&tagId=${tag}`
-
+  console.log(tag)
   await api
     .getQnAData(param)
     .then((response: AxiosResponse<questionResponse>) => {
@@ -79,15 +79,15 @@ function reset(event: Event): void {
   event.preventDefault()
   status = ''
   keyword.value = ''
-  tag = ''
+  tag = 0
   currentPage = 1
   init()
 }
 
 const school: selectform[] = [
   { value: 1, name: '초등학교' },
-  { value: 25, name: '중학교' },
-  { value: 37, name: '고등학교' }
+  { value: 31, name: '중학교' },
+  { value: 46, name: '고등학교' }
 ]
 
 let grade: selectform[] = []
@@ -97,14 +97,14 @@ watch(
   (oldValue) => {
     if (Number(oldValue) == 1) {
       grade = []
-      for (let i = 0; i < 6; i++) grade.push({ value: i * 4, name: `${i + 1}학년` })
+      for (let i = 0; i < 6; i++) grade.push({ value: i * 5, name: `${i + 1}학년` })
       gradeDisabled.value = false
       gradeSelected.value = ''
       subjectDisabled.value = true
       subjectSelected.value = ''
-    } else if (Number(oldValue) == 25 || Number(oldValue) == 37) {
+    } else if (Number(oldValue) == 31 || Number(oldValue) == 46) {
       grade = []
-      for (let i = 0; i < 3; i++) grade.push({ value: i * 4, name: `${i + 1}학년` })
+      for (let i = 0; i < 3; i++) grade.push({ value: i * 5, name: `${i + 1}학년` })
       gradeDisabled.value = false
       gradeSelected.value = ''
       subjectDisabled.value = true
@@ -129,11 +129,14 @@ async function keywordSearch(event: Event): Promise<void> {
     return
   }
 
-  tag = (
-    Number(schoolSelected.value) +
-    Number(gradeSelected.value) +
-    Number(subjectSelected.value)
-  ).toString()
+  if (
+    typeof schoolSelected.value === 'number' &&
+    typeof gradeSelected.value === 'number' &&
+    typeof subjectSelected.value === 'string'
+  ) {
+    tag = schoolSelected.value + gradeSelected.value + Number(subjectSelected.value)
+  }
+
   init()
 }
 
@@ -177,10 +180,11 @@ function goEditor(): void {
           :disabled="subjectDisabled"
         >
           <option value="" disabled>과목 선택</option>
-          <option value="0">수학</option>
-          <option value="1">과학</option>
-          <option value="2">국어</option>
-          <option value="3">영어</option>
+          <option value="0">국어</option>
+          <option value="1">수학</option>
+          <option value="2">사회</option>
+          <option value="3">과학</option>
+          <option value="4">영어</option>
         </select>
         <input
           type="text"
