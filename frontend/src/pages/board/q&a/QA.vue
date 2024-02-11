@@ -98,14 +98,14 @@ watch(
   (oldValue) => {
     if (Number(oldValue) == 1) {
       grade = []
-      for (let i = 0; i < 6; i++) grade.push({ value: i * 6, name: `${i + 1}학년` })
+      for (let i = 0; i < 6; i++) grade.push({ value: i * 5, name: `${i + 1}학년` })
       gradeDisabled.value = false
       gradeSelected.value = ''
       subjectDisabled.value = true
       subjectSelected.value = ''
     } else if (Number(oldValue) == 31 || Number(oldValue) == 46) {
       grade = []
-      for (let i = 0; i < 3; i++) grade.push({ value: i * 6, name: `${i + 1}학년` })
+      for (let i = 0; i < 3; i++) grade.push({ value: i * 5, name: `${i + 1}학년` })
       gradeDisabled.value = false
       gradeSelected.value = ''
       subjectDisabled.value = true
@@ -179,11 +179,11 @@ function goEditor():void{
           :disabled="subjectDisabled"
         >
           <option value="" disabled selected>과목 선택</option>
-          <option value=1>국어</option>
-          <option value=2>수학</option>
-          <option value=3>사회</option>
-          <option value=4>과학</option>
-          <option value=5>영어</option>
+          <option value=0>국어</option>
+          <option value=1>수학</option>
+          <option value=2>사회</option>
+          <option value=3>과학</option>
+          <option value=4>영어</option>
 
         </select>
         <input

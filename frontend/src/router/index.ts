@@ -22,7 +22,7 @@ import PointUsage from '@/pages/mypage/student/point/PointUsage.vue'
 import StudentMyLecture from '@/pages/mypage/student/information/StudentMyLecture.vue'
 import MyPaymentInfo from '@/pages/mypage/payment/MyPaymentInfo.vue'
 import InquiryEditor from '@/pages/board/editor/InquiryEditor.vue'
-import path from 'path'
+import MatchCall from '@/pages/tutorcall/MatchCall.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior(to, from, savedPosition) {
@@ -197,7 +197,12 @@ const router = createRouter({
       path: '/inquiry',
       name: 'inquiry',
       component: InquiryEditor
-    }
+    },
+    // {
+    //   path: '/matchcall',
+    //   name: 'matchcall',
+    //   component: MatchCall,
+    // }
   ]
 })
 

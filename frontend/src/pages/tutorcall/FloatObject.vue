@@ -1,32 +1,60 @@
+<script setup lang="ts">
+import type { Ref } from 'vue';
+import { ref } from 'vue';
+import SpeechBubble from '@/pages/tutorcall/SpeechBubble.vue';
+import floatingObject from '@/util/animation/floatingObject'
+import { onMounted } from 'vue';
+
+interface pushdata{
+    id: number,
+    delay: number,
+    size: number,
+    objectsize: number,
+    positionX: number,
+    positionY: number,
+    data: any,
+  }
+const props = defineProps<{
+  pushedData: pushdata,
+}>()
+
+const show:Ref<boolean> = ref(false);
+
+function click():void{
+  show.value = !show.value
+}
+
+onMounted(()=>{
+  floatingObject('.obj'+props.pushedData.id, props.pushedData.delay, props.pushedData.size);
+})
+</script>
 <template>
   <div
+  @click="click"
     class="obj"
     :style="{
-      width: props.size + 'px',
-      height: props.size + 'px',
-      top: props.positionX + '%',
-      left: props.positionY + '%',
+      width: props.pushedData.size + 'px',
+      height: props.pushedData.size + 'px',
+      top: props.pushedData.positionX + 'px',
+      left: props.pushedData.positionY + 'px',
       transform: 'translate(-50%, -50%)',
-      backgroundImage: 'url(https://via.placeholder.com/' + props.size + 'x' + props.size + ')',
+      backgroundImage: 'url(https://via.placeholder.com/' + props.pushedData.size + 'x' + props.pushedData.size + ')',
       animation: 'ani' + Math.floor(Math.random() * 3) + 1
     }"
-  ></div>
+  >
+  <div v-if="show">
+    <SpeechBubble/>
+  </div>
+  </div>
 </template>
-
-<script setup lang="ts">
-const props = defineProps<{
-  positionX: number
-  positionY: number
-  size: number
-}>()
-</script>
-
 <style scoped>
 .obj {
   position: absolute;
 
   border-radius: 50%;
+}
 
+.obj-inner {
   animation: ani 1s infinite alternate;
 }
 

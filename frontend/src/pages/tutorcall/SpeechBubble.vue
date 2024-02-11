@@ -1,5 +1,10 @@
-<script setup lang="ts"></script>
-
+<script setup lang="ts">
+import MatchText from '@/pages/tutorcall/MatchText.vue'
+import router from '@/router';
+function matching():void{
+  router.push({"name":'matchcall'});
+}
+</script>
 <template>
   <div class="speech-bubble">
     <div class="absolute top-3 right-5">x</div>
@@ -31,8 +36,9 @@
         </div>
       </div>
       <div class="text-center mt-1.5">
-        <button class="mr-3 bg-blue-600 text-center inline-block text-white rounded p-1.5">
-          수락
+        <button class="mr-3 bg-blue-600 text-center inline-block text-white rounded p-1.5"
+        @click="matching">
+            수락
         </button>
         <button class="mr-3 bg-red-600 text-center inline-block text-white rounded p-1.5">
           거절
