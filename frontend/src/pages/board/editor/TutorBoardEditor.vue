@@ -79,7 +79,6 @@ function cancelWrite(): void {
 }
 function handleModelValueUpdate(newValue: string) {
   editorData.value = newValue
-  console.log(editorData.value)
 }
 
 async function submitPost(event: Event): Promise<void> {

@@ -43,7 +43,6 @@ const nextPage = (): void => {
 
 async function init(): Promise<void> {
   const param: string = `?page=${currentPage - 1}&size=${size}&isEnd=${status}&keyword=${keyword.value}&tagId=${tag}`
-  console.log(tag)
   await api
     .getQnAData(param)
     .then((response: AxiosResponse<questionResponse>) => {
@@ -162,7 +161,7 @@ function goEditor(): void {
         >
           <!--tag 부분 수정 필요-->
           <option value="" disabled>학교 선택</option>
-          <option v-for="s in school" v-bind:value="s.value">{{ s.name }}</option>
+          <option v-for="s in school" v-bind:value="s.value" :key="s.value">{{ s.name }}</option>
 
           <!-- 다른 과목들도 추가할 수 있습니다. -->
         </select>
@@ -172,7 +171,7 @@ function goEditor(): void {
           :disabled="gradeDisabled"
         >
           <option value="" disabled>학년 선택</option>
-          <option v-for="g in grade" v-bind:value="g.value">{{ g.name }}</option>
+          <option v-for="g in grade" v-bind:value="g.value" :key="g.value">{{ g.name }}</option>
         </select>
         <select
           class="p-2 border border-gray-300 rounded-md mr-1 appearance-none"
@@ -214,6 +213,7 @@ function goEditor(): void {
       <ProblemCard
         v-for="data in questionData"
         :data="data"
+        :key="data.questionId"
         class="mb-10"
         @click="goQnADetail(data.questionId)"
       />
