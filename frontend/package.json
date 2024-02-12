@@ -9,8 +9,8 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint --fix src/",
-    "format": "prettier --write src/"
+    "lint": "eslint --cache --fix src/",
+    "format": "prettier --cache --write src/"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-alignment": "^41.0.0",

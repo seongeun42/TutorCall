@@ -3,7 +3,6 @@ import router from '@/router/index'
 import { useUserStore } from '@/store/userStore'
 import { ref, type Ref } from 'vue'
 import CallNotification from '@/components/CallNotification.vue'
-import smallAlert from '@/components/tutorcallAlert/smallAlert.vue'
 
 interface notifyDate {
   message: string
@@ -14,11 +13,6 @@ const dummyData: notifyDate = {
 }
 
 const modalShow: Ref<boolean> = ref(false)
-const viewAlertModal:Ref<boolean> = ref(false);
-
-function handleViewAlert():void{
-  viewAlertModal.value = !viewAlertModal.value;
-}
 
 function handleMode(show: boolean, mode: string) {
   modalShow.value = show
@@ -33,6 +27,13 @@ function goQnABoard():void{
 
 function goLectureBoard():void{
   router.push({"name":"lecturesPromo"});
+}
+
+
+function logout():void{
+  userStore.logout();
+  sessionStorage.clear();
+  router.push("/");
 }
 </script>
 
@@ -96,7 +97,7 @@ function goLectureBoard():void{
           </div>
           <!-- Profile dropdown -->
           <div class="relative ml-3">
-            <RouterLink to="/mypage/">
+            <RouterLink to="/mypage/user">
               <button
                 type="button"
                 class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -114,51 +115,14 @@ function goLectureBoard():void{
               </button>
             </RouterLink>
           </div>
-          <!--이 부분 밑은 NavBar로 옮겨야 함.-->
-          <div
-              tabindex="0"
-              type="button"
-              role="button"
-              class="relative rounded-full border-none bg-green-200 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 ml-8"
-              @click="handleViewAlert"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
-              </svg>
-            </div>
-            <div v-if="!viewAlertModal" id="alretbox" class="fixed right-0
-            top-24 min-w-[24rem] min-h-[36rem] 
-            bg-yellow-50 z-50 rounded-l-lg shadow-xl">
-            <div id="bar" class="w-full max-h-20 flex justify-between items-center justify-center">
-              <div class="flex justify-center items-center h-full ml-4">
-                <div class="chat chat-end">
-                  <div class="chat-bubble bg-green-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black" class="w-6 h-6">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
-                    </svg>
-                  </div>
-                </div>
-                <p class="text-center">튜터콜 요청</p>
-              </div>
-              <button class="btn border-none bg-yellow-50 mr-2" @click="handleViewAlert">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
-                </svg>
-              </button>
-            </div>
-            <smallAlert/>
-            <smallAlert/>
+          <div class="ml-3 p-2 bg-sky-900 rounded-lg"
+          @click="logout">
+            <p class="text-white font-semibold">로그아웃</p>
           </div>
         </div>
       </div>
     </div>
   </nav>
-  <CallNotification
-    v-if="modalShow"
-    :data="dummyData"
-    :show="modalShow"
-    @update:clicked="handleMode"
-  />
 </template>
 
 <style scoped></style>

@@ -15,6 +15,10 @@ import axios from 'axios'
 
 const videoSideView: Ref<boolean> = ref(true)
 const chatSideView: Ref<boolean> = ref(true)
+const screenShare: Ref<boolean> = ref(false)
+function handleScreenShare(screen: boolean) {
+  screenShare.value = screen
+}
 function handleVideoView(video: boolean) {
   videoSideView.value = video
 }
@@ -105,22 +109,25 @@ const dummydata5: chatForm = {
     </div>
     <div class="grid grid-cols-9 gap-4 max-h-[1000px]">
       <div class="col-span-7 grid grid-rows-9 max-h-[800px]">
-        <div class="row-span-8 max-h-[800px]">
+        <div class="row-span-8 max-h-[800px] flex justify-center items-center">
           <!-- 화면 컨텐츠 변환-->
-          <div v-if="videoSideView" class="flex justify-center max-h-[500px]">
-            <UserVideo :settings="dummydata3" />
+          <div v-if="videoSideView" class="flex justify-center">
+            <UserVideo :screenShare="screenShare" />
           </div>
           <!-- <img src="../../img/video.png" alt="" /> -->
           <img v-else class="h-full w-full" src="../../img/whitepage.jpg" alt="" />
         </div>
         <div class="row-span-1">
-          <OnlineLectureSettingBtn :settings="dummydata3" />
+          <OnlineLectureSettingBtn
+            :settings="dummydata3"
+            @update:screenChange="handleScreenShare"
+          />
         </div>
       </div>
       <div class="col-span-2">
         <div class="border-4 grid grid-rows-8 max-h-[800px]">
           <div v-if="chatSideView">
-            <div class="row-start-1 row-end-7 row-span-7 min-h-[520px] overflow-auto">
+            <div class="row-start-1 row-end-7 row-span-7 min-h-[710px] overflow-auto">
               <OnlineLectureChatForm :data="dummydata4" />
               <OnlineLectureChatForm :data="dummydata5" />
               <OnlineLectureSystemMsg message="시스템 메세지" />

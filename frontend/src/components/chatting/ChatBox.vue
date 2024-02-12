@@ -7,17 +7,14 @@ import ChatTopMenu from './ChatTopMenu.vue'
 <template>
   <div
     id="chatbox"
-    class="w-[290px] overflow-hidden h-[484px] absolute ml-[-155px] rounded-md left-2/4 top-[100px]"
+    class="w-full h-full overflow-hidden absolute rounded-md shadow-lg bg-white font-sans"
   >
-    <div id="friendslist" class="absolute w-[290px] h-[484px] left-0 top-0">
-      <ChatTopMenu />
-      <div id="friends" class="mt-2">
+    <div id="friendslist" class="absolute w-full h-full left-0 top-0">
+      <ChatTopMenu class="h-20" />
+      <div id="friends" class="h-[384px] overflow-scroll no-scrollbar">
         <ChatFriend />
-        <ChatFriend />
-        <ChatFriend />
-        <ChatFriend />
-        <ChatSearchVue />
       </div>
+      <ChatSearchVue class="h-14" />
     </div>
   </div>
 </template>

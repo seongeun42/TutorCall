@@ -5,7 +5,8 @@ export const useUserStore = defineStore({
   state: () => ({
     isLogin: false,
     email: '',
-    isTutor: false
+    isTutor: false,
+    isActiveCall: false
   }),
   actions: {
     login(isTutor: boolean, email: string) {

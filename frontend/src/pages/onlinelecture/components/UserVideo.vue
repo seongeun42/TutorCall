@@ -2,19 +2,20 @@
 import OnlineVideo from './OnlineVideo.vue'
 import ScreenShare from './ScreenShare.vue'
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import { OpenVidu, StreamManager } from 'openvidu-browser'
+import { OpenVidu, StreamManager, Session, Publisher, Subscriber } from 'openvidu-browser'
 import type { Ref } from 'vue'
 import axios from 'axios'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
-
+const props = defineProps<{ screenShare: boolean }>()
 const APPLICATION_SERVER_URL =
   import.meta.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/'
 const OV = ref<OpenVidu | undefined>(undefined)
-const session = ref<OpenVidu.Session | undefined>(undefined)
-const mainStreamManager = ref<OpenVidu.StreamManager | undefined>(undefined)
-const shareStreamManager = ref<OpenVidu.StreamManager | undefined>(undefined)
-const publisher = ref<OpenVidu.Publisher | undefined>(undefined)
-const subscribers = ref<OpenVidu.Subscriber[]>([])
+const session = ref<Session | undefined>(undefined)
+const mainStreamManager = ref<StreamManager | undefined>(undefined)
+const shareStreamManager = ref<StreamManager | undefined>(undefined)
+const publisher = ref<Publisher | undefined>(undefined)
+const publisherScreen = ref<Publisher | undefined>(undefined)
+const subscribers = ref<Subscriber[]>([])
 const mySessionId = ref('SessionA')
 const myUserName = ref('Participant' + Math.floor(Math.random() * 100))
 const joinSession = () => {
@@ -97,7 +98,7 @@ const leaveSession = () => {
   window.removeEventListener('beforeunload', leaveSession)
 }
 
-const updateMainVideoStreamManager = (stream: OpenVidu.StreamManager) => {
+const updateMainVideoStreamManager = (stream: StreamManager) => {
   if (mainStreamManager.value === stream) return
   mainStreamManager.value = stream
 }
@@ -132,27 +133,81 @@ function isVideoVisible(sub: string): boolean {
   // 예를 들어, 화면에 최대 4개의 비디오만 표시하고 싶다면:
   return subscribers.value.indexOf(sub) < 4
 }
+watch(
+  () => props.screenShare,
+  (newVal: boolean) => {
+    if (newVal) {
+      showScreenShare()
+    } else {
+      stopScreenSharing()
+    }
+  }
+)
+function showScreenShare() {
+  let screenPublisher = OV.value?.initPublisher(undefined, {
+    audioSource: false,
+    videoSource: 'screen',
+    publishAudio: false,
+    publishVideo: true,
+    resolution: '1920x1080',
+    frameRate: 30,
+    insertMode: 'APPEND',
+    mirror: false
+  })
 
-onMounted(() => joinSession())
+  // Set the screen sharing publisher as the main video in the page
+  shareStreamManager.value = screenPublisher
+  publisherScreen.value = screenPublisher
+
+  // Publish the screen sharing stream
+  session.value?.publish(publisherScreen.value)
+}
+
+const stopScreenSharing = () => {
+  // Unpublish the screen sharing stream
+  session.value?.unpublish(publisherScreen.value)
+
+  // Reset the main video in the page to display the webcam stream
+  publisherScreen.value = undefined
+}
+
+onMounted(() => {
+  joinSession()
+})
 onBeforeUnmount(() => leaveSession())
 </script>
 <template>
-  <ScreenShare :stream-manager="shareStreamManager" />
-  <div v-if="!subscribers">
-    <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
-  </div>
-  <div v-else>
-    <div class="flex">
+  <div v-if="props.screenShare">
+    <div class="flex mb-10">
+      <OnlineVideo class="w-[260px] h-[150px]" :stream-manager="mainStreamManager" />
       <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
         <OnlineVideo
-          class="w-[200px] h-[100px]"
+          class="w-[250px] h-[150px]"
           v-if="isVideoVisible(sub)"
           :stream-manager="sub"
           @click.native="updateMainVideoStreamManager(sub)"
         />
       </div>
     </div>
-    <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
+    <ScreenShare :stream-manager="shareStreamManager" />
+  </div>
+  <div v-else>
+    <div v-if="!subscribers">
+      <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
+    </div>
+    <div v-else>
+      <div class="flex">
+        <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
+          <OnlineVideo
+            class="w-[200px] h-[100px]"
+            v-if="isVideoVisible(sub)"
+            :stream-manager="sub"
+            @click.native="updateMainVideoStreamManager(sub)"
+          />
+        </div>
+      </div>
+      <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
+    </div>
   </div>
 </template>
 

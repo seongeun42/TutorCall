@@ -3,7 +3,9 @@ import type{ AxiosResponse } from 'axios';
 import type{ emailSend, emailCodeCheck,
     nickCheck, loginForm, signUpForm, signUpResponse, user } from '@/interface/account/interface'
 import type { commonResponse } from '@/interface/common/interface';
+import { ref, type Ref } from 'vue';
 
+const token:Ref<string> = ref('');
 export async function sendEmailCode(param: emailSend): Promise<AxiosResponse<commonResponse>> {
   const url: string = import.meta.env.VITE_VUE_API_URL + '/auth/email'
   return instance.post<commonResponse>(url, param)

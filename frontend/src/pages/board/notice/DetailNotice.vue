@@ -2,15 +2,11 @@
   <div v-if="noticeDetailData">
     <div class="mx-20 py-20">
       <div class="flex justify-between">
-        <h5 class="font-bold text-3xl">{{ noticeDetailData?.title }}</h5>
-        <div class="flex my-5">
-          <p @click="deleteNotice">delete</p>
-          <p class="mx-5" @click="editNotice">edit</p>
+        <h5 class="font-bold text-3xl ml-10">{{ noticeDetailData?.title }}</h5>
+        <div class="flex">
+          <p class="text-xl mr-10">관리자</p>
+          <p class="text-xl">{{ noticeDetailData?.createdAt.slice(0, 10) }}</p>
         </div>
-      </div>
-      <div class="flex">
-        <p class="text-xl mr-10">관리자</p>
-        <p class="text-xl">{{ noticeDetailData?.createdAt }}</p>
       </div>
       <p class="border border-b-1 border-gray-300 my-5"></p>
       <div class="mx-10 my-20">
@@ -22,7 +18,7 @@
       <div class="flex flex-col items-center">
         <button
           type="button"
-          class="rounded bg-primary mt-4 px-6 py-3 pb-2 pt-2 text-2xl font-bold uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+          class="rounded bg-primary mt-4 px-6 py-3 pb-2 pt-2 text-2xl font-bold uppercaseleading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
           style="width: calc(3 * 3rem); height: 3rem"
           @click="goNotice"
         >
@@ -68,14 +64,6 @@ onMounted((): void => {
 
 function goNotice(): void {
   router.push({ name: 'noticeArticles' })
-}
-
-function deleteNotice(): void {
-  // 추후 필요시 삭제 기능 구현
-}
-
-function editNotice(): void {
-  // 추후 필요시 수정 기능 구현
 }
 </script>
 
