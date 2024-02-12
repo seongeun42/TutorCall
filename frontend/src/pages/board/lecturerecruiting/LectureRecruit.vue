@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import TutorCard from './TutorCard.vue'
-import { onMounted, ref, type Ref } from 'vue';
+import { onMounted, ref, type Ref } from 'vue'
 import * as api from '@/api/lectureBoard/lectureBoard'
-import type { lecture, lectureResponse } from '@/interface/lectureBoard/interface';
-import { isAxiosError, type AxiosResponse } from 'axios';
-import type { errorResponse } from '@/interface/common/interface';
-import router from '@/router';
+import type { lecture, lectureResponse } from '@/interface/lectureBoard/interface'
+import { isAxiosError, type AxiosResponse } from 'axios'
+import type { errorResponse } from '@/interface/common/interface'
+import router from '@/router'
 
 let selectedSubject: string = ''
 let currentPage: number = 1
-let tag:string = "";
-const size = 10;
+let tag: string = ''
+const size = 10
 const totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
-const searchKeyword = ref("");
-const lectureData:Ref<lecture[]> = ref([]); 
+const searchKeyword = ref('')
+const lectureData: Ref<lecture[]> = ref([])
 
 const prevPage = (): void => {
   if (currentPage > 1) {
@@ -27,28 +27,27 @@ const nextPage = (): void => {
   }
 }
 
-async function init():Promise<void>{
+async function init(): Promise<void> {
+  const param: string = `page=${currentPage - 1}&tag=${tag}&keyword=${searchKeyword.value}&state=true&size=${size}`
 
-  const param:string = `page=${currentPage-1}&tag=${tag}&keyword=${searchKeyword.value}&state=true&size=${size}`
-
-  await api.lectureList(param)
-  .then((response: AxiosResponse<lectureResponse>)=>{
-    lectureData.value = response.data.content;
-  })
-  .catch((error: unknown)=>{
-    if(isAxiosError<errorResponse>(error)){
-      alert(error.response?.data.message);
-    }
-  })
-  
+  await api
+    .lectureList(param)
+    .then((response: AxiosResponse<lectureResponse>) => {
+      lectureData.value = response.data.content
+    })
+    .catch((error: unknown) => {
+      if (isAxiosError<errorResponse>(error)) {
+        alert(error.response?.data.message)
+      }
+    })
 }
 
-function gowrite():void{
-  router.push({"name":"writelecture"});
+function gowrite(): void {
+  router.push({ name: 'teacherPromotionForm' })
 }
 
-onMounted(()=>{
-  init();
+onMounted(() => {
+  init()
 })
 </script>
 <template>
@@ -78,14 +77,16 @@ onMounted(()=>{
           검색
         </button>
 
-        <button type="button" 
-        class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
-        @click="gowrite">
+        <button
+          type="button"
+          class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
+          @click="gowrite"
+        >
           글쓰기
         </button>
       </div>
     </div>
-    <TutorCard v-for="lecture in lectureData" :data="lecture"/>
+    <TutorCard v-for="lecture in lectureData" :data="lecture" />
     <div class="flex justify-center mt-8">
       <button
         type="button"
