@@ -56,6 +56,12 @@ watch(
     }
   }
 )
+watch(
+  () => subjectSelected.value,
+  () => {
+    tag = Number(schoolSelected.value) + Number(gradeSelected.value) + Number(subjectSelected.value)
+  }
+)
 const editStore = useEditStore()
 const questionId: number = Number(router.currentRoute.value.params['qnaNum'])
 onMounted(() => {
@@ -84,7 +90,7 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
   const param = {
     questionTitle: title.value,
     questionContent: editorData.value,
-    tagId: 1
+    tagId: tag
   }
 
   const endpoint: string = buttonClicked.value === 'qna' ? 'qna/question' : 'tutorcall/'

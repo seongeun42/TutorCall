@@ -60,7 +60,12 @@ watch(
     }
   }
 )
-
+watch(
+  () => subjectSelected.value,
+  () => {
+    tag = Number(schoolSelected.value) + Number(gradeSelected.value) + Number(subjectSelected.value)
+  }
+)
 onMounted(() => {
   if (editStore.needEdit) {
     title.value = editStore.title
@@ -79,16 +84,16 @@ function handleModelValueUpdate(newValue: string) {
 
 async function submitPost(event: Event): Promise<void> {
   event.preventDefault()
-
+  const promotionDue = new Date(deadline.value)
   const url: string = 'http://localhost:8080/'
 
   const param = {
     promotionTitle: title.value,
     promotionContent: editorData.value,
     maxParticipant: maxPeople.value,
-    promotionDue: deadline.value,
+    promotionDue: promotionDue,
     price: lectureFee.value,
-    tagId: 1
+    tagId: tag
   }
 
   const endpoint: string = 'lecture/promotion'
@@ -127,7 +132,7 @@ async function submitPost(event: Event): Promise<void> {
     <div class="flex">
       <div class="flex items-center">
         <select
-          class="p-2 border border-gray-300 rounded-md mr-1 appearance-none"
+          class="p-2 border border-gray-300 rounded-md mr-3 appearance-none"
           v-model="schoolSelected"
         >
           <!--tag 부분 수정 필요-->
@@ -137,7 +142,7 @@ async function submitPost(event: Event): Promise<void> {
           <!-- 다른 과목들도 추가할 수 있습니다. -->
         </select>
         <select
-          class="p-2 border border-gray-300 rounded-md mr-1 appearance-none"
+          class="p-2 border border-gray-300 rounded-md mr-3 appearance-none"
           v-model="gradeSelected"
           :disabled="gradeDisabled"
         >
@@ -182,14 +187,14 @@ async function submitPost(event: Event): Promise<void> {
       <button
         @click="cancelWrite"
         type="button"
-        class="mr-6 py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+        class="mr-6 py-2.5 px-5 me-2 mb-2 text-md font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
       >
         취소
       </button>
       <button
         @click="submitPost($event)"
         type="button"
-        class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-white focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+        class="py-2.5 px-5 me-2 mb-2 text-md font-medium text-white focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
       >
         등록
       </button>
