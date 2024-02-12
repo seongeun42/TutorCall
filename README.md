@@ -29,12 +29,19 @@ echo "Formatting Backend code..."
 echo "Running Google Java Format..."
 
 # Google Java 형식을 사용하여 사용하지 않는 import제거
-java -jar "google-java-format-1.19.2-all-deps.jar" -i $(git diff --cached --name-only --diff-filter=ACM -- '*.java' | tr '\n' ' ')
+for file in $stagedFiles; do
+  if test -f "$file"; then
+    if [[ $file == *.java ]]; then
+      java -jar "google-java-format-1.19.2-all-deps.jar" -i "$file"
+      git add "$file"
+    fi
+  fi
+done
+
+cd frontend/
 
 # FrontEnd auto formatting
 echo "Formatting Frontend code..."
-
-cd frontend/
 
 # Prettier 실행
 echo "Runnig Prettier..."
@@ -44,19 +51,13 @@ npm run format
 echo "Running ESLint..."
 npm run lint
 
-# 수정된 파일들 git add
-cd ..
-
-# for file in $stagedFiles; do
-#  if test -f "$file"; then
-#    git add $file
-#  fi
-# done
-
-git add .
+# 실행 후 staged 상태에 있는 파일만 add
+for file in $stagedFiles; do
+  if test -f "$file"; then
+    git add "$file"
+  fi
+done
 ```
-edit
-
 
 * pre-commit 실행 권한 부여
 ```
