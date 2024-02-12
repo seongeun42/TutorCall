@@ -7,6 +7,7 @@ import type { Ref } from 'vue'
 import axios from 'axios'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 const props = defineProps<{ screenShare: boolean }>()
+const showScreen: Ref<boolean> = ref(false)
 const APPLICATION_SERVER_URL =
   import.meta.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080/'
 const OV = ref<OpenVidu | undefined>(undefined)
@@ -29,7 +30,7 @@ const joinSession = () => {
 
   // On every new Stream received...
   session.value.on('streamCreated', ({ stream }) => {
-    const subscriber = session.value?.subscribe(stream)
+    const subscriber = session.value?.subscribe(stream, undefined)
     if (subscriber) {
       subscribers.value.push(subscriber)
     }
@@ -37,14 +38,14 @@ const joinSession = () => {
 
   // On every Stream destroyed...
   session.value.on('streamDestroyed', ({ stream }) => {
-    const index = subscribers.value.indexOf(stream.streamManager, 0)
+    const index = subscribers.value.findIndex((sub) => sub.stream === stream)
     if (index >= 0) {
       subscribers.value.splice(index, 1)
     }
   })
 
   // On every asynchronous exception...
-  session.value.on('exception', ({ exception }) => {
+  session.value.on('exception', (exception) => {
     console.warn(exception)
   })
   getToken(lectureId.value).then((token) => {
@@ -108,14 +109,21 @@ const getToken = async (sessionId: number) => {
 }
 
 const createSession = async (sessionId: number) => {
-  const response = await axios.post(
-    `${APPLICATION_SERVER_URL}tutorcall/${sessionId}/session`,
-    { customSessionId: sessionId },
-    {
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
-  return response.data // The sessionId
+  try {
+    const response = await axios.post(
+      `${APPLICATION_SERVER_URL}tutorcall/${sessionId}/session`,
+      { customSessionId: sessionId },
+      {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true
+      }
+    )
+
+    console.log(response)
+    return response.data.sessionId.replace('tutorCall', '')
+  } catch (error) {
+    return 1
+  }
 }
 
 const createToken = async (sessionId: number) => {
@@ -123,12 +131,13 @@ const createToken = async (sessionId: number) => {
     `${APPLICATION_SERVER_URL}tutorcall/${sessionId}/connection`,
     {},
     {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true
     }
   )
-  return response.data // The token
+  return response.data.token
 }
-function isVideoVisible(sub: string): boolean {
+function isVideoVisible(sub: any): boolean {
   // 제한된 영역 내에서 비디오를 표시할지 여부를 결정하는 로직을 작성합니다.
   // 예를 들어, 화면에 최대 4개의 비디오만 표시하고 싶다면:
   return subscribers.value.indexOf(sub) < 4
@@ -137,12 +146,23 @@ watch(
   () => props.screenShare,
   (newVal: boolean) => {
     if (newVal) {
+      showScreen.value = true
+    } else {
+      showScreen.value = false
+    }
+  }
+)
+watch(
+  () => showScreen.value,
+  (newVal: boolean) => {
+    if (newVal) {
       showScreenShare()
     } else {
       stopScreenSharing()
     }
   }
 )
+
 function showScreenShare() {
   let screenPublisher = OV.value?.initPublisher(undefined, {
     audioSource: false,
@@ -177,7 +197,7 @@ onMounted(() => {
 onBeforeUnmount(() => leaveSession())
 </script>
 <template>
-  <div v-if="props.screenShare">
+  <div v-if="showScreen">
     <div class="flex mb-10">
       <OnlineVideo class="w-[260px] h-[150px]" :stream-manager="mainStreamManager" />
       <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
@@ -196,7 +216,7 @@ onBeforeUnmount(() => leaveSession())
       <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
     </div>
     <div v-else>
-      <div class="flex">
+      <div class="flex mb-5 border-gray-100">
         <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
           <OnlineVideo
             class="w-[200px] h-[100px]"

@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import router from '@/router'
 import { defineProps, ref } from 'vue'
 import type { Ref } from 'vue'
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *
  *  학생이면 mike, video 다 꺼져 있어야 하고
@@ -48,12 +48,18 @@ function clickedVideo(): void {
   videoStatus.value = !videoStatus.value
   emit('update:videoChange', videoStatus.value)
 }
+
+function exit(): void {
+  if (window.confirm('회의에서 나가시겠습니까?')) {
+    router.push('/')
+  }
+}
 </script>
 <template>
   <div class="flex justify-between h-full py-2">
     <div class="flex justify-center">
       <button class="btn">
-        url copy
+        링크 복사
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -199,7 +205,7 @@ function clickedVideo(): void {
       </button>
     </div>
     <div>
-      <button class="btn btn-outline btn-error">나가기</button>
+      <button @click="exit" class="btn btn-outline btn-error">나가기</button>
     </div>
   </div>
 </template>
