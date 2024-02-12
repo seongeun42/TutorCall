@@ -7,7 +7,7 @@
         <ReviewCarousel
       /></template>
       <template v-if="userStore.isTutor"
-        ><ReviewCarousel class="mt-10" />
+        ><ReviewCarousel />
         <AboutPage class="my-10" />
         <FindTutor
       /></template>
