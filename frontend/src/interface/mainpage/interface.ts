@@ -48,7 +48,7 @@ export interface studentReviewResponse {
 export interface tagInfo {
   id: number
   subject: string
-  schoolType: string
+  level: string
   grade: number
 }
 

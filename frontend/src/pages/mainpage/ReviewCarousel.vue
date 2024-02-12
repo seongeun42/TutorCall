@@ -20,7 +20,7 @@
         </Slide>
       </Carousel>
     </div>
-    <div v-else>
+    <div v-if="!userStore.isTutor && !userStore.isLogin">
       <div class="text-3xl text-center font-black text-neutral-700 mb-5">
         비로그인용 더미데이터?
       </div>
