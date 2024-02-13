@@ -10,10 +10,21 @@ import TutorCallPage from '@/pages/tutorcall/TutorCallPage.vue'
 
 const userStore = useUserStore()
 </script>
-
 <template>
   <div>test</div>
-
+  <div v-if="!userStore.isLogin">
+    <NotLoginNavBar />
+  </div>
+  <div v-else>
+    <NavBar v-if="userStore.isTutor" />
+    <StudentNavBar v-else />
+  </div>
+  <div class="min-h-[1000px]" id="mainComponent">
+    <RouterView id="main" />
+    <!-- <TutorCallPage/> -->
+  </div>
+  <ChatIcon />
+  <FooterBar />
 </template>
 
 <style scoped></style>
