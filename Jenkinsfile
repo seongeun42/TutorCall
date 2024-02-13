@@ -22,7 +22,7 @@ pipeline {
                     script {
                 
                         def containerIds = sh(
-                            script: "docker ps -aqf \"name=^/${frontendContainer}$\"",
+                            script: "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")",
                             returnStdout: true
                         ).trim()
 
