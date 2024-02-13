@@ -10,7 +10,6 @@ import lombok.*;
 public class Tag {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String subject;
@@ -21,7 +20,8 @@ public class Tag {
 
   // 생성자
   @Builder
-  public Tag(String subject, SchoolType level, int grade) {
+  public Tag(Long id, String subject, SchoolType level, int grade) {
+    this.id = id;
     this.subject = subject;
     this.level = level;
     this.grade = grade;
