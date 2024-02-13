@@ -10,7 +10,6 @@ const userStore = useUserStore();
 
 function changeStatus() {
   userStore.isActiveCall = !userStore.isActiveCall
-  console.log(userStore.isActiveCall)
 }
 
 

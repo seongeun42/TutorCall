@@ -43,13 +43,11 @@ const nextPage = (): void => {
 
 async function init(): Promise<void> {
   const param: string = `?page=${currentPage - 1}&size=${size}&isEnd=${status}&keyword=${keyword.value}&tagId=${tag}`
-  console.log(param);
 
   await api
     .getQnAData(param)
     .then((response: AxiosResponse<questionResponse>) => {
       if (response.status == 200) {
-        console.log(response);
         totalPages = response.data.questions.totalPages
         questionData.value = response.data.questions.content
         originData.value = questionData.value
@@ -126,7 +124,6 @@ watch(
 
 async function keywordSearch(event: Event): Promise<void> {
   event.preventDefault()
-  console.log("keyword Search");
   if (!subjectSelected.value) {
     alert('검색 조건을 다시 설정해주세요!')
     return

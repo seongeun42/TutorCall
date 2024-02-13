@@ -66,10 +66,6 @@ async function modifyed(event: Event):Promise<void>{
       }
     }
 
-    tags.forEach((d)=>{
-      console.log(d);
-    })
-
     await api.modifyTag({tags: tags})
     .catch((error : unknown)=>{
       if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
