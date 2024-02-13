@@ -19,12 +19,11 @@ import org.springframework.data.redis.core.RedisHash;
 public class ChatMessage {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private String id;
 
-  @JsonBackReference private User user;
+  private Long senderId;
 
-  @JsonBackReference private Chatroom chatroom;
+  private String chatroomId;
 
   private String message;
 
@@ -32,9 +31,10 @@ public class ChatMessage {
 
   // 생성자
   @Builder
-  public ChatMessage(User user, Chatroom chatroom, String message) {
-    this.user = user;
-    this.chatroom = chatroom;
+  public ChatMessage(String id, Long senderId, String chatroomId, String message) {
+    this.id = id;
+    this.senderId = senderId;
+    this.chatroomId = chatroomId;
     this.message = message;
   }
 }

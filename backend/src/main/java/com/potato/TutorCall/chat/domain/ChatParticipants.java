@@ -3,10 +3,12 @@ package com.potato.TutorCall.chat.domain;
 import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.time.LocalDateTime;
 
 @Data
+@RedisHash("chatting_user")
 public class ChatParticipants {
   @Id
   String id;
