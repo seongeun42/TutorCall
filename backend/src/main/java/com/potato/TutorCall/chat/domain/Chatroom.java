@@ -25,8 +25,6 @@ public class Chatroom implements Serializable {
 
   private ChatroomType type;
 
-  @CreatedDate private LocalDateTime createdAt;
-
   // 생성자
   @Builder
   public Chatroom(String id, String name, ChatroomType type) {

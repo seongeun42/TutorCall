@@ -1,6 +1,7 @@
 package com.potato.TutorCall.chat.controller;
 
 import com.potato.TutorCall.chat.dto.req.CreateRoomReqDto;
+import com.potato.TutorCall.chat.dto.req.ExitRoomReqDto;
 import com.potato.TutorCall.chat.dto.req.SendChatReq;
 import com.potato.TutorCall.chat.service.ChatroomService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,17 @@ public class ChatroomController {
   }
 
   /**
+   * 채팅방 참여자들의 아이디를 반환
+   *
+   * @param roomId
+   * @return
+   */
+  @SendTo("/chatroom/{roomId}")
+  public Flux<?> getUsersInChatroom(@DestinationVariable String roomId) {
+    return chatroomService.getUsersInChatroom(roomId);
+  }
+
+  /**
    * 채팅방 생성
    *
    * @param createRoomReq
@@ -42,9 +54,14 @@ public class ChatroomController {
   }
 
   /**
-   * 방 나가기
+   * 채팅방에서 퇴장
+   *
+   * @param exitRoomReq
+   * @return
    */
-  @SendTo("/chatroom/")
-  public Mono<?> existRoom()
+  @SendTo("/chatroom/exited")
+  public void exitRoom(@RequestBody ExitRoomReqDto exitRoomReq) {
+    chatroomService.exitRoom(exitRoomReq);
+  }
 
 }

@@ -1,4 +1,4 @@
-package com.potato.TutorCall.chat.repository;
+package com.potato.TutorCall.chat.repository.chatroom;
 
 import com.potato.TutorCall.chat.domain.Chatroom;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;

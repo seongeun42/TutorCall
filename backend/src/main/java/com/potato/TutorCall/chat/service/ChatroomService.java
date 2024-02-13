@@ -3,8 +3,9 @@ package com.potato.TutorCall.chat.service;
 import com.potato.TutorCall.chat.domain.ChatParticipants;
 import com.potato.TutorCall.chat.domain.Chatroom;
 import com.potato.TutorCall.chat.dto.req.CreateRoomReqDto;
-import com.potato.TutorCall.chat.repository.ChatroomRepository;
-import com.potato.TutorCall.user.repository.UserRepository;
+import com.potato.TutorCall.chat.dto.req.ExitRoomReqDto;
+import com.potato.TutorCall.chat.repository.chatParticipants.ChatparticipantsRepository;
+import com.potato.TutorCall.chat.repository.chatroom.ChatroomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ChatroomService {
   private final SimpMessagingTemplate simpMessagingTemplate;
-  private final UserRepository userRepository;
   private final ChatroomRepository chatroomRepository;
+  private final ChatparticipantsRepository chatparticipantsRepository;
 
   public Mono<?> createRoom(CreateRoomReqDto createRoomReq) {
     String roomId = UUID.randomUUID().toString();
@@ -34,13 +35,30 @@ public class ChatroomService {
               .userId(userId)
               .build();
 
-
+      chatparticipantsRepository.save(chatParticipant);
     }
 
     return Mono.just(roomId);
   }
 
   public Flux<?> getChatroomList(Long userId) {
-    return null;
+    return chatparticipantsRepository.getParticipatingRooms(userId);
+  }
+
+  public void exitRoom(ExitRoomReqDto exitRoomReq) {
+    chatparticipantsRepository.deleteByUserIdAndChatroomId(exitRoomReq.getUserId(), exitRoomReq.getRoomId());
+
+    Mono<Long> zeroMono = Mono.just(0L);
+    Mono<Long> remains = chatparticipantsRepository.countUsersInRoom(exitRoomReq.getRoomId());
+
+    remains.zipWith(zeroMono).doOnNext(t -> {
+      if(t.getT1().equals(t.getT2())) {
+        chatroomRepository.deleteById(exitRoomReq.getRoomId());
+      }
+    }).subscribe();
+  }
+
+  public Flux<?> getUsersInChatroom(String roomId) {
+    return chatparticipantsRepository.getUsersInChatroom(roomId);
   }
 }
