@@ -14,10 +14,3 @@ services:
       MYSQL_DATABASE: '${DB_DATABASE}'
       MYSQL_USER: '${DB_USERNAME}'
       MYSQL_PASSWORD: '${DB_PASSWORD}'
-  openvidu:
-    image: openvidu/openvidu-dev:2.29.0
-    ports:
-      - 4443:4443
-    environment:
-      OPENVIDU_SECRET: '${MY_SECRET}'
-
