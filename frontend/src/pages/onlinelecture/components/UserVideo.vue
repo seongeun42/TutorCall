@@ -23,23 +23,18 @@ const subscribers = ref<Subscriber[]>([])
 const lectureId: Ref<number> = ref(1)
 const userName: Ref<string> = ref('Participant' + Math.floor(Math.random() * 100))
 const joinSession = () => {
-  // --- 1) Get an OpenVidu object ---
   OVCamera.value = new OpenVidu()
 
-  // --- 2) Init a session ---
   sessionCamera.value = OVCamera.value.initSession()
 
-  // --- 3) Specify the actions when events take place in the session ---
-
-  // On every new Stream received...
   sessionCamera.value.on('streamCreated', ({ stream }) => {
     const subscriber = sessionCamera.value?.subscribe(stream, undefined)
-    if (subscriber) {
+    if (subscriber && subscriber.stream.typeOfVideo === 'CAMERA') {
       subscribers.value.push(subscriber)
+      console.log('구독자 목록', subscribers.value)
     }
   })
 
-  // On every Stream destroyed...
   sessionCamera.value.on('streamDestroyed', ({ stream }) => {
     const index = subscribers.value.findIndex((sub) => sub.stream === stream)
     if (index >= 0) {
@@ -47,20 +42,13 @@ const joinSession = () => {
     }
   })
 
-  // On every asynchronous exception...
   sessionCamera.value.on('exception', (exception) => {
     console.warn(exception)
   })
   getToken(lectureId.value).then((token) => {
-    // First param is the token. Second param can be retrieved by every user on event
-    // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
     sessionCamera.value
       ?.connect(token, { clientData: userName.value })
       .then(() => {
-        // --- 5) Get your own camera stream with the desired properties ---
-
-        // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
-        // element: we will manage it on our own) and with the desired properties
         let newPublisher = OVCamera.value?.initPublisher(undefined, {
           audioSource: undefined,
           videoSource: undefined,
@@ -72,11 +60,9 @@ const joinSession = () => {
           mirror: false
         })
 
-        // Set the main video in the page to display our webcam and store our Publisher
         mainStreamManager.value = newPublisher
         publisher.value = newPublisher
         console.log(mainStreamManager.value)
-        // --- 6) Publish your stream ---
 
         sessionCamera.value?.publish(publisher.value)
       })
@@ -88,17 +74,14 @@ const joinSession = () => {
   window.addEventListener('beforeunload', leaveSession)
 }
 const leaveSession = () => {
-  // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
   if (sessionCamera.value) sessionCamera.value.disconnect()
 
-  // Empty all properties...
   sessionCamera.value = undefined
   mainStreamManager.value = undefined
   publisher.value = undefined
   subscribers.value = []
   OVCamera.value = undefined
 
-  // Remove beforeunload listener
   window.removeEventListener('beforeunload', leaveSession)
 }
 
@@ -122,7 +105,6 @@ const createSession = async (sessionId: number) => {
       }
     )
 
-    console.log(response)
     return response.data.sessionId.replace('tutorCall', '')
   } catch (error) {
     return 1
@@ -141,8 +123,6 @@ const createToken = async (sessionId: number) => {
   return response.data.token
 }
 function isVideoVisible(sub: any): boolean {
-  // 제한된 영역 내에서 비디오를 표시할지 여부를 결정하는 로직을 작성합니다.
-  // 예를 들어, 화면에 최대 4개의 비디오만 표시하고 싶다면:
   return subscribers.value.indexOf(sub) < 4
 }
 watch(
@@ -185,11 +165,9 @@ function showScreenShare() {
           shareSuccess.value = false
           console.warn('ScreenShare: Access Denied')
         })
-        // Set the screen sharing publisher as the main video in the page
         shareStreamManager.value = screenPublisher
         publisherScreen.value = screenPublisher
 
-        // Publish the screen sharing stream
         sessionScreen.value?.publish(publisherScreen.value)
       })
     })
@@ -199,10 +177,7 @@ function showScreenShare() {
 }
 
 const stopScreenSharing = () => {
-  // Unpublish the screen sharing stream
   sessionScreen.value?.unpublish(publisherScreen.value)
-
-  // Reset the main video in the page to display the webcam stream
   publisherScreen.value = undefined
   shareStreamManager.value = undefined
   OVScreen.value = undefined
