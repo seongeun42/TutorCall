@@ -45,7 +45,7 @@ function checkoverlapping(objectsize:number, positionX:number, positionY:number)
 function pushNewData(data: any){
   const objectsize= 175;
   let positionX = Math.floor(Math.random() * (500 - objectsize + 1)) + 100;
-  let positionY = Math.floor(Math.random() * ((mainWidth-objectsize)-(200)+1)) + 200
+  let positionY = Math.floor(Math.random() * (mainWidth * 0.35)) + (mainWidth * 0.325)
 
   while(checkoverlapping(objectsize, positionX, positionY)){
     positionX = Math.floor(Math.random() * (500 - objectsize + 1)) + 100;

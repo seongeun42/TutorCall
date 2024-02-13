@@ -24,6 +24,9 @@ import MyPaymentInfo from '@/pages/mypage/payment/MyPaymentInfo.vue'
 import InquiryEditor from '@/pages/board/editor/InquiryEditor.vue'
 import MatchCall from '@/pages/tutorcall/MatchCall.vue'
 import StudentBoardEditor from '@/pages/board/editor/StudentBoardEditor.vue'
+import TutorBoardEditor from '@/pages/board/editor/TutorBoardEditor.vue'
+import path from 'path'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior(to, from, savedPosition) {
@@ -218,11 +221,23 @@ const router = createRouter({
       name: 'inquiry',
       component: InquiryEditor
     },
-    // {
-    //   path: '/matchcall',
-    //   name: 'matchcall',
-    //   component: MatchCall,
-    // }
+    {
+      path: '/matchcall',
+      name: 'matchcall',
+      component: MatchCall,
+    },
+    // 학생 튜터콜 및 Q&A 에디터
+    {
+      path: '/problemform',
+      name: 'studentRequestForm',
+      component: StudentBoardEditor
+    },
+    // 선생님 홍보 에디터
+    {
+      path: '/promotionform',
+      name: 'teacherPromotionForm',
+      component: TutorBoardEditor
+    }
   ]
 })
 

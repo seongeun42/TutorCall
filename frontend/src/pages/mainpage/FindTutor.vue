@@ -6,7 +6,7 @@
       </div>
     </div>
     <Carousel :items-to-show="2.5" :wrapAround="true">
-      <Slide v-for="(slide, index) in Promotions" :key="index">
+      <Slide v-for="(slide, index) in othersPromotion" :key="index">
         <div class="carousel__item"><RecommendedTutorVue :data="slide" /></div>
       </Slide>
       <template #addons>
@@ -19,7 +19,45 @@
 <script setup lang="ts">
 import RecommendedTutorVue from './RecommendedTutor.vue'
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
-import { ref, type Ref, defineComponent } from 'vue'
+import { ref, type Ref, defineComponent, onMounted } from 'vue'
+import { useUserStore } from '@/store/userStore'
+import type {
+  reviewerInfo,
+  tutorInfo,
+  tutorReviewInfo,
+  tutorReviewResponse,
+  tagInfo,
+  lectureResponse
+} from '@/interface/mainpage/interface'
+import * as api from '@/api/mainpage/mainpage'
+import { type AxiosResponse } from 'axios'
+
+async function initOthersPromotion(): Promise<void> {
+  const response: AxiosResponse<lectureResponse> = await api.tutorPromotion();
+
+  if (response.status == 200) {
+    for (let i = 0; i < response.data.content.length; i++) {
+      const content = response.data.content[i];
+      const tutornum = content.tutor.id;
+
+      const moreResponse = await api.tutorInfo(tutornum);
+
+      othersPromotion.value.push({
+        lectureId: content.id,
+        promotionTitle: content.title,
+        tutorId: content.tutor.id,
+        tutorNickname: content.tutor.nickname,
+        profileUrl: content.tutor.profile,
+        // profileUrl: 'src/img/student.jpg',
+        tag: content.tag.subject,
+        introduction: moreResponse.data.introduction,
+        reliability: moreResponse.data.reliability,
+      });
+    }
+  }
+}
+
+const othersPromotion: Ref<Promotion[]> = ref([])
 
 defineComponent({
   name: 'WrapAround',
@@ -112,6 +150,10 @@ const Promotions: Ref<Promotion[]> = ref([
     tag: '수학'
   }
 ])
+
+onMounted(async (): Promise<void> => {
+ await initOthersPromotion()
+})
 </script>
 
 <style scoped>

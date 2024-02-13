@@ -2,10 +2,10 @@
 import TutorCard from './TutorCard.vue'
 import { onMounted, ref, watch, type Ref } from 'vue';
 import * as api from '@/api/lectureBoard/lectureBoard'
-import type { lecture, lectureResponse } from '@/interface/lectureBoard/interface';
-import { isAxiosError, type AxiosResponse } from 'axios';
-import type { errorResponse } from '@/interface/common/interface';
-import router from '@/router';
+import type { lecture, lectureResponse } from '@/interface/lectureBoard/interface'
+import { isAxiosError, type AxiosResponse } from 'axios'
+import type { errorResponse } from '@/interface/common/interface'
+import router from '@/router'
 
 interface selectform {
   value: number
@@ -37,28 +37,27 @@ const nextPage = (): void => {
   }
 }
 
-async function init():Promise<void>{
+async function init(): Promise<void> {
+  const param: string = `page=${currentPage - 1}&tag=${tag}&keyword=${searchKeyword.value}&state=true&size=${size}`
 
-  const param:string = `page=${currentPage-1}&tag=${tag}&keyword=${searchKeyword.value}&state=true&size=${size}`
-
-  await api.lectureList(param)
-  .then((response: AxiosResponse<lectureResponse>)=>{
-    lectureData.value = response.data.content;
-  })
-  .catch((error: unknown)=>{
-    if(isAxiosError<errorResponse>(error)){
-      alert(error.response?.data.message);
-    }
-  })
-  
+  await api
+    .lectureList(param)
+    .then((response: AxiosResponse<lectureResponse>) => {
+      lectureData.value = response.data.content
+    })
+    .catch((error: unknown) => {
+      if (isAxiosError<errorResponse>(error)) {
+        alert(error.response?.data.message)
+      }
+    })
 }
 
-function gowrite():void{
-  router.push({"name":"writelecture"});
+function gowrite(): void {
+  router.push({ name: 'teacherPromotionForm' })
 }
 
-onMounted(()=>{
-  init();
+onMounted(() => {
+  init()
 })
 
 const school: selectform[] = [

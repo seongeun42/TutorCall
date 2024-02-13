@@ -129,16 +129,19 @@ async function keywordSearch(event: Event): Promise<void> {
     return
   }
 
-  if(typeof(schoolSelected.value)==="number" && typeof(gradeSelected.value)==="number" && 
-  typeof(subjectSelected.value)==="string"){
-    tag = schoolSelected.value+gradeSelected.value+Number(subjectSelected.value);
+  if (
+    typeof schoolSelected.value === 'number' &&
+    typeof gradeSelected.value === 'number' &&
+    typeof subjectSelected.value === 'string'
+  ) {
+    tag = schoolSelected.value + gradeSelected.value + Number(subjectSelected.value)
   }
 
   init()
 }
 
-function goEditor():void{
-  router.push({"name":"writeqna"});
+function goEditor(): void {
+  router.push({ name: 'studentRequestForm' })
 }
 </script>
 
@@ -198,9 +201,11 @@ function goEditor():void{
           검색
         </button>
 
-        <button type="button"
-        class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
-        @click="goEditor">
+        <button
+          type="button"
+          class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
+          @click="goEditor"
+        >
           글쓰기
         </button>
       </div>
@@ -211,6 +216,7 @@ function goEditor():void{
         v-for="(data, index) in questionData"
         :key = "index"
         :data="data"
+        :key="data.questionId"
         class="mb-10"
         @click="goQnADetail(data.questionId)"
       />

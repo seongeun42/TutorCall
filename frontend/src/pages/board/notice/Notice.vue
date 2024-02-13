@@ -2,9 +2,7 @@
   <div class="container mx-auto my-10">
     <div class="mx-10 my-5">
       <MenuBar />
-      <!-- <NoticeArticle /> -->
-      <!-- <DetailNotice /> -->
-      <FAQArticle />
+      <RouterView />
     </div>
   </div>
 </template>
