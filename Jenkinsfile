@@ -20,18 +20,13 @@ pipeline {
                     // sh "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")"
                     sh "docker build -t frontend ."
                     script {
-                
-                        def containerIds = sh(
-                            script: "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")",
-                            returnStdout: true
-                        ).trim()
-
-                        if (containerIds) {
-                            sh "docker rm -f ${containerIds}"
-                        } else {
-                            echo "해당 조건에 일치하는 컨테이너가 없습니다."
-                        }
+                    
+                    try {
+                       sh "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")"
+                    } catch (Exception e) {
+                        error "컨테이너 제거 중 에러가 발생했습니다: ${e.getMessage()}"
                     }
+                }
                     sh "docker run --name frontend frontend"
                     sh "docker cp frontend:/app/dist /data/frontend"
                     sh "docker exec nginx nginx -s reload"
