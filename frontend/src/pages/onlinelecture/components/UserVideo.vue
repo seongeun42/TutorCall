@@ -10,34 +10,37 @@ const props = defineProps<{ screenShare: boolean }>()
 const showScreen: Ref<boolean> = ref(false)
 const APPLICATION_SERVER_URL =
   import.meta.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080/'
-const OV = ref<OpenVidu | undefined>(undefined)
-const session = ref<Session | undefined>(undefined)
+const OVCamera = ref<OpenVidu | undefined>(undefined)
+const OVScreen = ref<OpenVidu | undefined>(undefined)
+const sessionCamera = ref<Session | undefined>(undefined)
+const sessionScreen = ref<Session | undefined>(undefined)
 const mainStreamManager = ref<StreamManager | undefined>(undefined)
 const shareStreamManager = ref<StreamManager | undefined>(undefined)
 const publisher = ref<Publisher | undefined>(undefined)
 const publisherScreen = ref<Publisher | undefined>(undefined)
+const isScreenSharing = ref(false)
 const subscribers = ref<Subscriber[]>([])
 const lectureId: Ref<number> = ref(1)
 const userName: Ref<string> = ref('Participant' + Math.floor(Math.random() * 100))
 const joinSession = () => {
   // --- 1) Get an OpenVidu object ---
-  OV.value = new OpenVidu()
+  OVCamera.value = new OpenVidu()
 
   // --- 2) Init a session ---
-  session.value = OV.value.initSession()
+  sessionCamera.value = OVCamera.value.initSession()
 
   // --- 3) Specify the actions when events take place in the session ---
 
   // On every new Stream received...
-  session.value.on('streamCreated', ({ stream }) => {
-    const subscriber = session.value?.subscribe(stream, undefined)
+  sessionCamera.value.on('streamCreated', ({ stream }) => {
+    const subscriber = sessionCamera.value?.subscribe(stream, undefined)
     if (subscriber) {
       subscribers.value.push(subscriber)
     }
   })
 
   // On every Stream destroyed...
-  session.value.on('streamDestroyed', ({ stream }) => {
+  sessionCamera.value.on('streamDestroyed', ({ stream }) => {
     const index = subscribers.value.findIndex((sub) => sub.stream === stream)
     if (index >= 0) {
       subscribers.value.splice(index, 1)
@@ -45,20 +48,20 @@ const joinSession = () => {
   })
 
   // On every asynchronous exception...
-  session.value.on('exception', (exception) => {
+  sessionCamera.value.on('exception', (exception) => {
     console.warn(exception)
   })
   getToken(lectureId.value).then((token) => {
     // First param is the token. Second param can be retrieved by every user on event
     // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
-    session.value
+    sessionCamera.value
       ?.connect(token, { clientData: userName.value })
       .then(() => {
         // --- 5) Get your own camera stream with the desired properties ---
 
         // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
         // element: we will manage it on our own) and with the desired properties
-        let newPublisher = OV.value?.initPublisher(undefined, {
+        let newPublisher = OVCamera.value?.initPublisher(undefined, {
           audioSource: undefined,
           videoSource: undefined,
           publishAudio: true,
@@ -75,7 +78,7 @@ const joinSession = () => {
         console.log(mainStreamManager.value)
         // --- 6) Publish your stream ---
 
-        session.value?.publish(publisher.value)
+        sessionCamera.value?.publish(publisher.value)
       })
       .catch((error: any) => {
         console.log('There was an error connecting to the session:', error.code, error.message)
@@ -86,14 +89,14 @@ const joinSession = () => {
 }
 const leaveSession = () => {
   // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
-  if (session.value) session.value.disconnect()
+  if (sessionCamera.value) sessionCamera.value.disconnect()
 
   // Empty all properties...
-  session.value = undefined
+  sessionCamera.value = undefined
   mainStreamManager.value = undefined
   publisher.value = undefined
   subscribers.value = []
-  OV.value = undefined
+  OVCamera.value = undefined
 
   // Remove beforeunload listener
   window.removeEventListener('beforeunload', leaveSession)
@@ -164,42 +167,74 @@ watch(
 )
 
 function showScreenShare() {
-  let screenPublisher = OV.value?.initPublisher(undefined, {
-    audioSource: false,
-    videoSource: 'screen',
-    publishAudio: false,
-    publishVideo: true,
-    resolution: '1920x1080',
-    frameRate: 30,
-    insertMode: 'APPEND',
-    mirror: false
-  })
+  if (isScreenSharing.value) {
+    window.alert('이미 화면이 공유되고 있습니다.')
+    return
+  }
+  OVScreen.value = new OpenVidu()
+  sessionScreen.value = OVScreen.value.initSession()
+  getToken(lectureId.value)
+    .then((token) => {
+      sessionScreen.value?.connect(token).then(() => {
+        let screenPublisher = OVScreen.value?.initPublisher(undefined, {
+          audioSource: false,
+          videoSource: 'screen',
+          publishAudio: false,
+          publishVideo: true,
+          resolution: '1920x1080',
+          frameRate: 30,
+          insertMode: 'APPEND',
+          mirror: false
+        })
+        screenPublisher?.once('accessAllowed', (event) => {
+          screenPublisher?.stream
+            .getMediaStream()
+            .getVideoTracks()[0]
+            .addEventListener('ended', () => {
+              showScreen.value = false
+            })
+        })
+        screenPublisher?.once('accessDenied', (event) => {
+          console.warn('ScreenShare: Access Denied')
+        })
+        // Set the screen sharing publisher as the main video in the page
+        shareStreamManager.value = screenPublisher
+        publisherScreen.value = screenPublisher
 
-  // Set the screen sharing publisher as the main video in the page
-  shareStreamManager.value = screenPublisher
-  publisherScreen.value = screenPublisher
-
-  // Publish the screen sharing stream
-  session.value?.publish(publisherScreen.value)
+        // Publish the screen sharing stream
+        sessionScreen.value?.publish(publisherScreen.value)
+        isScreenSharing.value = true
+      })
+    })
+    .catch((error) => {
+      console.warn('There was an error connecting to the session:', error.code, error.message)
+    })
 }
 
 const stopScreenSharing = () => {
   // Unpublish the screen sharing stream
-  session.value?.unpublish(publisherScreen.value)
+  sessionScreen.value?.unpublish(publisherScreen.value)
 
   // Reset the main video in the page to display the webcam stream
   publisherScreen.value = undefined
+  shareStreamManager.value = undefined
+  OVScreen.value = undefined
+  showScreen.value = false
+  isScreenSharing.value = false
 }
 
 onMounted(() => {
   joinSession()
 })
-onBeforeUnmount(() => leaveSession())
+onBeforeUnmount(() => {
+  stopScreenSharing()
+  leaveSession()
+})
 </script>
 <template>
   <div v-if="showScreen">
     <div class="flex mb-10">
-      <OnlineVideo class="w-[260px] h-[150px]" :stream-manager="mainStreamManager" />
+      <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="mainStreamManager" />
       <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
         <OnlineVideo
           class="w-[250px] h-[150px]"
