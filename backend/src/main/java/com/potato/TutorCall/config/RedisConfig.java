@@ -4,13 +4,17 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.ReactiveRedisOperations;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.*;
+
+import java.io.Serializable;
 
 @Configuration
 @NoArgsConstructor
@@ -51,5 +55,17 @@ public class RedisConfig {
   public ReactiveRedisTemplate<?, ?> reactiveRedisTemplate(
       ReactiveRedisConnectionFactory redisConnectionFactory) {
     return new ReactiveRedisTemplate<>(redisConnectionFactory, RedisSerializationContext.string());
+  }
+
+  @Bean
+  public ReactiveRedisOperations<String, Serializable> redisOperations(LettuceConnectionFactory connectionFactory) {
+    RedisSerializationContext<String, Serializable> serializationContext = RedisSerializationContext
+            .<String, Serializable>newSerializationContext(new StringRedisSerializer())
+            .key(new StringRedisSerializer())
+            .value(new GenericToStringSerializer<>(Serializable.class))
+            .hashKey(new StringRedisSerializer())
+            .hashValue(new GenericJackson2JsonRedisSerializer())
+            .build();
+    return new ReactiveRedisTemplate<>(connectionFactory, serializationContext);
   }
 }
