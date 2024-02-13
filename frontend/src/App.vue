@@ -12,7 +12,8 @@ const userStore = useUserStore()
 </script>
 
 <template>
-  <div v-if="!userStore.isLogin">
+  <div>test</div>
+  {{!-- <div v-if="!userStore.isLogin">
     <NotLoginNavBar />
   </div>
   <div v-else>
@@ -24,7 +25,7 @@ const userStore = useUserStore()
     <!-- <TutorCallPage/> -->
   </div>
   <ChatIcon />
-  <FooterBar />
+  <FooterBar /> --}}
 </template>
 
 <style scoped></style>
