@@ -6,7 +6,6 @@ import NotLoginNavBar from './components/NotLoginNavBar.vue'
 import { RouterView } from 'vue-router'
 import { useUserStore } from '@/store/userStore'
 import ChatIcon from './components/chatting/ChatIcon.vue'
-import TutorCallPage from '@/pages/tutorcall/TutorCallPage.vue'
 
 const userStore = useUserStore()
 </script>
@@ -21,7 +20,6 @@ const userStore = useUserStore()
   </div>
   <div class="min-h-[1000px]" id="mainComponent">
     <RouterView id="main" />
-    <!-- <TutorCallPage/> -->
   </div>
   <ChatIcon />
   <FooterBar />

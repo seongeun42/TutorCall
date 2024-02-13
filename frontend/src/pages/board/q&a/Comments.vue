@@ -13,6 +13,10 @@ const questionId: number = Number(router.currentRoute.value.params['qnaNum'])
 const editMode:Ref<boolean> = ref(false);
 const editData:Ref<string> = ref(props.answer.content);
 
+const emit = defineEmits<{
+  update: [id: number]
+}>();
+
 function modeToEdit(event:Event){
   event.preventDefault();
   editMode.value = !editMode.value;
@@ -23,9 +27,8 @@ async function deleteAnswer(event: Event): Promise<void> {
   await api
     .deleteAnswer(props.answer.id)
     .then((response: AxiosResponse<commonResponse>) => {
-      console.log(response)
       alert(response.data.message)
-      router.go(0)
+      emit("update", props.answer.id);
     })
     .catch((error: unknown) => {
       if (isAxiosError<errorResponse>(error)) {

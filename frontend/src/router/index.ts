@@ -25,7 +25,7 @@ import InquiryEditor from '@/pages/board/editor/InquiryEditor.vue'
 import MatchCall from '@/pages/tutorcall/MatchCall.vue'
 import StudentBoardEditor from '@/pages/board/editor/StudentBoardEditor.vue'
 import TutorBoardEditor from '@/pages/board/editor/TutorBoardEditor.vue'
-import path from 'path'
+import MyTutorcallList from '@/pages/mypage/student/information/MyTutorcallList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,7 +50,6 @@ const router = createRouter({
       path: '/mypage',
       name: 'mypage',
       component: MyPage,
-      props: true,
       children: [
         // 선생님 마이페이지
         // 개인정보 수정
@@ -124,6 +123,11 @@ const router = createRouter({
           component: MyPaymentInfo,
           props: true
 
+        },
+        {
+          path:'/tutorcallList',
+          name: 'tutorcalllist',
+          component: MyTutorcallList,
         }
       ]
     },

@@ -28,3 +28,7 @@ export interface review{
   content: string,
   createAt: string,
 }
+
+export interface ReviewResponse extends commonResponse{
+  id: number
+}
