@@ -16,6 +16,7 @@ public class ChatService {
     return chatMessageRepository.findAllByChatroomIdOrderByCreatedAt(roomId).map(c -> ChatResDto.builder()
             .senderId(c.getSenderId())
             .message(c.getMessage())
+            .createdAt(c.getCreatedAt())
             .build());
   }
 
