@@ -19,6 +19,7 @@ pipeline {
                 dir('frontend'){
                     // sh "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")"
                     sh "docker build -t frontend ."
+                    sh "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")"
                     sh "docker run --name frontend frontend"
                     sh "docker cp frontend:/app/dist /data/frontend/dist"
                     sh "docker exec nginx nginx -s reload"
