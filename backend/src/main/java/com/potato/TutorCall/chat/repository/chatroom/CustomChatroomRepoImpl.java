@@ -1,4 +1,4 @@
-package com.potato.TutorCall.chat.repository.Chatroom;
+package com.potato.TutorCall.chat.repository.chatroom;
 
 import com.potato.TutorCall.chat.domain.Chatroom;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +7,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.ReactiveHashOperations;
 import org.springframework.data.redis.core.ReactiveRedisOperations;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository

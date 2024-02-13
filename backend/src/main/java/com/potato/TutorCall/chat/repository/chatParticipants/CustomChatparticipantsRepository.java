@@ -1,4 +1,4 @@
-package com.potato.TutorCall.chat.repository.ChatParticipants;
+package com.potato.TutorCall.chat.repository.chatParticipants;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
