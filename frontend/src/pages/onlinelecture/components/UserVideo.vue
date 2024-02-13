@@ -21,6 +21,28 @@ const subscribers: Ref<Subscriber[]> = ref([])
 const nowSharing: Ref<boolean> = ref(false)
 const screenSub: Ref<any> = ref('')
 const userName: Ref<string> = ref('Participant' + Math.floor(Math.random() * 100))
+watch(
+  () => videoStore.videoActive,
+  (newVal: boolean) => {
+    if (!newVal) {
+      // videoActive 값이 false가 되면 카메라 비활성화
+      publisher.value?.publishVideo(false)
+    } else {
+      publisher.value?.publishVideo(true)
+    }
+  }
+)
+
+watch(
+  () => videoStore.micActive,
+  (newVal: boolean) => {
+    if (!newVal) {
+      publisher.value?.publishAudio(false)
+    } else {
+      publisher.value?.publishAudio(true)
+    }
+  }
+)
 const joinSession = () => {
   OVCamera.value = new OpenVidu()
 
@@ -100,6 +122,7 @@ const updateMainVideoStreamManager = (stream: StreamManager) => {
   mainStreamManager.value = stream
 }
 const getToken = async (sessionId: number) => {
+  console.log(sessionId)
   const newSessionId = await createSession(sessionId)
   console.log(newSessionId)
   return await createToken(newSessionId)
