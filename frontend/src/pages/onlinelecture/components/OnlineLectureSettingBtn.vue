@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import router from '@/router'
 import { useVideoStore } from '@/store/videoStore'
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *
- *  학생이면 mike, video 다 꺼져 있어야 하고
- *  선생이면 mike, video 다 켜져 있어야 함...
- *  초기 설정 값이?
- *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 const videoStore = useVideoStore()
 

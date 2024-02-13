@@ -14,7 +14,7 @@ const sessionCamera = ref<Session | undefined>(undefined)
 const sessionScreen = ref<Session | undefined>(undefined)
 const mainStreamManager = ref<StreamManager | undefined>(undefined)
 const shareStreamManager = ref<StreamManager | undefined>(undefined)
-const publisher = ref<Publisher | undefined>(undefined)
+const publisher: Ref<Publisher | undefined> = ref(undefined)
 const publisherScreen = ref<Publisher | undefined>(undefined)
 const videoStore = useVideoStore()
 const subscribers: Ref<Subscriber[]> = ref([])
@@ -79,11 +79,8 @@ const joinSession = () => {
           insertMode: 'APPEND',
           mirror: false
         })
-
         mainStreamManager.value = newPublisher
         publisher.value = newPublisher
-        console.log(mainStreamManager.value)
-
         sessionCamera.value?.publish(publisher.value)
       })
       .catch((error: any) => {
@@ -188,13 +185,6 @@ watch(subscribers.value, (newValue: any) => {
 function showScreenShare() {
   OVScreen.value = new OpenVidu()
   sessionScreen.value = OVScreen.value.initSession()
-
-  // sessionScreen.value.on('streamDestroyed', ({ stream }) => {
-  //   const index = subscribers.value.findIndex((sub) => sub.stream === stream)
-  //   if (index >= 0) {
-  //     subscribers.value.splice(index, 1)
-  //   }
-  // })
   getToken(videoStore.sessionId)
     .then((token) => {
       sessionScreen.value?.connect(token).then(() => {
