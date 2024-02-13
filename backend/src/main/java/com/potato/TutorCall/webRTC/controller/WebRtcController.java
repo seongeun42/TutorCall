@@ -16,11 +16,9 @@ import com.potato.TutorCall.webRTC.service.WebRtcService;
 import io.openvidu.java.client.OpenVidu;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,22 +28,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class WebRtcController {
 
-  @Value("${OPENVIDU_URL}")
-  private String OPENVIDU_URL;
-
-  @Value("${OPENVIDU_SECRET}")
-  private String OPENVIDU_SECRET;
-
-  private OpenVidu openvidu;
+  private final OpenVidu openvidu;
   private final WebRtcService webRtcService;
   private final LectureService lectureService;
   private final TutorCallService tutorCallService;
   private final LectureParticipantService participantService;
-
-  @PostConstruct
-  public void init() {
-    this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-  }
 
   @PostMapping("/lecture/{lectureId}/session")
   public ResponseEntity<?> createLectureRoom(

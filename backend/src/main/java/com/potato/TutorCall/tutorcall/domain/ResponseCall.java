@@ -1,46 +1,43 @@
 package com.potato.TutorCall.tutorcall.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.potato.TutorCall.tutor.domain.Tutor;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.redis.core.RedisHash;
 
-@Entity
+@RedisHash(value = "callRes", timeToLive = 80)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class ResponseCall {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private UUID id;
 
-  @JsonBackReference
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Tutor tutor;
+  private Long tutor;
 
-  @JsonBackReference
-  @ManyToOne(fetch = FetchType.LAZY)
-  private RequestCall call;
+  private UUID call;
 
   private int price;
 
   private boolean matched;
 
-  @CreatedDate private LocalDateTime createdAt;
+  private LocalDateTime createdAt;
 
   // 생성자
   @Builder
-  public ResponseCall(Tutor tutor, RequestCall call, int price) {
+  public ResponseCall(UUID id, Long tutor, UUID call, int price) {
+    this.id = id;
     this.tutor = tutor;
     this.call = call;
     this.price = price;
+    this.createdAt = LocalDateTime.now();
   }
 
   // 비즈니스 로직
