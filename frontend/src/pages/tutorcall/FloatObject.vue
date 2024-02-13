@@ -14,7 +14,8 @@ interface pushdata{
     positionY: number,
     data: any,
   }
-const props = defineProps<{
+
+  const props = defineProps<{
   pushedData: pushdata,
 }>()
 
@@ -43,7 +44,7 @@ onMounted(()=>{
     }"
   >
   <div v-if="show">
-    <SpeechBubble/>
+    <SpeechBubble :pushedData=props.pushedData />
   </div>
   </div>
 </template>

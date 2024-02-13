@@ -198,11 +198,11 @@ const router = createRouter({
       name: 'inquiry',
       component: InquiryEditor
     },
-    // {
-    //   path: '/matchcall',
-    //   name: 'matchcall',
-    //   component: MatchCall,
-    // }
+    {
+      path: '/matchcall',
+      name: 'matchcall',
+      component: MatchCall,
+    }
   ]
 })
 
