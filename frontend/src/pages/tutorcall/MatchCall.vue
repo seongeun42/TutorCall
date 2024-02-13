@@ -37,29 +37,37 @@ const input = {
 
 <template>
   <div class="container">
-    <div>
-      <MatchText/>
-    </div>
-    <div class="image-container">
-      <img src="https://via.placeholder.com/300x300" alt="Test Image">
+    <div class="content">
+      <div class="image-container">
+        <img src="https://via.placeholder.com/300x300" alt="Test Image">
+      </div>
+      <div>
+        <MatchText/>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .container {
+  display: flex;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   width: 100vw;
   height: 100vh;
 }
 
-.image-container {  
-  top: 50%;
-  left: 50%;
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-container {
   width: 300px;
   height: 300px;
   border-radius: 50%;
   overflow: hidden;
+  margin-top: 20px;
 }
 </style>

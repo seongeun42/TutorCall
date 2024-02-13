@@ -112,8 +112,15 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
     .post(url + endpoint, param)
     .then((response: any) => {
       if (buttonName === 'tutorcall') {
-        // 대기실로 이동하는 라우터 구현해야 됨
+        /*
+         *
+         *
+         * userId를 store에서 가져와서 params에 추가 필요. 2는 예시
+         *
+         *
+         */
         window.alert('문제 등록이 완료되었습니다. 튜터콜 대기실로 이동합니다.')
+        router.push({ name: 'waitingRoom', params: { userId: 2 }})
       } else {
         window.alert('문제 등록이 완료되었습니다.')
         router.push({ name: 'qnaList' })

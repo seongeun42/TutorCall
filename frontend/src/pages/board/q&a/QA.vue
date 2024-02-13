@@ -216,7 +216,6 @@ function goEditor(): void {
         v-for="(data, index) in questionData"
         :key = "index"
         :data="data"
-        :key="data.questionId"
         class="mb-10"
         @click="goQnADetail(data.questionId)"
       />
