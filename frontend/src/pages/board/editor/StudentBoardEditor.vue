@@ -123,7 +123,7 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
         router.push({ name: 'waitingRoom', params: { userId: 2 }})
       } else {
         window.alert('문제 등록이 완료되었습니다.')
-        router.push({ name: 'qnaList' })
+        router.push({ name: 'qnalist' })
       }
     })
     .catch((error: any) => {
