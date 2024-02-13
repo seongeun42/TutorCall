@@ -6,6 +6,7 @@ import type { lecture, lectureResponse } from '@/interface/lectureBoard/interfac
 import { isAxiosError, type AxiosResponse } from 'axios'
 import type { errorResponse } from '@/interface/common/interface'
 import router from '@/router'
+import { useUserStore } from '@/store/userStore'
 
 interface selectform {
   value: number
@@ -24,6 +25,7 @@ const totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변�
 const searchKeyword = ref("");
 const lectureData:Ref<lecture[]> = ref([]); 
 const keyword: Ref<string> = ref('')
+const userStore = useUserStore()
 
 const prevPage = (): void => {
   if (currentPage > 1) {
@@ -165,6 +167,7 @@ async function keywordSearch(event: Event): Promise<void> {
         </button>
 
         <button type="button"
+        v-if="userStore.role === 'TUTOR'"
         class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
         @click="gowrite">
           글쓰기

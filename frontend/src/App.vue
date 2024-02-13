@@ -7,8 +7,18 @@ import { RouterView } from 'vue-router'
 import { useUserStore } from '@/store/userStore'
 import ChatIcon from './components/chatting/ChatIcon.vue'
 import TutorCallPage from '@/pages/tutorcall/TutorCallPage.vue'
+import { useNotificationStore } from '@/store/notificationStore'
+import { onMounted } from 'vue'
 
 const userStore = useUserStore()
+const notificationStore = useNotificationStore()
+
+onMounted(() => {
+  // 새로고침이나 페이지 이동 시 소켓, 구독 재연결
+  if (userStore.id != -1) {
+    notificationStore.socketReconnect(userStore.id, userStore.isTutor, userStore.isActiveCall)
+  }
+})
 </script>
 <template>
   <div>test</div>
