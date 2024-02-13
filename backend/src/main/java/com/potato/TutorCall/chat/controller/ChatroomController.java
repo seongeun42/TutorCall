@@ -31,6 +31,17 @@ public class ChatroomController {
   }
 
   /**
+   * 채팅방 참여자들의 아이디를 반환
+   *
+   * @param roomId
+   * @return
+   */
+  @SendTo("/chatroom/{roomId}")
+  public Flux<?> getUsersInChatroom(@DestinationVariable String roomId) {
+    return chatroomService.getUsersInChatroom(roomId);
+  }
+
+  /**
    * 채팅방 생성
    *
    * @param createRoomReq

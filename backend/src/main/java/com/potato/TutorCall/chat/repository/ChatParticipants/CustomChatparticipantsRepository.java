@@ -5,6 +5,6 @@ import reactor.core.publisher.Mono;
 
 public interface CustomChatparticipantsRepository {
   Flux<String> getParticipatingRooms(Long userId);
-  Flux<Long> getParticipants(String chatroomId);
+  Flux<Long> getUsersInChatroom(String chatroomId);
   Mono<Long> countUsersInRoom(String roomId);
 }

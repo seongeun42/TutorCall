@@ -31,7 +31,7 @@ public class CustomChatparticipantsRepoImpl implements CustomChatparticipantsRep
   }
 
   @Override
-  public Flux<Long> getParticipants(String chatroomId) {
+  public Flux<Long> getUsersInChatroom(String chatroomId) {
     return hashOperations.values(KEY)
             .filter(c -> c.getChatroomId().equals(chatroomId))
             .map(ChatParticipants::getUserId);

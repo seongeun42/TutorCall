@@ -58,4 +58,8 @@ public class ChatroomService {
       }
     }).subscribe();
   }
+
+  public Flux<?> getUsersInChatroom(String roomId) {
+    return chatparticipantsRepository.getUsersInChatroom(roomId);
+  }
 }
