@@ -6,11 +6,9 @@ import OnlineLectureSystemMsg from '@/pages/onlinelecture/components/OnlineLectu
 import OnlineLectureUserProfile from '@/pages/onlinelecture/components/OnlineLectureUserProfile.vue'
 import OnlineLectureChatInput from '@/pages/onlinelecture/components/OnlineLectureChatInput.vue'
 import OnlineLectureSettingBtn from '@/pages/onlinelecture/components/OnlineLectureSettingBtn.vue'
-import OnlineVideo from './components/OnlineVideo.vue'
 import UserVideo from './components/UserVideo.vue'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref } from 'vue'
 import type { Ref } from 'vue'
-import axios from 'axios'
 
 const chatSideView: Ref<boolean> = ref(true)
 const screenShare: Ref<boolean> = ref(false)
@@ -88,7 +86,7 @@ const dummydata5: chatForm = {
     <div class="mt-5 grid grid-cols-9 gap-4 max-h-[1000px]">
       <div class="col-span-7 grid grid-rows-9 max-h-[900px]">
         <div class="row-span-8 max-h-[800px] flex justify-center items-center">
-          <UserVideo :screenShare="screenShare" />
+          <UserVideo />
         </div>
         <div class="row-span-1">
           <OnlineLectureSettingBtn

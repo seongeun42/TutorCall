@@ -4,10 +4,9 @@ import ScreenShare from './ScreenShare.vue'
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { OpenVidu, StreamManager, Session, Publisher, Subscriber } from 'openvidu-browser'
 import type { Ref } from 'vue'
+import { useVideoStore } from '@/store/videoStore'
 import axios from 'axios'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
-const props = defineProps<{ screenShare: boolean }>()
-const showScreen: Ref<boolean> = ref(false)
 const APPLICATION_SERVER_URL =
   import.meta.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080/'
 const OVCamera = ref<OpenVidu | undefined>(undefined)
@@ -18,7 +17,8 @@ const mainStreamManager = ref<StreamManager | undefined>(undefined)
 const shareStreamManager = ref<StreamManager | undefined>(undefined)
 const publisher = ref<Publisher | undefined>(undefined)
 const publisherScreen = ref<Publisher | undefined>(undefined)
-const isScreenSharing = ref(false)
+const videoStore = useVideoStore()
+const shareSuccess: Ref<boolean> = ref(false)
 const subscribers = ref<Subscriber[]>([])
 const lectureId: Ref<number> = ref(1)
 const userName: Ref<string> = ref('Participant' + Math.floor(Math.random() * 100))
@@ -146,31 +146,16 @@ function isVideoVisible(sub: any): boolean {
   return subscribers.value.indexOf(sub) < 4
 }
 watch(
-  () => props.screenShare,
-  (newVal: boolean) => {
-    if (newVal) {
-      showScreen.value = true
-    } else {
-      showScreen.value = false
-    }
-  }
-)
-watch(
-  () => showScreen.value,
-  (newVal: boolean) => {
-    if (newVal) {
+  () => videoStore.showScreen,
+  () => {
+    if (videoStore.showScreen) {
       showScreenShare()
     } else {
       stopScreenSharing()
     }
   }
 )
-
 function showScreenShare() {
-  if (isScreenSharing.value) {
-    window.alert('이미 화면이 공유되고 있습니다.')
-    return
-  }
   OVScreen.value = new OpenVidu()
   sessionScreen.value = OVScreen.value.initSession()
   getToken(lectureId.value)
@@ -187,14 +172,17 @@ function showScreenShare() {
           mirror: false
         })
         screenPublisher?.once('accessAllowed', (event) => {
+          shareSuccess.value = true
           screenPublisher?.stream
             .getMediaStream()
             .getVideoTracks()[0]
             .addEventListener('ended', () => {
-              showScreen.value = false
+              videoStore.showScreen = false
+              shareSuccess.value = false
             })
         })
         screenPublisher?.once('accessDenied', (event) => {
+          shareSuccess.value = false
           console.warn('ScreenShare: Access Denied')
         })
         // Set the screen sharing publisher as the main video in the page
@@ -203,7 +191,6 @@ function showScreenShare() {
 
         // Publish the screen sharing stream
         sessionScreen.value?.publish(publisherScreen.value)
-        isScreenSharing.value = true
       })
     })
     .catch((error) => {
@@ -219,8 +206,7 @@ const stopScreenSharing = () => {
   publisherScreen.value = undefined
   shareStreamManager.value = undefined
   OVScreen.value = undefined
-  showScreen.value = false
-  isScreenSharing.value = false
+  videoStore.showScreen = false
 }
 
 onMounted(() => {
@@ -232,7 +218,7 @@ onBeforeUnmount(() => {
 })
 </script>
 <template>
-  <div v-if="showScreen">
+  <div v-if="shareSuccess">
     <div class="flex mb-10">
       <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="mainStreamManager" />
       <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
@@ -240,7 +226,7 @@ onBeforeUnmount(() => {
           class="w-[250px] h-[150px]"
           v-if="isVideoVisible(sub)"
           :stream-manager="sub"
-          @click.native="updateMainVideoStreamManager(sub)"
+          @click="updateMainVideoStreamManager(sub)"
         />
       </div>
     </div>
@@ -257,7 +243,7 @@ onBeforeUnmount(() => {
             class="w-[200px] h-[100px]"
             v-if="isVideoVisible(sub)"
             :stream-manager="sub"
-            @click.native="updateMainVideoStreamManager(sub)"
+            @click="updateMainVideoStreamManager(sub)"
           />
         </div>
       </div>

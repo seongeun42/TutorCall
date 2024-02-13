@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import router from '@/router'
-import { defineProps, ref } from 'vue'
-import type { Ref } from 'vue'
+import { useVideoStore } from '@/store/videoStore'
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *
  *  학생이면 mike, video 다 꺼져 있어야 하고
@@ -10,43 +9,18 @@ import type { Ref } from 'vue'
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-interface videoSettingsProp {
-  onMike: boolean
-  onVideo: boolean
-}
+const videoStore = useVideoStore()
 
-//const props = defineProps<{settings:videoSettingsProp}>();
-const props = defineProps<{ settings: videoSettingsProp }>()
-
-const emit = defineEmits<{
-  'update:mikeChange': [boolean]
-  'update:videoChange': [boolean]
-  'update:screenChange': [boolean]
-}>()
-const screenShare: Ref<boolean> = ref(false)
 function clickShare(): void {
-  screenShare.value = !screenShare.value
-  emit('update:screenChange', screenShare.value)
+  videoStore.showScreen = !videoStore.showScreen
 }
 
-const mikeStatus: Ref<boolean> = ref(props.settings.onMike)
-const videoStatus: Ref<boolean> = ref(props.settings.onVideo)
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *
- * 우리 메모장? canvas? 씀? 쓸 거면 그거 어떻게 돌아가는지에 따라
- * 상호작용 하는게 달라질듯 일단 뭐 끌어온게 아니라서 냅둠
- * const panToolOpen: Ref<boolean> = ref(false);
- *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-function clickedMike(): void {
-  mikeStatus.value = !mikeStatus.value
-  emit('update:mikeChange', mikeStatus.value)
+function clickedMic(): void {
+  videoStore.micActive = !videoStore.micActive
 }
 
 function clickedVideo(): void {
-  videoStatus.value = !videoStatus.value
-  emit('update:videoChange', videoStatus.value)
+  videoStore.videoActive = !videoStore.videoActive
 }
 
 function exit(): void {
@@ -77,7 +51,7 @@ function exit(): void {
       </button>
     </div>
     <div class="flex justify-center">
-      <button v-if="mikeStatus" class="btn btn-square mx-1" @click="clickedMike">
+      <button v-if="videoStore.micActive" class="btn btn-square mx-1" @click="clickedMic">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -93,7 +67,7 @@ function exit(): void {
           />
         </svg>
       </button>
-      <button v-else class="btn btn-error mx-1" @click="clickedMike">
+      <button v-else class="btn btn-error mx-1" @click="clickedMic">
         <svg
           fill="none"
           viewBox="0 0 24 24"
@@ -129,7 +103,7 @@ function exit(): void {
           />
         </svg>
       </button>
-      <button v-if="videoStatus" class="btn btn-square mx-1" @click="clickedVideo">
+      <button v-if="videoStore.videoActive" class="btn btn-square mx-1" @click="clickedVideo">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
