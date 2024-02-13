@@ -2,33 +2,44 @@ pipeline {
     agent any
     environment {
         BACKEND = 'backend'
+        FRONTEND = 'frontend'
         TAG = 'test'
         RENAME_JAR = 'backend'
         BUILD_CMD = 'bootJar'
         WORKSPACE_DIR = ''
         TEST_BUILD_CMD = 'bootJar'
+
     }
    
     stages {
-        stage('프론트 테스트 빌드') {
+        stage('프론트 빌드') {
             when {
                 expression { env.GIT_BRANCH == 'origin/frontend' || env.GIT_BRANCH == 'origin/master' }
             }
-            steps {								
+            steps {
                 dir('frontend'){
-                    sh 'npm i'
-                    sh 'npm run build'
+                    // sh "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")"
+                    sh "docker build -t frontend ."
+                    script {
+                        try {
+                            
+                            sh "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")"
+                        } catch (Exception e) {
+                            echo "컨테이너 제거 중 에러가 발생했습니다: ${e.getMessage()}"
+                        }
+                    }
+                    sh "docker run --name frontend frontend"
+                    sh "docker cp frontend:/app/dist /data/frontend"
+                    sh "docker exec openvidu_nginx_1 nginx -s reload"
                 }
             }
             post {
                 success {
                     updateGitlabCommitStatus name: 'build', state: 'success'
-
                     echo "build 성공"
                 }
                 failure {
                     updateGitlabCommitStatus name: 'build', state: 'failed'
-
                     echo "build 실패"
                 }
             }
@@ -45,74 +56,52 @@ pipeline {
             }
             post {
 		           success {
-								echo "application.yml 복사 성공"
-							}
-							failure{
-								echo "application.yml 복사 실패"
+                        echo "application.yml 복사 성공"
+                    }
+                    failure{
+                        echo "application.yml 복사 실패"
 
-							}
+                    }
             }
         }
+        stage('백앤드 도커 빌드') {
+            when {
+                expression { env.GIT_BRANCH == 'origin/backend' || env.GIT_BRANCH == 'origin/master' }
+            }
+            steps {								
+                dir('backend'){
+                    sh "docker build -t env.BACKEND ."
+                }
+            }
+            post {
+                success {
+                    echo "백앤드 도커 빌드 성공"
+                }
+                failure{
+                    echo "백앤드 도커 빌드 실패"
+
+                }
+            }
+            
+        }
         
-        stage('테스트 빌드하기') { // 테스트 빌드하기
+        stage('백앤드 도커 띄우기') { // 테스트 빌드하기
             when {
                 expression { env.GIT_BRANCH == 'origin/backend' || env.GIT_BRANCH == 'origin/master' }
             }
             steps {
-                dir('backend') {
-                    updateGitlabCommitStatus name: 'build', state: 'running'
-
-                    sh 'chmod +x ./gradlew'
-                    sh "./gradlew ${env.BUILD_CMD}"
-                }
+                sh "docker rm -f \$(docker ps -aqf \"name=^/${env.BACKEND}\$\")"
+                sh "docker run -itd -p 8080:8080 --name ${env.BACKEND} ${env.BACKEND}"
             }
             post {
                 success {
-                    updateGitlabCommitStatus name: 'build', state: 'success'
-
-                    echo "build 성공"
+                    echo "도커 띄우기 성공"
                 }
                 failure {
-                    updateGitlabCommitStatus name: 'build', state: 'failed'
-
-                    echo "build 실패"
+                    echo "도커 띄우기 실패"
                 }
             }
         }
         
-        stage('컨테이너 삭제') {
-            when {
-                expression { env.GIT_BRANCH == 'origin/master' }
-            }
-            steps {
-                script {
-                    try {
-                        sh 'docker image prune -a -f'
-												sh "docker rm -f \$(docker ps -aqf \"name=^/${env.BACKEND}\$\")"
-												sh "docker rmi ${env.BACKEND}"
-                    } catch(e) {
-                        echo 'docker clear fail!'
-                    }
-                }
-            }
-        }
-        
-        stage('배포') {
-            when {
-                expression { env.GIT_BRANCH == 'origin/master' }
-            }
-            steps {
-                sh 'docker build -t ${env.TAG}:v1.0 .'
-                sh "docker run -d -p 8088:8080 --name ${env.BACKEND} ${env.TAG}:v1.0"
-            }
-            post {
-                success {
-                    echo "성공적으로 배포되었습니다."
-                }
-                failure {
-                    echo "배포 실패"
-                }
-            }
-        }
     }
 }
