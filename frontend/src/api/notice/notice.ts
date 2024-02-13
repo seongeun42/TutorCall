@@ -3,7 +3,7 @@ import type { AxiosResponse } from 'axios'
 import type { noticeInfo, noticeResponse, faqInfo, faqResponse } from '@/interface/notice/interface'
 
 export async function getNoticeData(): Promise<AxiosResponse<noticeResponse>> {
-  const url = import.meta.env.VITE_VUE_API_URL + '/notice/' + param
+  const url = import.meta.env.VITE_VUE_API_URL + '/notice'
   //   const url = 'http://localhost:8080/notice'
 
   return instance.get<noticeResponse>(url)

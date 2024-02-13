@@ -11,14 +11,13 @@
     <div class="star-rating">
       <i
         v-for="i in Math.floor(data.rating)"
-        :key="`${data.reviewId}+${i}-${i}`"
         class="fas fa-star"
       ></i>
       <i v-if="data.rating % 1 !== 0" class="fas fa-star-half-alt"></i>
     </div>
     <div class="user-review">
       <p class="review-text">
-        {{ data.content }}
+        " {{ data.content }} "
       </p>
     </div>
   </div>
@@ -28,7 +27,7 @@
 import { defineProps } from 'vue'
 
 interface Review {
-  reviewId: number
+  // reviewId: number
   profileUrl: string
   nickname: string
   rating: number

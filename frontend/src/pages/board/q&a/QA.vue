@@ -4,9 +4,9 @@ import * as api from '@/api/qna/qna'
 import { ref, onMounted, computed, watch } from 'vue'
 import type { Ref } from 'vue'
 import router from '@/router/index'
-import{ type AxiosResponse, type AxiosError, isAxiosError } from 'axios';
-import type{ questionInfo, questionResponse } from '@/interface/qna/interface'
-import type { errorResponse } from '@/interface/common/interface';
+import { type AxiosResponse, type AxiosError, isAxiosError } from 'axios'
+import type { questionInfo, questionResponse } from '@/interface/qna/interface'
+import type { errorResponse } from '@/interface/common/interface'
 
 interface selectform {
   value: number
@@ -16,7 +16,7 @@ interface selectform {
 let currentPage: number = 1
 const size = 10
 let totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
-let tag: number = 0;
+let tag: number = 0
 let status: string = ''
 
 const questionData: Ref<questionInfo[]> = ref([])
@@ -43,8 +43,6 @@ const nextPage = (): void => {
 
 async function init(): Promise<void> {
   const param: string = `?page=${currentPage - 1}&size=${size}&isEnd=${status}&keyword=${keyword.value}&tagId=${tag}`
-  console.log(param);
-
   await api
     .getQnAData(param)
     .then((response: AxiosResponse<questionResponse>) => {
@@ -131,16 +129,19 @@ async function keywordSearch(event: Event): Promise<void> {
     return
   }
 
-  if(typeof(schoolSelected.value)==="number" && typeof(gradeSelected.value)==="number" && 
-  typeof(subjectSelected.value)==="string"){
-    tag = schoolSelected.value+gradeSelected.value+Number(subjectSelected.value);
+  if (
+    typeof schoolSelected.value === 'number' &&
+    typeof gradeSelected.value === 'number' &&
+    typeof subjectSelected.value === 'string'
+  ) {
+    tag = schoolSelected.value + gradeSelected.value + Number(subjectSelected.value)
   }
 
   init()
 }
 
-function goEditor():void{
-  router.push({"name":"writeqna"});
+function goEditor(): void {
+  router.push({ name: 'studentRequestForm' })
 }
 </script>
 
@@ -200,9 +201,11 @@ function goEditor():void{
           검색
         </button>
 
-        <button type="button"
-        class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
-        @click="goEditor">
+        <button
+          type="button"
+          class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
+          @click="goEditor"
+        >
           글쓰기
         </button>
       </div>
@@ -213,6 +216,7 @@ function goEditor():void{
         v-for="(data, index) in questionData"
         :key = "index"
         :data="data"
+        :key="data.questionId"
         class="mb-10"
         @click="goQnADetail(data.questionId)"
       />
