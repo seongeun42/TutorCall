@@ -22,6 +22,7 @@ import PointUsage from '@/pages/mypage/student/point/PointUsage.vue'
 import StudentMyLecture from '@/pages/mypage/student/information/StudentMyLecture.vue'
 import MyPaymentInfo from '@/pages/mypage/payment/MyPaymentInfo.vue'
 import InquiryEditor from '@/pages/board/editor/InquiryEditor.vue'
+import MatchCall from '@/pages/tutorcall/MatchCall.vue'
 import StudentBoardEditor from '@/pages/board/editor/StudentBoardEditor.vue'
 import TutorBoardEditor from '@/pages/board/editor/TutorBoardEditor.vue'
 import path from 'path'
@@ -49,7 +50,7 @@ const router = createRouter({
       path: '/mypage',
       name: 'mypage',
       component: MyPage,
-      props: true,
+      // props: true,
       children: [
         // 선생님 마이페이지
         // 개인정보 수정
@@ -142,9 +143,15 @@ const router = createRouter({
       // 과외 구하는 모집 및 홍보 게시판
       path: '/lecturespromotion',
       name: 'lecturesPromo',
-      component: LectureRecruit,
+      redirect: {"name":'lectureList'},
       children: [
         // 모홍게 상세
+        {
+          path:'/list',
+          name:'lectureList',
+          component: LectureRecruit,
+
+        },
         {
           path: ':promotionNum',
           name: 'lectureDetail',
@@ -194,6 +201,11 @@ const router = createRouter({
       path: '/inquiry',
       name: 'inquiry',
       component: InquiryEditor
+    },
+    {
+      path: '/matchcall',
+      name: 'matchcall',
+      component: MatchCall,
     },
     // 학생 튜터콜 및 Q&A 에디터
     {

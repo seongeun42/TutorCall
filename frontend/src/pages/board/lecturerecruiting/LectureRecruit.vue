@@ -86,7 +86,7 @@ onMounted(() => {
         </button>
       </div>
     </div>
-    <TutorCard v-for="lecture in lectureData" :data="lecture" />
+    <TutorCard v-for="(lecture, index) in lectureData" :key="index" :data="lecture"/>
     <div class="flex justify-center mt-8">
       <button
         type="button"

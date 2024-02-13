@@ -123,7 +123,8 @@ watch(
 
 async function keywordSearch(event: Event): Promise<void> {
   event.preventDefault()
-  if (subjectSelected.value == '') {
+  console.log("keyword Search");
+  if (!subjectSelected.value) {
     alert('검색 조건을 다시 설정해주세요!')
     return
   }
@@ -160,8 +161,8 @@ function goEditor(): void {
           v-model="schoolSelected"
         >
           <!--tag 부분 수정 필요-->
-          <option value="" disabled>학교 선택</option>
-          <option v-for="s in school" v-bind:value="s.value" :key="s.value">{{ s.name }}</option>
+          <option value="" disabled selected>학교 선택</option>
+          <option v-for="(s, index) in school" :key="index" v-bind:value="s.value">{{ s.name }}</option>
 
           <!-- 다른 과목들도 추가할 수 있습니다. -->
         </select>
@@ -170,20 +171,21 @@ function goEditor(): void {
           v-model="gradeSelected"
           :disabled="gradeDisabled"
         >
-          <option value="" disabled>학년 선택</option>
-          <option v-for="g in grade" v-bind:value="g.value" :key="g.value">{{ g.name }}</option>
+          <option value="" disabled selected>학년 선택</option>
+          <option v-for="(g, index) in grade" :key="index" v-bind:value="g.value">{{ g.name }}</option>
         </select>
         <select
           class="p-2 border border-gray-300 rounded-md mr-1 appearance-none"
           v-model="subjectSelected"
           :disabled="subjectDisabled"
         >
-          <option value="" disabled>과목 선택</option>
-          <option value="0">국어</option>
-          <option value="1">수학</option>
-          <option value="2">사회</option>
-          <option value="3">과학</option>
-          <option value="4">영어</option>
+          <option value="" disabled selected>과목 선택</option>
+          <option value=0>국어</option>
+          <option value=1>수학</option>
+          <option value=2>사회</option>
+          <option value=3>과학</option>
+          <option value=4>영어</option>
+
         </select>
         <input
           type="text"
@@ -211,7 +213,8 @@ function goEditor(): void {
 
     <div class="grid grid-cols-3 gap-3">
       <ProblemCard
-        v-for="data in questionData"
+        v-for="(data, index) in questionData"
+        :key = "index"
         :data="data"
         :key="data.questionId"
         class="mb-10"

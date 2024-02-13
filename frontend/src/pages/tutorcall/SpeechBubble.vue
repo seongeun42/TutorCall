@@ -1,5 +1,28 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MatchText from '@/pages/tutorcall/MatchText.vue'
+import router from '@/router';
+import {onMounted} from 'vue'
 
+function matching():void{
+  router.push({name:'matchcall'});
+}
+
+interface pushdata{
+    id: number,
+    delay: number,
+    size: number,
+    objectsize: number,
+    positionX: number,
+    positionY: number,
+    data: any,
+  }
+
+  const props = defineProps<{
+  pushedData: pushdata,
+}>()
+
+// onMounted(()=> console.log(props.pushedData))
+</script>
 <template>
   <div class="speech-bubble">
     <div class="absolute top-3 right-5">x</div>
@@ -31,9 +54,10 @@
         </div>
       </div>
       <div class="text-center mt-1.5">
-        <button class="mr-3 bg-blue-600 text-center inline-block text-white rounded p-1.5">
-          수락
-        </button>
+        <RouterLink :to="{ name: 'matchcall'}" class="mr-3 bg-blue-600 text-center inline-block text-white rounded p-1.5"
+        :pushedData="props.pushedData">
+            수락
+      </RouterLink>
         <button class="mr-3 bg-red-600 text-center inline-block text-white rounded p-1.5">
           거절
         </button>
