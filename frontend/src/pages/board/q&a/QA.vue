@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import ProblemCard from './ProblemCard.vue'
 import * as api from '@/api/qna/qna'
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import type { Ref } from 'vue'
 import router from '@/router/index'
-import{ type AxiosResponse, type AxiosError, isAxiosError } from 'axios';
+import{ type AxiosResponse, isAxiosError } from 'axios';
 import type{ questionInfo, questionResponse } from '@/interface/qna/interface'
 import type { errorResponse } from '@/interface/common/interface';
 
@@ -16,7 +16,7 @@ interface selectform {
 let currentPage: number = 1
 const size = 10
 let totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
-let tag: number = 0;
+let tag: number|string = '';
 let status: string = ''
 
 const questionData: Ref<questionInfo[]> = ref([])
@@ -49,6 +49,7 @@ async function init(): Promise<void> {
     .getQnAData(param)
     .then((response: AxiosResponse<questionResponse>) => {
       if (response.status == 200) {
+        console.log(response);
         totalPages = response.data.questions.totalPages
         questionData.value = response.data.questions.content
         originData.value = questionData.value
@@ -80,7 +81,7 @@ function reset(event: Event): void {
   event.preventDefault()
   status = ''
   keyword.value = ''
-  tag = 0
+  tag = ''
   currentPage = 1
   init()
 }

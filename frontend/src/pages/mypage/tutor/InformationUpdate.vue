@@ -1,3 +1,97 @@
+<script setup lang="ts">
+import type { Ref } from 'vue';
+import { ref } from 'vue';
+import { useUserStore } from '@/store/userStore';
+import * as api from '@/api/mypage/mypage'
+import { isAxiosError } from 'axios';
+import type { errorResponse } from '@/interface/common/interface';
+import router from '@/router';
+
+const today: String = new Date().toISOString().split('T')[0]
+const userStore = useUserStore();
+
+const introduce:Ref<string> = ref('');
+const nickname:Ref<string> = ref(userStore.nickname);
+const password:Ref<string> = ref('');
+const newPassword:Ref<string> = ref('');
+const alram:Ref<string>
+= ref('true');
+const checkPassword:Ref<string> = ref('');
+const school:Ref<string> = ref('none');
+const subject:Ref<string> = ref('none');
+let tags:number[] = [];
+
+async function modifyed(event: Event):Promise<void>{
+
+  event.preventDefault();
+
+  if(introduce.value.length!=0){
+    await api.modifyIntro({introduction: introduce.value})
+    .catch((error : unknown)=>{
+      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+      throw error;
+    })
+  }
+
+  if(nickname.value.length!=0 && nickname.value != userStore.nickname){
+    await api.modifynickname({nickname:nickname.value})
+    .catch((error : unknown)=>{
+      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+      throw error;
+    })
+  }
+  if(password.value.length !=0 && newPassword.value.length !=0){
+    if(password.value == newPassword.value){
+      alert("이전 비밀번호와 변경 비밀번호가 같습니다.");
+      return;
+    }
+    else if (newPassword.value == checkPassword.value){
+      await api.modifyPassword({password:password.value, newPassword: newPassword.value})
+      .catch((error : unknown)=>{
+      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+      throw error;
+    })
+    }else{
+      alert('새로운 비밀번호를 다시 확인해주세요.');
+      return;
+    }
+  }
+
+  if(school.value!="none" && subject.value!="none"){
+    const startNumber:number = Number(school.value);
+    const rem:number = Number(subject.value);
+    for(let i=startNumber; i<=60; i++){
+      if(i%5==rem) {
+        tags.push(i);
+      }
+    }
+
+    tags.forEach((d)=>{
+      console.log(d);
+    })
+
+    await api.modifyTag({tags: tags})
+    .catch((error : unknown)=>{
+      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+      throw error;
+    })
+
+  }else{
+    alert("관심 태그를 다시 설정해주세요.");
+    return;
+  }
+
+  await api.modifyAlert({notificationOption: alram.value})
+  .catch((error : unknown)=>{
+      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+      throw error;
+  })
+
+  alert('정보 수정을 완료했습니다');
+  router.push({"name":"mypage"});
+
+}
+</script>
 <template>
   <div class="mx-40 my-40">
     <p class="font-bold text-2xl mb-10">프로필 사진</p>
@@ -25,6 +119,7 @@
           name=""
           id=""
           placeholder="소개글을 작성하세요"
+          v-model="introduce"
         />
       </div>
     </div>
@@ -37,8 +132,8 @@
           name=""
           id=""
           placeholder="닉네임을 입력하세요"
+          v-model="nickname"
         />
-        <button class="">중복 확인</button>
       </div>
     </div>
     <div class="mt-8">
@@ -49,6 +144,7 @@
         name=""
         id=""
         placeholder=""
+        v-model="password"
       />
     </div>
     <div class="mt-8">
@@ -59,6 +155,7 @@
         name=""
         id=""
         placeholder=""
+        v-model="newPassword"
       />
     </div>
     <div class="mt-8">
@@ -69,35 +166,46 @@
         name=""
         id=""
         placeholder=""
+        v-model="checkPassword"
       />
     </div>
-    <div class="mt-8">
-      <p class="text-xl mb-5">관심 과목 선택</p>
-      <select class="bg-gray-200 w-full h-20 text-lg rounded-lg">
-        <option value="과목1">과목1</option>
-        <option value="과목2">과목2</option>
-        <option value="과목3">과목3</option>
-        <option value="과목4">과목4</option>
-      </select>
+    <div class="mt-8 flex flex-row gap-2">
+      <div class="flex flex-col w-1/2">
+        <p class="text-xl mb-5">관심 학교 선택</p>
+        <select class="bg-gray-200 w-full h-20 text-lg rounded-lg" v-model="school">
+          <option value="none" disabled>관심 학교 선택</option>
+          <option value="0">초등학교</option>
+          <option value="31">중학교</option>
+          <option value="46">고등학교</option>
+        </select>
+      </div>
+      <div class="flex flex-col w-1/2">
+        <p class="text-xl mb-5 ">관심 과목 선택</p>
+        <select class="bg-gray-200 w-full h-20 text-lg rounded-lg" v-model="subject">
+          <option value="none" disabled>관심 과목 선택</option>
+          <option value="1">국어</option>
+          <option value="2">수학</option>
+          <option value="3">과학</option>
+          <option value="4">사회</option>
+          <option value="5">영어</option>
+        </select>
+      </div>
     </div>
     <div class="mt-8">
       <p class="text-xl mb-5">알림 허용</p>
-      <select class="bg-gray-200 w-full h-20 text-lg rounded-lg">
-        <option value="과목1">허용</option>
-        <option value="과목2">차단</option>
+      <select class="bg-gray-200 w-full h-20 text-lg rounded-lg" v-model="alram">
+        <option value="true">허용</option>
+        <option value="false">차단</option>
       </select>
     </div>
     <div class="flex justify-end">
-      <button class="w-24 h-14 mt-10 bg-blue-800 text-white flex items-center justify-center">
+      <button class="w-24 h-14 mt-10 bg-blue-800 text-white flex items-center justify-center"
+      @click="modifyed($event)">
         저장
       </button>
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-const today: String = new Date().toISOString().split('T')[0]
-</script>
 
 <style scoped>
 input::placeholder {

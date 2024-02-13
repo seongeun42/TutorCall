@@ -20,10 +20,10 @@ const userStore = useUserStore()
     <StudentNavBar v-else />
   </div>
   <div class="min-h-[1000px]" id="mainComponent">
-    <!-- <RouterView id="main" /> -->
-    <TutorCallPage/>
+    <RouterView id="main" />
+    <!-- <TutorCallPage/> -->
   </div>
-  <!-- <ChatIcon /> -->
+  <ChatIcon />
   <FooterBar />
 </template>
 

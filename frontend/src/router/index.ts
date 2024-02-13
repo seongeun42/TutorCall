@@ -23,6 +23,7 @@ import StudentMyLecture from '@/pages/mypage/student/information/StudentMyLectur
 import MyPaymentInfo from '@/pages/mypage/payment/MyPaymentInfo.vue'
 import InquiryEditor from '@/pages/board/editor/InquiryEditor.vue'
 import MatchCall from '@/pages/tutorcall/MatchCall.vue'
+import StudentBoardEditor from '@/pages/board/editor/StudentBoardEditor.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior(to, from, savedPosition) {
@@ -46,7 +47,7 @@ const router = createRouter({
       path: '/mypage',
       name: 'mypage',
       component: MyPage,
-      // props: true,
+      props: true,
       children: [
         // 선생님 마이페이지
         // 개인정보 수정
@@ -67,19 +68,25 @@ const router = createRouter({
         {
           path: '/profits',
           name: 'profitCheck',
-          component: ProfitCheck
+          component: ProfitCheck,
+          props: true
+
         },
         // 출금
         {
           path: '/withdrawl',
           name: 'withdrawl',
-          component: WithdrawlPage
+          component: WithdrawlPage,
+          props: true
+
         },
         // 내 과외
         {
           path: '/lecturelists',
           name: 'tutorMyLectures',
-          component: MyLectureList
+          component: MyLectureList,
+          props: true
+
         },
 
         // 학생 마이페이지
@@ -87,25 +94,33 @@ const router = createRouter({
         {
           path: '/userupdate',
           name: 'userUpdate',
-          component: StudentInformationUpdate
+          component: StudentInformationUpdate,
+          props: true
+
         },
         // 포인트 내역
         {
           path: '/points',
           name: 'pointUsage',
-          component: PointUsage
+          component: PointUsage,
+          props: true
+
         },
         // 내 과외
         {
           path: '/mylectures',
           name: 'userMyLectures',
-          component: StudentMyLecture
+          component: StudentMyLecture,
+          props: true
+
         },
         // 결제 정보
         {
           path: '/payments',
           name: 'paymentInfo',
-          component: MyPaymentInfo
+          component: MyPaymentInfo,
+          props: true
+
         }
       ]
     },
@@ -171,6 +186,11 @@ const router = createRouter({
           path: ':qnaNum',
           name: 'qnaDetail',
           component: DetailQA
+        },
+        {
+          path:'writeqna',
+          name:'writeqna',
+          component: StudentBoardEditor
         }
       ]
     },
