@@ -2,7 +2,6 @@
 import OnlineLectureTitleBar from '@/pages/onlinelecture/components/OnlineLectureTitleBar.vue'
 import OnlineLectureUtilBtn from '@/pages/onlinelecture/components/OnlineLectureUtilBtn.vue'
 import OnlineLectureChatForm from '@/pages/onlinelecture/components/OnlineLectureChatForm.vue'
-import OnlineLectureSystemMsg from '@/pages/onlinelecture/components/OnlineLectureSystemMsg.vue'
 import OnlineLectureUserProfile from '@/pages/onlinelecture/components/OnlineLectureUserProfile.vue'
 import OnlineLectureChatInput from '@/pages/onlinelecture/components/OnlineLectureChatInput.vue'
 import OnlineLectureSettingBtn from '@/pages/onlinelecture/components/OnlineLectureSettingBtn.vue'
@@ -11,10 +10,6 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 
 const chatSideView: Ref<boolean> = ref(true)
-const screenShare: Ref<boolean> = ref(false)
-function handleScreenShare(screen: boolean) {
-  screenShare.value = screen
-}
 
 function handleChatView(chat: boolean) {
   chatSideView.value = chat
@@ -33,19 +28,9 @@ interface userInfo {
   mikeStatus: boolean
 }
 
-interface videoSettings {
-  onMike: boolean
-  onVideo: boolean
-}
-
 interface chatForm {
   isMychat: boolean
   message: string
-}
-
-interface btnProps {
-  btnName1: string
-  btnName2: string
 }
 
 const dummydata: userInfo = {
@@ -60,11 +45,6 @@ const dummydata2: userInfo = {
   nickName: '파트너 피카츄',
   isHost: false,
   mikeStatus: false
-}
-
-const dummydata3: videoSettings = {
-  onMike: false,
-  onVideo: false
 }
 
 const dummydata4: chatForm = {
@@ -89,10 +69,7 @@ const dummydata5: chatForm = {
           <UserVideo />
         </div>
         <div class="row-span-1">
-          <OnlineLectureSettingBtn
-            :settings="dummydata3"
-            @update:screenChange="handleScreenShare"
-          />
+          <OnlineLectureSettingBtn />
         </div>
       </div>
       <div class="col-span-2">
@@ -107,7 +84,6 @@ const dummydata5: chatForm = {
               <div class="h-[600px]">
                 <OnlineLectureChatForm :data="dummydata4" />
                 <OnlineLectureChatForm :data="dummydata5" />
-                <OnlineLectureSystemMsg message="시스템 메세지" />
               </div>
               <div>
                 <OnlineLectureChatInput />

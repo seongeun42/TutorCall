@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import OnlineVideo from './OnlineVideo.vue'
 import ScreenShare from './ScreenShare.vue'
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { OpenVidu, StreamManager, Session, Publisher, Subscriber } from 'openvidu-browser'
 import type { Ref } from 'vue'
 import { useVideoStore } from '@/store/videoStore'
 import axios from 'axios'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
-const APPLICATION_SERVER_URL =
-  import.meta.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080/'
+const APPLICATION_SERVER_URL = 'http://localhost:8080/'
 const OVCamera = ref<OpenVidu | undefined>(undefined)
 const OVScreen = ref<OpenVidu | undefined>(undefined)
 const sessionCamera = ref<Session | undefined>(undefined)
@@ -21,7 +20,6 @@ const videoStore = useVideoStore()
 const subscribers: Ref<Subscriber[]> = ref([])
 const nowSharing: Ref<boolean> = ref(false)
 const screenSub: Ref<any> = ref('')
-const lectureId: Ref<number> = ref(1)
 const userName: Ref<string> = ref('Participant' + Math.floor(Math.random() * 100))
 const joinSession = () => {
   OVCamera.value = new OpenVidu()
@@ -45,7 +43,7 @@ const joinSession = () => {
   sessionCamera.value.on('exception', (exception) => {
     console.warn(exception)
   })
-  getToken(lectureId.value).then((token) => {
+  getToken(videoStore.sessionId).then((token) => {
     sessionCamera.value
       ?.connect(token, { clientData: userName.value })
       .then(() => {
@@ -73,9 +71,21 @@ const joinSession = () => {
 
   window.addEventListener('beforeunload', leaveSession)
 }
-const leaveSession = () => {
-  if (sessionCamera.value) sessionCamera.value.disconnect()
+const nonScreenSubscribersCount = computed(() => {
+  return subscribers.value.filter((sub) => sub.stream.typeOfVideo !== 'SCREEN').length
+})
 
+const leaveSession = async () => {
+  // 회의에 혼자 남은 상황에서 새로 고침하거나 나가면 세션 종료
+  if (nonScreenSubscribersCount.value == 0) {
+    const endPoint = `tutorcall/${videoStore.sessionId}/disconnection`
+    await axios.delete(APPLICATION_SERVER_URL + endPoint, {
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true
+    })
+  } else {
+    if (sessionCamera.value) sessionCamera.value.disconnect()
+  }
   sessionCamera.value = undefined
   mainStreamManager.value = undefined
   publisher.value = undefined
@@ -91,6 +101,7 @@ const updateMainVideoStreamManager = (stream: StreamManager) => {
 }
 const getToken = async (sessionId: number) => {
   const newSessionId = await createSession(sessionId)
+  console.log(newSessionId)
   return await createToken(newSessionId)
 }
 
@@ -104,9 +115,10 @@ const createSession = async (sessionId: number) => {
         withCredentials: true
       }
     )
-
+    console.log('세션 생성', response)
     return response.data.sessionId.replace('tutorCall', '')
   } catch (error) {
+    console.log('세션 생성 실패', error)
     return 1
   }
 }
@@ -120,6 +132,7 @@ const createToken = async (sessionId: number) => {
       withCredentials: true
     }
   )
+  console.log('토큰', response.data.token)
   return response.data.token
 }
 function isVideoVisible(sub: any): boolean {
@@ -136,6 +149,7 @@ watch(
     }
   }
 )
+
 watch(subscribers.value, (newValue: any) => {
   for (const sub of newValue) {
     if (sub.stream.typeOfVideo === 'SCREEN') {
@@ -152,13 +166,13 @@ function showScreenShare() {
   OVScreen.value = new OpenVidu()
   sessionScreen.value = OVScreen.value.initSession()
 
-  sessionScreen.value.on('streamDestroyed', ({ stream }) => {
-    const index = subscribers.value.findIndex((sub) => sub.stream === stream)
-    if (index >= 0) {
-      subscribers.value.splice(index, 1)
-    }
-  })
-  getToken(lectureId.value)
+  // sessionScreen.value.on('streamDestroyed', ({ stream }) => {
+  //   const index = subscribers.value.findIndex((sub) => sub.stream === stream)
+  //   if (index >= 0) {
+  //     subscribers.value.splice(index, 1)
+  //   }
+  // })
+  getToken(videoStore.sessionId)
     .then((token) => {
       sessionScreen.value?.connect(token).then(() => {
         let screenPublisher = OVScreen.value?.initPublisher(undefined, {
@@ -177,13 +191,8 @@ function showScreenShare() {
             .getVideoTracks()[0]
             .addEventListener('ended', () => {
               videoStore.showScreen = false
-              const screenIdToRemove = screenSub.value
               screenSub.value = ''
               nowSharing.value = false
-              const index = subscribers.value.findIndex((sub) => sub.id === screenIdToRemove)
-              if (index !== -1) {
-                subscribers.value.splice(index, 1)
-              }
             })
         })
         screenPublisher?.once('accessDenied', (event) => {
@@ -202,7 +211,8 @@ function showScreenShare() {
 }
 
 const stopScreenSharing = () => {
-  sessionScreen.value?.unpublish(publisherScreen.value)
+  if (sessionScreen.value) sessionScreen.value.disconnect()
+  // sessionScreen.value?.unpublish(publisherScreen.value)
   publisherScreen.value = undefined
   shareStreamManager.value = undefined
   OVScreen.value = undefined
@@ -218,9 +228,9 @@ onBeforeUnmount(() => {
 })
 </script>
 <template>
-  <div v-if="subscribers">
+  <div v-if="subscribers.length != 0">
     <div v-if="nowSharing">
-      <div class="flex mb-10">
+      <div class="flex mb-5 subscribers">
         <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="mainStreamManager" />
         <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
           <div v-if="sub.stream.typeOfVideo !== 'SCREEN'">
@@ -236,16 +246,14 @@ onBeforeUnmount(() => {
       <ScreenShare :stream-manager="screenSub" />
     </div>
     <div v-else>
-      <div class="flex mb-10">
+      <div class="flex mb-5 subscribers">
         <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
-          <div v-if="sub.stream.typeOfVideo !== 'SCREEN'">
-            <OnlineVideo
-              class="w-[250px] h-[150px]"
-              v-if="isVideoVisible(sub)"
-              :stream-manager="sub"
-              @click="updateMainVideoStreamManager(sub)"
-            />
-          </div>
+          <OnlineVideo
+            class="w-[250px] h-[150px]"
+            v-if="isVideoVisible(sub)"
+            :stream-manager="sub"
+            @click="updateMainVideoStreamManager(sub)"
+          />
         </div>
       </div>
       <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
@@ -256,4 +264,8 @@ onBeforeUnmount(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.subscribers {
+  border: 1px solid #dbdbdb;
+}
+</style>
