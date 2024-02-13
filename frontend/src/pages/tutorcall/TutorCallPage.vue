@@ -1,26 +1,86 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
-import gsap from 'gsap'
-import floatingObject from '@/util/animation/floatingObject'
+// import { onMounted, watch } from 'vue'
+import { useNotificationStore } from '@/store/notificationStore'
 import FloatObject from '@/pages/tutorcall/FloatObject.vue'
-const data: Array<any> = []
-;(() => {
-  for (let i = 1; i <= 10; i++) {
-    data.push({
-      id: i,
-      delay: Math.floor(Math.random() * 100) + 1,
-      size: Math.floor(Math.random() * 100) + 1
-    })
-  }
-})()
+// import { reactive } from 'vue';
 
-onMounted(() => {
-  console.log('data ' + data)
-  data.forEach((d) => {
-    console.log('foreach d ', d)
-    floatingObject('.obj' + d.id, d.delay, d.size)
-  })
-})
+const notificationStore = useNotificationStore()
+
+// const mainContent = document.querySelector('#mainComponent');
+// const mainWidth = mainContent?.clientWidth ?? 1960;
+// const mainHeight = mainContent?.clientHeight ?? 1000;
+// let idcount = 0;
+
+// const arraydata:{
+//   id: number,
+//   delay: number,
+//   size: number,
+//   objectsize: number,
+//   positionX: number,
+//   positionY: number,
+//   data:any,
+// }[] = reactive([]);
+
+// /* * * * * * * * * * * * *
+// * 
+// *   data: 소켓에서 받은 선생님 데이터
+// *   objectsize
+// *   position x
+// *   position y
+// *
+// * * * * * * * * * * * * * */
+
+
+// /*
+// * 이 made by written 중복 회피 로직은 쓰레기다 고쳐야함
+// */
+// function checkoverlapping(objectsize:number, positionX:number, positionY:number):boolean
+// {
+//   const length = arraydata.length;
+
+//   for(let i =0; i<length-1; i++){
+//     const r = Math.sqrt(Math.pow(Math.abs(arraydata[i].positionX-positionX),2)+Math.pow(Math.abs(arraydata[i].positionY-positionY),2))
+//     if(r<175) return true;
+//   }
+//   return false;
+// }
+
+// function pushNewData(data: any){
+//   const objectsize= 175;
+//   let positionX = Math.floor(Math.random() * (500 - objectsize + 1)) + 100;
+//   let positionY = Math.floor(Math.random() * (mainWidth * 0.35)) + (mainWidth * 0.325)
+
+//   while(checkoverlapping(objectsize, positionX, positionY)){
+//     positionX = Math.floor(Math.random() * (500 - objectsize + 1)) + 100;
+//     positionY = Math.floor(Math.random() * ((mainWidth-objectsize)-(200)+1)) + 200
+//   }
+
+//   const pushdata = {
+//     id: idcount++,
+//     delay: Math.floor(Math.random() * 100) + 1,
+//     size: objectsize,
+//     objectsize: objectsize,
+//     positionX: positionX,
+//     positionY: positionY,
+//     data: data
+//   }
+
+//   arraydata.push(pushdata);
+
+//   setTimeout(() => {
+//     // 30초 후에 해당 데이터를 삭제하는 로직
+//     const index = arraydata.findIndex((item) => item.id === pushdata.id);
+//     if (index !== -1) {
+//       arraydata.splice(index, 1);
+//     }
+//   }, 10000); // 30초를 밀리초로 변환하여 설정합니다.
+// }
+
+// function testBtn():void{
+//   console.log("ddd");
+//   pushNewData("testDatainput");
+// }
+
 </script>
 
 <template>
@@ -30,16 +90,27 @@ onMounted(() => {
     <div class="wave -two"></div>
     <div class="wave -three"></div>
     <FloatObject
-      v-for="(d, idx) in data"
+      v-for="(d, idx) in notificationStore.accepts"
+      :accept=d
       :class="'obj' + d.id"
       :key="idx"
-      :position-y="Math.floor(Math.random() * 100) + 1"
-      :size="Math.floor(Math.random() * 100) + 100"
-      :position-x="Math.floor(Math.random() * 100) + 1"
+      :position-y=d.positionY
+      :size=d.objectsize
+      :position-x=d.positionX
     />
   </div>
+  <div @click="testBtn"
+  class="bg-gray-300 min-h-8"><p>pushdata</p></div>
 </template>
 <style scoped>
+.relative {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
 .obj1 {
   position: absolute;
   width: 300px;

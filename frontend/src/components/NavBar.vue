@@ -2,24 +2,24 @@
 import { ref, type Ref, reactive } from 'vue'
 import CallNotification from '@/components/CallNotification.vue'
 import { useUserStore } from '@/store/userStore';
+import { useNotificationStore } from '@/store/notificationStore'
 import smallAlert from '@/components/tutorcallAlert/smallAlert.vue'
 import { type alertForm } from '@/interface/tutorcall/interface'
 import router from '@/router'
 
 const userStore = useUserStore();
+const notificationStore = useNotificationStore()
 
 function changeStatus() {
+    if (!userStore.isActiveCall) {
+    notificationStore.tagSubscribe()
+  } else {
+    for (let i = 0; i < notificationStore.tagSubs.length; i++) {
+      notificationStore.unsubscribe(notificationStore.tagSubs[i])
+    }
+    notificationStore.clearTagSubs()
+  }
   userStore.isActiveCall = !userStore.isActiveCall
-  // console.log(userStore.isActiveCall)
-}
-
-
-interface notifyDate {
-  message: string
-}
-
-const dummyData: notifyDate = {
-  message: '테스트 데이터 알림'
 }
 
 const modalShow: Ref<boolean> = ref(false)
@@ -35,6 +35,8 @@ function handleViewAlert():void{
 
 function logout():void{
   userStore.logout();
+  notificationStore.socketDisconnect();
+  notificationStore.clear();
   sessionStorage.clear();
   router.push("/");
 }
@@ -108,7 +110,7 @@ function hideAlert(item:{hide:boolean}):void{
                 </p>
 
                 <label class="ml-3 relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" :value="userStore.isActiveCall" class="sr-only peer" @click="changeStatus()"/>
+                  <input type="checkbox" v-model="userStore.isActiveCall" class="sr-only peer" @click="changeStatus()"/>
                   <div
                     class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
                   ></div>
@@ -172,9 +174,9 @@ function hideAlert(item:{hide:boolean}):void{
                 </svg>
               </button>
             </div>
-            <div v-for="d in data">
-              <smallAlert v-if="!d.hide" :data="d"
-              @change="hideAlert(d)"/>
+            <div v-for="(item, index) in notificationStore.problems" :key="index">
+              <smallAlert v-if="!item.hide" :data="item"
+              @change="hideAlert(item)"/>
             </div>
           </div>
           <div class="ml-3 p-2 bg-sky-900 rounded-lg"

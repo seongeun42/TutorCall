@@ -1,4 +1,4 @@
-import type { review, user } from "../common/interface";
+import type { review, tagInfo, user } from "../common/interface";
 
 export interface tutorCallHistory{
     tutoringId: number,
@@ -11,4 +11,40 @@ export interface tutorCallHistory{
     liveState: string,
     price: number,
     review: review
+}
+export interface lectureResponse{
+    content: lectureHistory[]
+}
+export interface lectureHistory{
+
+    lectureId: number,
+    tutor: user,
+    promotionTitle: string,
+    promotionState: boolean,
+    lecture_state: boolean,
+    tag: tagInfo,
+    lectureEntAt: string,
+    review: boolean,
+
+}
+
+export interface modifynickname{
+    nickname: string
+}
+
+export interface modifypassword{
+    password: string,
+    newPassword: string
+}
+
+export interface modifynotify{
+    notificationOption: string
+}
+
+export interface modifytags{
+    tags: number[]
+}
+
+export interface modifyIntro{
+    introduction: string
 }

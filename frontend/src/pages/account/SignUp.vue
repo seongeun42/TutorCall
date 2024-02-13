@@ -5,6 +5,7 @@ import SelectRole from './SelectRole.vue'
 import * as api from '@/api/login/signUp'
 import router from '@/router/index'
 import { useUserStore } from '@/store/userStore'
+import { useNotificationStore } from '@/store/notificationStore'
 import type{ emailCodeCheck,
     nickCheck, loginForm, signUpForm, signUpResponse, user, accountErrorResponse } from '@/interface/account/interface'
 
@@ -26,6 +27,7 @@ const isNickNameUsed: Ref<boolean> = ref(false)
 const loginEmail: Ref<string> = ref('')
 const loginPassword: Ref<string> = ref('')
 const userStore = useUserStore()
+const notificationStore = useNotificationStore()
 
 const status = router.currentRoute.value.query.signUp
 
@@ -161,13 +163,10 @@ async function doLogin(event: Event) {
   await api
     .login(param)
     .then((response: AxiosResponse<user>) => {
-      const roleType:string = response.data.role;
-      // 현재 서버에서 user 관련 data를 넘겨주고 있지 않음
-      if (roleType == 'TUTOR') {
-        userStore.login(true, loginEmail.value)
-      } else {
-        userStore.login(false, loginEmail.value)
-      }
+      // 유저 정보 저장
+      userStore.login(response.data)
+      // 소켓 연결 & 유저 개인 알림 구독
+      notificationStore.socketConnect(response.data.id)
       router.push('/')
     })
     .catch((error: unknown) => {

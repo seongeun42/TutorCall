@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import ProblemCard from './ProblemCard.vue'
 import * as api from '@/api/qna/qna'
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import type { Ref } from 'vue'
 import router from '@/router/index'
-import { type AxiosResponse, type AxiosError, isAxiosError } from 'axios'
-import type { questionInfo, questionResponse } from '@/interface/qna/interface'
-import type { errorResponse } from '@/interface/common/interface'
+import{ type AxiosResponse, isAxiosError } from 'axios';
+import type{ questionInfo, questionResponse } from '@/interface/qna/interface'
+import type { errorResponse } from '@/interface/common/interface';
+import { useUserStore } from '@/store/userStore'
 
 interface selectform {
   value: number
@@ -16,7 +17,7 @@ interface selectform {
 let currentPage: number = 1
 const size = 10
 let totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
-let tag: number = 0
+let tag: number|string = '';
 let status: string = ''
 
 const questionData: Ref<questionInfo[]> = ref([])
@@ -27,6 +28,7 @@ const subjectSelected: Ref<selectform | string> = ref('')
 const gradeDisabled: Ref<boolean> = ref(true)
 const subjectDisabled: Ref<boolean> = ref(true)
 const keyword: Ref<string> = ref('')
+const userStore = useUserStore()
 
 const prevPage = (): void => {
   if (currentPage > 1) {
@@ -43,6 +45,7 @@ const nextPage = (): void => {
 
 async function init(): Promise<void> {
   const param: string = `?page=${currentPage - 1}&size=${size}&isEnd=${status}&keyword=${keyword.value}&tagId=${tag}`
+
   await api
     .getQnAData(param)
     .then((response: AxiosResponse<questionResponse>) => {
@@ -78,7 +81,7 @@ function reset(event: Event): void {
   event.preventDefault()
   status = ''
   keyword.value = ''
-  tag = 0
+  tag = ''
   currentPage = 1
   init()
 }
@@ -123,7 +126,7 @@ watch(
 
 async function keywordSearch(event: Event): Promise<void> {
   event.preventDefault()
-  if (subjectSelected.value == '') {
+  if (!subjectSelected.value) {
     alert('검색 조건을 다시 설정해주세요!')
     return
   }
@@ -160,8 +163,8 @@ function goEditor(): void {
           v-model="schoolSelected"
         >
           <!--tag 부분 수정 필요-->
-          <option value="" disabled>학교 선택</option>
-          <option v-for="s in school" v-bind:value="s.value" :key="s.value">{{ s.name }}</option>
+          <option value="" disabled selected>학교 선택</option>
+          <option v-for="(s, index) in school" :key="index" v-bind:value="s.value">{{ s.name }}</option>
 
           <!-- 다른 과목들도 추가할 수 있습니다. -->
         </select>
@@ -170,20 +173,21 @@ function goEditor(): void {
           v-model="gradeSelected"
           :disabled="gradeDisabled"
         >
-          <option value="" disabled>학년 선택</option>
-          <option v-for="g in grade" v-bind:value="g.value" :key="g.value">{{ g.name }}</option>
+          <option value="" disabled selected>학년 선택</option>
+          <option v-for="(g, index) in grade" :key="index" v-bind:value="g.value">{{ g.name }}</option>
         </select>
         <select
           class="p-2 border border-gray-300 rounded-md mr-1 appearance-none"
           v-model="subjectSelected"
           :disabled="subjectDisabled"
         >
-          <option value="" disabled>과목 선택</option>
-          <option value="0">국어</option>
-          <option value="1">수학</option>
-          <option value="2">사회</option>
-          <option value="3">과학</option>
-          <option value="4">영어</option>
+          <option value="" disabled selected>과목 선택</option>
+          <option value=0>국어</option>
+          <option value=1>수학</option>
+          <option value=2>사회</option>
+          <option value=3>과학</option>
+          <option value=4>영어</option>
+
         </select>
         <input
           type="text"
@@ -200,6 +204,7 @@ function goEditor(): void {
         </button>
 
         <button
+          v-if="userStore.role === 'USER'"
           type="button"
           class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
           @click="goEditor"
@@ -211,9 +216,9 @@ function goEditor(): void {
 
     <div class="grid grid-cols-3 gap-3">
       <ProblemCard
-        v-for="data in questionData"
+        v-for="(data, index) in questionData"
+        :key = "index"
         :data="data"
-        :key="data.questionId"
         class="mb-10"
         @click="goQnADetail(data.questionId)"
       />

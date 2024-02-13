@@ -31,7 +31,7 @@
                     />
                   </svg>
 
-                  <RouterLink :to="{ name: 'tutorUpdate' }" class="ml-2">개인정보 수정</RouterLink>
+                  <RouterLink :to="{ name: 'tutorUpdate', query:{title: '개인정보 수정'}}" class="ml-2">개인정보 수정</RouterLink>
                 </li>
                 <li class="my-5 flex">
                   <svg
@@ -51,7 +51,7 @@
                     />
                   </svg>
 
-                  <RouterLink :to="{ name: 'reviewCheck' }" class="ml-2">리뷰 확인</RouterLink>
+                  <RouterLink :to="{ name: 'reviewCheck', query:{title: '리뷰 확인'} }" class="ml-2">리뷰 확인</RouterLink>
                 </li>
                 <li class="my-5 flex">
                   <svg
@@ -83,7 +83,7 @@
                     />
                   </svg>
 
-                  <RouterLink :to="{ name: 'withdrawl' }" class="ml-2">출금</RouterLink>
+                  <RouterLink :to="{ name: 'withdrawl', query:{title: '출금'} }" class="ml-2">출금</RouterLink>
                 </li>
                 <li class="my-5 flex">
                   <svg
@@ -105,7 +105,7 @@
                     />
                   </svg>
 
-                  <RouterLink :to="{ name: 'tutorMyLectures' }" class="ml-2">내 과외</RouterLink>
+                  <RouterLink :to="{ name: 'tutorMyLectures',query:{title: '내 과외'} }" class="ml-2">내 과외</RouterLink>
                 </li>
               </div>
             </ul>

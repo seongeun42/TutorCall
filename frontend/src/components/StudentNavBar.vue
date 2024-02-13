@@ -1,16 +1,9 @@
 <script setup lang="ts">
 import router from '@/router/index'
 import { useUserStore } from '@/store/userStore'
+import { useNotificationStore } from '@/store/notificationStore'
 import { ref, type Ref } from 'vue'
 import CallNotification from '@/components/CallNotification.vue'
-
-interface notifyDate {
-  message: string
-}
-
-const dummyData: notifyDate = {
-  message: '테스트 데이터 알림'
-}
 
 const modalShow: Ref<boolean> = ref(false)
 
@@ -19,19 +12,22 @@ function handleMode(show: boolean, mode: string) {
   //mode에 따라 수행할 기능이 다름.
 }
 
-const userStore = useUserStore();
+const userStore = useUserStore()
+const notificationStore = useNotificationStore()
 
 function goQnABoard():void{
-  router.push({"name":"qna"});
+  router.push({"name":"qna"})
 }
 
 function goLectureBoard():void{
-  router.push({"name":"lecturesPromo"});
+  router.push({"name":"lecturesPromo"})
 }
 
 
 function logout():void{
   userStore.logout();
+  notificationStore.socketDisconnect();
+  notificationStore.clear();
   sessionStorage.clear();
   router.push("/");
 }
@@ -97,7 +93,7 @@ function logout():void{
           </div>
           <!-- Profile dropdown -->
           <div class="relative ml-3">
-            <RouterLink to="/mypage/user">
+            <RouterLink :to="{name:'userUpdate'}">
               <button
                 type="button"
                 class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"

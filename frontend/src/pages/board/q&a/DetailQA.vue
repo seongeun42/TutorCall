@@ -10,8 +10,9 @@ import type{ questionInfo, answerForm, answerResponse } from '@/interface/qna/in
 
 import type { errorResponse, commonResponse } from '@/interface/common/interface'
 import { useEditStore } from '@/store/editStore'
+import { reactive } from 'vue'
 
-const questionData: Ref<questionInfo | null> = ref(null)
+let questionData: questionInfo[] = reactive([]);
 const questionId: number = Number(router.currentRoute.value.params['qnaNum'])
 const editStore = useEditStore();
 
@@ -21,7 +22,7 @@ onMounted(async (): Promise<void> => {
   await api
     .getOneQuestionData(questionId)
     .then((response: AxiosResponse<{ question: questionInfo }>) => {
-      questionData.value = response.data.question
+      questionData.push(response.data.question)
     })
     .catch((error: unknown) => {
       if (isAxiosError<errorResponse>(error)) {
@@ -34,8 +35,8 @@ function editQuestion(event:Event):void{
 
   event.preventDefault();
   editStore.init();
-  editStore.save(0,0,0,questionData.value?.title ?? "",questionData.value?.content ?? "", true);
-  router.push({"name":"editqna",params: { qnaNum: questionData.value?.questionId }})
+  editStore.save(0,0,0,questionData[0].title ?? "",questionData[0].content ?? "", true);
+  router.push({"name":"editqna",params: { qnaNum: questionData[0].questionId }})
 
 }
 
@@ -44,7 +45,7 @@ async function deleteQuestion(event: Event): Promise<void> {
   await api
     .deleteQuestion(questionId)
     .then((response: AxiosResponse<commonResponse>) => {
-      alert("성공적으로 삭제되었습니다!");
+      alert(response.data.message);
       router.push({ name: 'qnaList' })
     })
     .catch((error: unknown) => {
@@ -89,28 +90,28 @@ function goList(): void {
     <div class="mx-20 my-10">
       <div class="flex justify-between items-center">
         <div class="flex items-center justify-center rounded-full w-20 h-8 bg-green-200">
-          <p>{{ questionData?.tag.subject }}</p>
+          <p>{{ questionData[0].tag.subject }}</p>
         </div>
         <div class="flex">
           <a href="" class="mr-3" @click="deleteQuestion($event)">글 삭제</a>
           <a href="" @click="editQuestion">글 수정</a>
         </div>
       </div>
-      <h5 class="font-bold text-[1.5rem] my-3">{{ questionData?.title }}</h5>
+      <h5 class="font-bold text-[1.5rem] my-3">{{ questionData[0].title }}</h5>
       <div class="flex justify-between items-center">
         <div class="flex items-center mb-5">
-          <img :src="questionData?.writer.profile" alt="" class="w-10 h-10 rounded-full" />
-          <p class="ml-1">{{ questionData?.writer.nickname }}</p>
+          <img :src="questionData[0].writer.profile" alt="" class="w-10 h-10 rounded-full" />
+          <p class="ml-1">{{ questionData[0].writer.nickname }}</p>
           <p class="ml-3">
-            {{ questionData?.createDate }}
+            {{ questionData[0].createDate }}
           </p>
         </div>
       </div>
       <hr />
-      <DetailProblem :content="questionData?.content" />
+      <DetailProblem :content="questionData[0].content" />
       <div class="bg-gray-200 pb-10 rounded-xl">
         <p class="mx-10 my-10 pt-5 font-bold text-xl">댓글</p>
-        <Comments v-for="answer in questionData?.answerList" :answer="answer" />
+        <Comments v-for="(answer, index) in questionData[0].answerList" :key="index" :answer="answer" />
       </div>
       <div class="mt-20 flex justify-center">
         <img src="@/img/teacher.png" alt="" class="w-20 h-20 rounded-full mr-10" />

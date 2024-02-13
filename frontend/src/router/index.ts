@@ -22,8 +22,10 @@ import PointUsage from '@/pages/mypage/student/point/PointUsage.vue'
 import StudentMyLecture from '@/pages/mypage/student/information/StudentMyLecture.vue'
 import MyPaymentInfo from '@/pages/mypage/payment/MyPaymentInfo.vue'
 import InquiryEditor from '@/pages/board/editor/InquiryEditor.vue'
+import MatchCall from '@/pages/tutorcall/MatchCall.vue'
 import StudentBoardEditor from '@/pages/board/editor/StudentBoardEditor.vue'
 import TutorBoardEditor from '@/pages/board/editor/TutorBoardEditor.vue'
+import { useUserStore } from '@/store/userStore'
 import path from 'path'
 
 const router = createRouter({
@@ -70,19 +72,25 @@ const router = createRouter({
         {
           path: '/profits',
           name: 'profitCheck',
-          component: ProfitCheck
+          component: ProfitCheck,
+          props: true
+
         },
         // 출금
         {
           path: '/withdrawl',
           name: 'withdrawl',
-          component: WithdrawlPage
+          component: WithdrawlPage,
+          props: true
+
         },
         // 내 과외
         {
           path: '/lecturelists',
           name: 'tutorMyLectures',
-          component: MyLectureList
+          component: MyLectureList,
+          props: true
+
         },
 
         // 학생 마이페이지
@@ -90,25 +98,33 @@ const router = createRouter({
         {
           path: '/userupdate',
           name: 'userUpdate',
-          component: StudentInformationUpdate
+          component: StudentInformationUpdate,
+          props: true
+
         },
         // 포인트 내역
         {
           path: '/points',
           name: 'pointUsage',
-          component: PointUsage
+          component: PointUsage,
+          props: true
+
         },
         // 내 과외
         {
           path: '/mylectures',
           name: 'userMyLectures',
-          component: StudentMyLecture
+          component: StudentMyLecture,
+          props: true
+
         },
         // 결제 정보
         {
           path: '/payments',
           name: 'paymentInfo',
-          component: MyPaymentInfo
+          component: MyPaymentInfo,
+          props: true
+
         }
       ]
     },
@@ -142,9 +158,15 @@ const router = createRouter({
       // 과외 구하는 모집 및 홍보 게시판
       path: '/lecturespromotion',
       name: 'lecturesPromo',
-      component: LectureRecruit,
+      redirect: {"name":'lectureList'},
       children: [
         // 모홍게 상세
+        {
+          path:'/list',
+          name:'lectureList',
+          component: LectureRecruit,
+
+        },
         {
           path: ':promotionNum',
           name: 'lectureDetail',
@@ -168,6 +190,11 @@ const router = createRouter({
           path: ':qnaNum',
           name: 'qnaDetail',
           component: DetailQA
+        },
+        {
+          path:'writeqna',
+          name:'writeqna',
+          component: StudentBoardEditor
         }
       ]
     },
@@ -195,6 +222,11 @@ const router = createRouter({
       name: 'inquiry',
       component: InquiryEditor
     },
+    {
+      path: '/matchcall',
+      name: 'matchcall',
+      component: MatchCall,
+    },
     // 학생 튜터콜 및 Q&A 에디터
     {
       path: '/problemform',
@@ -209,5 +241,53 @@ const router = createRouter({
     }
   ]
 })
+
+// 컴포넌트 가드
+router.beforeEach((to) => {
+  const userStore = useUserStore();
+  // 로그인을 안한 상태에서 회원전용 페이지에 접근하려는 경우
+  if (
+    !userStore.isLogin &&
+    (to.name == "teacherPromotionForm" ||
+      to.name == "studentRequestForm" ||
+      to.name == "matchcall" ||
+      to.name == "waitingRoom" ||
+      to.name == "onlineLectureNum" ||
+      to.name == "onlineLecture" ||
+      to.name == "writeqna" ||
+      to.name == "qnaDetail" ||
+      to.name == "lectureDetail" ||
+      to.name == "mypage")
+  ) {
+    alert("회원전용 기능입니다. 로그인이 필요합니다.");
+    return { name: "signform" };
+  }
+  // 로그인을 안했거나, 학생이 아닌 선생님이 학생 마이페이지에 접근하려 할 때 라우터가드
+  if (
+    (!userStore.isLogin || userStore.isLogin && userStore.isTutor) && (
+      to.name == "userUpdate" ||
+      to.name == "pointUsage" ||
+      to.name == "userMyLectures" ||
+      to.name == "paymentInfo"
+    )
+  ) {
+    alert("해당 페이지에 접근 권한이 없습니다.")
+    return { name: 'main' }
+  }
+    // 로그인을 안했거나, 학생이 아닌 선생님이 학생 마이페이지에 접근하려 할 때 라우터가드
+    if (
+      (!userStore.isLogin || userStore.isLogin && !userStore.isTutor) && (
+        to.name == "tutorUpdate" ||
+        to.name == "reviewCheck" ||
+        to.name == "profitCheck" ||
+        to.name == "withdrawl" ||
+        to.name == "tutorMyLectures"
+      )
+    ) {
+      alert("해당 페이지에 접근 권한이 없습니다.")
+      return { name: 'main' }
+    }
+});
+
 
 export default router
