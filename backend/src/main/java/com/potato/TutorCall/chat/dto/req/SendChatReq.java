@@ -1,9 +1,10 @@
 package com.potato.TutorCall.chat.dto.req;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class SendChatReq {
-  Long chatroomId;
+  Long senderId;
+  String chatroomId;
   String message;
 }

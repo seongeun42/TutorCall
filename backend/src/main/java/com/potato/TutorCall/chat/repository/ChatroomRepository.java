@@ -1,8 +1,8 @@
 package com.potato.TutorCall.chat.repository;
 
 import com.potato.TutorCall.chat.domain.Chatroom;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
-@Repository
-public interface ChatroomRepository extends CrudRepository<Chatroom, Long> {}
+// See also: https://habeebcycle.medium.com/reactive-api-service-using-spring-webflux-and-reactive-data-redis-47ad2467de1d
+public interface ChatroomRepository extends ReactiveCrudRepository<Chatroom, String>, CustomChatroomRepository {
+}
