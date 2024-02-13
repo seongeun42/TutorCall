@@ -19,7 +19,19 @@ pipeline {
                 dir('frontend'){
                     // sh "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")"
                     sh "docker build -t frontend ."
-                    sh "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")"
+                    script {
+                
+                        def containerIds = sh(
+                            script: "docker ps -aqf \"name=^/${frontendContainer}$\"",
+                            returnStdout: true
+                        ).trim()
+
+                        if (containerIds) {
+                            sh "docker rm -f ${containerIds}"
+                        } else {
+                            echo "해당 조건에 일치하는 컨테이너가 없습니다."
+                        }
+                    }
                     sh "docker run --name frontend frontend"
                     sh "docker cp frontend:/app/dist /data/frontend"
                     sh "docker exec nginx nginx -s reload"
