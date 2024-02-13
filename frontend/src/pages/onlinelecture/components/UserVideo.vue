@@ -18,8 +18,9 @@ const shareStreamManager = ref<StreamManager | undefined>(undefined)
 const publisher = ref<Publisher | undefined>(undefined)
 const publisherScreen = ref<Publisher | undefined>(undefined)
 const videoStore = useVideoStore()
-const shareSuccess: Ref<boolean> = ref(false)
-const subscribers = ref<Subscriber[]>([])
+const subscribers: Ref<Subscriber[]> = ref([])
+const nowSharing: Ref<boolean> = ref(false)
+const screenSub: Ref<any> = ref('')
 const lectureId: Ref<number> = ref(1)
 const userName: Ref<string> = ref('Participant' + Math.floor(Math.random() * 100))
 const joinSession = () => {
@@ -29,9 +30,8 @@ const joinSession = () => {
 
   sessionCamera.value.on('streamCreated', ({ stream }) => {
     const subscriber = sessionCamera.value?.subscribe(stream, undefined)
-    if (subscriber && subscriber.stream.typeOfVideo === 'CAMERA') {
+    if (subscriber) {
       subscribers.value.push(subscriber)
-      console.log('구독자 목록', subscribers.value)
     }
   })
 
@@ -125,6 +125,7 @@ const createToken = async (sessionId: number) => {
 function isVideoVisible(sub: any): boolean {
   return subscribers.value.indexOf(sub) < 4
 }
+
 watch(
   () => videoStore.showScreen,
   () => {
@@ -135,9 +136,28 @@ watch(
     }
   }
 )
+watch(subscribers.value, (newValue: any) => {
+  for (const sub of newValue) {
+    if (sub.stream.typeOfVideo === 'SCREEN') {
+      nowSharing.value = true
+      screenSub.value = sub
+      return
+    }
+  }
+  nowSharing.value = false
+  screenSub.value = ''
+})
+
 function showScreenShare() {
   OVScreen.value = new OpenVidu()
   sessionScreen.value = OVScreen.value.initSession()
+
+  sessionScreen.value.on('streamDestroyed', ({ stream }) => {
+    const index = subscribers.value.findIndex((sub) => sub.stream === stream)
+    if (index >= 0) {
+      subscribers.value.splice(index, 1)
+    }
+  })
   getToken(lectureId.value)
     .then((token) => {
       sessionScreen.value?.connect(token).then(() => {
@@ -152,17 +172,22 @@ function showScreenShare() {
           mirror: false
         })
         screenPublisher?.once('accessAllowed', (event) => {
-          shareSuccess.value = true
           screenPublisher?.stream
             .getMediaStream()
             .getVideoTracks()[0]
             .addEventListener('ended', () => {
               videoStore.showScreen = false
-              shareSuccess.value = false
+              const screenIdToRemove = screenSub.value
+              screenSub.value = ''
+              nowSharing.value = false
+              const index = subscribers.value.findIndex((sub) => sub.id === screenIdToRemove)
+              if (index !== -1) {
+                subscribers.value.splice(index, 1)
+              }
             })
         })
         screenPublisher?.once('accessDenied', (event) => {
-          shareSuccess.value = false
+          videoStore.showScreen = false
           console.warn('ScreenShare: Access Denied')
         })
         shareStreamManager.value = screenPublisher
@@ -193,37 +218,41 @@ onBeforeUnmount(() => {
 })
 </script>
 <template>
-  <div v-if="shareSuccess">
-    <div class="flex mb-10">
-      <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="mainStreamManager" />
-      <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
-        <OnlineVideo
-          class="w-[250px] h-[150px]"
-          v-if="isVideoVisible(sub)"
-          :stream-manager="sub"
-          @click="updateMainVideoStreamManager(sub)"
-        />
+  <div v-if="subscribers">
+    <div v-if="nowSharing">
+      <div class="flex mb-10">
+        <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="mainStreamManager" />
+        <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
+          <div v-if="sub.stream.typeOfVideo !== 'SCREEN'">
+            <OnlineVideo
+              class="w-[250px] h-[150px]"
+              v-if="isVideoVisible(sub)"
+              :stream-manager="sub"
+              @click="updateMainVideoStreamManager(sub)"
+            />
+          </div>
+        </div>
       </div>
-    </div>
-    <ScreenShare :stream-manager="shareStreamManager" />
-  </div>
-  <div v-else>
-    <div v-if="!subscribers">
-      <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
+      <ScreenShare :stream-manager="screenSub" />
     </div>
     <div v-else>
-      <div class="flex mb-5 border-gray-100">
+      <div class="flex mb-10">
         <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
-          <OnlineVideo
-            class="w-[200px] h-[100px]"
-            v-if="isVideoVisible(sub)"
-            :stream-manager="sub"
-            @click="updateMainVideoStreamManager(sub)"
-          />
+          <div v-if="sub.stream.typeOfVideo !== 'SCREEN'">
+            <OnlineVideo
+              class="w-[250px] h-[150px]"
+              v-if="isVideoVisible(sub)"
+              :stream-manager="sub"
+              @click="updateMainVideoStreamManager(sub)"
+            />
+          </div>
         </div>
       </div>
       <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
     </div>
+  </div>
+  <div v-else>
+    <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
   </div>
 </template>
 
