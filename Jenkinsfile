@@ -8,6 +8,7 @@ pipeline {
         BUILD_CMD = 'bootJar'
         WORKSPACE_DIR = ''
         TEST_BUILD_CMD = 'bootJar'
+
     }
    
     stages {
@@ -20,8 +21,8 @@ pipeline {
                     // sh "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")"
                     sh "docker build -t frontend ."
                     script {
-                    
                         try {
+                            
                             sh "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")"
                         } catch (Exception e) {
                             echo "컨테이너 제거 중 에러가 발생했습니다: ${e.getMessage()}"
@@ -29,7 +30,7 @@ pipeline {
                     }
                     sh "docker run --name frontend frontend"
                     sh "docker cp frontend:/app/dist /data/frontend"
-                    sh "docker exec nginx nginx -s reload"
+                    sh "docker exec openvidu_nginx_1 nginx -s reload"
                 }
             }
             post {
