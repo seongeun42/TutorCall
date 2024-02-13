@@ -27,3 +27,24 @@ export interface lectureHistory{
     review: boolean,
 
 }
+
+export interface modifynickname{
+    nickname: string
+}
+
+export interface modifypassword{
+    password: string,
+    newPassword: string
+}
+
+export interface modifynotify{
+    notificationOption: string
+}
+
+export interface modifytags{
+    tags: number[]
+}
+
+export interface modifyIntro{
+    introduction: string
+}

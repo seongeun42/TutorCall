@@ -1,4 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useUserStore } from '@/store/userStore';
+
+const userStore = useUserStore();
+
+</script>
 <template>
   <div class="md flex flex-col bg-white border rounded-xl w-60">
     <div class="flex-grow">
@@ -15,7 +20,7 @@
                 <img src="@/img/default_profile.png" alt="" class="rounded-full w-28 h-28" />
               </li>
               <li class="flex items-center justify-center mt-3">
-                <p>김선생</p>
+                <p>{{ userStore.nickname }}</p>
               </li>
               <div class="my-10 ml-5">
                 <li class="my-5 flex">
@@ -33,7 +38,7 @@
                   </svg>
 
                   <RouterLink
-                    :to="{ name: 'userUpdate', state: { title: '개인정보 수정' } }"
+                    :to="{ name: 'userUpdate', query: { title: '개인정보 수정' } }"
                     class="ml-2"
                     >개인정보 수정</RouterLink
                   >
@@ -56,7 +61,7 @@
                     />
                   </svg>
 
-                  <RouterLink :to="{ name: 'pointUsage' }" class="ml-2">포인트 내역</RouterLink>
+                  <RouterLink :to="{ name: 'pointUsage', query: { title: '포인트 내역' } }" class="ml-2">포인트 내역</RouterLink>
                 </li>
                 <li class="my-5 flex">
                   <svg
@@ -78,7 +83,7 @@
                     />
                   </svg>
 
-                  <RouterLink :to="{ name: 'userMyLectures' }" class="ml-2">내 과외</RouterLink>
+                  <RouterLink :to="{ name: 'userMyLectures', query: { title: '내 과외' } }" class="ml-2">내 과외</RouterLink>
                 </li>
                 <li class="my-5 flex">
                   <svg
@@ -94,9 +99,14 @@
                     />
                   </svg>
 
-                  <RouterLink :to="{ name: 'paymentInfo' }" class="ml-2">결제정보</RouterLink>
+                  <RouterLink :to="{ name: 'paymentInfo',query: { title: '결제 정보' } }" class="ml-2">결제정보</RouterLink>
                 </li>
-                <li class="my-5 flex"></li>
+                <li class="my-5 flex">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+                  </svg>
+                  <RouterLink :to="{ name: 'paymentInfo',query: { title: '결제 정보' } }" class="ml-2">튜터콜</RouterLink>
+                </li>
               </div>
             </ul>
           </li>

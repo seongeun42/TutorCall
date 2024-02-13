@@ -164,9 +164,9 @@ async function doLogin(event: Event) {
       const roleType:string = response.data.role;
       // 현재 서버에서 user 관련 data를 넘겨주고 있지 않음
       if (roleType == 'TUTOR') {
-        userStore.login(true, loginEmail.value)
+        userStore.login(true, loginEmail.value, response.data.nickname, response.data.profile)
       } else {
-        userStore.login(false, loginEmail.value)
+        userStore.login(false, loginEmail.value, response.data.nickname, response.data.profile)
       }
       router.push('/')
     })

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import ProblemCard from './ProblemCard.vue'
 import * as api from '@/api/qna/qna'
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import type { Ref } from 'vue'
 import router from '@/router/index'
-import { type AxiosResponse, type AxiosError, isAxiosError } from 'axios'
-import type { questionInfo, questionResponse } from '@/interface/qna/interface'
-import type { errorResponse } from '@/interface/common/interface'
+import{ type AxiosResponse, isAxiosError } from 'axios';
+import type{ questionInfo, questionResponse } from '@/interface/qna/interface'
+import type { errorResponse } from '@/interface/common/interface';
 
 interface selectform {
   value: number
@@ -16,7 +16,7 @@ interface selectform {
 let currentPage: number = 1
 const size = 10
 let totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
-let tag: number = 0
+let tag: number|string = '';
 let status: string = ''
 
 const questionData: Ref<questionInfo[]> = ref([])
@@ -43,6 +43,7 @@ const nextPage = (): void => {
 
 async function init(): Promise<void> {
   const param: string = `?page=${currentPage - 1}&size=${size}&isEnd=${status}&keyword=${keyword.value}&tagId=${tag}`
+
   await api
     .getQnAData(param)
     .then((response: AxiosResponse<questionResponse>) => {
@@ -78,7 +79,7 @@ function reset(event: Event): void {
   event.preventDefault()
   status = ''
   keyword.value = ''
-  tag = 0
+  tag = ''
   currentPage = 1
   init()
 }
@@ -123,7 +124,6 @@ watch(
 
 async function keywordSearch(event: Event): Promise<void> {
   event.preventDefault()
-  console.log("keyword Search");
   if (!subjectSelected.value) {
     alert('검색 조건을 다시 설정해주세요!')
     return
