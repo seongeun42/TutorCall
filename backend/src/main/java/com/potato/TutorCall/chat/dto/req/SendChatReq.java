@@ -5,6 +5,5 @@ import lombok.Data;
 @Data
 public class SendChatReq {
   Long senderId;
-  String chatroomId;
   String message;
 }

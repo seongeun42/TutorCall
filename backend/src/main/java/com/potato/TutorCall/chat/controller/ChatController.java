@@ -4,6 +4,7 @@ import com.potato.TutorCall.chat.dto.req.SendChatReq;
 import com.potato.TutorCall.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,21 +24,21 @@ public class ChatController {
    * @param roomId 채팅방의 Id
    * @return
    */
-  @SendTo("/chat/{roomId}")
-  public Flux<?> receiveChatsInRoom(@DestinationVariable String roomId) {
+  @MessageMapping("/chat/{roomId}/{userId}")
+  @SendTo("/sub/chat/{roomId}/{userId}")
+  public Flux<?> receiveChatsInRoom(@DestinationVariable(value = "roomId") String roomId) {
     return chatService.receiveChatsInRoom(roomId);
   }
 
   /**
    * 메시지전송
-   * TODO: 소캣 붙여야 함..
    *
    * @param newChat 새로운 메시지
-   * @return
+   * @return 보낸 메시지를 바로 전달받음
    */
-  @SendTo("/chat")
-  public void sendChatToRoom(
-      @RequestBody SendChatReq newChat) {
-    chatService.sendChatToRoom(newChat);
+  @MessageMapping("/chat/{roomId}")
+  @SendTo("/sub/chat/{roomId}")
+  public Mono<?> sendChatToRoom(@RequestBody SendChatReq newChat, @DestinationVariable String roomId) {
+    return chatService.sendChatToRoom(newChat, roomId);
   }
 }
