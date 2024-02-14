@@ -28,7 +28,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
   private final AuthService authService;
   private final List<ProviderHandler> providerHandlers;
 
-  @Value("${frontend.url}:${frontend.port}")
+  @Value("${frontend.url}")
   private String frontendUrl;
 
   @Override
