@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { ref, type Ref, watch } from 'vue'
 import { useVideoStore } from '@/store/videoStore'
+import { useUserStore } from '@/store/userStore'
+const userStore = useUserStore()
 const message: Ref<string> = ref('')
-watch(message, () => {
-  console.log(message.value)
-})
 const videoStore = useVideoStore()
 function sendMsg(): void {
   videoStore.sessionCamera
     ?.signal({
-      data: message.value
+      data: message.value,
+      to: []
     })
-    .then((res) => {
-      console.log('반응 좀 보자', res)
+    .then(() => {
+      // videoStore.messages.push({ userName: userStore.nickname, message: message.value })
+      // console.log('반응 좀 보자')
       message.value = ''
     })
 }

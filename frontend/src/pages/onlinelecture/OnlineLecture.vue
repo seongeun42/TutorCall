@@ -10,11 +10,16 @@ import { ref, watch } from 'vue'
 import type { Ref } from 'vue'
 import { useVideoStore } from '@/store/videoStore'
 const videoStore = useVideoStore()
-// watch(videoStore, () => {
-//   videoStore.sessionCamera?.on('signal', (event) => {
-//     console.log(event.data)
-//   })
-// })
+watch(videoStore, () => {
+  videoStore.sessionCamera?.on('signal', (event) => {
+    videoStore.messages.push({
+      userName: JSON.parse(event.from?.data).clientData,
+      message: event.data
+    })
+    // console.log('잘 받고 있나?', event.data, JSON.parse(event.from?.data).clientData)
+    // videoStore.messages.push({ userName: event.from, message: event.data })
+  })
+})
 
 const chatSideView: Ref<boolean> = ref(true)
 
@@ -35,11 +40,6 @@ interface userInfo {
   mikeStatus: boolean
 }
 
-interface chatForm {
-  isMychat: boolean
-  message: string
-}
-
 const dummydata: userInfo = {
   imgUrl: '',
   nickName: '투블럭의 여집합',
@@ -52,16 +52,6 @@ const dummydata2: userInfo = {
   nickName: '파트너 피카츄',
   isHost: false,
   mikeStatus: false
-}
-
-const dummydata4: chatForm = {
-  isMychat: true,
-  message: '테스트 말풍선'
-}
-
-const dummydata5: chatForm = {
-  isMychat: false,
-  message: '테스트 말풍선'
 }
 </script>
 <template>
@@ -89,8 +79,8 @@ const dummydata5: chatForm = {
           <div class="border-4 h-[700px]">
             <div v-if="chatSideView" class="flex-col">
               <div class="h-[600px]">
-                <OnlineLectureChatForm :data="dummydata4" />
-                <OnlineLectureChatForm :data="dummydata5" />
+                <OnlineLectureChatForm />
+                <OnlineLectureChatForm />
               </div>
               <div>
                 <OnlineLectureChatInput />
