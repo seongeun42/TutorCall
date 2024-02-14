@@ -12,6 +12,10 @@ export interface tutorCallHistory{
     price: number,
     review: review
 }
+
+export interface tutorcallResponse{
+    content: tutorCallHistory[]
+}
 export interface lectureResponse{
     content: lectureHistory[]
 }

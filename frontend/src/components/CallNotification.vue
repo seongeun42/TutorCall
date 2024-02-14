@@ -1,8 +1,8 @@
 <script setup lang="ts">
-interface notifyDate {
+interface NotifyDate {
   message: string
 }
-const props = defineProps<{ data: notifyDate; show: boolean }>()
+const props = defineProps<{ data: NotifyDate; show: boolean }>()
 
 const emit = defineEmits<{
   'update:clicked': [show: boolean, mode: string]

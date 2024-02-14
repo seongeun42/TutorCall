@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { defineProps } from 'vue'
 import type { questionInfo } from '@/interface/qna/interface'
 
 const props = defineProps<{ data: questionInfo }>()

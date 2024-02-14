@@ -1,13 +1,13 @@
 import { instance } from '@/axios/axiosConfig'
 import type { commonResponse } from '@/interface/common/interface';
-import type { lectureHistory, lectureResponse, modifyIntro, modifynickname, modifynotify, modifypassword, modifytags, tutorCallHistory } from '@/interface/mypage/interface';
+import type { lectureHistory, lectureResponse, modifyIntro, modifynickname, modifynotify, modifypassword, modifytags, tutorcallResponse } from '@/interface/mypage/interface';
 import type { AxiosResponse } from 'axios';
 
 export async function tutorcallHistory(param:string):
-Promise<AxiosResponse<tutorCallHistory>>{
+Promise<AxiosResponse<tutorcallResponse>>{
 
     const url:string = import.meta.env.VITE_VUE_API_URL+"/mypage/tutorCall?"+param;
-    return instance.get<tutorCallHistory>(url);
+    return instance.get<tutorcallResponse>(url);
 }
 
 export async function lectureHistory(param: string):

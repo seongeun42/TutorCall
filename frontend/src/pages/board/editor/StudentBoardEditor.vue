@@ -52,6 +52,8 @@ watch(
       subjectDisabled.value = true
       subjectSelected.value = ''
     }
+
+    if(editStore.needEdit) gradeSelected.value = editStore.grade.toString();
   }
 )
 
@@ -61,6 +63,7 @@ watch(
     if (Number(newValue) >= 0) {
       subjectDisabled.value = false
     }
+    if(editStore.needEdit) subjectSelected.value = editStore.subject.toString();
   }
 )
 
@@ -77,6 +80,7 @@ onMounted(() => {
   if (editStore.needEdit) {
     title.value = editStore.title
     editorData.value = editStore.content
+    schoolSelected.value = editStore.school.toString();
   }
 })
 
@@ -96,7 +100,7 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
   event.preventDefault()
 
   buttonClicked.value = buttonName
-  const url: string = 'http://localhost:8080/'
+  const url: string = import.meta.env.VITE_VUE_API_URL
 
   const param = {
     questionTitle: title.value,
@@ -186,8 +190,8 @@ function tutorcallRequest() {
             <option value="" disabled>과목 선택</option>
             <option value="0">국어</option>
             <option value="1">수학</option>
-            <option value="2">사회</option>
-            <option value="3">과학</option>
+            <option value="2">과학</option>
+            <option value="3">사회</option>
             <option value="4">영어</option>
           </select>
         </div>
