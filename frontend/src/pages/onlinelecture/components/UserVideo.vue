@@ -1,63 +1,76 @@
 <script setup lang="ts">
 import OnlineVideo from './OnlineVideo.vue'
 import ScreenShare from './ScreenShare.vue'
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { OpenVidu, StreamManager, Session, Publisher, Subscriber } from 'openvidu-browser'
 import type { Ref } from 'vue'
+import { useVideoStore } from '@/store/videoStore'
 import axios from 'axios'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
-const props = defineProps<{ screenShare: boolean }>()
-const APPLICATION_SERVER_URL =
-  import.meta.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/'
-const OV = ref<OpenVidu | undefined>(undefined)
-const session = ref<Session | undefined>(undefined)
+const APPLICATION_SERVER_URL = 'http://localhost:8080/'
+const OVCamera = ref<OpenVidu | undefined>(undefined)
+const OVScreen = ref<OpenVidu | undefined>(undefined)
+const sessionCamera = ref<Session | undefined>(undefined)
+const sessionScreen = ref<Session | undefined>(undefined)
 const mainStreamManager = ref<StreamManager | undefined>(undefined)
 const shareStreamManager = ref<StreamManager | undefined>(undefined)
-const publisher = ref<Publisher | undefined>(undefined)
+const publisher: Ref<Publisher | undefined> = ref(undefined)
 const publisherScreen = ref<Publisher | undefined>(undefined)
-const subscribers = ref<Subscriber[]>([])
-const mySessionId = ref('SessionA')
-const myUserName = ref('Participant' + Math.floor(Math.random() * 100))
+const videoStore = useVideoStore()
+const subscribers: Ref<Subscriber[]> = ref([])
+const nowSharing: Ref<boolean> = ref(false)
+const screenSub: Ref<any> = ref('')
+const userName: Ref<string> = ref('Participant' + Math.floor(Math.random() * 100))
+watch(
+  () => videoStore.videoActive,
+  (newVal: boolean) => {
+    if (!newVal) {
+      // videoActive 값이 false가 되면 카메라 비활성화
+      publisher.value?.publishVideo(false)
+    } else {
+      publisher.value?.publishVideo(true)
+    }
+  }
+)
+
+watch(
+  () => videoStore.micActive,
+  (newVal: boolean) => {
+    if (!newVal) {
+      publisher.value?.publishAudio(false)
+    } else {
+      publisher.value?.publishAudio(true)
+    }
+  }
+)
+
 const joinSession = () => {
-  // --- 1) Get an OpenVidu object ---
-  OV.value = new OpenVidu()
+  OVCamera.value = new OpenVidu()
 
-  // --- 2) Init a session ---
-  session.value = OV.value.initSession()
+  sessionCamera.value = OVCamera.value.initSession()
 
-  // --- 3) Specify the actions when events take place in the session ---
-
-  // On every new Stream received...
-  session.value.on('streamCreated', ({ stream }) => {
-    const subscriber = session.value?.subscribe(stream)
+  sessionCamera.value.on('streamCreated', ({ stream }) => {
+    const subscriber = sessionCamera.value?.subscribe(stream, undefined)
     if (subscriber) {
       subscribers.value.push(subscriber)
     }
   })
 
-  // On every Stream destroyed...
-  session.value.on('streamDestroyed', ({ stream }) => {
-    const index = subscribers.value.indexOf(stream.streamManager, 0)
+  sessionCamera.value.on('streamDestroyed', ({ stream }) => {
+    const index = subscribers.value.findIndex((sub) => sub.stream === stream)
     if (index >= 0) {
       subscribers.value.splice(index, 1)
     }
   })
 
-  // On every asynchronous exception...
-  session.value.on('exception', ({ exception }) => {
+  sessionCamera.value.on('exception', (exception) => {
     console.warn(exception)
   })
-  getToken(mySessionId.value).then((token) => {
-    // First param is the token. Second param can be retrieved by every user on event
-    // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
-    session.value
-      ?.connect(token, { clientData: myUserName.value })
+  getToken(videoStore.sessionId).then((token) => {
+    sessionCamera.value
+      ?.connect(token, { clientData: userName.value })
       .then(() => {
-        // --- 5) Get your own camera stream with the desired properties ---
-
-        // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
-        // element: we will manage it on our own) and with the desired properties
-        let newPublisher = OV.value?.initPublisher(undefined, {
+        let newPublisher = OVCamera.value?.initPublisher(undefined, {
           audioSource: undefined,
           videoSource: undefined,
           publishAudio: true,
@@ -67,14 +80,9 @@ const joinSession = () => {
           insertMode: 'APPEND',
           mirror: false
         })
-
-        // Set the main video in the page to display our webcam and store our Publisher
         mainStreamManager.value = newPublisher
         publisher.value = newPublisher
-        console.log(mainStreamManager.value)
-        // --- 6) Publish your stream ---
-
-        session.value?.publish(publisher.value)
+        sessionCamera.value?.publish(publisher.value)
       })
       .catch((error: any) => {
         console.log('There was an error connecting to the session:', error.code, error.message)
@@ -83,18 +91,28 @@ const joinSession = () => {
 
   window.addEventListener('beforeunload', leaveSession)
 }
-const leaveSession = () => {
-  // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
-  if (session.value) session.value.disconnect()
 
-  // Empty all properties...
-  session.value = undefined
+const videoSubscribers = computed(() => {
+  return subscribers.value.filter((sub) => sub.stream.typeOfVideo === 'CAMERA')
+})
+
+const leaveSession = async () => {
+  // 회의에 혼자 남은 상황에서 새로 고침하거나 나가면 세션 종료
+  if (videoSubscribers.value.length == 0) {
+    const endPoint = `tutorcall/${videoStore.sessionId}/disconnection`
+    await axios.delete(APPLICATION_SERVER_URL + endPoint, {
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true
+    })
+  } else {
+    if (sessionCamera.value) sessionCamera.value.disconnect()
+  }
+  sessionCamera.value = undefined
   mainStreamManager.value = undefined
   publisher.value = undefined
   subscribers.value = []
-  OV.value = undefined
+  OVCamera.value = undefined
 
-  // Remove beforeunload listener
   window.removeEventListener('beforeunload', leaveSession)
 }
 
@@ -102,113 +120,165 @@ const updateMainVideoStreamManager = (stream: StreamManager) => {
   if (mainStreamManager.value === stream) return
   mainStreamManager.value = stream
 }
-const getToken = async (sessionId: string) => {
+const getToken = async (sessionId: number) => {
+  console.log(sessionId)
   const newSessionId = await createSession(sessionId)
+  console.log(newSessionId)
   return await createToken(newSessionId)
 }
 
-const createSession = async (sessionId: string) => {
-  const response = await axios.post(
-    `${APPLICATION_SERVER_URL}api/sessions`,
-    { customSessionId: sessionId },
-    {
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
-  return response.data // The sessionId
+const createSession = async (sessionId: number) => {
+  try {
+    const response = await axios.post(
+      `${APPLICATION_SERVER_URL}tutorcall/${sessionId}/session`,
+      { customSessionId: sessionId },
+      {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true
+      }
+    )
+    console.log('세션 생성', response)
+    return response.data.sessionId.replace('tutorCall', '')
+  } catch (error) {
+    console.log('세션 생성 실패', error)
+    return 1
+  }
 }
 
-const createToken = async (sessionId: string) => {
+const createToken = async (sessionId: number) => {
   const response = await axios.post(
-    `${APPLICATION_SERVER_URL}api/sessions/${sessionId}/connections`,
+    `${APPLICATION_SERVER_URL}tutorcall/${sessionId}/connection`,
     {},
     {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true
     }
   )
-  return response.data // The token
+  console.log('토큰', response.data.token)
+  return response.data.token
 }
-function isVideoVisible(sub: string): boolean {
-  // 제한된 영역 내에서 비디오를 표시할지 여부를 결정하는 로직을 작성합니다.
-  // 예를 들어, 화면에 최대 4개의 비디오만 표시하고 싶다면:
+function isVideoVisible(sub: any): boolean {
   return subscribers.value.indexOf(sub) < 4
 }
+
 watch(
-  () => props.screenShare,
-  (newVal: boolean) => {
-    if (newVal) {
+  () => videoStore.showScreen,
+  () => {
+    if (videoStore.showScreen) {
       showScreenShare()
     } else {
       stopScreenSharing()
     }
   }
 )
+
+watch(subscribers.value, (newValue: any) => {
+  for (const sub of newValue) {
+    if (sub.stream.typeOfVideo === 'SCREEN') {
+      nowSharing.value = true
+      screenSub.value = sub
+      return
+    }
+  }
+  nowSharing.value = false
+  screenSub.value = ''
+})
+
 function showScreenShare() {
-  let screenPublisher = OV.value?.initPublisher(undefined, {
-    audioSource: false,
-    videoSource: 'screen',
-    publishAudio: false,
-    publishVideo: true,
-    resolution: '1920x1080',
-    frameRate: 30,
-    insertMode: 'APPEND',
-    mirror: false
-  })
+  OVScreen.value = new OpenVidu()
+  sessionScreen.value = OVScreen.value.initSession()
+  getToken(videoStore.sessionId)
+    .then((token) => {
+      sessionScreen.value?.connect(token).then(() => {
+        let screenPublisher = OVScreen.value?.initPublisher(undefined, {
+          audioSource: false,
+          videoSource: 'screen',
+          publishAudio: false,
+          publishVideo: true,
+          resolution: '1920x1080',
+          frameRate: 30,
+          insertMode: 'APPEND',
+          mirror: false
+        })
+        screenPublisher?.once('accessAllowed', (event) => {
+          screenPublisher?.stream
+            .getMediaStream()
+            .getVideoTracks()[0]
+            .addEventListener('ended', () => {
+              videoStore.showScreen = false
+              screenSub.value = ''
+              nowSharing.value = false
+            })
+        })
+        screenPublisher?.once('accessDenied', (event) => {
+          videoStore.showScreen = false
+          console.warn('ScreenShare: Access Denied')
+        })
+        shareStreamManager.value = screenPublisher
+        publisherScreen.value = screenPublisher
 
-  // Set the screen sharing publisher as the main video in the page
-  shareStreamManager.value = screenPublisher
-  publisherScreen.value = screenPublisher
-
-  // Publish the screen sharing stream
-  session.value?.publish(publisherScreen.value)
+        sessionScreen.value?.publish(publisherScreen.value)
+      })
+    })
+    .catch((error) => {
+      console.warn('There was an error connecting to the session:', error.code, error.message)
+    })
 }
 
 const stopScreenSharing = () => {
-  // Unpublish the screen sharing stream
-  session.value?.unpublish(publisherScreen.value)
-
-  // Reset the main video in the page to display the webcam stream
+  if (sessionScreen.value) sessionScreen.value.disconnect()
+  // sessionScreen.value?.unpublish(publisherScreen.value)
   publisherScreen.value = undefined
+  shareStreamManager.value = undefined
+  OVScreen.value = undefined
+  videoStore.showScreen = false
 }
 
 onMounted(() => {
   joinSession()
 })
-onBeforeUnmount(() => leaveSession())
+onBeforeUnmount(() => {
+  stopScreenSharing()
+  leaveSession()
+})
 </script>
 <template>
-  <div v-if="props.screenShare">
-    <div class="flex mb-10">
-      <OnlineVideo class="w-[260px] h-[150px]" :stream-manager="mainStreamManager" />
-      <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
-        <OnlineVideo
-          class="w-[250px] h-[150px]"
-          v-if="isVideoVisible(sub)"
-          :stream-manager="sub"
-          @click.native="updateMainVideoStreamManager(sub)"
-        />
-      </div>
-    </div>
-    <ScreenShare :stream-manager="shareStreamManager" />
-  </div>
-  <div v-else>
-    <div v-if="!subscribers">
-      <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
-    </div>
-    <div v-else>
-      <div class="flex">
-        <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
+  <div v-if="subscribers.length != 0">
+    <div v-if="nowSharing">
+      <div class="flex mb-5 subscribers">
+        <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="mainStreamManager" />
+        <div v-for="sub in videoSubscribers" :key="sub.stream.connection.connectionId">
           <OnlineVideo
-            class="w-[200px] h-[100px]"
+            class="w-[250px] h-[150px]"
             v-if="isVideoVisible(sub)"
             :stream-manager="sub"
-            @click.native="updateMainVideoStreamManager(sub)"
+            @click="updateMainVideoStreamManager(sub)"
+          />
+        </div>
+      </div>
+      <ScreenShare :stream-manager="screenSub" />
+    </div>
+    <div v-else>
+      <div class="flex mb-5 subscribers">
+        <div v-for="sub in videoSubscribers" :key="sub.stream.connection.connectionId">
+          <OnlineVideo
+            class="w-[250px] h-[150px]"
+            v-if="isVideoVisible(sub)"
+            :stream-manager="sub"
+            @click="updateMainVideoStreamManager(sub)"
           />
         </div>
       </div>
       <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
     </div>
   </div>
+  <div v-else>
+    <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.subscribers {
+  border: 1px solid #dbdbdb;
+}
+</style>
