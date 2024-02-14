@@ -22,6 +22,10 @@ const publisher: Ref<Publisher | undefined> = ref(undefined)
 const publisherScreen = ref<Publisher | undefined>(undefined)
 const videoStore = useVideoStore()
 const notificationStore = useNotificationStore()
+const sessionId: number = parseInt(
+  notificationStore.roomSessionId?.replace('tutorCall', '') || '1',
+  10
+)
 const router = useRouter()
 const subscribers: Ref<Subscriber[]> = ref([])
 const nowSharing: Ref<boolean> = ref(false)
@@ -72,7 +76,7 @@ const joinSession = () => {
   sessionCamera.value.on('exception', (exception) => {
     console.warn(exception)
   })
-  getToken(videoStore.sessionId).then((token) => {
+  getToken(sessionId).then((token) => {
     sessionCamera.value
       ?.connect(token, { clientData: userName })
       .then(() => {
@@ -105,7 +109,7 @@ const videoSubscribers = computed(() => {
 const leaveSession = async () => {
   // 회의에 혼자 남은 상황에서 새로 고침하거나 나가면 세션 종료
   if (videoSubscribers.value.length == 0) {
-    const endPoint = `tutorcall/${videoStore.sessionId}/disconnection`
+    const endPoint = `tutorcall/${sessionId}/disconnection`
     await axios.delete(APPLICATION_SERVER_URL + endPoint, {
       headers: { 'Content-Type': 'application/json' },
       withCredentials: true
@@ -127,28 +131,7 @@ const updateMainVideoStreamManager = (stream: StreamManager) => {
   mainStreamManager.value = stream
 }
 const getToken = async (sessionId: number) => {
-  console.log(sessionId)
-  const newSessionId = await createSession(sessionId)
-  console.log(newSessionId)
-  return await createToken(newSessionId)
-}
-
-const createSession = async (sessionId: number) => {
-  try {
-    const response = await axios.post(
-      `${APPLICATION_SERVER_URL}tutorcall/${sessionId}/session`,
-      { customSessionId: sessionId },
-      {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
-      }
-    )
-    console.log('세션 생성', response)
-    return response.data.sessionId.replace('tutorCall', '')
-  } catch (error) {
-    console.log('세션 생성 실패', error)
-    return 1
-  }
+  return await createToken(sessionId)
 }
 
 const createToken = async (sessionId: number) => {
@@ -193,7 +176,7 @@ watch(subscribers.value, (newValue: any) => {
 function showScreenShare() {
   OVScreen.value = new OpenVidu()
   sessionScreen.value = OVScreen.value.initSession()
-  getToken(videoStore.sessionId)
+  getToken(sessionId)
     .then((token) => {
       sessionScreen.value?.connect(token).then(() => {
         let screenPublisher = OVScreen.value?.initPublisher(undefined, {
