@@ -9,7 +9,7 @@ git config commit.template .gitmessage.txt
 ```
 ## 자바 auto lint
 * 프로젝트의 .git/hooks/ 폴더 안에 **pre-commit** 파일 생성
-```
+```d
 // bash에서
 cd .git/hooks/
 
