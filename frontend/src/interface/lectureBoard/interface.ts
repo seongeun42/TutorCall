@@ -49,7 +49,7 @@ export interface promotion {
   promotionTitle: string
   promotionContent: string
   maxParticipant: number
-  promotionDue: string
+  promotionDue: Date
   price: number
   tagId: number
 }

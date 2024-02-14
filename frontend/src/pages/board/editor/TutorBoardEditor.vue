@@ -94,7 +94,7 @@ function handleModelValueUpdate(newValue: string) {
 
 async function submitPost(event: Event): Promise<void> {
   event.preventDefault()
-  const promotionDue = new Date(deadline.value).toString();
+  const promotionDue = new Date(deadline.value)
   const url: string = 'http://localhost:8080/'
 
   const param = {
