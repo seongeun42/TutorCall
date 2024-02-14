@@ -1,54 +1,54 @@
-import type { review, tagInfo, user } from "../common/interface";
+import type { Review, TagInfo, User } from "../common/interface";
 
-export interface tutorCallHistory{
+export interface TutorCallHistory{
     tutoringId: number,
-    tutor: user,
-    user: user,
+    tutor: User,
+    user: User,
     problem: string,
     replayVideo: string,
     createAt: string,
     liveUrl: string,
     liveState: string,
     price: number,
-    review: review
+    review: Review
 }
 
-export interface tutorcallResponse{
-    content: tutorCallHistory[]
+export interface TutorcallResponse{
+    content: TutorCallHistory[]
 }
-export interface lectureResponse{
-    content: lectureHistory[]
+export interface LectureResponse{
+    content: LectureHistory[]
 }
-export interface lectureHistory{
+export interface LectureHistory{
 
     lectureId: number,
-    tutor: user,
+    tutor: User,
     promotionTitle: string,
     promotionState: boolean,
     lecture_state: boolean,
-    tag: tagInfo,
+    tag: TagInfo,
     lectureEntAt: string,
     review: boolean,
 
 }
 
-export interface modifynickname{
+export interface Modifynickname{
     nickname: string
 }
 
-export interface modifypassword{
+export interface Modifypassword{
     password: string,
     newPassword: string
 }
 
-export interface modifynotify{
+export interface Modifynotify{
     notificationOption: string
 }
 
-export interface modifytags{
+export interface Modifytags{
     tags: number[]
 }
 
-export interface modifyIntro{
+export interface ModifyIntro{
     introduction: string
 }

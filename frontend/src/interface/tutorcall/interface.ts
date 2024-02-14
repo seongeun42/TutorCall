@@ -1,9 +1,9 @@
-import type { tagInfo } from "../common/interface";
+import type { TagInfo } from "../common/interface";
 
-export interface alertForm{
+export interface AlertForm{
     nickname: string,
     title: string,
     content: string,
     hide: boolean,
-    tag: tagInfo
+    tag: TagInfo
 }

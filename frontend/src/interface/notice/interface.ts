@@ -1,29 +1,29 @@
-export interface noticeInfo {
+export interface NoticeInfo {
     noticeId: number
     title: string
     content: string
     createdAt: Date
   }
   
-  export interface noticeResponse {
+  export interface NoticeResponse {
     notices: {
-      content: noticeInfo[]
+      content: NoticeInfo[]
     }
   }
   
-  export interface faqInfo {
+  export interface FaqInfo {
     faqId: number
     question: string
     answer: string
   }
   
-  export interface faqResponse {
+  export interface FaqResponse {
     faqs: {
-      content: faqInfo[]
+      content: FaqInfo[]
     }
   }
   
-  export interface FaqData extends faqInfo {
+  export interface FaqData extends FaqInfo {
     showAnswer: boolean
   }
   

@@ -2,10 +2,12 @@
 import TutorCard from './TutorCard.vue'
 import { onMounted, ref, watch, type Ref } from 'vue';
 import * as api from '@/api/lectureBoard/lectureBoard'
-import type { lecture, lectureResponse } from '@/interface/lectureBoard/interface'
+import type { Lecture, LectureResponse } from '@/interface/lectureBoard/interface'
 import { isAxiosError, type AxiosResponse } from 'axios'
-import type { errorResponse } from '@/interface/common/interface'
+import type { ErrorResponse } from '@/interface/common/interface'
 import router from '@/router'
+import { useEditStore } from '@/store/editStore';
+import { tagConvert } from '@/util/tagConvert';
 
 interface selectform {
   value: number
@@ -17,13 +19,14 @@ const gradeSelected: Ref<selectform | string> = ref('')
 const subjectSelected: Ref<selectform | string> = ref('')
 const gradeDisabled: Ref<boolean> = ref(true)
 const subjectDisabled: Ref<boolean> = ref(true)
-let tag: number = 0;
+let tag: number|string = '';
 let currentPage: number = 1
 const size = 10;
 const totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
 const searchKeyword = ref("");
-const lectureData:Ref<lecture[]> = ref([]); 
+const lectureData:Ref<Lecture[]> = ref([]); 
 const keyword: Ref<string> = ref('')
+const editStore = useEditStore();
 
 const prevPage = (): void => {
   if (currentPage > 1) {
@@ -38,21 +41,21 @@ const nextPage = (): void => {
 }
 
 async function init(): Promise<void> {
-  const param: string = `page=${currentPage - 1}&tag=${tag}&keyword=${searchKeyword.value}&state=true&size=${size}`
-
+  const param: string = `page=${currentPage - 1}&tag=${tag}&keyword=${searchKeyword.value}&state=false&size=${size}`
   await api
     .lectureList(param)
-    .then((response: AxiosResponse<lectureResponse>) => {
-      lectureData.value = response.data.content
+    .then((response: AxiosResponse<LectureResponse>) => {
+      lectureData.value = tagConvert(response.data.content);
     })
     .catch((error: unknown) => {
-      if (isAxiosError<errorResponse>(error)) {
+      if (isAxiosError<ErrorResponse>(error)) {
         alert(error.response?.data.message)
       }
     })
 }
 
 function gowrite(): void {
+  editStore.init();
   router.push({ name: 'teacherPromotionForm' })
 }
 
@@ -145,8 +148,8 @@ async function keywordSearch(event: Event): Promise<void> {
           <option value="" disabled selected>과목 선택</option>
           <option value=0>국어</option>
           <option value=1>수학</option>
-          <option value=2>사회</option>
-          <option value=3>과학</option>
+          <option value=2>과학</option>
+          <option value=3>사회</option>
           <option value=4>영어</option>
 
         </select>
@@ -171,7 +174,9 @@ async function keywordSearch(event: Event): Promise<void> {
         </button>
       </div>
     </div>
-    <TutorCard v-for="(lecture, index) in lectureData" :key="index" :data="lecture"/>
+    <div class="grid grid-cols-3 gap-4">
+      <TutorCard v-for="(lecture, index) in lectureData" :key="index" :data="lecture"/>
+    </div>
     <div class="flex justify-center mt-8">
       <button
         type="button"

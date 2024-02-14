@@ -1,13 +1,13 @@
 import { instance } from '@/axios/axiosConfig';
-import type { commonResponse } from '@/interface/common/interface';
-import { type lectureResponse, type detailLecture, type registResponse, type deleteResponse, type promotion } from '@/interface/lectureBoard/interface';
+import type { CommonResponse } from '@/interface/common/interface';
+import { type LectureResponse, type detailLecture, type RegistResponse, type DeleteResponse, type Promotion } from '@/interface/lectureBoard/interface';
 import type { AxiosResponse } from 'axios';
 
 export async function lectureList(param:string)
-:Promise<AxiosResponse<lectureResponse>>
+:Promise<AxiosResponse<LectureResponse>>
 {
     const url:string = import.meta.env.VITE_VUE_API_URL+"/lecture?"+param;
-    return instance.get<lectureResponse>(url);
+    return instance.get<LectureResponse>(url);
 
 }
 
@@ -19,39 +19,39 @@ export async function oneLecture(param:number)
 }
 
 export async function registLecture(param:number)
-:Promise<AxiosResponse<registResponse>>{
+:Promise<AxiosResponse<RegistResponse>>{
     const url:string = import.meta.env.VITE_VUE_API_URL+"/lecture/participant/"+param;
-    return instance.post<registResponse>(url);
+    return instance.post<RegistResponse>(url);
 }
 
 export async function deletePromotion(param:number)
-:Promise<AxiosResponse<deleteResponse>>{
+:Promise<AxiosResponse<DeleteResponse>>{
     const url:string = import.meta.env.VITE_VUE_API_URL+"/lecture/promotion/"+param;
 
-    return instance.delete<deleteResponse>(url);
+    return instance.delete<DeleteResponse>(url);
 }
 
 export async function cancleRegistLecture(param:number)
-:Promise<AxiosResponse<commonResponse>>
+:Promise<AxiosResponse<CommonResponse>>
 {
     const url:string = import.meta.env.VITE_VUE_API_URL+"/lecture/participant/"+param;
-    return instance.delete<commonResponse>(url);
+    return instance.delete<CommonResponse>(url);
 }
 
-export async function registPromotion(param:promotion)
-:Promise<AxiosResponse<registResponse>>{
+export async function registPromotion(param:Promotion)
+:Promise<AxiosResponse<RegistResponse>>{
 
     const url:string = import.meta.env.VITE_VUE_API_URL+"/lecture/promotion";
 
-    return instance.post<registResponse>(url, param);
+    return instance.post<RegistResponse>(url, param);
 }
 
-export async function editPromotion(param:promotion, lectureId: number)
-:Promise<AxiosResponse<registResponse>>{
+export async function editPromotion(param:Promotion, lectureId: number)
+:Promise<AxiosResponse<RegistResponse>>{
     
     const url:string = import.meta.env.VITE_VUE_API_URL+"/lecture/promotion/"+lectureId;
 
-    return instance.patch<registResponse>(url, param);
+    return instance.patch<RegistResponse>(url, param);
 }
 
 

@@ -2,14 +2,14 @@
 import { ref, type Ref, onMounted } from 'vue'
 import * as mypageApi from '@/api/mypage/mypage'
 import MyLectureDetail from '@/pages/mypage/MyLectureDetail.vue'
-import type { lectureHistory, lectureResponse } from '@/interface/mypage/interface';
+import type { LectureHistory, LectureResponse } from '@/interface/mypage/interface';
 import { isAxiosError, type AxiosResponse } from 'axios';
-import { type errorResponse } from '@/interface/common/interface';
+import { type ErrorResponse } from '@/interface/common/interface';
 
 
 const showDetail: Ref<boolean> = ref(false)
-const selectedLecture: Ref<lectureHistory|null> = ref(null);
-const lectureData: Ref<lectureHistory[]|null> = ref(null);
+const selectedLecture: Ref<LectureHistory|null> = ref(null);
+const lectureData: Ref<LectureHistory[]|null> = ref(null);
 const page:Ref<number> = ref(0);
 const size:Ref<number> = ref(5);
   const clickShow = function (index: number): void {
@@ -20,11 +20,11 @@ const size:Ref<number> = ref(5);
 onMounted(async():Promise<void>=>{
   const param:string = `page=${page.value}&size=${size.value}`
   await mypageApi.lectureHistory(param)
-  .then((response: AxiosResponse<lectureResponse>)=>{
+  .then((response: AxiosResponse<LectureResponse>)=>{
     lectureData.value = response.data.content;
   })
   .catch((error:unknown)=>{
-    if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+    if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
   })
 })
 
@@ -44,7 +44,7 @@ onMounted(async():Promise<void>=>{
                 {{ data.tag.subject }}
               </p>
               <p class="bg-green-500 w-16 text-white rounded-3xl text-center">
-                {{ data.tag.grade }}
+                {{ data.tag.grade }}학년
               </p>
             </div>
           </div>

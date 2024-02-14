@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { detailLecture } from '@/interface/lectureBoard/interface';
+import type { DetailLecture } from '@/interface/lectureBoard/interface';
 
 
-const props = defineProps<{"data":detailLecture|null}>();
+const props = defineProps<{"data":DetailLecture|null}>();
 
 </script>
 <template>

@@ -5,7 +5,7 @@
         <h5 class="font-bold text-3xl ml-10">{{ noticeDetailData?.title }}</h5>
         <div class="flex">
           <p class="text-xl mr-10">관리자</p>
-          <p class="text-xl">{{ noticeDetailData?.createdAt.slice(0, 10) }}</p>
+          <p class="text-xl">{{ noticeDetailData?.createdAt }}</p>
         </div>
       </div>
       <p class="border border-b-1 border-gray-300 my-5"></p>
@@ -37,22 +37,21 @@ import * as api from '@/api/notice/notice'
 import { ref, type Ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { type AxiosResponse } from 'axios'
-import type { noticeInfo } from '@/interface/notice/interface'
+import type { NoticeInfo } from '@/interface/notice/interface'
 
 const router = useRouter()
 
 const noticeNum: number = Number(router.currentRoute.value.params['noticeNum'])
 
-const noticeDetailData: Ref<noticeInfo | undefined> = ref(undefined)
+const noticeDetailData: Ref<NoticeInfo | undefined> = ref(undefined)
 
 const loaded: Ref<boolean> = ref(false)
 
 function init(): void {
   const param: number = noticeNum
 
-  api.getOneNoticeData(param).then((response: AxiosResponse<{ notice: noticeInfo }>) => {
+  api.getOneNoticeData(param).then((response: AxiosResponse<{ notice: NoticeInfo }>) => {
     if (response.status == 200) {
-      // console.log(response.data)
       noticeDetailData.value = response.data
     }
   })

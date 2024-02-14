@@ -39,7 +39,7 @@
 import * as api from '@/api/notice/notice'
 import { ref, type Ref, onMounted } from 'vue'
 import { type AxiosResponse } from 'axios'
-import type { faqInfo, faqResponse, FaqData } from '@/interface/notice/interface'
+import type { FaqInfo, FaqResponse, FaqData } from '@/interface/notice/interface'
 
 const toggleAnswer = (data: FaqData): void => {
   // console.log(data)
@@ -50,9 +50,9 @@ const toggleAnswer = (data: FaqData): void => {
 const faqData: Ref<FaqData[]> = ref([])
 
 function init(): void {
-  api.getFaqData().then((response: AxiosResponse<faqResponse>) => {
+  api.getFaqData().then((response: AxiosResponse<FaqResponse>) => {
     if (response.status == 200) {
-      response.data.faqs.forEach((faq: faqInfo) => {
+      response.data.faqs.forEach((faq: FaqInfo) => {
         faqData.value.push({ ...faq, showAnswer: false })
       })
       // console.log(faqData.value)

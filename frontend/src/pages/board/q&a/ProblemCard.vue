@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
-import type { questionInfo } from '@/interface/qna/interface'
+import { defineProps } from 'vue'
+import type { QuestionInfo } from '@/interface/qna/interface'
 
-const props = defineProps<{ data: questionInfo }>()
+const props = defineProps<{ data: QuestionInfo }>()
 </script>
 <template>
   <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com -->

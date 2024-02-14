@@ -6,7 +6,7 @@ import router from '@/router'
 import { useEditStore } from '@/store/editStore'
 import * as api from '@/api/qna/qna'
 import { isAxiosError, type AxiosResponse } from 'axios'
-import { type commonResponse, type errorResponse } from '@/interface/common/interface'
+import { type CommonResponse, type ErrorResponse } from '@/interface/common/interface'
 
 interface selectform {
   value: number
@@ -28,6 +28,7 @@ const gradeSelected: Ref<selectform | string> = ref('')
 const subjectSelected: Ref<selectform | string> = ref('')
 const gradeDisabled: Ref<boolean> = ref(true)
 const subjectDisabled: Ref<boolean> = ref(true)
+
 watch(
   () => schoolSelected.value,
   (oldValue) => {
@@ -46,6 +47,8 @@ watch(
       subjectDisabled.value = true
       subjectSelected.value = ''
     }
+
+    if(editStore.needEdit) gradeSelected.value = editStore.grade.toString();
   }
 )
 watch(
@@ -54,6 +57,7 @@ watch(
     if (Number(newValue) >= 0) {
       subjectDisabled.value = false
     }
+    if(editStore.needEdit) subjectSelected.value = editStore.subject.toString();
   }
 )
 watch(
@@ -68,6 +72,7 @@ onMounted(() => {
   if (editStore.needEdit) {
     title.value = editStore.title
     editorData.value = editStore.content
+    schoolSelected.value = editStore.school.toString();
   }
 })
 function cancelWrite(): void {
@@ -98,12 +103,12 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
   if (editStore.needEdit) {
     await api
       .editQuestion(param, questionId)
-      .then((response: AxiosResponse<commonResponse>) => {
+      .then((response: AxiosResponse<CommonResponse>) => {
         alert(response.data.message)
         router.push({ name: 'qnaDetail', params: { qnaNum: questionId } })
       })
       .catch((error: unknown) => {
-        if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+        if (isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message)
       })
     return
   }
@@ -116,7 +121,7 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
         window.alert('문제 등록이 완료되었습니다. 튜터콜 대기실로 이동합니다.')
       } else {
         window.alert('문제 등록이 완료되었습니다.')
-        router.push({ name: 'qnaList' })
+        router.push({ name: 'qnalist' })
       }
     })
     .catch((error: any) => {
@@ -159,8 +164,8 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
             <option value="" disabled>과목 선택</option>
             <option value="0">국어</option>
             <option value="1">수학</option>
-            <option value="2">사회</option>
-            <option value="3">과학</option>
+            <option value="2">과학</option>
+            <option value="3">사회</option>
             <option value="4">영어</option>
           </select>
         </div>

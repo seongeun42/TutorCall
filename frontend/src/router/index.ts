@@ -26,6 +26,7 @@ import MatchCall from '@/pages/tutorcall/MatchCall.vue'
 import StudentBoardEditor from '@/pages/board/editor/StudentBoardEditor.vue'
 import TutorBoardEditor from '@/pages/board/editor/TutorBoardEditor.vue'
 import MyTutorcallList from '@/pages/mypage/student/information/MyTutorcallList.vue'
+import TutorCallList from '@/pages/mypage/tutor/MytutorCallList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -90,6 +91,11 @@ const router = createRouter({
           props: true
 
         },
+        {
+          path:'/tutorcallList',
+          name: 'tutorcalllist',
+          component: TutorCallList,
+        },
 
         // 학생 마이페이지
         // 개인정보 수정
@@ -126,7 +132,7 @@ const router = createRouter({
         },
         {
           path:'/tutorcallList',
-          name: 'tutorcalllist',
+          name: 'studenttutorcalllist',
           component: MyTutorcallList,
         }
       ]
@@ -174,6 +180,11 @@ const router = createRouter({
           path: ':promotionNum',
           name: 'lectureDetail',
           component: DetailLecture
+        },
+        {
+          path:'/edit/:promotionNum',
+          name:'editlecture',
+          component: TutorBoardEditor,
         }
       ]
     },
@@ -197,6 +208,11 @@ const router = createRouter({
         {
           path:'writeqna',
           name:'writeqna',
+          component: StudentBoardEditor
+        },
+        {
+          path:'edit/:qnaNum',
+          name:'editqna',
           component: StudentBoardEditor
         }
       ]

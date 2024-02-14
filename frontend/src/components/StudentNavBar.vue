@@ -4,11 +4,11 @@ import { useUserStore } from '@/store/userStore'
 import { ref, type Ref } from 'vue'
 import CallNotification from '@/components/CallNotification.vue'
 
-interface notifyDate {
+interface NotifyDate {
   message: string
 }
 
-const dummyData: notifyDate = {
+const dummyData: NotifyDate = {
   message: '테스트 데이터 알림'
 }
 

@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { ref, type Ref, onMounted } from 'vue'
 import * as api from '@/api/mypage/mypage'
-import type { tutorCallHistory, tutorcallResponse } from '@/interface/mypage/interface';
+import type { TutorCallHistory, TutorcallResponse } from '@/interface/mypage/interface';
 import { isAxiosError, type AxiosResponse } from 'axios';
-import { type errorResponse } from '@/interface/common/interface';
+import { type ErrorResponse } from '@/interface/common/interface';
 import MyTutorcallDetail from '@/pages/mypage/student/information/MyTutorcallDetail.vue';
 
 
 
 const showDetail: Ref<boolean> = ref(false)
-const selected: Ref<tutorCallHistory|null> = ref(null);
-const tutorCallData: Ref<tutorCallHistory[]|null> = ref(null);
+const selected: Ref<TutorCallHistory|null> = ref(null);
+const tutorCallData: Ref<TutorCallHistory[]|null> = ref(null);
 const page:Ref<number> = ref(0);
 const size:Ref<number> = ref(5);
 const sindex:Ref<number|null> = ref(null);
@@ -24,10 +24,10 @@ const clickShow = function (index: number): void {
 onMounted(async():Promise<void>=>{
   const param:string = `page=${page.value}&size=${size.value}`
   await api.tutorcallHistory(param)
-  .then((response: AxiosResponse<tutorcallResponse>)=>{
+  .then((response: AxiosResponse<TutorcallResponse>)=>{
     tutorCallData.value = response.data.content;
   }).catch((error:unknown)=>{
-    if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+    if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
   })
 })
 

@@ -3,7 +3,7 @@ import { ref, type Ref, reactive } from 'vue'
 import CallNotification from '@/components/CallNotification.vue'
 import { useUserStore } from '@/store/userStore';
 import smallAlert from '@/components/tutorcallAlert/smallAlert.vue'
-import { type alertForm } from '@/interface/tutorcall/interface'
+import { type AlertForm } from '@/interface/tutorcall/interface'
 import router from '@/router'
 
 const userStore = useUserStore();
@@ -13,11 +13,11 @@ function changeStatus() {
 }
 
 
-interface notifyDate {
+interface NotifyDate {
   message: string
 }
 
-const dummyData: notifyDate = {
+const dummyData: NotifyDate = {
   message: '테스트 데이터 알림'
 }
 
@@ -44,7 +44,7 @@ function logout():void{
 *
 * * * * * * * * * * * * * * */
 
-const data:alertForm[] = reactive([
+const data:AlertForm[] = reactive([
   { nickname: "싸뚜기",
     title: "ㅇㅇㅇ",
     content: "ㅇㅇㅇ",

@@ -22,18 +22,18 @@ import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import { ref, type Ref, defineComponent, onMounted } from 'vue'
 import { useUserStore } from '@/store/userStore'
 import type {
-  reviewerInfo,
-  tutorInfo,
-  tutorReviewInfo,
-  tutorReviewResponse,
-  tagInfo,
-  lectureResponse
+  ReviewerInfo,
+  TutorInfo,
+  TutorReviewInfo,
+  TutorReviewResponse,
+  TagInfo,
+  LectureResponse
 } from '@/interface/mainpage/interface'
 import * as api from '@/api/mainpage/mainpage'
 import { type AxiosResponse } from 'axios'
 
 async function initOthersPromotion(): Promise<void> {
-  const response: AxiosResponse<lectureResponse> = await api.tutorPromotion();
+  const response: AxiosResponse<LectureResponse> = await api.tutorPromotion();
 
   if (response.status == 200) {
     for (let i = 0; i < response.data.content.length; i++) {

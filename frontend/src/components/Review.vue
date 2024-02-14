@@ -5,7 +5,7 @@ import { computed } from 'vue';
 import { ref } from 'vue';
 import { instance } from '@/axios/axiosConfig'
 import { isAxiosError, type AxiosResponse } from 'axios';
-import type { ReviewResponse, errorResponse, review } from '@/interface/common/interface'
+import type { ReviewResponse, ErrorResponse, Review } from '@/interface/common/interface'
 
 
 interface ReviewForm{
@@ -31,14 +31,14 @@ const content:Ref<string> = ref("");
 
 const emit = defineEmits<{
   change: [value:string]
-  update: [value: review]
+  update: [value: Review]
 }>()
 
 const props = defineProps<{"mode":string, id:number}>();
 
-function closereviewpage(event: Event):void{
+function closeReviewpage(event: Event):void{
     event.preventDefault();
-    if(props.mode === "tutorcallList") emit("change", "close");
+    emit("change", "close");
 }
 
 async function regiestReview(event: Event):Promise<void>{
@@ -62,19 +62,17 @@ async function regiestReview(event: Event):Promise<void>{
     await instance.post(url, param)
     .then((response: AxiosResponse<ReviewResponse>)=>{
         alert(response.data.message);
-        if(props.mode === "tutorcallList") {
-            const review:review = {
+        const Review:Review = {
                 mannerRate: Number(mannerRate.value),
                 communicationRate: Number(communicationRate.value),
                 professionalismRate: Number(professionalismRate.value),
                 content: content.value,
                 createAt: ''
-            }
-            emit("update", review);
         }
+        emit("update", Review);
     })
     .catch((error:unknown)=>{
-        if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+        if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
     })
 }
 
@@ -146,7 +144,7 @@ async function regiestReview(event: Event):Promise<void>{
             </div>
             <div class="flex flex-row flex justify-around mt-6">
                 <button class="btn btn-info" @click="regiestReview($event)">제출하기</button>
-                <button class="btn btn-error" @click="closereviewpage($event)">나중에 하기</button>
+                <button class="btn btn-error" @click="closeReviewpage($event)">나중에 하기</button>
             </div>
         </div>
     </div>

@@ -3,8 +3,8 @@ import type { Ref } from 'vue';
 import { ref } from 'vue';
 import { useUserStore } from '@/store/userStore';
 import * as api from '@/api/mypage/mypage'
-import { isAxiosError } from 'axios';
-import type { errorResponse } from '@/interface/common/interface';
+import { isAxiosError, type AxiosResponse } from 'axios';
+import type { CommonResponse, ErrorResponse } from '@/interface/common/interface';
 import router from '@/router';
 
 const today: String = new Date().toISOString().split('T')[0]
@@ -28,15 +28,18 @@ async function modifyed(event: Event):Promise<void>{
   if(introduce.value.length!=0){
     await api.modifyIntro({introduction: introduce.value})
     .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+      if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
       throw error;
     })
   }
 
   if(nickname.value.length!=0 && nickname.value != userStore.nickname){
     await api.modifynickname({nickname:nickname.value})
+    .then((response: AxiosResponse<CommonResponse>)=>{
+      userStore.nickname= nickname.value;
+    })
     .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+      if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
       throw error;
     })
   }
@@ -48,7 +51,7 @@ async function modifyed(event: Event):Promise<void>{
     else if (newPassword.value == checkPassword.value){
       await api.modifyPassword({password:password.value, newPassword: newPassword.value})
       .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+      if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
       throw error;
     })
     }else{
@@ -68,7 +71,7 @@ async function modifyed(event: Event):Promise<void>{
 
     await api.modifyTag({tags: tags})
     .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+      if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
       throw error;
     })
 
@@ -79,7 +82,7 @@ async function modifyed(event: Event):Promise<void>{
 
   await api.modifyAlert({notificationOption: alram.value})
   .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+      if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
       throw error;
   })
 

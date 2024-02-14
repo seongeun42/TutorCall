@@ -8,20 +8,25 @@ export const useUserStore = defineStore({
     profile: '',
     email: '',
     isTutor: false,
-    isActiveCall: false
+    isActiveCall: false,
+    userId: '',
   }),
   actions: {
-    login(isTutor: boolean, email: string, nickname: string, profile: string) {
+    login(isTutor: boolean, email: string, nickname: string, profile: string, userId:string) {
       this.isLogin = true
       this.isTutor = isTutor
       this.email = email
       this.nickname = nickname,
-      this.profile = profile
+      this.profile = profile,
+      this.userId = userId
     },
     logout() {
       this.isLogin = false
       this.isTutor = false
       this.email = ''
+      this.nickname = '',
+      this.profile= '',
+      this.userId = ''
     }
   },
   persist: {

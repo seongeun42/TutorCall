@@ -1,34 +1,35 @@
-import type { commonResponse, tagInfo, user } from '../common/interface'
+import type { CommonResponse, TagInfo, User } from '../common/interface'
 
-export interface lectureResponse {
-  content: lecture[]
+export interface LectureResponse {
+  content: Lecture[]
 }
 
-export interface lecture {
+export interface Lecture {
   id: number
   title: string
   content: string
-  tag: tagInfo
-  tutor: user
+  tag: TagInfo
+  tutor: User
   promotionState: boolean
   createdAt: string
 }
 
-export interface detailLecture extends lecture{
+export interface DetailLecture extends Lecture{
 
     promotionTitle: string,
     promotionContent: string,
-    tutor: detailTutor,
+    tutor: DetailTutor,
     maxParticipants: number,
     participants: number,
     promotionDue: string,
-    lectureStartAt:string,
-    lectureEndAt:string,
+    lectureStartAt: string,
+    lectureEndAt: string,
     participated: boolean,
     price: number,
+    promotionCreatedAt:string,
 }
 
-export interface detailTutor extends user {
+export interface DetailTutor extends User {
   mannerRate: number
   communicationRate: number
   professionalismRate: number
@@ -36,19 +37,19 @@ export interface detailTutor extends user {
   reliablity: number
 }
 
-export interface registResponse extends commonResponse {
+export interface RegistResponse extends CommonResponse {
   lectureId: number
 }
 
-export interface deleteResponse extends commonResponse {
+export interface DeleteResponse extends CommonResponse {
   id: number
 }
 
-export interface promotion {
+export interface Promotion {
   promotionTitle: string
   promotionContent: string
   maxParticipant: number
-  promotionDue: Date
+  promotionDue: string
   price: number
   tagId: number
 }
