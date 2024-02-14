@@ -1,19 +1,31 @@
 <script setup lang="ts">
 import TutorCard from './TutorCard.vue'
-import { onMounted, ref, type Ref } from 'vue'
+import { onMounted, ref, watch, type Ref } from 'vue';
 import * as api from '@/api/lectureBoard/lectureBoard'
 import type { lecture, lectureResponse } from '@/interface/lectureBoard/interface'
 import { isAxiosError, type AxiosResponse } from 'axios'
 import type { errorResponse } from '@/interface/common/interface'
 import router from '@/router'
+import { useUserStore } from '@/store/userStore'
 
-let selectedSubject: string = ''
+interface selectform {
+  value: number
+  name: string
+}
+
+const schoolSelected: Ref<selectform | string> = ref('')
+const gradeSelected: Ref<selectform | string> = ref('')
+const subjectSelected: Ref<selectform | string> = ref('')
+const gradeDisabled: Ref<boolean> = ref(true)
+const subjectDisabled: Ref<boolean> = ref(true)
+let tag: number = 0;
 let currentPage: number = 1
-let tag: string = ''
-const size = 10
+const size = 10;
 const totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
-const searchKeyword = ref('')
-const lectureData: Ref<lecture[]> = ref([])
+const searchKeyword = ref("");
+const lectureData:Ref<lecture[]> = ref([]); 
+const keyword: Ref<string> = ref('')
+const userStore = useUserStore()
 
 const prevPage = (): void => {
   if (currentPage > 1) {
@@ -49,6 +61,60 @@ function gowrite(): void {
 onMounted(() => {
   init()
 })
+
+const school: selectform[] = [
+  { value: 1, name: '초등학교' },
+  { value: 31, name: '중학교' },
+  { value: 46, name: '고등학교' }
+]
+
+let grade: selectform[] = []
+
+watch(
+  () => schoolSelected.value,
+  (oldValue) => {
+    if (Number(oldValue) == 1) {
+      grade = []
+      for (let i = 0; i < 6; i++) grade.push({ value: i * 5, name: `${i + 1}학년` })
+      gradeDisabled.value = false
+      gradeSelected.value = ''
+      subjectDisabled.value = true
+      subjectSelected.value = ''
+    } else if (Number(oldValue) == 31 || Number(oldValue) == 46) {
+      grade = []
+      for (let i = 0; i < 3; i++) grade.push({ value: i * 5, name: `${i + 1}학년` })
+      gradeDisabled.value = false
+      gradeSelected.value = ''
+      subjectDisabled.value = true
+      subjectSelected.value = ''
+    }
+  }
+)
+
+watch(
+  () => gradeSelected.value,
+  (newValue, oldValue) => {
+    if (Number(newValue) >= 0) {
+      subjectDisabled.value = false
+    }
+  }
+)
+
+async function keywordSearch(event: Event): Promise<void> {
+  event.preventDefault()
+  if (!subjectSelected.value) {
+    alert('검색 조건을 다시 설정해주세요!')
+    return
+  }
+
+  if(typeof(schoolSelected.value)==="number" && typeof(gradeSelected.value)==="number" && 
+  typeof(subjectSelected.value)==="string"){
+    tag = schoolSelected.value+gradeSelected.value+Number(subjectSelected.value);
+  }
+
+  init()
+}
+
 </script>
 <template>
   <div class="container mx-auto">
@@ -57,36 +123,58 @@ onMounted(() => {
       <div class="flex items-center">
         <select
           class="p-2 border border-gray-300 rounded-md mr-1 appearance-none"
-          v-model="selectedSubject"
+          v-model="schoolSelected"
         >
-          <option value="">분야</option>
-          <option value="math">수학</option>
-          <option value="science">과학</option>
+          <!--tag 부분 수정 필요-->
+          <option value="" disabled selected>학교 선택</option>
+          <option v-for="(s, index) in school" :key="index" v-bind:value="s.value">{{ s.name }}</option>
+
           <!-- 다른 과목들도 추가할 수 있습니다. -->
         </select>
+        <select
+          class="p-2 border border-gray-300 rounded-md mr-1 appearance-none"
+          v-model="gradeSelected"
+          :disabled="gradeDisabled"
+        >
+          <option value="" disabled selected>학년 선택</option>
+          <option v-for="(g, index) in grade" :key="index" v-bind:value="g.value">{{ g.name }}</option>
+        </select>
+        <select
+          class="p-2 border border-gray-300 rounded-md mr-1 appearance-none"
+          v-model="subjectSelected"
+          :disabled="subjectDisabled"
+        >
+          <option value="" disabled selected>과목 선택</option>
+          <option value=0>국어</option>
+          <option value=1>수학</option>
+          <option value=2>사회</option>
+          <option value=3>과학</option>
+          <option value=4>영어</option>
 
+        </select>
         <input
           type="text"
           placeholder="search for keywords"
           class="w-60 p-2 border border-gray-300 rounded-md mr-1"
+          v-model="keyword"
         />
         <button
           type="button"
           class="px-4 py-2 bg-gray-400 hover:bg-gray-500 rounded-md text-white mr-3"
+          @click="keywordSearch"
         >
           검색
         </button>
 
-        <button
-          type="button"
-          class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
-          @click="gowrite"
-        >
+        <button type="button"
+        v-if="userStore.role === 'TUTOR'"
+        class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
+        @click="gowrite">
           글쓰기
         </button>
       </div>
     </div>
-    <TutorCard v-for="lecture in lectureData" :data="lecture" />
+    <TutorCard v-for="(lecture, index) in lectureData" :key="index" :data="lecture"/>
     <div class="flex justify-center mt-8">
       <button
         type="button"

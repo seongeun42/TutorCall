@@ -6,10 +6,20 @@ import NotLoginNavBar from './components/NotLoginNavBar.vue'
 import { RouterView } from 'vue-router'
 import { useUserStore } from '@/store/userStore'
 import ChatIcon from './components/chatting/ChatIcon.vue'
+import TutorCallPage from '@/pages/tutorcall/TutorCallPage.vue'
+import { useNotificationStore } from '@/store/notificationStore'
+import { onMounted } from 'vue'
 
 const userStore = useUserStore()
-</script>
+const notificationStore = useNotificationStore()
 
+onMounted(() => {
+  // 새로고침이나 페이지 이동 시 소켓, 구독 재연결
+  if (userStore.id != -1) {
+    notificationStore.socketReconnect(userStore.id, userStore.isTutor, userStore.isActiveCall)
+  }
+})
+</script>
 <template>
   <div v-if="!userStore.isLogin">
     <NotLoginNavBar />
@@ -18,8 +28,9 @@ const userStore = useUserStore()
     <NavBar v-if="userStore.isTutor" />
     <StudentNavBar v-else />
   </div>
-  <div class="min-h-[1000px]">
+  <div class="min-h-[1000px]" id="mainComponent">
     <RouterView id="main" />
+    <!-- <TutorCallPage/> -->
   </div>
   <ChatIcon />
   <FooterBar />

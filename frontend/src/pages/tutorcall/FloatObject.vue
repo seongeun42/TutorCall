@@ -1,32 +1,52 @@
+<script setup lang="ts">
+import type { Ref } from 'vue';
+import { ref } from 'vue';
+import SpeechBubble from '@/pages/tutorcall/SpeechBubble.vue';
+import floatingObject from '@/util/animation/floatingObject'
+import { onMounted } from 'vue';
+import type { acceptTutor } from '@/interface/tutorcall/interface'
+
+const props = defineProps<{
+  accept: acceptTutor,
+}>()
+
+const show:Ref<boolean> = ref(false);
+
+function click():void{
+  show.value = !show.value
+}
+
+onMounted(()=>{
+  floatingObject('.obj'+props.accept.id, props.accept.delay, props.accept.size);
+})
+</script>
 <template>
   <div
+  @click="click"
     class="obj"
     :style="{
-      width: props.size + 'px',
-      height: props.size + 'px',
-      top: props.positionX + '%',
-      left: props.positionY + '%',
+      width: props.accept.size + 'px',
+      height: props.accept.size + 'px',
+      top: props.accept.positionX + 'px',
+      left: props.accept.positionY + 'px',
       transform: 'translate(-50%, -50%)',
-      backgroundImage: 'url(https://via.placeholder.com/' + props.size + 'x' + props.size + ')',
+      backgroundImage: 'url(https://via.placeholder.com/' + props.accept.size + 'x' + props.accept.size + ')',
       animation: 'ani' + Math.floor(Math.random() * 3) + 1
     }"
-  ></div>
+  >
+    <div v-if="show">
+      <SpeechBubble :accept=props.accept />
+    </div>
+  </div>
 </template>
-
-<script setup lang="ts">
-const props = defineProps<{
-  positionX: number
-  positionY: number
-  size: number
-}>()
-</script>
-
 <style scoped>
 .obj {
   position: absolute;
 
   border-radius: 50%;
+}
 
+.obj-inner {
   animation: ani 1s infinite alternate;
 }
 

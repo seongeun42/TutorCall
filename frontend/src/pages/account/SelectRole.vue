@@ -37,8 +37,9 @@
 
 <script setup lang="ts">
 //   import { ref } from 'vue';
-
+import { useUserStore } from '@/store/userStore';
 const modalId = 'my_modal_4'
+const userStore = useUserStore();
 
 const showModal = (): void => {
   const modal = document.getElementById(modalId) as HTMLDialogElement
@@ -59,9 +60,12 @@ const closeModal = (): void => {
 }
 
 const saveChoice = (choice: string) => {
-  localStorage.setItem('userChoice', choice)
-  //   console.log(localStorage.getItem('userChoice'))
-
+  
+  if(choice =="선생님"){
+    userStore.isTutor = true;
+  }else{
+    userStore.isTutor = false;
+  }
   emit('update:changeForm')
   closeModal()
   // 선택한 값을 'userChoice'라는 키로 localStorage에 저장.

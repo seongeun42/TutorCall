@@ -1,23 +1,55 @@
+<script setup lang="ts">
+import { ref, type Ref, onMounted } from 'vue'
+import * as mypageApi from '@/api/mypage/mypage'
+import MyLectureDetail from '@/pages/mypage/MyLectureDetail.vue'
+import type { lectureHistory, lectureResponse } from '@/interface/mypage/interface';
+import { isAxiosError, type AxiosResponse } from 'axios';
+import { type errorResponse } from '@/interface/common/interface';
+
+
+const showDetail: Ref<boolean> = ref(false)
+const selectedLecture: Ref<lectureHistory|null> = ref(null);
+const lectureData: Ref<lectureHistory[]|null> = ref(null);
+const page:Ref<number> = ref(0);
+const size:Ref<number> = ref(5);
+  const clickShow = function (index: number): void {
+  showDetail.value = !showDetail.value
+  if(lectureData.value != null) selectedLecture.value = lectureData.value[index];
+}
+
+onMounted(async():Promise<void>=>{
+  const param:string = `page=${page.value}&size=${size.value}`
+  await mypageApi.lectureHistory(param)
+  .then((response: AxiosResponse<lectureResponse>)=>{
+    lectureData.value = response.data.content;
+  })
+  .catch((error:unknown)=>{
+    if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
+  })
+})
+
+
+</script>
 <template>
   <div class="flex">
     <div class="lecturelist bg-blue-50">
-      <div v-for="index in 4" :key="index">
+      <div v-for="(data, index) in lectureData" :key="index">
         <div class="flex mt-5 mb-10 justify-center">
-          <img src="@/img/teacher.png" alt="" class="w-24 h-24 rounded-full" />
+          <img :src="data.tutor.profile" alt="" class="w-24 h-24 rounded-full" />
           <div class="pt-2 mx-5">
-            <p>{{ lectureInfo.tutorname }}</p>
-            <p class="mt-2 font-bold text-xl">{{ lectureInfo.title }}</p>
+            <p>{{ data.tutor.nickname }}</p>
+            <p class="mt-2 font-bold text-xl">{{ data.promotionTitle }}</p>
             <div class="flex mt-1">
               <p class="bg-blue-500 mr-2 rounded-3xl w-16 text-white text-center">
-                {{ lectureInfo.subject }}
+                {{ data.tag.subject }}
               </p>
               <p class="bg-green-500 w-16 text-white rounded-3xl text-center">
-                {{ lectureInfo.target }}
+                {{ data.tag.grade }}
               </p>
             </div>
           </div>
           <div
-            @click="clickShow"
+            @click="clickShow(index)"
             class="flex justify-center cursor-pointer items-center mx-5 text-xl font-bold"
           >
             <svg
@@ -47,52 +79,10 @@
       </div>
     </div>
     <div class="lecturedetail">
-      <MyLectureDetail v-if="showDetail" :Infos="selectedLecture" />
+      <MyLectureDetail v-if="showDetail&&selectedLecture" :data="selectedLecture" />
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, type Ref } from 'vue'
-import MyLectureDetail from '../MyLectureDetail.vue'
-
-const showDetail: Ref<boolean> = ref(false)
-const selectedLecture: Ref<object> = ref([])
-const clickShow = function (): void {
-  showDetail.value = !showDetail.value
-  selectedLecture.value = lectureInfo.review
-}
-interface Review {
-  name: string
-  img: string
-  rates: number
-  content: string
-}
-interface LectureInfo {
-  title: string
-  tutorname: string
-  subject: string
-  target: string
-  img: string
-  review: object
-}
-const reviews: Review = {
-  name: '사브레26',
-  img: '/src/img/student.jpg',
-  rates: 4,
-  content: '좋습니다. 좋구여'
-}
-
-const lectureInfo: LectureInfo = {
-  title: '기하와 벡터',
-  tutorname: '투블럭의 여집합',
-  subject: '수학',
-  target: '고3',
-  img: 'src/img/teacher.png',
-  review: reviews
-}
-</script>
-
 <style scoped>
 .lecturelist {
   min-height: 900px;
