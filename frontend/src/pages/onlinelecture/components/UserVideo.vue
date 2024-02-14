@@ -10,7 +10,7 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 const userStore = useUserStore()
-const APPLICATION_SERVER_URL = 'http://localhost:8080/'
+const APPLICATION_SERVER_URL = import.meta.env.VITE_VUE_API_URL
 const OVCamera = ref<OpenVidu | undefined>(undefined)
 const OVScreen = ref<OpenVidu | undefined>(undefined)
 const sessionCamera = ref<Session | undefined>(undefined)

@@ -25,6 +25,8 @@ import InquiryEditor from '@/pages/board/editor/InquiryEditor.vue'
 import MatchCall from '@/pages/tutorcall/MatchCall.vue'
 import StudentBoardEditor from '@/pages/board/editor/StudentBoardEditor.vue'
 import TutorBoardEditor from '@/pages/board/editor/TutorBoardEditor.vue'
+import MyTutorcallList from '@/pages/mypage/student/information/MyTutorcallList.vue'
+import TutorCallList from '@/pages/mypage/tutor/MytutorCallList.vue'
 import { useUserStore } from '@/store/userStore'
 import path from 'path'
 
@@ -51,7 +53,6 @@ const router = createRouter({
       path: '/mypage',
       name: 'mypage',
       component: MyPage,
-      props: true,
       children: [
         // 선생님 마이페이지
         // 개인정보 수정
@@ -89,6 +90,11 @@ const router = createRouter({
           component: MyLectureList,
           props: true
         },
+        {
+          path:'/tutorcallList',
+          name: 'tutorcalllist',
+          component: TutorCallList,
+        },
 
         // 학생 마이페이지
         // 개인정보 수정
@@ -118,6 +124,12 @@ const router = createRouter({
           name: 'paymentInfo',
           component: MyPaymentInfo,
           props: true
+
+        },
+        {
+          path:'/tutorcallList',
+          name: 'studenttutorcalllist',
+          component: MyTutorcallList,
         }
       ]
     },
@@ -163,6 +175,11 @@ const router = createRouter({
           path: ':promotionNum',
           name: 'lectureDetail',
           component: DetailLecture
+        },
+        {
+          path:'/edit/:promotionNum',
+          name:'editlecture',
+          component: TutorBoardEditor,
         }
       ]
     },
@@ -186,6 +203,11 @@ const router = createRouter({
         {
           path: 'writeqna',
           name: 'writeqna',
+          component: StudentBoardEditor
+        },
+        {
+          path:'edit/:qnaNum',
+          name:'editqna',
           component: StudentBoardEditor
         }
       ]
