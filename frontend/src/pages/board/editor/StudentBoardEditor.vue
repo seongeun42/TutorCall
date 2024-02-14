@@ -53,7 +53,7 @@ watch(
       subjectSelected.value = ''
     }
 
-    if(editStore.needEdit) gradeSelected.value = editStore.grade.toString();
+    if (editStore.needEdit) gradeSelected.value = editStore.grade.toString()
   }
 )
 
@@ -63,7 +63,7 @@ watch(
     if (Number(newValue) >= 0) {
       subjectDisabled.value = false
     }
-    if(editStore.needEdit) subjectSelected.value = editStore.subject.toString();
+    if (editStore.needEdit) subjectSelected.value = editStore.subject.toString()
   }
 )
 
@@ -80,7 +80,7 @@ onMounted(() => {
   if (editStore.needEdit) {
     title.value = editStore.title
     editorData.value = editStore.content
-    schoolSelected.value = editStore.school.toString();
+    schoolSelected.value = editStore.school.toString()
   }
 })
 
@@ -108,7 +108,7 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
     tagId: tag
   }
 
-  const endpoint: string = buttonClicked.value === 'qna' ? 'qna/question' : 'tutorcall/'
+  const endpoint: string = '/qna/question'
 
   if (editStore.needEdit) {
     await api

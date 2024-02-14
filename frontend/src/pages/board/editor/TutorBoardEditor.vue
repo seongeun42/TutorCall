@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { ref, type Ref, onMounted, watch } from 'vue'
 import { instance } from '@/axios/axiosConfig'
 import CkEditor from '@/pages/board/editor/CkEditor.vue'
@@ -55,7 +54,7 @@ watch(
       subjectDisabled.value = true
       subjectSelected.value = ''
     }
-    if(editStore.needEdit) gradeSelected.value = editStore.grade.toString();
+    if (editStore.needEdit) gradeSelected.value = editStore.grade.toString()
   }
 )
 
@@ -65,7 +64,7 @@ watch(
     if (Number(newValue) >= 0) {
       subjectDisabled.value = false
     }
-    if(editStore.needEdit) subjectSelected.value = editStore.subject.toString();
+    if (editStore.needEdit) subjectSelected.value = editStore.subject.toString()
   }
 )
 
@@ -80,7 +79,7 @@ onMounted(() => {
   if (editStore.needEdit) {
     title.value = editStore.title
     editorData.value = editStore.content
-    schoolSelected.value = editStore.school.toString();
+    schoolSelected.value = editStore.school.toString()
   }
 })
 function cancelWrite(): void {
@@ -106,7 +105,7 @@ async function submitPost(event: Event): Promise<void> {
     tagId: tag
   }
 
-  const endpoint: string = 'lecture/promotion'
+  const endpoint: string = '/lecture/promotion'
 
   if (editStore.needEdit) {
     await api
@@ -125,13 +124,12 @@ async function submitPost(event: Event): Promise<void> {
     .post(url + endpoint, param)
     .then((response: any) => {
       window.alert('홍보 등록이 완료되었습니다.')
-      router.push({"name":"lectureList"})
+      router.push({ name: 'lectureList' })
     })
     .catch((error: any) => {
       console.log(error)
     })
 }
-
 </script>
 <template>
   <div class="my-10 mx-auto w-[1000px]">
