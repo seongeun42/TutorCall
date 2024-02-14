@@ -34,7 +34,6 @@ pipeline {
             }
             steps {
                 dir('frontend'){
-                    sh "cp 
                     sh "docker build -t frontend ."
                     script {
                         try {
