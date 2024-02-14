@@ -24,11 +24,7 @@ public class ChatroomRepoImpl implements ChatroomRepository{
 
   @Override
   public Mono<Chatroom> save(Chatroom chatroom) {
-      return findById(chatroom.getId())
-              .flatMap(c -> Mono.defer(() -> {
-                Mono<Boolean> exists = existsById(chatroom.getId());
-                return addOrUpdateChatroom(chatroom, exists);
-              }));
+    return hashOperations.put(KEY, chatroom.getId(), chatroom).map(isSaved -> chatroom);
   }
 
   @Override

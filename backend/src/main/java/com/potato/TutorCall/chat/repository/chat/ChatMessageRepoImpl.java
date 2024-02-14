@@ -33,11 +33,7 @@ public class ChatMessageRepoImpl implements ChatMessageRepository {
 
   @Override
   public Mono<ChatMessage> save(ChatMessage chatMessage) {
-    return findById(chatMessage.getId())
-            .flatMap(c -> Mono.defer(() -> {
-              Mono<Boolean> exists = existsById(chatMessage.getId());
-              return addOrUpdateChatMessage(chatMessage, exists);
-            }));
+    return hashOperations.put(KEY, chatMessage.getId(), chatMessage).map(isSaved -> chatMessage);
   }
 
   @Override
@@ -132,15 +128,5 @@ public class ChatMessageRepoImpl implements ChatMessageRepository {
   @Override
   public Mono<Void> deleteAll() {
     return hashOperations.delete(KEY).then();
-  }
-  private Mono<ChatMessage> addOrUpdateChatMessage(ChatMessage chatMessage, Mono<Boolean> exists) {
-    return exists.flatMap(exist -> {
-      if(exist) {
-        log.error("중복되는 참여자 정보: " + chatMessage.toString());
-        return Mono.error(new DuplicateKeyException("이미 존재하는 참여자 ID"));
-      } else {
-        return hashOperations.put(KEY, chatMessage.getId(), chatMessage).map(isSaved -> chatMessage);
-      }
-    }).thenReturn(chatMessage);
   }
 }

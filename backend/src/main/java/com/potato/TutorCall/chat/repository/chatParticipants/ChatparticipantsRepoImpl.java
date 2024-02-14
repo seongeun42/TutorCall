@@ -52,11 +52,7 @@ public class ChatparticipantsRepoImpl implements ChatparticipantsRepository {
 
   @Override
   public Mono<ChatParticipants> save(ChatParticipants chatParticipants) {
-    return findById(chatParticipants.getId())
-            .flatMap(c -> Mono.defer(() -> {
-              Mono<Boolean> exists = existsById(chatParticipants.getId());
-              return addOrUpdateChatparticipants(chatParticipants, exists);
-            }));
+    return hashOperations.put(KEY, chatParticipants.getId(), chatParticipants).map(isSaved -> chatParticipants);
   }
 
   @Override
@@ -153,16 +149,5 @@ public class ChatparticipantsRepoImpl implements ChatparticipantsRepository {
   @Override
   public Mono<Void> deleteAll() {
     return hashOperations.delete(KEY).then();
-  }
-
-  private Mono<ChatParticipants> addOrUpdateChatparticipants(ChatParticipants chatParticipants, Mono<Boolean> exists) {
-    return exists.flatMap(exist -> {
-      if(exist) {
-        log.error("중복되는 참여자 정보: " + chatParticipants.toString());
-        return Mono.error(new DuplicateKeyException("이미 존재하는 참여자 ID"));
-      } else {
-        return hashOperations.put(KEY, chatParticipants.getId(), chatParticipants).map(isSaved -> chatParticipants);
-      }
-    }).thenReturn(chatParticipants);
   }
 }

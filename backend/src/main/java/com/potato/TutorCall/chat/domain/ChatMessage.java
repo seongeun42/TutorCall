@@ -1,21 +1,18 @@
 package com.potato.TutorCall.chat.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.potato.TutorCall.user.domain.User;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.redis.core.RedisHash;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatMessage {
+public class ChatMessage implements Serializable {
 
   @Id
   private String id;
@@ -26,7 +23,7 @@ public class ChatMessage {
 
   private String message;
 
-  @CreatedDate private LocalDateTime createdAt;
+  @CreatedDate private Timestamp createdAt;
 
   // 생성자
   @Builder

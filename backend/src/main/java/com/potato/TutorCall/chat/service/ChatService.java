@@ -6,6 +6,7 @@ import com.potato.TutorCall.chat.dto.res.ChatResDto;
 import com.potato.TutorCall.chat.repository.chat.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -20,11 +21,12 @@ public class ChatService {
     return chatMessageRepository.findAllByChatroomIdOrderByCreatedAt(roomId).map(c -> ChatResDto.builder()
             .senderId(c.getSenderId())
             .message(c.getMessage())
-            .createdAt(c.getCreatedAt())
+            .createdAt(c.getCreatedAt().toLocalDateTime())
             .build());
   }
 
-  public Mono<?> sendChatToRoom(SendChatReq newChat, String roomId) {
+
+  public Mono<ChatResDto> sendChatToRoom(SendChatReq newChat, String roomId) {
     ChatMessage newMessage = ChatMessage.builder()
             .id(UUID.randomUUID().toString())
             .senderId(newChat.getSenderId())
@@ -32,12 +34,11 @@ public class ChatService {
             .message(newChat.getMessage())
             .build();
 
-    chatMessageRepository.save(newMessage);
-
-    return Mono.just(ChatResDto.builder()
-            .senderId(newMessage.getSenderId())
-            .message(newMessage.getMessage())
-            .createdAt(newMessage.getCreatedAt())
-            .build());
+    return chatMessageRepository.save(newMessage)
+            .then(Mono.just(ChatResDto.builder()
+                    .senderId(newMessage.getSenderId())
+                    .message(newMessage.getMessage())
+                    .createdAt(newMessage.getCreatedAt().toLocalDateTime())
+                    .build()));
   }
 }
