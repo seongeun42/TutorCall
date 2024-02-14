@@ -11,7 +11,7 @@
   <ReviewChart class="my-32" />
   <p class="font-bold text-2xl">학생 리뷰</p>
   <p class="border-2 my-10"></p>
-  <ReviewHistory />
+  <!-- <ReviewHistory /> -->
 </template>
 
 <script setup lang="ts">

@@ -3,8 +3,8 @@ import type { Ref } from 'vue';
 import { ref } from 'vue';
 import { useUserStore } from '@/store/userStore';
 import * as api from '@/api/mypage/mypage'
-import { isAxiosError } from 'axios';
-import type { errorResponse } from '@/interface/common/interface';
+import { isAxiosError, type AxiosResponse } from 'axios';
+import type { commonResponse, errorResponse } from '@/interface/common/interface';
 import router from '@/router';
 
 const today: String = new Date().toISOString().split('T')[0]
@@ -35,6 +35,9 @@ async function modifyed(event: Event):Promise<void>{
 
   if(nickname.value.length!=0 && nickname.value != userStore.nickname){
     await api.modifynickname({nickname:nickname.value})
+    .then((response: AxiosResponse<commonResponse>)=>{
+      userStore.nickname= nickname.value;
+    })
     .catch((error : unknown)=>{
       if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
       throw error;

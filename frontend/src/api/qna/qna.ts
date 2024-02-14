@@ -55,3 +55,9 @@ export async function editAnswer(param:editAnswer, answerId: number)
   const url = import.meta.env.VITE_VUE_API_URL +'/qna/answer/'+answerId;
   return instance.patch<commonResponse>(url, param);
 }
+
+export async function selectAnswer(param:number)
+:Promise<AxiosResponse<commonResponse>>{
+  const url:string = import.meta.env.VITE_VUE_API_URL+'/qna/answer/selection/'+param;
+  return instance.patch<commonResponse>(url);
+}

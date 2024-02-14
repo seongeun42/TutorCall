@@ -41,5 +41,19 @@ export interface tutorDetail {
   mannerRate: number,
   communicationRate: number,
   professionalismRate: number,
+  content: string,
+  createAt: string,
   tags: tagInfo[]
+}
+
+
+export interface review{
+  mannerRate: number,
+  communicationRate: number,
+  professionalismRate: number,
+  content: string,
+  createAt: string,
+}
+export interface reviewResponse extends commonResponse{
+  id: number
 }
