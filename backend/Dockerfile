@@ -12,4 +12,4 @@ RUN mv ./build/libs/*-SNAPSHOT.jar ./
 FROM amazoncorretto:17-alpine
 WORKDIR /app
 COPY --from=builder /app /app
-CMD ["java","-jar", "*-SNAPSHOT.jar"]
+CMD ["java","-jar", "TutorCall-0.0.1-SNAPSHOT.jar"]
