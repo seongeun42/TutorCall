@@ -10,6 +10,13 @@ import { manualChunksPlugin } from 'vite-plugin-webpackchunkname'
 const require = createRequire(import.meta.url)
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      external: [
+        /^node:.*/,
+      ]
+    }
+  },
   plugins: [
     vue(),
     manualChunksPlugin(),
