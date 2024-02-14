@@ -96,7 +96,7 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
   event.preventDefault()
 
   buttonClicked.value = buttonName
-  const url: string = 'http://localhost:8080/'
+  const url: string = import.meta.env.VITE_VUE_API_URL
 
   const param = {
     questionTitle: title.value,
