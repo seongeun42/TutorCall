@@ -7,7 +7,7 @@ import type { Ref } from 'vue'
 import { useVideoStore } from '@/store/videoStore'
 import axios from 'axios'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
-const APPLICATION_SERVER_URL = 'http://localhost:8080/'
+const APPLICATION_SERVER_URL = import.meta.env.VITE_VUE_API_URL
 const OVCamera = ref<OpenVidu | undefined>(undefined)
 const OVScreen = ref<OpenVidu | undefined>(undefined)
 const sessionCamera = ref<Session | undefined>(undefined)
