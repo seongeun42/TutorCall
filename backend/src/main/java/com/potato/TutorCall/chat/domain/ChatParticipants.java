@@ -8,7 +8,6 @@ import org.springframework.data.redis.core.RedisHash;
 import java.time.LocalDateTime;
 
 @Data
-@RedisHash("chatting_user")
 public class ChatParticipants {
   @Id
   String id;

@@ -15,7 +15,6 @@ import org.springframework.data.redis.core.RedisHash;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@RedisHash(value = "chat")
 public class ChatMessage {
 
   @Id
