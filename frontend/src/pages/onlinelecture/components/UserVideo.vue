@@ -5,8 +5,12 @@ import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { OpenVidu, StreamManager, Session, Publisher, Subscriber } from 'openvidu-browser'
 import type { Ref } from 'vue'
 import { useVideoStore } from '@/store/videoStore'
+import { useUserStore } from '@/store/userStore'
+import { useNotificationStore } from '@/store/notificationStore'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
+const userStore = useUserStore()
 const APPLICATION_SERVER_URL = 'http://localhost:8080/'
 const OVCamera = ref<OpenVidu | undefined>(undefined)
 const OVScreen = ref<OpenVidu | undefined>(undefined)
@@ -17,10 +21,12 @@ const shareStreamManager = ref<StreamManager | undefined>(undefined)
 const publisher: Ref<Publisher | undefined> = ref(undefined)
 const publisherScreen = ref<Publisher | undefined>(undefined)
 const videoStore = useVideoStore()
+const notificationStore = useNotificationStore()
+const router = useRouter()
 const subscribers: Ref<Subscriber[]> = ref([])
 const nowSharing: Ref<boolean> = ref(false)
 const screenSub: Ref<any> = ref('')
-const userName: Ref<string> = ref('Participant' + Math.floor(Math.random() * 100))
+const userName: string = userStore.nickname
 watch(
   () => videoStore.videoActive,
   (newVal: boolean) => {
@@ -68,7 +74,7 @@ const joinSession = () => {
   })
   getToken(videoStore.sessionId).then((token) => {
     sessionCamera.value
-      ?.connect(token, { clientData: userName.value })
+      ?.connect(token, { clientData: userName })
       .then(() => {
         let newPublisher = OVCamera.value?.initPublisher(undefined, {
           audioSource: undefined,
@@ -236,8 +242,15 @@ const stopScreenSharing = () => {
 
 onMounted(() => {
   joinSession()
+  const leaveGuard = () => {
+    leaveSession()
+  }
+  router.beforeEach(() => {
+    leaveGuard()
+  })
 })
 onBeforeUnmount(() => {
+  router.beforeEach(() => {})
   stopScreenSharing()
   leaveSession()
 })

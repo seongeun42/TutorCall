@@ -132,23 +132,23 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
 
 function tutorcallRequest() {
   if (notificationStore.requestUuid != null) {
-    console.log("한 번에 한 번의 요청만 가능")
+    console.log('한 번에 한 번의 요청만 가능')
     return
   }
-  const uuid = crypto.randomUUID();
+  const uuid = crypto.randomUUID()
   // 문제 수락 응답 받을 sub 구독
   notificationStore.callSubscribe(uuid)
   const message = {
     id: uuid,
     title: title.value,
     content: editorData.value,
-    tagId: tag,
+    tagId: 1,
     userId: userStore.id
   }
   // 문제 요청 보내기
   notificationStore.sendMessage(`tag/${message.tagId}`, message)
   window.alert('문제 등록이 완료되었습니다. 튜터콜 대기실로 이동합니다.')
-  router.push({ name: 'waitingRoom', params: { userId: userStore.id } });
+  router.push({ name: 'waitingRoom', params: { userId: userStore.id } })
 }
 </script>
 <template>
