@@ -26,7 +26,7 @@ public class ChatController {
    */
   @MessageMapping("/chat/{roomId}/{userId}")
   @SendTo("/sub/chat/{roomId}/{userId}")
-  public Flux<?> receiveChatsInRoom(@DestinationVariable(value = "roomId") String roomId) {
+  public Flux<?> receiveChatsInRoom(@DestinationVariable(value = "roomId") String roomId, @DestinationVariable(value = "userId") Long userId) {
     return chatService.receiveChatsInRoom(roomId);
   }
 
