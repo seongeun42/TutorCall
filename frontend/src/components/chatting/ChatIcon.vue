@@ -3,7 +3,7 @@ import {type Ref, ref} from 'vue'
 import ChatRoom from './ChatRoom.vue';
 
 const show: Ref<boolean> = ref(false);
-const onClick: void = () => {
+const onClick = () => {
   show.value = !show.value
 }
 </script>
