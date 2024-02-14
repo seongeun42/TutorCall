@@ -4,6 +4,8 @@ import { instance } from '@/axios/axiosConfig'
 import CkEditor from '@/pages/board/editor/CkEditor.vue'
 import router from '@/router'
 import { useEditStore } from '@/store/editStore'
+import { useUserStore } from '@/store/userStore'
+import { useNotificationStore } from '@/store/notificationStore'
 import * as api from '@/api/qna/qna'
 import { isAxiosError, type AxiosResponse } from 'axios'
 import { type commonResponse, type errorResponse } from '@/interface/common/interface'
@@ -28,6 +30,9 @@ const gradeSelected: Ref<selectform | string> = ref('')
 const subjectSelected: Ref<selectform | string> = ref('')
 const gradeDisabled: Ref<boolean> = ref(true)
 const subjectDisabled: Ref<boolean> = ref(true)
+const editStore = useEditStore()
+const userStore = useUserStore()
+const notificationStore = useNotificationStore()
 
 watch(
   () => schoolSelected.value,
@@ -51,6 +56,7 @@ watch(
     if(editStore.needEdit) gradeSelected.value = editStore.grade.toString();
   }
 )
+
 watch(
   () => gradeSelected.value,
   (newValue, oldValue) => {
@@ -60,14 +66,16 @@ watch(
     if(editStore.needEdit) subjectSelected.value = editStore.subject.toString();
   }
 )
+
 watch(
   () => subjectSelected.value,
   () => {
     tag = Number(schoolSelected.value) + Number(gradeSelected.value) + Number(subjectSelected.value)
   }
 )
-const editStore = useEditStore()
+
 const questionId: number = Number(router.currentRoute.value.params['qnaNum'])
+
 onMounted(() => {
   if (editStore.needEdit) {
     title.value = editStore.title
@@ -75,6 +83,7 @@ onMounted(() => {
     schoolSelected.value = editStore.school.toString();
   }
 })
+
 function cancelWrite(): void {
   if (window.confirm('글 작성을 취소하시겠습니까?')) {
     router.push('/')
@@ -86,6 +95,7 @@ function handleModelValueUpdate(newValue: string) {
   editorData.value = newValue
   console.log(editorData.value)
 }
+
 async function submitPost(buttonName: string, event: Event): Promise<void> {
   event.preventDefault()
 
@@ -116,17 +126,33 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
   instance
     .post(url + endpoint, param)
     .then((response: any) => {
-      if (buttonName === 'tutorcall') {
-        // 대기실로 이동하는 라우터 구현해야 됨
-        window.alert('문제 등록이 완료되었습니다. 튜터콜 대기실로 이동합니다.')
-      } else {
-        window.alert('문제 등록이 완료되었습니다.')
-        router.push({ name: 'qnalist' })
-      }
+      window.alert('문제 등록이 완료되었습니다.')
+      router.push({ name: 'qnalist' })
     })
     .catch((error: any) => {
       console.log(error)
     })
+}
+
+function tutorcallRequest() {
+  if (notificationStore.requestUuid != null) {
+    console.log("한 번에 한 번의 요청만 가능")
+    return
+  }
+  const uuid = crypto.randomUUID();
+  // 문제 수락 응답 받을 sub 구독
+  notificationStore.callSubscribe(uuid)
+  const message = {
+    id: uuid,
+    title: title.value,
+    content: editorData.value,
+    tagId: tag,
+    userId: userStore.id
+  }
+  // 문제 요청 보내기
+  notificationStore.sendMessage(`tag/${message.tagId}`, message)
+  window.alert('문제 등록이 완료되었습니다. 튜터콜 대기실로 이동합니다.')
+  router.push({ name: 'waitingRoom', params: { userId: userStore.id } });
 }
 </script>
 <template>
@@ -191,7 +217,7 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
         Q&A 게시판
       </button>
       <button
-        @click="submitPost('tutorcall', $event)"
+        @click="tutorcallRequest"
         type="button"
         class="py-2.5 px-5 me-2 mb-2 text-xl font-medium text-white bg-green-900 focus:outline-none rounded-xl border border-gray-300 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
       >

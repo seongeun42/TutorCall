@@ -8,6 +8,8 @@ import type { errorResponse } from '@/interface/common/interface'
 import router from '@/router'
 import { useEditStore } from '@/store/editStore';
 import { tagConvert } from '@/util/tagConvert';
+import { useUserStore } from '@/store/userStore'
+
 
 interface selectform {
   value: number
@@ -26,7 +28,9 @@ const totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변�
 const searchKeyword = ref("");
 const lectureData:Ref<Lecture[]> = ref([]); 
 const keyword: Ref<string> = ref('')
+<<<<<<< frontend/src/pages/board/lecturerecruiting/LectureRecruit.vue
 const editStore = useEditStore();
+const userStore = useUserStore()
 
 const prevPage = (): void => {
   if (currentPage > 1) {
@@ -168,6 +172,7 @@ async function keywordSearch(event: Event): Promise<void> {
         </button>
 
         <button type="button"
+        v-if="userStore.role === 'TUTOR'"
         class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
         @click="gowrite">
           글쓰기

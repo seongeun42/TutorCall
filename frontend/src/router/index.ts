@@ -27,6 +27,8 @@ import StudentBoardEditor from '@/pages/board/editor/StudentBoardEditor.vue'
 import TutorBoardEditor from '@/pages/board/editor/TutorBoardEditor.vue'
 import MyTutorcallList from '@/pages/mypage/student/information/MyTutorcallList.vue'
 import TutorCallList from '@/pages/mypage/tutor/MytutorCallList.vue'
+import { useUserStore } from '@/store/userStore'
+import path from 'path'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -260,5 +262,53 @@ const router = createRouter({
     }
   ]
 })
+
+// 컴포넌트 가드
+router.beforeEach((to) => {
+  const userStore = useUserStore();
+  // 로그인을 안한 상태에서 회원전용 페이지에 접근하려는 경우
+  if (
+    !userStore.isLogin &&
+    (to.name == "teacherPromotionForm" ||
+      to.name == "studentRequestForm" ||
+      to.name == "matchcall" ||
+      to.name == "waitingRoom" ||
+      to.name == "onlineLectureNum" ||
+      to.name == "onlineLecture" ||
+      to.name == "writeqna" ||
+      to.name == "qnaDetail" ||
+      to.name == "lectureDetail" ||
+      to.name == "mypage")
+  ) {
+    alert("회원전용 기능입니다. 로그인이 필요합니다.");
+    return { name: "signform" };
+  }
+  // 로그인을 안했거나, 학생이 아닌 선생님이 학생 마이페이지에 접근하려 할 때 라우터가드
+  if (
+    (!userStore.isLogin || userStore.isLogin && userStore.isTutor) && (
+      to.name == "userUpdate" ||
+      to.name == "pointUsage" ||
+      to.name == "userMyLectures" ||
+      to.name == "paymentInfo"
+    )
+  ) {
+    alert("해당 페이지에 접근 권한이 없습니다.")
+    return { name: 'main' }
+  }
+    // 로그인을 안했거나, 학생이 아닌 선생님이 학생 마이페이지에 접근하려 할 때 라우터가드
+    if (
+      (!userStore.isLogin || userStore.isLogin && !userStore.isTutor) && (
+        to.name == "tutorUpdate" ||
+        to.name == "reviewCheck" ||
+        to.name == "profitCheck" ||
+        to.name == "withdrawl" ||
+        to.name == "tutorMyLectures"
+      )
+    ) {
+      alert("해당 페이지에 접근 권한이 없습니다.")
+      return { name: 'main' }
+    }
+});
+
 
 export default router

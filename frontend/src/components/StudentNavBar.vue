@@ -1,16 +1,9 @@
 <script setup lang="ts">
 import router from '@/router/index'
 import { useUserStore } from '@/store/userStore'
+import { useNotificationStore } from '@/store/notificationStore'
 import { ref, type Ref } from 'vue'
 import CallNotification from '@/components/CallNotification.vue'
-
-interface NotifyDate {
-  message: string
-}
-
-const dummyData: NotifyDate = {
-  message: '테스트 데이터 알림'
-}
 
 const modalShow: Ref<boolean> = ref(false)
 
@@ -19,19 +12,22 @@ function handleMode(show: boolean, mode: string) {
   //mode에 따라 수행할 기능이 다름.
 }
 
-const userStore = useUserStore();
+const userStore = useUserStore()
+const notificationStore = useNotificationStore()
 
 function goQnABoard():void{
-  router.push({"name":"qna"});
+  router.push({"name":"qna"})
 }
 
 function goLectureBoard():void{
-  router.push({"name":"lecturesPromo"});
+  router.push({"name":"lecturesPromo"})
 }
 
 
 function logout():void{
   userStore.logout();
+  notificationStore.socketDisconnect();
+  notificationStore.clear();
   sessionStorage.clear();
   router.push("/");
 }

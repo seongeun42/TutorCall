@@ -6,9 +6,10 @@ import type { Ref } from 'vue'
 import router from '@/router/index'
 import{ type AxiosResponse, isAxiosError } from 'axios';
 import type{ QuestionInfo, questionResponse } from '@/interface/qna/interface'
-import type { errorResponse } from '@/interface/common/interface';
+import type { errorResponse } from '@/interface/common/interface'
 import { useEditStore } from '@/store/editStore'
 import { tagConvert } from '@/util/tagConvert'
+import { useUserStore } from '@/store/userStore'
 
 interface selectform {
   value: number
@@ -30,6 +31,7 @@ const gradeDisabled: Ref<boolean> = ref(true)
 const subjectDisabled: Ref<boolean> = ref(true)
 const keyword: Ref<string> = ref('')
 const editStore = useEditStore();
+const userStore = useUserStore()
 
 const prevPage = (): void => {
   if (currentPage > 1) {
@@ -206,6 +208,7 @@ function goEditor(): void {
         </button>
 
         <button
+          v-if="userStore.role === 'USER'"
           type="button"
           class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
           @click="goEditor"

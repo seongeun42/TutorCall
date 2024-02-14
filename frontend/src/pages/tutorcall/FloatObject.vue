@@ -4,19 +4,10 @@ import { ref } from 'vue';
 import SpeechBubble from '@/pages/tutorcall/SpeechBubble.vue';
 import floatingObject from '@/util/animation/floatingObject'
 import { onMounted } from 'vue';
+import type { acceptTutor } from '@/interface/tutorcall/interface'
 
-interface pushdata{
-    id: number,
-    delay: number,
-    size: number,
-    objectsize: number,
-    positionX: number,
-    positionY: number,
-    data: any,
-  }
-
-  const props = defineProps<{
-  pushedData: pushdata,
+const props = defineProps<{
+  accept: acceptTutor,
 }>()
 
 const show:Ref<boolean> = ref(false);
@@ -26,7 +17,7 @@ function click():void{
 }
 
 onMounted(()=>{
-  floatingObject('.obj'+props.pushedData.id, props.pushedData.delay, props.pushedData.size);
+  floatingObject('.obj'+props.accept.id, props.accept.delay, props.accept.size);
 })
 </script>
 <template>
@@ -34,18 +25,18 @@ onMounted(()=>{
   @click="click"
     class="obj"
     :style="{
-      width: props.pushedData.size + 'px',
-      height: props.pushedData.size + 'px',
-      top: props.pushedData.positionX + 'px',
-      left: props.pushedData.positionY + 'px',
+      width: props.accept.size + 'px',
+      height: props.accept.size + 'px',
+      top: props.accept.positionX + 'px',
+      left: props.accept.positionY + 'px',
       transform: 'translate(-50%, -50%)',
-      backgroundImage: 'url(https://via.placeholder.com/' + props.pushedData.size + 'x' + props.pushedData.size + ')',
+      backgroundImage: 'url(https://via.placeholder.com/' + props.accept.size + 'x' + props.accept.size + ')',
       animation: 'ani' + Math.floor(Math.random() * 3) + 1
     }"
   >
-  <div v-if="show">
-    <SpeechBubble :pushedData=props.pushedData />
-  </div>
+    <div v-if="show">
+      <SpeechBubble :accept=props.accept />
+    </div>
   </div>
 </template>
 <style scoped>

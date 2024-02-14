@@ -2,23 +2,24 @@
 import { ref, type Ref, reactive } from 'vue'
 import CallNotification from '@/components/CallNotification.vue'
 import { useUserStore } from '@/store/userStore';
+import { useNotificationStore } from '@/store/notificationStore'
 import smallAlert from '@/components/tutorcallAlert/smallAlert.vue'
 import { type alertForm } from '@/interface/tutorcall/interface'
 import router from '@/router'
 
 const userStore = useUserStore();
+const notificationStore = useNotificationStore()
 
 function changeStatus() {
+    if (!userStore.isActiveCall) {
+    notificationStore.tagSubscribe()
+  } else {
+    for (let i = 0; i < notificationStore.tagSubs.length; i++) {
+      notificationStore.unsubscribe(notificationStore.tagSubs[i])
+    }
+    notificationStore.clearTagSubs()
+  }
   userStore.isActiveCall = !userStore.isActiveCall
-}
-
-
-interface NotifyDate {
-  message: string
-}
-
-const dummyData: NotifyDate = {
-  message: '테스트 데이터 알림'
 }
 
 const modalShow: Ref<boolean> = ref(false)
@@ -34,6 +35,8 @@ function handleViewAlert():void{
 
 function logout():void{
   userStore.logout();
+  notificationStore.socketDisconnect();
+  notificationStore.clear();
   sessionStorage.clear();
   router.push("/");
 }
@@ -171,7 +174,7 @@ function hideAlert(item:{hide:boolean}):void{
                 </svg>
               </button>
             </div>
-            <div v-for="(item, index) in data" :key="index">
+            <div v-for="(item, index) in notificationStore.problems" :key="index">
               <smallAlert v-if="!item.hide" :data="item"
               @change="hideAlert(item)"/>
             </div>
