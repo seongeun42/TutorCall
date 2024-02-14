@@ -8,25 +8,6 @@ const onClick: void = () => {
   show.value = !show.value
 }
 
-import { RSocketConnector } from 'rsocket-core'
-import { WebsocketClientTransport } from 'rsocket-websocket-client'
-
-async function socketChatting() {
-  const connector = new RSocketConnector({
-    transport: new WebsocketClientTransport({
-      url: 'ws://localhost:6565/rs',
-      wsCreator: (url) => new WebSocket(url) as any
-    })
-  })
-
-  const rsocket = await connector.connect()
-}
-
-socketChatting()
-  .then(() => exit())
-  .catch((error: Error) => {
-    console.error(error)
-  })
 </script>
 
 <template>
