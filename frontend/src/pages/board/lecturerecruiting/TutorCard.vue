@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Lecture } from '@/interface/lectureBoard/interface';
+import type { lecture } from '@/interface/lectureBoard/interface';
 import router from '@/router/index';
 
-const props = defineProps<{"data":Lecture}>();
+const props = defineProps<{"data":lecture}>();
 
 function showDetail(event:Event):void{
   event.preventDefault();

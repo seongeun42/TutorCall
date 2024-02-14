@@ -2,7 +2,7 @@
 import TutorCard from './TutorCard.vue'
 import { onMounted, ref, watch, type Ref } from 'vue';
 import * as api from '@/api/lectureBoard/lectureBoard'
-import type { Lecture, lectureResponse } from '@/interface/lectureBoard/interface'
+import type { lecture, lectureResponse } from '@/interface/lectureBoard/interface'
 import { isAxiosError, type AxiosResponse } from 'axios'
 import type { errorResponse } from '@/interface/common/interface'
 import router from '@/router'
@@ -26,9 +26,8 @@ let currentPage: number = 1
 const size = 10;
 const totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
 const searchKeyword = ref("");
-const lectureData:Ref<Lecture[]> = ref([]); 
+const lectureData:Ref<lecture[]> = ref([]); 
 const keyword: Ref<string> = ref('')
-<<<<<<< frontend/src/pages/board/lecturerecruiting/LectureRecruit.vue
 const editStore = useEditStore();
 const userStore = useUserStore()
 

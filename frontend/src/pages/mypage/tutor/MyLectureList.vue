@@ -2,14 +2,14 @@
 import { ref, type Ref, onMounted } from 'vue'
 import * as mypageApi from '@/api/mypage/mypage'
 import MyLectureDetail from '@/pages/mypage/MyLectureDetail.vue'
-import type { LectureHistory, lectureResponse } from '@/interface/mypage/interface';
+import type { lectureHistory, lectureResponse } from '@/interface/mypage/interface';
 import { isAxiosError, type AxiosResponse } from 'axios';
 import { type errorResponse } from '@/interface/common/interface';
 
 
 const showDetail: Ref<boolean> = ref(false)
-const selectedLecture: Ref<LectureHistory|null> = ref(null);
-const lectureData: Ref<LectureHistory[]|null> = ref(null);
+const selectedLecture: Ref<lectureHistory|null> = ref(null);
+const lectureData: Ref<lectureHistory[]|null> = ref(null);
 const page:Ref<number> = ref(0);
 const size:Ref<number> = ref(5);
   const clickShow = function (index: number): void {

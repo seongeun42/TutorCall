@@ -94,7 +94,7 @@ function handleModelValueUpdate(newValue: string) {
 
 async function submitPost(event: Event): Promise<void> {
   event.preventDefault()
-  const promotionDue = new Date(deadline.value)
+  const promotionDue = new Date(deadline.value).toString();
   const url: string = 'http://localhost:8080/'
 
   const param = {
@@ -124,7 +124,7 @@ async function submitPost(event: Event): Promise<void> {
   instance
     .post(url + endpoint, param)
     .then((response: any) => {
-      window.alert('문제 등록이 완료되었습니다.')
+      window.alert('홍보 등록이 완료되었습니다.')
       router.push({"name":"lectureList"})
     })
     .catch((error: any) => {

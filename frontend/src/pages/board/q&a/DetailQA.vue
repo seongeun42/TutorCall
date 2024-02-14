@@ -60,7 +60,7 @@ function editQuestion(event:Event):void{
   if(questionData.value){
     editStore.init();
 
-    if(questionData.value.writer.id != Number(userStore.userId)){
+    if(questionData.value.writer.id != Number(userStore.$state.id)){
       alert("수정 권한이 없습니다!");
       return;
     }

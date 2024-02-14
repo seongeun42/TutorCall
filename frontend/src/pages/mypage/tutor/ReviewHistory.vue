@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { Review } from '@/interface/common/interface';
+import type { review } from '@/interface/common/interface';
 import StarScore from './StarScore.vue'
 import { useUserStore } from '@/store/userStore';
 import { onMounted } from 'vue';
 
-const props = defineProps<{data: Review}>();
+const props = defineProps<{data: review}>();
 const score:number = Math.round((props.data.communicationRate+props.data.mannerRate+props.data.professionalismRate)/3)
 
 </script>

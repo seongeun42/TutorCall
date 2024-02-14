@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, type Ref, onMounted } from 'vue'
 import * as api from '@/api/mypage/mypage'
-import type { TutorCallHistory, tutorcallResponse } from '@/interface/mypage/interface';
+import type { tutorCallHistory, tutorcallResponse } from '@/interface/mypage/interface';
 import { isAxiosError, type AxiosResponse } from 'axios';
 import { type errorResponse } from '@/interface/common/interface';
 import MyTutorcallDetail from '@/pages/mypage/student/information/MyTutorcallDetail.vue';
@@ -9,8 +9,8 @@ import MyTutorcallDetail from '@/pages/mypage/student/information/MyTutorcallDet
 
 
 const showDetail: Ref<boolean> = ref(false)
-const selected: Ref<TutorCallHistory|null> = ref(null);
-const tutorCallData: Ref<TutorCallHistory[]|null> = ref(null);
+const selected: Ref<tutorCallHistory|null> = ref(null);
+const tutorCallData: Ref<tutorCallHistory[]|null> = ref(null);
 const page:Ref<number> = ref(0);
 const size:Ref<number> = ref(5);
 const sindex:Ref<number|null> = ref(null);

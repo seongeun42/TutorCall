@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DetailTutor, registResponse } from '@/interface/lectureBoard/interface';
+import type { detailTutor, registResponse } from '@/interface/lectureBoard/interface';
 import router from '@/router/index'
 import {type Ref, ref } from 'vue';
 import * as api from '@/api/lectureBoard/lectureBoard'
@@ -7,7 +7,7 @@ import { isAxiosError, type AxiosResponse } from 'axios';
 import type { commonResponse, errorResponse } from '@/interface/common/interface';
 import { useUserStore } from '@/store/userStore';
 
-const props = defineProps<{"data":DetailTutor, "isParticipated":boolean}>();
+const props = defineProps<{"data":detailTutor, "isParticipated":boolean}>();
 
 const promotionId:number = Number(router.currentRoute.value.params.promotionNum);
 

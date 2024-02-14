@@ -5,7 +5,7 @@ import { computed } from 'vue';
 import { ref } from 'vue';
 import { instance } from '@/axios/axiosConfig'
 import { isAxiosError, type AxiosResponse } from 'axios';
-import type { reviewResponse, errorResponse, Review } from '@/interface/common/interface'
+import type { reviewResponse, errorResponse, review } from '@/interface/common/interface'
 
 
 interface ReviewForm{
@@ -31,7 +31,7 @@ const content:Ref<string> = ref("");
 
 const emit = defineEmits<{
   change: [value:string]
-  update: [value: Review]
+  update: [value: review]
 }>()
 
 const props = defineProps<{"mode":string, id:number}>();
@@ -62,7 +62,7 @@ async function regiestReview(event: Event):Promise<void>{
     await instance.post(url, param)
     .then((response: AxiosResponse<reviewResponse>)=>{
         alert(response.data.message);
-        const Review:Review = {
+        const Review:review = {
                 mannerRate: Number(mannerRate.value),
                 communicationRate: Number(communicationRate.value),
                 professionalismRate: Number(professionalismRate.value),

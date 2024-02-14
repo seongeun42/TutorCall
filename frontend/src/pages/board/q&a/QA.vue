@@ -5,7 +5,7 @@ import { ref, onMounted, watch } from 'vue'
 import type { Ref } from 'vue'
 import router from '@/router/index'
 import{ type AxiosResponse, isAxiosError } from 'axios';
-import type{ QuestionInfo, questionResponse } from '@/interface/qna/interface'
+import type{ questionInfo, questionResponse } from '@/interface/qna/interface'
 import type { errorResponse } from '@/interface/common/interface'
 import { useEditStore } from '@/store/editStore'
 import { tagConvert } from '@/util/tagConvert'
@@ -22,8 +22,8 @@ let totalPages: number = 10 // 전체 페이지 수 (원하는 값으로 변경)
 let tag: number|string = '';
 let status: string = ''
 
-const questionData: Ref<QuestionInfo[]> = ref([])
-const originData: Ref<QuestionInfo[]> = ref([])
+const questionData: Ref<questionInfo[]> = ref([])
+const originData: Ref<questionInfo[]> = ref([])
 const schoolSelected: Ref<selectform | string> = ref('')
 const gradeSelected: Ref<selectform | string> = ref('')
 const subjectSelected: Ref<selectform | string> = ref('')
