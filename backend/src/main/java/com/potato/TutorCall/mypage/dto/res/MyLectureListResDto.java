@@ -27,6 +27,17 @@ public class MyLectureListResDto {
     this.lectureEndAt = lecture.getLectureEndAt();
   }
 
+  public MyLectureListResDto(Lecture lecture, User tutor) {
+    this.lectureId = lecture.getId();
+    this.tutor = UserSimpleDto.builder().user(tutor).build();
+    this.promotionTitle = lecture.getPromotionTitle();
+    this.promotionState = lecture.isPromotionState();
+    this.lectureState = lecture.isLectureState();
+    this.tag = new TagDto(lecture.getTag());
+    this.lectureEndAt = lecture.getLectureEndAt();
+    this.review = false;
+  }
+
   public void setTutorInfo(User user) {
     this.tutor = UserSimpleDto.builder().user(user).build();
   }

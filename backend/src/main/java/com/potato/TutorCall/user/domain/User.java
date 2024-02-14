@@ -97,14 +97,13 @@ public class User {
       String nickname,
       String password,
       RoleType role,
-      String profile,
       SnsType sns,
       int point) {
     this.email = email;
     this.nickname = nickname;
     this.password = password;
     this.role = role;
-    this.profile = profile;
+    this.profile = role.equals(RoleType.USER) ? "@/img/profile/default_student.png" : "@/img/profile/default_tutor.png";
     this.sns = sns;
     this.point = point;
   }
