@@ -142,7 +142,7 @@ function tutorcallRequest() {
     id: uuid,
     title: title.value,
     content: editorData.value,
-    tagId: 1,
+    tagId: tag,
     userId: userStore.id
   }
   // 문제 요청 보내기
