@@ -108,7 +108,7 @@ const screenSub = computed(() => {
 const leaveSession = async () => {
   // 회의에 혼자 남은 상황에서 새로 고침하거나 나가면 세션 종료
   if (videoSubscribers.value.length == 0) {
-    const endPoint = `tutorcall/${sessionId}/disconnection`
+    const endPoint = `/tutorcall/${sessionId}/disconnection`
     await axios.delete(APPLICATION_SERVER_URL + endPoint, {
       headers: { 'Content-Type': 'application/json' },
       withCredentials: true
@@ -139,7 +139,7 @@ const getToken = async (sessionId: number) => {
 
 const createToken = async (sessionId: number) => {
   const response = await axios.post(
-    `${APPLICATION_SERVER_URL}tutorcall/${sessionId}/connection`,
+    `${APPLICATION_SERVER_URL}/tutorcall/${sessionId}/connection`,
     {},
     {
       headers: { 'Content-Type': 'application/json' },
