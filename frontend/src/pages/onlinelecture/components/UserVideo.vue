@@ -43,6 +43,7 @@ watch(
     }
   }
 )
+
 const joinSession = () => {
   OVCamera.value = new OpenVidu()
 
@@ -90,13 +91,14 @@ const joinSession = () => {
 
   window.addEventListener('beforeunload', leaveSession)
 }
-const nonScreenSubscribersCount = computed(() => {
-  return subscribers.value.filter((sub) => sub.stream.typeOfVideo !== 'SCREEN').length
+
+const videoSubscribers = computed(() => {
+  return subscribers.value.filter((sub) => sub.stream.typeOfVideo === 'CAMERA')
 })
 
 const leaveSession = async () => {
   // 회의에 혼자 남은 상황에서 새로 고침하거나 나가면 세션 종료
-  if (nonScreenSubscribersCount.value == 0) {
+  if (videoSubscribers.value.length == 0) {
     const endPoint = `tutorcall/${videoStore.sessionId}/disconnection`
     await axios.delete(APPLICATION_SERVER_URL + endPoint, {
       headers: { 'Content-Type': 'application/json' },
@@ -245,22 +247,20 @@ onBeforeUnmount(() => {
     <div v-if="nowSharing">
       <div class="flex mb-5 subscribers">
         <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="mainStreamManager" />
-        <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
-          <div v-if="sub.stream.typeOfVideo !== 'SCREEN'">
-            <OnlineVideo
-              class="w-[250px] h-[150px]"
-              v-if="isVideoVisible(sub)"
-              :stream-manager="sub"
-              @click="updateMainVideoStreamManager(sub)"
-            />
-          </div>
+        <div v-for="sub in videoSubscribers" :key="sub.stream.connection.connectionId">
+          <OnlineVideo
+            class="w-[250px] h-[150px]"
+            v-if="isVideoVisible(sub)"
+            :stream-manager="sub"
+            @click="updateMainVideoStreamManager(sub)"
+          />
         </div>
       </div>
       <ScreenShare :stream-manager="screenSub" />
     </div>
     <div v-else>
       <div class="flex mb-5 subscribers">
-        <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
+        <div v-for="sub in videoSubscribers" :key="sub.stream.connection.connectionId">
           <OnlineVideo
             class="w-[250px] h-[150px]"
             v-if="isVideoVisible(sub)"

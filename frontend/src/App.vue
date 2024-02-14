@@ -21,7 +21,6 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div>test</div>
   <div v-if="!userStore.isLogin">
     <NotLoginNavBar />
   </div>
