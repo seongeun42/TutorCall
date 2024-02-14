@@ -12,17 +12,32 @@ pipeline {
     }
    
     stages {
+         stage('프론트 변수 세팅') { // application.yml이 있는 경우 삭제
+            when {
+                expression { env.GIT_BRANCH == 'origin/frontend' || env.GIT_BRANCH == 'origin/master' }
+            }
+            steps {								
+                sh 'cp ../.env frontend'
+            }
+            post {
+		           success {
+                        echo "프론트 환경변수 세팅 성공"
+                    }
+                    failure{
+                        echo "프론트 환경변수 실패 성공"
+                    }
+            }
+        }
         stage('프론트 빌드') {
             when {
                 expression { env.GIT_BRANCH == 'origin/frontend' || env.GIT_BRANCH == 'origin/master' }
             }
             steps {
                 dir('frontend'){
-                    // sh "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")"
+                    sh "cp 
                     sh "docker build -t frontend ."
                     script {
                         try {
-                            
                             sh "docker rm -f \$(docker ps -aqf \"name=^/${env.FRONTEND}\$\")"
                         } catch (Exception e) {
                             echo "컨테이너 제거 중 에러가 발생했습니다: ${e.getMessage()}"
@@ -79,10 +94,8 @@ pipeline {
                 }
                 failure{
                     echo "백앤드 도커 빌드 실패"
-
                 }
             }
-            
         }
         
         stage('백앤드 도커 띄우기') { // 테스트 빌드하기
@@ -90,18 +103,27 @@ pipeline {
                 expression { env.GIT_BRANCH == 'origin/backend' || env.GIT_BRANCH == 'origin/master' }
             }
             steps {
+                 script {
+                        try {
+                            
+                            sh "docker rm -f \$(docker ps -aqf \"name=^/${env.BACKEND}\$\")"
+                        } catch (Exception e) {
+                            echo "컨테이너 제거 중 에러가 발생했습니다: ${e.getMessage()}"
+                        }
+                    }
                 sh "docker rm -f \$(docker ps -aqf \"name=^/${env.BACKEND}\$\")"
                 sh "docker run -itd -p 8080:8080 --name ${env.BACKEND} ${env.BACKEND}"
             }
             post {
                 success {
-                    echo "도커 띄우기 성공"
+                    updateGitlabCommitStatus name: 'build', state: 'success'
+                    echo "시작 성공"
                 }
                 failure {
-                    echo "도커 띄우기 실패"
+                    updateGitlabCommitStatus name: 'build', state: 'failed'
+                    echo "시작 실패"
                 }
             }
         }
-        
     }
 }
