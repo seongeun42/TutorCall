@@ -6,8 +6,15 @@ import OnlineLectureUserProfile from '@/pages/onlinelecture/components/OnlineLec
 import OnlineLectureChatInput from '@/pages/onlinelecture/components/OnlineLectureChatInput.vue'
 import OnlineLectureSettingBtn from '@/pages/onlinelecture/components/OnlineLectureSettingBtn.vue'
 import UserVideo from './components/UserVideo.vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import type { Ref } from 'vue'
+import { useVideoStore } from '@/store/videoStore'
+const videoStore = useVideoStore()
+// watch(videoStore, () => {
+//   videoStore.sessionCamera?.on('signal', (event) => {
+//     console.log(event.data)
+//   })
+// })
 
 const chatSideView: Ref<boolean> = ref(true)
 

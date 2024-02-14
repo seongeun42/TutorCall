@@ -9,11 +9,10 @@ export const useVideoStore = defineStore({
     sessionCamera: undefined as Session | undefined,
     mainStreamManager: undefined as Publisher | undefined,
     subscribers: [] as Subscriber[],
+    messages: {},
     nowSharing: false,
     screenSub: '',
     token: '',
-    userName: 'Participant' + Math.floor(Math.random() * 100),
-    sessionId: 1,
     showScreen: false
   }),
   persist: {

@@ -57,7 +57,7 @@ const joinSession = async () => {
   OVCamera.value = new OpenVidu()
 
   sessionCamera.value = OVCamera.value.initSession()
-
+  videoStore.sessionCamera = sessionCamera.value
   sessionCamera.value.on('streamCreated', ({ stream }) => {
     const subscriber = sessionCamera.value?.subscribe(stream, undefined)
     if (subscriber) {
@@ -88,6 +88,7 @@ const joinSession = async () => {
       insertMode: 'APPEND',
       mirror: false
     })
+
     mainStreamManager.value = newPublisher
     publisher.value = newPublisher
     sessionCamera.value.publish(publisher.value)
@@ -105,10 +106,14 @@ const screenSub = computed(() => {
   return v != undefined ? v : null
 })
 
+watch(subscribers.value, (o, v) => {
+  console.log(o, v)
+})
+
 const leaveSession = async () => {
   // 회의에 혼자 남은 상황에서 새로 고침하거나 나가면 세션 종료
   if (videoSubscribers.value.length == 0) {
-    const endPoint = `tutorcall/${sessionId}/disconnection`
+    const endPoint = `/tutorcall/${sessionId}/disconnection`
     await axios.delete(APPLICATION_SERVER_URL + endPoint, {
       headers: { 'Content-Type': 'application/json' },
       withCredentials: true
@@ -139,7 +144,7 @@ const getToken = async (sessionId: number) => {
 
 const createToken = async (sessionId: number) => {
   const response = await axios.post(
-    `${APPLICATION_SERVER_URL}tutorcall/${sessionId}/connection`,
+    `${APPLICATION_SERVER_URL}/tutorcall/${sessionId}/connection`,
     {},
     {
       headers: { 'Content-Type': 'application/json' },

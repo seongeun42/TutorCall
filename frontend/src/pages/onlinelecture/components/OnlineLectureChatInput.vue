@@ -1,15 +1,34 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref, type Ref, watch } from 'vue'
+import { useVideoStore } from '@/store/videoStore'
+const message: Ref<string> = ref('')
+watch(message, () => {
+  console.log(message.value)
+})
+const videoStore = useVideoStore()
+function sendMsg(): void {
+  videoStore.sessionCamera
+    ?.signal({
+      data: message.value
+    })
+    .then((res) => {
+      console.log('반응 좀 보자', res)
+      message.value = ''
+    })
+}
+</script>
 <template>
   <form>
     <div class="flex items-center mt-3 px-3">
       <textarea
+        v-model="message"
         id="chat"
         rows="1"
         class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         placeholder=""
       ></textarea>
       <button
-        type="submit"
+        @click.prevent="sendMsg"
         class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
       >
         <svg
