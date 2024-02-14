@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import OnlineVideo from './OnlineVideo.vue'
-import ScreenShare from './ScreenShare.vue'
 import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { OpenVidu, StreamManager, Session, Publisher, Subscriber } from 'openvidu-browser'
 import type { Ref } from 'vue'
@@ -16,10 +15,10 @@ const OVCamera = ref<OpenVidu | undefined>(undefined)
 const OVScreen = ref<OpenVidu | undefined>(undefined)
 const sessionCamera = ref<Session | undefined>(undefined)
 const sessionScreen = ref<Session | undefined>(undefined)
-const mainStreamManager = ref<StreamManager | undefined>(undefined)
+const mainStreamManager: Ref<StreamManager | undefined> = ref(undefined)
 const shareStreamManager = ref<StreamManager | undefined>(undefined)
 const publisher: Ref<Publisher | undefined> = ref(undefined)
-const publisherScreen = ref<Publisher | undefined>(undefined)
+const publisherScreen: Ref<Publisher | undefined> = ref(undefined)
 const videoStore = useVideoStore()
 const notificationStore = useNotificationStore()
 const sessionId: number = parseInt(
@@ -28,9 +27,9 @@ const sessionId: number = parseInt(
 )
 const router = useRouter()
 const subscribers: Ref<Subscriber[]> = ref([])
-const nowSharing: Ref<boolean> = ref(false)
-const screenSub: Ref<any> = ref('')
 const userName: string = userStore.nickname
+
+// 음소거, 화면 끄기 로직
 watch(
   () => videoStore.videoActive,
   (newVal: boolean) => {
@@ -54,7 +53,7 @@ watch(
   }
 )
 
-const joinSession = () => {
+const joinSession = async () => {
   OVCamera.value = new OpenVidu()
 
   sessionCamera.value = OVCamera.value.initSession()
@@ -76,34 +75,34 @@ const joinSession = () => {
   sessionCamera.value.on('exception', (exception) => {
     console.warn(exception)
   })
-  getToken(sessionId).then((token) => {
-    sessionCamera.value
-      ?.connect(token, { clientData: userName })
-      .then(() => {
-        let newPublisher = OVCamera.value?.initPublisher(undefined, {
-          audioSource: undefined,
-          videoSource: undefined,
-          publishAudio: true,
-          publishVideo: true,
-          resolution: '1000x500',
-          frameRate: 30,
-          insertMode: 'APPEND',
-          mirror: false
-        })
-        mainStreamManager.value = newPublisher
-        publisher.value = newPublisher
-        sessionCamera.value?.publish(publisher.value)
-      })
-      .catch((error: any) => {
-        console.log('There was an error connecting to the session:', error.code, error.message)
-      })
-  })
-
+  try {
+    const token = await getToken(sessionId)
+    await sessionCamera.value.connect(token, { clientData: userName })
+    const newPublisher = OVCamera.value?.initPublisher(undefined, {
+      audioSource: undefined,
+      videoSource: undefined,
+      publishAudio: true,
+      publishVideo: true,
+      resolution: '1000x500',
+      frameRate: 30,
+      insertMode: 'APPEND',
+      mirror: false
+    })
+    mainStreamManager.value = newPublisher
+    publisher.value = newPublisher
+    sessionCamera.value.publish(publisher.value)
+  } catch (error: any) {
+    console.log('There was an error connecting to the session:', error.code, error.message)
+  }
   window.addEventListener('beforeunload', leaveSession)
 }
 
-const videoSubscribers = computed(() => {
-  return subscribers.value.filter((sub) => sub.stream.typeOfVideo === 'CAMERA')
+const videoSubscribers = computed(() =>
+  subscribers.value.filter((sub) => sub.stream.typeOfVideo === 'CAMERA')
+)
+const screenSub = computed(() => {
+  const v = subscribers.value.find((sub) => sub.stream.typeOfVideo === 'SCREEN')
+  return v != undefined ? v : null
 })
 
 const leaveSession = async () => {
@@ -114,22 +113,26 @@ const leaveSession = async () => {
       headers: { 'Content-Type': 'application/json' },
       withCredentials: true
     })
+    return
   } else {
-    if (sessionCamera.value) sessionCamera.value.disconnect()
+    if (sessionCamera.value) {
+      sessionCamera.value.disconnect()
+    }
+    if (sessionScreen.value) {
+      sessionScreen.value.disconnect()
+    }
   }
-  sessionCamera.value = undefined
+  shareStreamManager.value = undefined
   mainStreamManager.value = undefined
+  publisherScreen.value = undefined
   publisher.value = undefined
   subscribers.value = []
+  OVScreen.value = undefined
   OVCamera.value = undefined
 
   window.removeEventListener('beforeunload', leaveSession)
 }
 
-const updateMainVideoStreamManager = (stream: StreamManager) => {
-  if (mainStreamManager.value === stream) return
-  mainStreamManager.value = stream
-}
 const getToken = async (sessionId: number) => {
   return await createToken(sessionId)
 }
@@ -143,11 +146,8 @@ const createToken = async (sessionId: number) => {
       withCredentials: true
     }
   )
-  console.log('토큰', response.data.token)
+  videoStore.token = response.data.token
   return response.data.token
-}
-function isVideoVisible(sub: any): boolean {
-  return subscribers.value.indexOf(sub) < 4
 }
 
 watch(
@@ -160,18 +160,6 @@ watch(
     }
   }
 )
-
-watch(subscribers.value, (newValue: any) => {
-  for (const sub of newValue) {
-    if (sub.stream.typeOfVideo === 'SCREEN') {
-      nowSharing.value = true
-      screenSub.value = sub
-      return
-    }
-  }
-  nowSharing.value = false
-  screenSub.value = ''
-})
 
 function showScreenShare() {
   OVScreen.value = new OpenVidu()
@@ -195,8 +183,6 @@ function showScreenShare() {
             .getVideoTracks()[0]
             .addEventListener('ended', () => {
               videoStore.showScreen = false
-              screenSub.value = ''
-              nowSharing.value = false
             })
         })
         screenPublisher?.once('accessDenied', (event) => {
@@ -215,9 +201,13 @@ function showScreenShare() {
 }
 
 const stopScreenSharing = () => {
-  if (sessionScreen.value) sessionScreen.value.disconnect()
-  // sessionScreen.value?.unpublish(publisherScreen.value)
-  publisherScreen.value = undefined
+  if (sessionScreen.value) {
+    sessionScreen.value.disconnect()
+    sessionScreen.value = undefined
+  }
+  if (publisherScreen.value) {
+    publisherScreen.value = undefined
+  }
   shareStreamManager.value = undefined
   OVScreen.value = undefined
   videoStore.showScreen = false
@@ -239,37 +229,29 @@ onBeforeUnmount(() => {
 })
 </script>
 <template>
-  <div v-if="subscribers.length != 0">
-    <div v-if="nowSharing">
-      <div class="flex mb-5 subscribers">
-        <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="mainStreamManager" />
-        <div v-for="sub in videoSubscribers" :key="sub.stream.connection.connectionId">
-          <OnlineVideo
-            class="w-[250px] h-[150px]"
-            v-if="isVideoVisible(sub)"
-            :stream-manager="sub"
-            @click="updateMainVideoStreamManager(sub)"
-          />
-        </div>
+  <!-- 화면이 공유될 때 -->
+  <div v-if="screenSub">
+    <div class="flex mb-5 subscribers">
+      <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="mainStreamManager" />
+      <div v-for="sub in videoSubscribers" :key="sub.stream.connection.connectionId">
+        <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="sub" />
       </div>
-      <ScreenShare :stream-manager="screenSub" />
     </div>
-    <div v-else>
+    <OnlineVideo :stream-manager="screenSub" />
+  </div>
+  <!-- 화면 공유 중이 아닐 때 -->
+  <div v-else>
+    <div v-if="videoSubscribers.length > 0">
       <div class="flex mb-5 subscribers">
         <div v-for="sub in videoSubscribers" :key="sub.stream.connection.connectionId">
-          <OnlineVideo
-            class="w-[250px] h-[150px]"
-            v-if="isVideoVisible(sub)"
-            :stream-manager="sub"
-            @click="updateMainVideoStreamManager(sub)"
-          />
+          <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="sub" />
         </div>
       </div>
       <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
     </div>
-  </div>
-  <div v-else>
-    <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
+    <div v-else>
+      <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
+    </div>
   </div>
 </template>
 

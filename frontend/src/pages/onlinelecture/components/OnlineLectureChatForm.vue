@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useUserStore } from '@/store/userStore'
+
+const userStore = useUserStore()
 interface chatForm {
   isMychat: boolean
   message: string
@@ -18,7 +21,7 @@ const isMychat = defineProps<{
           />
         </div>
       </div>
-      <div class="chat-header">Obi-Wan Kenobi</div>
+      <div class="chat-header">{{ userStore.nickname }}</div>
       <div class="chat-bubble">{{ isMychat.data.message }}</div>
     </div>
   </div>
@@ -32,7 +35,7 @@ const isMychat = defineProps<{
           />
         </div>
       </div>
-      <div class="chat-header">Anakin</div>
+      <div class="chat-header">{{ userStore.nickname }}</div>
       <div class="chat-bubble">{{ isMychat.data.message }}</div>
     </div>
   </div>
