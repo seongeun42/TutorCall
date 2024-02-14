@@ -5,7 +5,6 @@ import com.potato.TutorCall.exception.customException.DuplicatedException;
 import com.potato.TutorCall.exception.customException.ForbiddenException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.user.domain.User;
-import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
@@ -43,7 +42,7 @@ public class UserService {
             .email(signupRequestDto.getEmail())
             .nickname(signupRequestDto.getNickname())
             .password(passwordEncoder.encode(signupRequestDto.getPassword()))
-            .role(RoleType.USER)
+            .role(signupRequestDto.getRole())
             .point(0)
             .build();
     this.userRepository.save(user);

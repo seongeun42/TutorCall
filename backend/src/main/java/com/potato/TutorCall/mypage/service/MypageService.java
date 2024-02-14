@@ -102,7 +102,7 @@ public class MypageService {
   }
 
   @Transactional(readOnly = true)
-  public Page<MyLectureListResDto> getLectureList(Long id, Pageable pageable) {
+  public Page<MyLectureListResDto> getLectureListUser(Long id, Pageable pageable) {
     User currentUser =
         userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다"));
     List<MyLectureListResDto> lectures = new ArrayList<>();
@@ -132,6 +132,15 @@ public class MypageService {
   }
 
   @Transactional(readOnly = true)
+  public Page<MyLectureListResDto> getLectureListTutor(Long id, Pageable pageable) {
+    Tutor tutor = tutorService.findById(id);
+    User user = tutor.getUser();
+    // 내 강의 정보 가져오기
+    Page<Lecture> myLectures = lectureService.findAllByTutor(tutor, pageable);
+    return myLectures.map(l -> new MyLectureListResDto(l, user));
+  }
+
+  @Transactional(readOnly = true)
   public Page<MyTutorCallResDto> getTutorCall(Long id, Pageable pageable) {
     User currentUser = userRepository.findById(id).orElse(null);
     if (currentUser == null) {
@@ -141,7 +150,9 @@ public class MypageService {
     List<MyTutorCallResDto> tutorCalls = new ArrayList<>();
 
     // 튜터콜 정보 가져오기
-    List<TutorCall> myTutorCalls = tutorCallService.findUserTutorCalls(currentUser);
+    List<TutorCall> myTutorCalls = currentUser.getRole().equals(RoleType.USER) ?
+            tutorCallService.findUserTutorCalls(currentUser) :
+            tutorCallService.findAllByTutor(tutorService.findById(id));
     // TODO: 루프문 개선이 필요할 것으로 판단됨(쿼리가 너무 많이 나가는 것 같은)
     for (TutorCall tutorCall : myTutorCalls) {
       MyTutorCallResDto myTutorCall = new MyTutorCallResDto(tutorCall);

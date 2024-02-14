@@ -60,6 +60,10 @@ public class Tutor {
   public Tutor(User user, String introduction) {
     this.user = user;
     this.introduction = introduction;
+    this.reliablity = 50;
+    this.mannerRate = 3.0;
+    this.communicationRate = 3.0;
+    this.professionalismRate = 3.0;
   }
 
   // 비즈니스 로직

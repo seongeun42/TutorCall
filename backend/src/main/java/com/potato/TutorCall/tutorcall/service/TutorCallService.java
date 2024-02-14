@@ -1,6 +1,7 @@
 package com.potato.TutorCall.tutorcall.service;
 
 import com.potato.TutorCall.exception.customException.NotFoundException;
+import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutorcall.domain.RequestCall;
 import com.potato.TutorCall.tutorcall.domain.ResponseCall;
 import com.potato.TutorCall.tutorcall.domain.TutorCall;
@@ -32,6 +33,11 @@ public class TutorCallService {
   @Transactional(readOnly = true)
   public List<TutorCall> findUserTutorCalls(User currentUser) {
     return tutorcallRepository.findByUserOrderByIdDesc(currentUser);
+  }
+
+  @Transactional(readOnly = true)
+  public List<TutorCall> findAllByTutor(Tutor tutor) {
+    return tutorcallRepository.findAllByTutorOrderByIdDesc(tutor);
   }
 
   public Long save(TutorCall tutorCall) {

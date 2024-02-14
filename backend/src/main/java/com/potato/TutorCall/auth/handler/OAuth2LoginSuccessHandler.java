@@ -61,8 +61,6 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
               .nickname(comm.getName())
               .sns(comm.getSnsType())
               .role(RoleType.USER)
-              .profile(comm.getProfile())
-              .role(RoleType.USER)
               .build();
       user = this.userService.save(newUser);
     }

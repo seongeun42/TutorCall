@@ -2,6 +2,10 @@ package com.potato.TutorCall.lecture.repository;
 
 import com.potato.TutorCall.lecture.domain.Lecture;
 import java.time.LocalDateTime;
+
+import com.potato.TutorCall.tutor.domain.Tutor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -47,4 +51,12 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
       value =
           "update Lecture l set l.lectureState = true where l.lectureEndAt between :start and :end")
   void changeLectureState(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+  /**
+   * 선생님이 등록한 과외 목록
+   * @param id 선생님 ID
+   * @return
+   */
+  Page<Lecture> findAllByTutorOrderByIdDesc(Tutor tutor, Pageable pageable);
+
 }
