@@ -29,7 +29,8 @@ public class ChatroomController {
    */
   @MessageMapping("/chatroom/{userId}")
   @SendTo("/sub/chatroom/{userId}")
-  public Flux<?> getChatroomList(@DestinationVariable Long userId) {
+  public Flux<String> getChatroomList(@DestinationVariable Long userId) {
+    System.out.println("test");
     return chatroomService.getChatroomList(userId);
   }
 
@@ -39,18 +40,18 @@ public class ChatroomController {
    * @param roomId
    * @return
    */
-  @MessageMapping("/chatroom/{roomId}")
-  @SendTo("/sub/chatroom/{roomId}")
+  @MessageMapping("/chatroom/users/{roomId}")
+  @SendTo("/sub/chatroom/users/{roomId}")
   public Flux<?> getUsersInChatroom(@DestinationVariable String roomId) {
     return chatroomService.getUsersInChatroom(roomId);
   }
 
   /**
    * 채팅방 생성
-   *
+   * /chatroom/created/{userId}로 새로 생성된 채팅방의 roomId가 날아감
    * @param createRoomReq
    */
-  @MessageMapping("chatroom/created")
+  @MessageMapping("/chatroom/created")
   public void createRoom(@RequestBody CreateRoomReqDto createRoomReq) {
     chatroomService.createRoom(createRoomReq);
   }

@@ -37,13 +37,17 @@ public class ChatroomService {
                       .chatroomId(roomId)
                       .userId(userId)
                       .build();
+
+              // 새로 생긴 방에 대한 정보를 참여자들에게 보내줌
+              String destination = "/chatroom/created" + userId;
+              simpMessagingTemplate.convertAndSend(destination, roomId);
+
               return chatparticipantsRepository.save(chatParticipant)
                       .doOnError(e -> log.error("참가자 저장 중 오류: ", e));
             }).subscribe();
   }
 
-
-  public Flux<?> getChatroomList(Long userId) {
+  public Flux<String> getChatroomList(Long userId) {
     return chatparticipantsRepository.getParticipatingRooms(userId);
   }
 
