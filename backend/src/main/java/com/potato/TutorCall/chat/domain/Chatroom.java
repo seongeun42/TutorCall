@@ -1,38 +1,33 @@
 package com.potato.TutorCall.chat.domain;
 
 import com.potato.TutorCall.chat.domain.enums.ChatroomType;
-import com.potato.TutorCall.user.domain.User;
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import jakarta.persistence.Id;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.redis.core.RedisHash;
 
-@Getter
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@RedisHash("chatroom")
-public class Chatroom {
+public class Chatroom implements Serializable {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private String id;
 
   private String name;
 
   private ChatroomType type;
 
-  private Set<User> participants = new HashSet<>();
-
-  @CreatedDate private LocalDateTime createdAt;
-
   // 생성자
   @Builder
-  public Chatroom(String name, ChatroomType type) {
+  public Chatroom(String id, String name, ChatroomType type) {
+    this.id = id;
     this.name = name;
     this.type = type;
   }

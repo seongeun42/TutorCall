@@ -4,6 +4,7 @@ import com.potato.TutorCall.exception.customException.NotFoundException;
 import com.potato.TutorCall.tutor.domain.Tag;
 import com.potato.TutorCall.tutor.domain.Tutor;
 import com.potato.TutorCall.tutor.domain.TutorTag;
+import com.potato.TutorCall.tutor.dto.TutorDetailDto;
 import com.potato.TutorCall.tutor.repository.TagRepository;
 import com.potato.TutorCall.tutor.repository.TutorRepository;
 import com.potato.TutorCall.tutor.repository.TutorTagRepository;
@@ -43,6 +44,15 @@ public class TutorService {
     return tutorRepository
         .findById(id)
         .orElseThrow(() -> new NotFoundException("해당 선생님이 존재하지 않습니다."));
+  }
+
+  /**
+   * TutorDetailDto 만들어 반환하는 함수
+   */
+  @Transactional(readOnly = true)
+  public TutorDetailDto getTutorDetail(Long id) {
+    Tutor tutor = this.findById(id);
+    return TutorDetailDto.builder().tutor(tutor).build();
   }
 
   /**

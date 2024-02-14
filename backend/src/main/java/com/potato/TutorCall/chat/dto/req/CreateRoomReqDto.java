@@ -1,6 +1,13 @@
 package com.potato.TutorCall.chat.dto.req;
 
-import lombok.Getter;
+import com.potato.TutorCall.chat.domain.enums.ChatroomType;
+import lombok.Data;
 
-@Getter
-public class CreateRoomReqDto {}
+import java.util.List;
+
+@Data
+public class CreateRoomReqDto {
+  String roomName;
+  ChatroomType chatroomType;
+  List<Long> participants;
+}

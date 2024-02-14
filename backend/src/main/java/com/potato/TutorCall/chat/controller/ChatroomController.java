@@ -1,17 +1,22 @@
 package com.potato.TutorCall.chat.controller;
 
-import com.potato.TutorCall.auth.SessionKey;
-import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.chat.dto.req.CreateRoomReqDto;
+import com.potato.TutorCall.chat.dto.req.ExitRoomReqDto;
+import com.potato.TutorCall.chat.dto.req.SendChatReq;
 import com.potato.TutorCall.chat.service.ChatroomService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /** 채팅방에 대한 컨트롤러 */
-@RestController
-@RequestMapping("chatroom")
+@Controller
 @RequiredArgsConstructor
 public class ChatroomController {
   private final ChatroomService chatroomService;
@@ -19,54 +24,46 @@ public class ChatroomController {
   /**
    * 사용자가 참여한 채팅방의 목록을 반환
    *
-   * @param userSession 유저의 로그인 세션
+   * @param userId 사용자의 id
    * @return
    */
-  @GetMapping
-  public Flux<?> getChatroomList(
-      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession) {
-    return null;
+  @MessageMapping("/chatroom/{userId}")
+  @SendTo("/sub/chatroom/{userId}")
+  public Flux<?> getChatroomList(@DestinationVariable Long userId) {
+    return chatroomService.getChatroomList(userId);
+  }
+
+  /**
+   * 채팅방 참여자들의 아이디를 반환
+   *
+   * @param roomId
+   * @return
+   */
+  @MessageMapping("/chatroom/{roomId}")
+  @SendTo("/sub/chatroom/{roomId}")
+  public Flux<?> getUsersInChatroom(@DestinationVariable String roomId) {
+    return chatroomService.getUsersInChatroom(roomId);
   }
 
   /**
    * 채팅방 생성
    *
-   * @param userSession 유저의 로그인 세션
    * @param createRoomReq
-   * @return
    */
-  @PostMapping
-  public Mono<?> createRoom(
-      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
-      @RequestBody CreateRoomReqDto createRoomReq) {
-    return null;
-  }
-
-  /**
-   * 채팅방에 참가
-   *
-   * @param userSession 유저의 로그인 세션
-   * @param roomId 채팅방 id
-   * @return
-   */
-  @PatchMapping("{roomId}")
-  public Mono<?> joinRoom(
-      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
-      @PathVariable Long roomId) {
-    return null;
+  @MessageMapping("chatroom/created")
+  public void createRoom(@RequestBody CreateRoomReqDto createRoomReq) {
+    chatroomService.createRoom(createRoomReq);
   }
 
   /**
    * 채팅방에서 퇴장
    *
-   * @param userSession 유저의 로그인 세션
-   * @param roomId 채팅방 id
-   * @return
+   * @param exitRoomReq
    */
-  @PutMapping("{roomId}")
-  public Mono<?> existRoom(
-      @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
-      @PathVariable Long roomId) {
-    return null;
+  @MessageMapping("/chatroom/exited/{userId}")
+  @SendTo("/sub/chatroom/exited/{userId}")
+  public void exitRoom(@DestinationVariable Long userId, @RequestBody ExitRoomReqDto exitRoomReq) {
+    chatroomService.exitRoom(userId, exitRoomReq.getRoomId());
   }
+
 }

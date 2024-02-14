@@ -8,7 +8,6 @@ import com.potato.TutorCall.payment.domain.PointHistory;
 import com.potato.TutorCall.payment.domain.UserCoupon;
 import com.potato.TutorCall.qna.domain.Question;
 import com.potato.TutorCall.report.domain.Report;
-import com.potato.TutorCall.tutorcall.domain.RequestCall;
 import com.potato.TutorCall.tutorcall.domain.TutorCall;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.domain.enums.SnsType;
@@ -90,10 +89,6 @@ public class User {
   @JsonManagedReference
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private List<TutorCall> tutorCallList = new ArrayList<>();
-
-  @JsonManagedReference
-  @OneToMany(mappedBy = "caller", fetch = FetchType.LAZY)
-  private List<RequestCall> requestCallList = new ArrayList<>();
 
   // 생성자
   @Builder

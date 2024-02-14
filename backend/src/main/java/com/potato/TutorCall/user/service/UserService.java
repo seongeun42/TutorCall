@@ -21,9 +21,7 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
 
   public User findUserByEmail(String email) {
-    return userRepository
-        .findByEmail(email)
-        .orElseThrow(() -> new NotFoundException("이메일을 확인해주세요."));
+    return userRepository.findByEmail(email);
   }
 
   @Transactional

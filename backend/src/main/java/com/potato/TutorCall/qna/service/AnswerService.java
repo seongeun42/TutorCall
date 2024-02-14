@@ -92,4 +92,18 @@ public class AnswerService {
 
     return CommonResponseDto.builder().message("답변 채택 완료.").build();
   }
+
+  @Transactional
+  public CommonResponseDto updateAnswer(AnswerWriteDto answerWriteDto, int answerId) {
+    Answer targetAnswer = answerRepository.findById((long) answerId)
+            .orElseThrow(() -> new NotFoundException("답변을 찾을 수 없습니다."));
+
+    if(!targetAnswer.getTutor().getId().equals(answerWriteDto.getTutorUserId()))
+      throw new ForbiddenException("답변 수정 권한이 없습니다.");
+
+    int count = answerRepository.updateAnswer(answerWriteDto.getAnswerContent(), (long) answerId);
+    if(count ==0) throw new RuntimeException("답변 수정에 실패했습니다");
+
+    return CommonResponseDto.builder().message("답변이 수정되었습니다").build();
+  }
 }

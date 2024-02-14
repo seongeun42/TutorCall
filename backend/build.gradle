@@ -53,6 +53,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	// Spring Boot에서 Redis를 사용하기 위한 의존성입니다.
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
 	// Spring Session을 Redis에 저장하기 위한 의존성입니다.
 	implementation 'org.springframework.session:spring-session-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-web'

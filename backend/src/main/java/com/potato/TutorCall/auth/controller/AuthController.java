@@ -3,6 +3,7 @@ package com.potato.TutorCall.auth.controller;
 import com.potato.TutorCall.auth.CodeRepository;
 import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.constant.SendEmailConfig;
+import com.potato.TutorCall.auth.dto.LoginResponseDto;
 import com.potato.TutorCall.auth.dto.SendEmailDto;
 import com.potato.TutorCall.auth.dto.request.*;
 import com.potato.TutorCall.auth.service.AuthService;
@@ -49,7 +50,15 @@ public class AuthController {
     // 유저 세션를 세션에 넣는다.
     authService.saveUserInfoToSession(session, SessionKey.USER, user);
 
-    return new ResponseEntity<>(HttpStatus.OK);
+    // 로그인 정보
+    LoginResponseDto dto = LoginResponseDto.builder()
+            .id(user.getId())
+            .role(user.getRole())
+            .email(user.getEmail())
+            .nickname(user.getNickname())
+            .profile(user.getProfile())
+            .build();
+    return ResponseEntity.ok().body(dto);
   }
 
   @PostMapping("/email")

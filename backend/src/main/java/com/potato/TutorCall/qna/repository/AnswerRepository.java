@@ -19,4 +19,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Long>, AnswerRep
   @Query("UPDATE Answer a set a.isChosen = :isChosen where a.id = :answerId")
   int chooseAnswer(
       @Param("answerId") Long answerId, @Param("isChosen") boolean isChosen);
+  @Modifying
+  @Query("update Answer a set a.content=:content where a.id=:answerId")
+  int updateAnswer(@Param("content")String content, @Param("answerId") Long answerId);
 }

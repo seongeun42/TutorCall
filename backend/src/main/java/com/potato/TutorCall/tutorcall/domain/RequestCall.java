@@ -1,58 +1,48 @@
 package com.potato.TutorCall.tutorcall.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.potato.TutorCall.tutor.domain.Tag;
-import com.potato.TutorCall.user.domain.User;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.redis.core.RedisHash;
 
-@Entity
+@RedisHash(value = "callReq", timeToLive = 60 * 6)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class RequestCall {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private UUID id;
 
-  @JsonBackReference
-  @ManyToOne(fetch = FetchType.LAZY)
-  private User caller;
+  private Long caller;
 
   private String title;
 
   private String content;
 
-  @JsonBackReference
-  @ManyToOne(fetch = FetchType.LAZY)
   private Tag tag;
 
   private int tutorCount;
 
-  @CreatedDate private LocalDateTime createdAt;
+  private LocalDateTime createdAt;
 
-  // 양방향 연관 관계
-  @JsonManagedReference
-  @OneToMany(mappedBy = "call", fetch = FetchType.LAZY)
-  private List<ResponseCall> responseCallList = new ArrayList<>();
 
   // 생성자
   @Builder
-  public RequestCall(User caller, String title, String content, Tag tag) {
+  public RequestCall(UUID id, Long caller, String title, String content, Tag tag) {
+    this.id = id;
     this.caller = caller;
     this.title = title;
     this.content = content;
     this.tag = tag;
+    this.createdAt = LocalDateTime.now();
   }
 
   // 비즈니스 로직
