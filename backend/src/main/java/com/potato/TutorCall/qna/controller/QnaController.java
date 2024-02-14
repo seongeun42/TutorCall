@@ -94,6 +94,16 @@ public class QnaController {
   }
 
   @CommonResponses
+  @Operation(summary="답변 수정", description = "답변 수정")
+  @PatchMapping("/answer/{answerId}")
+  public ResponseEntity<?> editAnswer(
+          @PathVariable("answerId") int answerId,
+          @RequestBody AnswerWriteDto answerWriteDto, HttpSession session){
+    UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(SessionKey.USER);
+    answerWriteDto.setTutorUserId(userSessionDto.getId());
+    return ResponseEntity.ok(answerService.updateAnswer(answerWriteDto, answerId));
+  }
+  @CommonResponses
   @Operation(summary = "답변 채택", description = "답변을 채택한다")
   @PatchMapping("/answer/selection/{answerId}")
   public ResponseEntity<?> chooseAnswer(
