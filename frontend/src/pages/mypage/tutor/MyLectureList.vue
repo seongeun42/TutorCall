@@ -2,9 +2,9 @@
 import { ref, type Ref, onMounted } from 'vue'
 import * as mypageApi from '@/api/mypage/mypage'
 import MyLectureDetail from '@/pages/mypage/MyLectureDetail.vue'
-import type { LectureHistory, LectureResponse } from '@/interface/mypage/interface';
+import type { LectureHistory, lectureResponse } from '@/interface/mypage/interface';
 import { isAxiosError, type AxiosResponse } from 'axios';
-import { type ErrorResponse } from '@/interface/common/interface';
+import { type errorResponse } from '@/interface/common/interface';
 
 
 const showDetail: Ref<boolean> = ref(false)
@@ -20,11 +20,11 @@ const size:Ref<number> = ref(5);
 onMounted(async():Promise<void>=>{
   const param:string = `page=${page.value}&size=${size.value}`
   await mypageApi.lectureHistory(param)
-  .then((response: AxiosResponse<LectureResponse>)=>{
+  .then((response: AxiosResponse<lectureResponse>)=>{
     lectureData.value = response.data.content;
   })
   .catch((error:unknown)=>{
-    if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
+    if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
   })
 })
 

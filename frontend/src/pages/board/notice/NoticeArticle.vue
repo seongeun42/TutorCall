@@ -23,13 +23,13 @@ import * as api from '@/api/notice/notice'
 import { ref, type Ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { type AxiosResponse } from 'axios'
-import type { NoticeInfo, NoticeResponse } from '@/interface/notice/interface'
+import type { noticeInfo, noticeResponse } from '@/interface/notice/interface'
 
-const noticeData: Ref<NoticeInfo[]> = ref([])
+const noticeData: Ref<noticeInfo[]> = ref([])
 const router = useRouter()
 
 async function init(): Promise<void> {
-  await api.getNoticeData().then((response: AxiosResponse<NoticeResponse>) => {
+  await api.getNoticeData().then((response: AxiosResponse<noticeResponse>) => {
     console.log(response)
     if (response.status == 200) {
       noticeData.value = response.data.notices

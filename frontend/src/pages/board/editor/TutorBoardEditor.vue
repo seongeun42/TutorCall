@@ -7,7 +7,7 @@ import router from '@/router'
 import * as api from '@/api/lectureBoard/lectureBoard'
 import { useEditStore } from '@/store/editStore'
 import { isAxiosError, type AxiosResponse } from 'axios'
-import { type CommonResponse, type ErrorResponse } from '@/interface/common/interface'
+import { type commonResponse, type errorResponse } from '@/interface/common/interface'
 
 interface selectform {
   value: number
@@ -111,12 +111,12 @@ async function submitPost(event: Event): Promise<void> {
   if (editStore.needEdit) {
     await api
       .editPromotion(param, lectureId)
-      .then((response: AxiosResponse<CommonResponse>) => {
+      .then((response: AxiosResponse<commonResponse>) => {
         alert(response.data.message)
         router.push({ name: 'lectureDetail', params: { promotionNum: lectureId } })
       })
       .catch((error: unknown) => {
-        if (isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message)
+        if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
       })
     return
   }

@@ -1,4 +1,4 @@
-export interface TagInfo{
+export interface tagInfo{
     id: number,
     subject: string,
     level: string,
@@ -6,22 +6,22 @@ export interface TagInfo{
   
   }
 
-export interface User{
+export interface user{
     id: number,
     nickname: string,
     profile: string
 }
 
-export interface ErrorResponse{
+export interface errorResponse{
     timestamp: string,
     message: string
   }
   
-export interface CommonResponse{
+export interface commonResponse{
     message: string
   }
 
-export interface Review{
+export interface review{
   mannerRate: number,
   communicationRate: number,
   professionalismRate: number,
@@ -29,6 +29,6 @@ export interface Review{
   createAt: string,
 }
 
-export interface ReviewResponse extends CommonResponse{
+export interface reviewResponse extends commonResponse{
   id: number
 }

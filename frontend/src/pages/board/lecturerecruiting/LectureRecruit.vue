@@ -2,9 +2,9 @@
 import TutorCard from './TutorCard.vue'
 import { onMounted, ref, watch, type Ref } from 'vue';
 import * as api from '@/api/lectureBoard/lectureBoard'
-import type { Lecture, LectureResponse } from '@/interface/lectureBoard/interface'
+import type { Lecture, lectureResponse } from '@/interface/lectureBoard/interface'
 import { isAxiosError, type AxiosResponse } from 'axios'
-import type { ErrorResponse } from '@/interface/common/interface'
+import type { errorResponse } from '@/interface/common/interface'
 import router from '@/router'
 import { useEditStore } from '@/store/editStore';
 import { tagConvert } from '@/util/tagConvert';
@@ -44,11 +44,11 @@ async function init(): Promise<void> {
   const param: string = `page=${currentPage - 1}&tag=${tag}&keyword=${searchKeyword.value}&state=false&size=${size}`
   await api
     .lectureList(param)
-    .then((response: AxiosResponse<LectureResponse>) => {
+    .then((response: AxiosResponse<lectureResponse>) => {
       lectureData.value = tagConvert(response.data.content);
     })
     .catch((error: unknown) => {
-      if (isAxiosError<ErrorResponse>(error)) {
+      if (isAxiosError<errorResponse>(error)) {
         alert(error.response?.data.message)
       }
     })

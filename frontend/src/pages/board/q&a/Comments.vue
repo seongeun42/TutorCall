@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import {type AnswerInfo, type EditAnswer } from '@/interface/qna/interface';
-import {type ErrorResponse, type CommonResponse} from '@/interface/common/interface'
+import {type answerInfo, type editAnswer } from '@/interface/qna/interface';
+import {type errorResponse, type commonResponse} from '@/interface/common/interface'
 import * as api from '@/api/qna/qna'
 import { isAxiosError, type AxiosResponse } from 'axios'
 import type { Ref } from 'vue';
 import { ref } from 'vue';
 
-const props = defineProps<{ answer: AnswerInfo }>()
+const props = defineProps<{ answer: answerInfo }>()
 
 const editMode:Ref<boolean> = ref(false);
 const editData:Ref<string> = ref(props.answer.content);
@@ -24,12 +24,12 @@ async function deleteAnswer(event: Event): Promise<void> {
 
   await api
     .deleteAnswer(props.answer.id)
-    .then((response: AxiosResponse<CommonResponse>) => {
+    .then((response: AxiosResponse<commonResponse>) => {
       alert(response.data.message)
       emit("update", props.answer.id);
     })
     .catch((error: unknown) => {
-      if (isAxiosError<ErrorResponse>(error)) {
+      if (isAxiosError<errorResponse>(error)) {
         alert(error.response?.data.message)
       }
     })
@@ -39,14 +39,14 @@ async function editanswer(event: Event):Promise<void>{
 
   event.preventDefault();
 
-  const param:EditAnswer = { answerContent: editData.value };
+  const param:editAnswer = { answerContent: editData.value };
 
   await api.editAnswer(param, props.answer.id)
-  .then((response: AxiosResponse<CommonResponse>)=>{
+  .then((response: AxiosResponse<commonResponse>)=>{
     alert(response.data.message);
   })
   .catch((error:unknown)=>{
-    if(isAxiosError<ErrorResponse>(error)) {
+    if(isAxiosError<errorResponse>(error)) {
       alert(error.response?.data.message);
     }
   })
@@ -56,11 +56,11 @@ async function editanswer(event: Event):Promise<void>{
 async function selectAnswer(event: Event):Promise<void>{
   event.preventDefault();
   await api.selectAnswer(props.answer.id)
-  .then((response: AxiosResponse<CommonResponse>)=>{
+  .then((response: AxiosResponse<commonResponse>)=>{
     alert(response.data.message);
     emit("update", props.answer.id);
   }).catch((error:unknown)=>{
-    if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
+    if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
   })
 }
 

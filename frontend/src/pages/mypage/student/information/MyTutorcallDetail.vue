@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import type { TutorCallHistory } from '@/interface/mypage/interface';
+import type { tutorCallHistory } from '@/interface/mypage/interface';
 import ReviewHistory from '@/pages/mypage/tutor/ReviewHistory.vue'
 import type { Ref } from 'vue';
 import { ref } from 'vue';
 import TutorcallReview from '@/components/Review.vue'
-import type { Review } from '@/interface/common/interface'
+import type { review } from '@/interface/common/interface'
 import { onMounted } from 'vue';
 
 
-const props = defineProps<{data:TutorCallHistory}>();
-const myreview:Ref<Review|null> = ref(props.data.review);
+const props = defineProps<{data:tutorCallHistory}>();
+const myreview:Ref<review|null> = ref(props.data.review);
 const open:Ref<boolean> = ref(false);
 const canReview:Ref<boolean> = ref(true);
 
@@ -37,7 +37,7 @@ function closemodal():void{
   open.value = !open.value;
 }
 
-function updateReview(value:Review):void{
+function updateReview(value:review):void{
   myreview.value = value;
 }
 

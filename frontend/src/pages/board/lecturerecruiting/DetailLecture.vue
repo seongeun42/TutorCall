@@ -4,13 +4,13 @@ import Content from './details/Content.vue'
 import router from '@/router/index'
 import {onMounted, type Ref, ref} from 'vue';
 import * as api from '@/api/lectureBoard/lectureBoard';
-import type { DeleteResponse, DetailLecture } from '@/interface/lectureBoard/interface';
+import type { deleteResponse, detailLecture } from '@/interface/lectureBoard/interface';
 import { isAxiosError, type AxiosResponse } from 'axios';
-import type { ErrorResponse } from '@/interface/common/interface';
+import type { errorResponse } from '@/interface/common/interface';
 import { useEditStore } from '@/store/editStore';
 import { useUserStore } from '@/store/userStore';
 
-const lectureData:Ref<DetailLecture|null> = ref(null);
+const lectureData:Ref<detailLecture|null> = ref(null);
 const promotionId:number = Number(router.currentRoute.value.params.promotionNum);
 const startDate:Ref<string> = ref('');
 const endDate:Ref<string> = ref('');
@@ -21,12 +21,12 @@ async function deletePromotion(event: Event):Promise<void>{
 
   event.preventDefault();
   await api.deletePromotion(promotionId)
-  .then((response: AxiosResponse<DeleteResponse>)=>{
+  .then((response: AxiosResponse<deleteResponse>)=>{
     alert(response.data.message);
     router.push({"name":"lectureList"});
   })
   .catch((error:unknown)=>{
-    if(isAxiosError<ErrorResponse>(error)){
+    if(isAxiosError<errorResponse>(error)){
       alert(error.response?.data.message);
     }
   })
@@ -51,7 +51,7 @@ onMounted(async()=>{
     endDate.value = lectureData.value.promotionDue.split(".")[0].replace("T", " ");
   })
   .catch((error: unknown)=>{
-    if(isAxiosError<ErrorResponse>(error)){
+    if(isAxiosError<errorResponse>(error)){
       alert(error.response?.data.message);
     }
   })

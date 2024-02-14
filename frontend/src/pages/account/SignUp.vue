@@ -5,10 +5,10 @@ import SelectRole from './SelectRole.vue'
 import * as api from '@/api/login/signUp'
 import router from '@/router/index'
 import { useUserStore } from '@/store/userStore'
-import type{ EmailCodeCheck,
-    NickCheck, LoginForm, SignUpForm, signUpResponse, User, AccountErrorResponse } from '@/interface/account/interface'
+import type{ emailCodeCheck,
+    nickCheck, loginForm, signUpForm, signUpResponse, user, accountErrorResponse } from '@/interface/account/interface'
 
-import type { CommonResponse, ErrorResponse } from '@/interface/common/interface'
+import type { commonResponse, errorResponse } from '@/interface/common/interface'
 import { isAxiosError, type AxiosResponse } from 'axios'
 
 // import exp from 'constants'
@@ -72,11 +72,11 @@ async function receiveEmailCode() {
   }
 
   await api.sendEmailCode({email:emailAddr.value})
-  .then((response: AxiosResponse<CommonResponse>)=>{
+  .then((response: AxiosResponse<commonResponse>)=>{
     if(response.status == 201) alert(response.data.message);
   })
   .catch((error: unknown)=>{
-    if(isAxiosError<AccountErrorResponse>(error)){
+    if(isAxiosError<accountErrorResponse>(error)){
       alert(error.response?.data.message);
     }
   })
@@ -85,18 +85,18 @@ async function receiveEmailCode() {
 
 async function checkEmailValidCode(){
 
-  const param:EmailCodeCheck = {
+  const param:emailCodeCheck = {
     'email':emailAddr.value,
     'code':vaildCode.value
   };
 
   await api.checkCode(param)
-  .then((response: AxiosResponse<CommonResponse>)=>{
+  .then((response: AxiosResponse<commonResponse>)=>{
     alert(response.data.message);
     isEmailChecked.value = true;
   })
   .catch((error: unknown)=>{
-    if(isAxiosError<AccountErrorResponse>(error)){
+    if(isAxiosError<accountErrorResponse>(error)){
       alert(error.response?.data.message);
     }
   })
@@ -111,18 +111,18 @@ function checkPassword(): boolean {
 async function doSignUp(event: Event) {
   event.preventDefault()
 
-  const nickcheck: NickCheck = {
+  const nickcheck: nickCheck = {
     nickname: nickname.value
   }
 
   await api.nickDupCheck(nickcheck).catch((error: unknown) => {
-    if (isAxiosError<ErrorResponse>(error)) {
+    if (isAxiosError<errorResponse>(error)) {
       alert(error.response?.data.message)
       isNickNameUsed.value = true
     }
   })
 
-  const param: SignUpForm = {
+  const param: signUpForm = {
     nickname: nickname.value,
     password: password.value,
     email: emailAddr.value
@@ -140,7 +140,7 @@ async function doSignUp(event: Event) {
         return
       })
       .catch((error: unknown) => {
-        if (isAxiosError<ErrorResponse>(error)) {
+        if (isAxiosError<errorResponse>(error)) {
           alert(error.response?.data.message)
         }
       })
@@ -152,14 +152,14 @@ async function doSignUp(event: Event) {
 
 async function doLogin(event: Event) {
   event.preventDefault()
-  const param: LoginForm = {
+  const param: loginForm = {
     email: loginEmail.value,
     password: loginPassword.value
   }
 
   await api
     .login(param)
-    .then((response: AxiosResponse<User>) => {
+    .then((response: AxiosResponse<user>) => {
       const roleType:string = response.data.role;
       if (roleType == 'TUTOR') {
         userStore.login(true, loginEmail.value, response.data.nickname, response.data.profile, response.data.id)
@@ -169,7 +169,7 @@ async function doLogin(event: Event) {
       router.push('/')
     })
     .catch((error: unknown) => {
-      if (isAxiosError<ErrorResponse>(error)) {
+      if (isAxiosError<errorResponse>(error)) {
         alert(error.response?.data.message)
       }
     })

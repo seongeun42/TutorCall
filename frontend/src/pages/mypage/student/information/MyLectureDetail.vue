@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { ref, type Ref, onMounted } from 'vue'
-import type { LectureHistory } from '@/interface/mypage/interface';
+import type { lectureHistory } from '@/interface/mypage/interface';
 import * as api from '@/api/lectureBoard/lectureBoard'
-import type { DetailLecture } from '@/interface/lectureBoard/interface';
+import type { detailLecture } from '@/interface/lectureBoard/interface';
 import { isAxiosError, type AxiosResponse } from 'axios';
-import { type ErrorResponse, type Review } from '@/interface/common/interface';
+import { type errorResponse, type review } from '@/interface/common/interface';
 import TutorcallReview from '@/components/Review.vue'
 
 
 const point: Ref<number> = ref(1000)
 const isTutor: Ref<boolean> = ref(true)
-const props = defineProps<{data: LectureHistory}>();
-const lectureData: Ref<DetailLecture|null> = ref(null);
+const props = defineProps<{data: lectureHistory}>();
+const lectureData: Ref<detailLecture|null> = ref(null);
 const open:Ref<boolean> = ref(false);
 const schoolname:Ref<string> = ref('');
 
@@ -28,14 +28,14 @@ function closemodal():void{
   open.value = !open.value;
 }
 
-function updateReview(value:Review):void{
+function updateReview(value:review):void{
   open.value =! open.value
 }
 
 onMounted(async()=>{
   console.log(props.data);
   await api.oneLecture(props.data.lectureId)
-  .then((response: AxiosResponse<DetailLecture>)=>{
+  .then((response: AxiosResponse<detailLecture>)=>{
     lectureData.value = response.data;
     switch(lectureData.value.tag.level){
       case "ELEMENTARY":
@@ -50,7 +50,7 @@ onMounted(async()=>{
     }
   })
   .catch((error:unknown)=>{
-    if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
+    if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
   })
 })
 

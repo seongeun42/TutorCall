@@ -1,48 +1,48 @@
-import type{User, TagInfo, CommonResponse} from '@/interface/common/interface'
+import type{user, tagInfo, commonResponse} from '@/interface/common/interface'
 
-export interface AnswerInfo {
+export interface answerInfo {
   chosen: boolean
   content: string
   createAt: string
   delete: boolean
   id: number
   modifiedAt: string
-  tutor: User
+  tutor: user
 }
 
-export interface QuestionInfo {
+export interface questionInfo {
   questionId: number
-  answerList: AnswerInfo[]
+  answerList: answerInfo[]
   title: string
   content: string
-  writer: User
+  writer: user
   createdAt: string
   modifiedAt: string
   end: boolean
-  tag: TagInfo
+  tag: tagInfo
 }
 
-export interface QuestionResponse {
+export interface questionResponse {
   questions: {
-    content: QuestionInfo[]
+    content: questionInfo[]
     totalPages: number
   }
 }
 
-export interface QuestionWriteForm{
+export interface questionWriteForm{
   questionTitle: string,
   questionContent: string,
   tagId: number
 }
 
-export interface EditAnswer{
+export interface editAnswer{
   answerContent: string
 }
-export interface AnswerForm extends EditAnswer{
+export interface answerForm extends editAnswer{
   questionId: number
   answerContent: string
 }
 
-export interface AnswerResponse extends CommonResponse {
+export interface answerResponse extends commonResponse {
   questionId: number
 }

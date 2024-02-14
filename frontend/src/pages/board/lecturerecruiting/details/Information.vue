@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { DetailTutor, RegistResponse } from '@/interface/lectureBoard/interface';
+import type { DetailTutor, registResponse } from '@/interface/lectureBoard/interface';
 import router from '@/router/index'
 import {type Ref, ref } from 'vue';
 import * as api from '@/api/lectureBoard/lectureBoard'
 import { isAxiosError, type AxiosResponse } from 'axios';
-import type { CommonResponse, ErrorResponse } from '@/interface/common/interface';
+import type { commonResponse, errorResponse } from '@/interface/common/interface';
 import { useUserStore } from '@/store/userStore';
 
 const props = defineProps<{"data":DetailTutor, "isParticipated":boolean}>();
@@ -25,12 +25,12 @@ async function registLecture(event: Event)
   }
 
   await api.registLecture(promotionId)
-  .then((response: AxiosResponse<RegistResponse>)=>{
+  .then((response: AxiosResponse<registResponse>)=>{
     state.value = true;
     alert(response.data.message);
   })
   .catch((error:unknown)=>{
-    if(isAxiosError<ErrorResponse>(error)){
+    if(isAxiosError<errorResponse>(error)){
       alert(error.response?.data.message);
     }
   })
@@ -42,12 +42,12 @@ async function cancleRegistLecture(event: Event)
 
   event.preventDefault();
   await api.cancleRegistLecture(promotionId)
-  .then((response: AxiosResponse<CommonResponse>)=>{
+  .then((response: AxiosResponse<commonResponse>)=>{
     state.value = false;
     alert(response.data.message);
   })
   .catch((error:unknown)=>{
-    if(isAxiosError<ErrorResponse>(error)){
+    if(isAxiosError<errorResponse>(error)){
       alert(error.response?.data.message);
     }
   })

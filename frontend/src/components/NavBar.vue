@@ -3,7 +3,7 @@ import { ref, type Ref, reactive } from 'vue'
 import CallNotification from '@/components/CallNotification.vue'
 import { useUserStore } from '@/store/userStore';
 import smallAlert from '@/components/tutorcallAlert/smallAlert.vue'
-import { type AlertForm } from '@/interface/tutorcall/interface'
+import { type alertForm } from '@/interface/tutorcall/interface'
 import router from '@/router'
 
 const userStore = useUserStore();
@@ -44,7 +44,7 @@ function logout():void{
 *
 * * * * * * * * * * * * * * */
 
-const data:AlertForm[] = reactive([
+const data:alertForm[] = reactive([
   { nickname: "싸뚜기",
     title: "ㅇㅇㅇ",
     content: "ㅇㅇㅇ",

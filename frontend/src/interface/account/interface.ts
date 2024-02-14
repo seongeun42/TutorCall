@@ -1,10 +1,10 @@
-import type{ CommonResponse, ErrorResponse } from '@/interface/common/interface'
+import type{ commonResponse, errorResponse } from '@/interface/common/interface'
 
-export interface signUpResponse extends CommonResponse {
+export interface signUpResponse extends commonResponse {
   id: string
 }
 
-export interface User {
+export interface user {
   id: string
   role: string
   nickname: string
@@ -12,28 +12,28 @@ export interface User {
   profile: string
 }
 
-export interface AccountErrorResponse extends ErrorResponse{
+export interface accountErrorResponse extends errorResponse{
     status: number,
     error: string,
 }
 
-export interface EmailSend {
+export interface emailSend {
   email: string
 }
 
-export interface EmailCodeCheck extends EmailSend {
+export interface emailCodeCheck extends emailSend {
   code: string
 }
 
-export interface NickCheck {
+export interface nickCheck {
   nickname: string
 }
 
-export interface LoginForm {
+export interface loginForm {
   email: string
   password: string
 }
 
-export interface SignUpForm extends LoginForm {
+export interface signUpForm extends loginForm {
   nickname: string
 }

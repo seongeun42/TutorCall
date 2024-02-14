@@ -5,8 +5,8 @@ import { ref, onMounted, watch } from 'vue'
 import type { Ref } from 'vue'
 import router from '@/router/index'
 import{ type AxiosResponse, isAxiosError } from 'axios';
-import type{ QuestionInfo, QuestionResponse } from '@/interface/qna/interface'
-import type { ErrorResponse } from '@/interface/common/interface';
+import type{ QuestionInfo, questionResponse } from '@/interface/qna/interface'
+import type { errorResponse } from '@/interface/common/interface';
 import { useEditStore } from '@/store/editStore'
 import { tagConvert } from '@/util/tagConvert'
 
@@ -49,7 +49,7 @@ async function init(): Promise<void> {
 
   await api
     .getQnAData(param)
-    .then((response: AxiosResponse<QuestionResponse>) => {
+    .then((response: AxiosResponse<questionResponse>) => {
       if (response.status == 200) {
         totalPages = response.data.questions.totalPages
         questionData.value = response.data.questions.content;
@@ -57,7 +57,7 @@ async function init(): Promise<void> {
       }
     })
     .catch((error: unknown) => {
-      if (isAxiosError<ErrorResponse>(error)) {
+      if (isAxiosError<errorResponse>(error)) {
         alert(error.response?.data.message)
       }
     })

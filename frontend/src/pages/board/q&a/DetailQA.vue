@@ -6,17 +6,17 @@ import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import * as api from '@/api/qna/qna'
 import{ type AxiosResponse, isAxiosError } from 'axios';
-import type{ QuestionInfo, AnswerForm, AnswerResponse, AnswerInfo } from '@/interface/qna/interface'
-import type { ErrorResponse, CommonResponse } from '@/interface/common/interface'
+import type{ questionInfo, answerForm, answerResponse, answerInfo } from '@/interface/qna/interface'
+import type { errorResponse, commonResponse } from '@/interface/common/interface'
 import { useEditStore } from '@/store/editStore'
 import { reactive } from 'vue'
 import { useUserStore } from '@/store/userStore'
 
-const questionData:Ref<QuestionInfo|null>= ref(null);
+const questionData:Ref<questionInfo|null>= ref(null);
 const questionId: number = Number(router.currentRoute.value.params['qnaNum'])
 const editStore = useEditStore();
-let answerData:AnswerInfo[] = reactive([]);
-const selectedAnswer:Ref<AnswerInfo|null> = ref(null);
+let answerData:answerInfo[] = reactive([]);
+const selectedAnswer:Ref<answerInfo|null> = ref(null);
 const answerInput: Ref<string> = ref('')
 const schoolname:Ref<string> = ref('');
 const date:Ref<string> = ref('');
@@ -25,7 +25,7 @@ const userStore = useUserStore();
 async function getQuestion():Promise<void>{
   await api
     .getOneQuestionData(questionId)
-    .then((response: AxiosResponse<{ question: QuestionInfo }>) => {
+    .then((response: AxiosResponse<{ question: questionInfo }>) => {
       questionData.value=response.data.question
       answerData = response.data.question.answerList
       selectedAnswer.value = answerData.filter(item => item.chosen === true)[0] || null;
@@ -44,7 +44,7 @@ async function getQuestion():Promise<void>{
 
     })
     .catch((error: unknown) => {
-      if (isAxiosError<ErrorResponse>(error)) {
+      if (isAxiosError<errorResponse>(error)) {
         alert(error.response?.data.message)
       }
     })
@@ -109,12 +109,12 @@ async function deleteQuestion(event: Event): Promise<void> {
   event.preventDefault()
   await api
     .deleteQuestion(questionId)
-    .then((response: AxiosResponse<CommonResponse>) => {
+    .then((response: AxiosResponse<commonResponse>) => {
       alert(response.data.message);
       router.push({ name: 'qnaList' })
     })
     .catch((error: unknown) => {
-      if (isAxiosError<ErrorResponse>(error)) {
+      if (isAxiosError<errorResponse>(error)) {
         alert(error.response?.data.message)
       }
     })
@@ -128,20 +128,20 @@ async function registAnswer(event: Event): Promise<void> {
     return
   }
 
-  const param: AnswerForm = {
+  const param: answerForm = {
     questionId: questionId,
     answerContent: answerInput.value
   }
 
   await api
     .registAnswer(param)
-    .then((response: AxiosResponse<AnswerResponse>) => {
+    .then((response: AxiosResponse<answerResponse>) => {
       alert(response.data.message)
       answerInput.value = '';
       getQuestion();
     })
     .catch((error: unknown) => {
-      if (isAxiosError<ErrorResponse>(error)) {
+      if (isAxiosError<errorResponse>(error)) {
         alert(error.response?.data.message)
       }
     })

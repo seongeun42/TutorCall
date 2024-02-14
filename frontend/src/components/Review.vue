@@ -5,7 +5,7 @@ import { computed } from 'vue';
 import { ref } from 'vue';
 import { instance } from '@/axios/axiosConfig'
 import { isAxiosError, type AxiosResponse } from 'axios';
-import type { ReviewResponse, ErrorResponse, Review } from '@/interface/common/interface'
+import type { reviewResponse, errorResponse, Review } from '@/interface/common/interface'
 
 
 interface ReviewForm{
@@ -60,7 +60,7 @@ async function regiestReview(event: Event):Promise<void>{
     }
 
     await instance.post(url, param)
-    .then((response: AxiosResponse<ReviewResponse>)=>{
+    .then((response: AxiosResponse<reviewResponse>)=>{
         alert(response.data.message);
         const Review:Review = {
                 mannerRate: Number(mannerRate.value),
@@ -72,7 +72,7 @@ async function regiestReview(event: Event):Promise<void>{
         emit("update", Review);
     })
     .catch((error:unknown)=>{
-        if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
+        if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
     })
 }
 

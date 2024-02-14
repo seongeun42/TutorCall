@@ -1,16 +1,16 @@
-export interface ReviewerInfo {
+export interface reviewerInfo {
   userId: number
   nickname: string
   profile: string
 }
 
-export interface TutorInfo {
+export interface tutorInfo {
   id: number
   nickname: string
   profile: string
 }
 
-export interface TutorReviewInfo {
+export interface tutorReviewInfo {
   introduction: string
   isActive: boolean
   mannerRate: number
@@ -18,9 +18,9 @@ export interface TutorReviewInfo {
   professionalRate: number
 }
 
-export interface TutorReviewResponse {
+export interface tutorReviewResponse {
   reviewer: {
-    content: ReviewerInfo
+    content: reviewerInfo
   }
   type: string
   mannerRate: number
@@ -30,12 +30,12 @@ export interface TutorReviewResponse {
   createdAt: Date
 }
 
-export interface StudentReviewResponse {
+export interface studentReviewResponse {
   tutor: {
-    content: TutorReviewInfo
+    content: tutorReviewInfo
   }
   reviewer: {
-    content: ReviewerInfo
+    content: reviewerInfo
   }
   type: string
   mannerRate: number
@@ -45,22 +45,22 @@ export interface StudentReviewResponse {
   createdAt: Date
 }
 
-export interface TagInfo {
+export interface tagInfo {
   id: number
   subject: string
   level: string
   grade: number
 }
 
-export interface LectureResponse {
+export interface lectureResponse {
   id: number
   title: string
   content: string
   tag: {
-    content: TagInfo
+    content: tagInfo
   }
   tutor: {
-    content: TutorInfo
+    content: tutorInfo
   }
   promotionState: boolean
   createdAt: Date

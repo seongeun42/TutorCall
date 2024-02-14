@@ -3,7 +3,7 @@ import type { Ref } from 'vue';
 import { ref } from 'vue';
 import { useUserStore } from '@/store/userStore';
 import * as api from '@/api/mypage/mypage'
-import type { CommonResponse, ErrorResponse } from '@/interface/common/interface';
+import type { commonResponse, errorResponse } from '@/interface/common/interface';
 import { isAxiosError, type AxiosResponse } from 'axios';
 import router from '@/router';
 
@@ -23,11 +23,11 @@ async function modifyed(event: Event):Promise<void>{
 
   if(nickname.value.length!=0 && nickname.value != userStore.nickname){
     await api.modifynickname({nickname:nickname.value})
-    .then((response: AxiosResponse<CommonResponse>)=>{
+    .then((response: AxiosResponse<commonResponse>)=>{
       userStore.nickname= nickname.value;
     })
     .catch((error : unknown)=>{
-      if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
+      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
       throw error;
     })
   }
@@ -39,7 +39,7 @@ async function modifyed(event: Event):Promise<void>{
     else if (newPassword.value == checkPassword.value){
       await api.modifyPassword({password:password.value, newPassword: newPassword.value})
       .catch((error : unknown)=>{
-      if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
+      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
       throw error;
     })
     }else{
@@ -50,7 +50,7 @@ async function modifyed(event: Event):Promise<void>{
 
   await api.modifyAlert({notificationOption: alram.value})
   .catch((error : unknown)=>{
-      if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
+      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
       throw error;
   })
 

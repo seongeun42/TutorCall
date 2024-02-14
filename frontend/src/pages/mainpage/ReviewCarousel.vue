@@ -43,12 +43,12 @@ import { useUserStore } from '@/store/userStore'
 import * as api from '@/api/mainpage/mainpage'
 import { type AxiosResponse } from 'axios'
 import type {
-  ReviewerInfo,
-  TutorInfo,
-  TutorReviewInfo,
-  TutorReviewResponse,
-  TagInfo,
-  LectureResponse
+  reviewerInfo,
+  tutorInfo,
+  tutorReviewInfo,
+  tutorReviewResponse,
+  tagInfo,
+  lectureResponse
 } from '@/interface/mainpage/interface'
 
 import 'vue3-carousel/dist/carousel.css'
@@ -56,7 +56,7 @@ import 'vue3-carousel/dist/carousel.css'
 const userStore = useUserStore()
 
 async function initTutorReview(tutorId: number): Promise<void> {
-  await api.tutorReview(tutorId).then((response: AxiosResponse<TutorReviewResponse>) => {
+  await api.tutorReview(tutorId).then((response: AxiosResponse<tutorReviewResponse>) => {
     if (response.status == 200) {
       for (let i = 0; i < response.data.content.length; i++) {
         const review = response.data.content[i]

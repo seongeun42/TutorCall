@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, type Ref, onMounted } from 'vue'
 import * as api from '@/api/mypage/mypage'
-import type { TutorCallHistory, TutorcallResponse } from '@/interface/mypage/interface';
+import type { TutorCallHistory, tutorcallResponse } from '@/interface/mypage/interface';
 import { isAxiosError, type AxiosResponse } from 'axios';
-import { type ErrorResponse } from '@/interface/common/interface';
+import { type errorResponse } from '@/interface/common/interface';
 import MyTutorcallDetail from '@/pages/mypage/student/information/MyTutorcallDetail.vue';
 
 
@@ -24,10 +24,10 @@ const clickShow = function (index: number): void {
 onMounted(async():Promise<void>=>{
   const param:string = `page=${page.value}&size=${size.value}`
   await api.tutorcallHistory(param)
-  .then((response: AxiosResponse<TutorcallResponse>)=>{
+  .then((response: AxiosResponse<tutorcallResponse>)=>{
     tutorCallData.value = response.data.content;
   }).catch((error:unknown)=>{
-    if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
+    if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
   })
 })
 

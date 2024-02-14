@@ -37,20 +37,20 @@ import * as api from '@/api/notice/notice'
 import { ref, type Ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { type AxiosResponse } from 'axios'
-import type { NoticeInfo } from '@/interface/notice/interface'
+import type { noticeInfo } from '@/interface/notice/interface'
 
 const router = useRouter()
 
 const noticeNum: number = Number(router.currentRoute.value.params['noticeNum'])
 
-const noticeDetailData: Ref<NoticeInfo | undefined> = ref(undefined)
+const noticeDetailData: Ref<noticeInfo | undefined> = ref(undefined)
 
 const loaded: Ref<boolean> = ref(false)
 
 function init(): void {
   const param: number = noticeNum
 
-  api.getOneNoticeData(param).then((response: AxiosResponse<{ notice: NoticeInfo }>) => {
+  api.getOneNoticeData(param).then((response: AxiosResponse<{ notice: noticeInfo }>) => {
     if (response.status == 200) {
       noticeDetailData.value = response.data
     }

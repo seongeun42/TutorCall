@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { ref, type Ref, onMounted } from 'vue'
 import StarScore from './tutor/StarScore.vue'
-import type { LectureHistory } from '@/interface/mypage/interface';
+import type { lectureHistory } from '@/interface/mypage/interface';
 import * as api from '@/api/lectureBoard/lectureBoard'
-import type { DetailLecture } from '@/interface/lectureBoard/interface';
+import type { detailLecture } from '@/interface/lectureBoard/interface';
 import { isAxiosError, type AxiosResponse } from 'axios';
-import { type ErrorResponse } from '@/interface/common/interface';
+import { type errorResponse } from '@/interface/common/interface';
 import TutorcallReview from '@/components/Review.vue'
 
 const point: Ref<number> = ref(1000)
 const isTutor: Ref<boolean> = ref(true)
-const props = defineProps<{data: LectureHistory}>();
-const lectureData: Ref<DetailLecture|null> = ref(null);
+const props = defineProps<{data: lectureHistory}>();
+const lectureData: Ref<detailLecture|null> = ref(null);
 const open:Ref<boolean> = ref(false);
 const isReviewed:Ref<boolean> = ref(props.data.review);
 const schoolname:Ref<string> = ref('');
@@ -36,7 +36,7 @@ function updateReview():void{
 
 onMounted(async()=>{
   await api.oneLecture(props.data.lectureId)
-  .then((response: AxiosResponse<DetailLecture>)=>{
+  .then((response: AxiosResponse<detailLecture>)=>{
     lectureData.value = response.data;
     switch(lectureData.value.tag.level){
       case "ELEMENTARY":
@@ -52,7 +52,7 @@ onMounted(async()=>{
 
   })
   .catch((error:unknown)=>{
-    if(isAxiosError<ErrorResponse>(error)) alert(error.response?.data.message);
+    if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
   })
 })
 
