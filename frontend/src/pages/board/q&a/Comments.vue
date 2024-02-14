@@ -12,7 +12,7 @@ const editMode:Ref<boolean> = ref(false);
 const editData:Ref<string> = ref(props.answer.content);
 const date:string = props.answer.modifiedAt.split(".")[0].replace("T", " ");
 
-const emit = defineEmits(['update']);
+const emit = defineEmits(['update', 'change']);
 
 function modeToEdit(event:Event){
   event.preventDefault();
@@ -44,6 +44,16 @@ async function editanswer(event: Event):Promise<void>{
   await api.editAnswer(param, props.answer.id)
   .then((response: AxiosResponse<commonResponse>)=>{
     alert(response.data.message);
+    const updateAnswer:answerInfo ={
+      chosen: props.answer.chosen,
+      content: editData.value,
+      createAt: props.answer.createAt,
+      delete: props.answer.delete,
+      id: props.answer.id,
+      modifiedAt: props.answer.modifiedAt,
+      tutor: props.answer.tutor
+    }
+    emit('change', updateAnswer);
   })
   .catch((error:unknown)=>{
     if(isAxiosError<errorResponse>(error)) {

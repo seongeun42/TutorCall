@@ -151,6 +151,14 @@ function removeAnswer(idx:number){
   getQuestion();
 }
 
+function updateEditAnswer(updated: answerInfo):void{
+  answerData.forEach((item: answerInfo) => {
+  if (item.id === updated.id) {
+    item.content = updated.content;
+  }
+});
+}
+
 function goList(): void {
   router.push({ name: 'qna' })
 }
@@ -190,12 +198,13 @@ function goList(): void {
       <div class="bg-gray-200 pb-10 rounded-xl">
         <p class="mx-10 my-10 pt-5 font-bold text-xl">채택된 답변</p>
         <div v-if="selectedAnswer">
-          <Comments :answer="selectedAnswer" @update="removeAnswer"/>
+          <Comments :answer="selectedAnswer" @update="removeAnswer" @change="updateEditAnswer"/>
         </div>
       </div>
       <div class="bg-gray-200 pb-10 rounded-xl">
         <p class="mx-10 my-10 pt-5 font-bold text-xl">댓글</p>
-        <Comments v-for="(answer, index) in answerData" :key="index" :answer="answer" @update="removeAnswer"/>
+        <Comments v-for="(answer, index) in answerData" :key="index" :answer="answer" @update="removeAnswer"
+        @change="updateEditAnswer"/>
       </div>
       <div class="mt-20 flex justify-center">
         <img :src="userStore.profile" alt="" class="w-20 h-20 rounded-full mr-10" />
