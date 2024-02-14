@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import {type, Ref, ref} from 'vue'
-import ChatBox from './ChatBox.vue';
+import {type Ref, ref} from 'vue'
 import ChatRoom from './ChatRoom.vue';
 
 const show: Ref<boolean> = ref(false);
