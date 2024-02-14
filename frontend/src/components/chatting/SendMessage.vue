@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+
+</script>
 
 <template>
   <div
@@ -9,6 +11,8 @@
       type="text"
       class="text-sm font-[400px] text-[#aab8c2] ml-[21px] mr-0 mt-[21px] mb-0 p-0 border-[none] bg-[#ffffff] font-sans focus:outline-0"
       value="Send message..."
+      @keyup.enter="sendMessage"
+      v-model="newMessage"
     />
     <button
       id="send"

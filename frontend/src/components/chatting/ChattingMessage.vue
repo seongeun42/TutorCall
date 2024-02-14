@@ -32,7 +32,7 @@
       </div>
 
       <div class="corner"></div>
-      <span>Now</span>
+      <span>2024.2.8 09:14</span>
     </div>
   </div>
 </template>
@@ -57,6 +57,6 @@
   @apply right-[-5px] left-auto;
 }
 span {
-  @apply text-[#aab8c2] text-[11px] absolute bottom-[-22px] right-0;
+  @apply text-[#aab8c2] text-[10px] absolute bottom-[-22px] right-0;
 }
 </style>
