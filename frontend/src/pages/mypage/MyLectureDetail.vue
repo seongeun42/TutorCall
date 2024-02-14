@@ -84,11 +84,6 @@ onMounted(async()=>{
       <p class="font-bold text-lg mr-8">과외 기간</p>
       <p class="text-xl">{{ lectureData?.lectureStartAt }} ~ {{ lectureData?.lectureEndAt }}</p>
     </div>
-    <div class="flex ml-8">
-      <p class="font-bold text-lg mr-8">회당 가격</p>
-      <p class="text-xl">{{ lectureData?.price }} point</p>
-    </div>
-
     <div class="mt-10 font-semibold text-xl mb-5">
       <p>과외 리뷰</p>
     </div>

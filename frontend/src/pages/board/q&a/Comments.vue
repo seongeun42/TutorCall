@@ -5,9 +5,10 @@ import * as api from '@/api/qna/qna'
 import { isAxiosError, type AxiosResponse } from 'axios'
 import type { Ref } from 'vue';
 import { ref } from 'vue';
+import { useUserStore } from '@/store/userStore';
 
 const props = defineProps<{ answer: answerInfo }>()
-
+const userStore = useUserStore();
 const editMode:Ref<boolean> = ref(false);
 const editData:Ref<string> = ref(props.answer.content);
 const date:string = props.answer.modifiedAt.split(".")[0].replace("T", " ");
@@ -16,6 +17,10 @@ const emit = defineEmits(['update', 'change']);
 
 function modeToEdit(event:Event){
   event.preventDefault();
+  if(props.answer.tutor.id != userStore.$state.id){
+    alert("수정 권한이 없습니다!");
+    return;
+  }
   editMode.value = !editMode.value;
 }
 

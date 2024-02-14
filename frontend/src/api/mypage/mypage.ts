@@ -1,7 +1,7 @@
 import { instance } from '@/axios/axiosConfig'
 import type { commonResponse } from '@/interface/common/interface';
-import type { lectureHistory, lectureResponse, modifyIntro, modifynickname, modifynotify, modifypassword, modifytags, tutorcallResponse } from '@/interface/mypage/interface';
-import type { AxiosResponse } from 'axios';
+import type { GetTutorReviewResponse, lectureHistory, lectureResponse, modifyIntro, modifynickname, modifynotify, modifypassword, modifytags, tutorcallResponse } from '@/interface/mypage/interface';
+import type { Axios, AxiosResponse } from 'axios';
 
 export async function tutorcallHistory(param:string):
 Promise<AxiosResponse<tutorcallResponse>>{
@@ -52,4 +52,12 @@ Promise<AxiosResponse<commonResponse>>{
 
     const url:string = import.meta.env.VITE_VUE_API_URL+"/mypage/tutor/intro";
     return instance.patch<commonResponse>(url, param);
+}
+
+export async function getTutorReview(param:string)
+:Promise<AxiosResponse<GetTutorReviewResponse>>{
+
+    const url:string = import.meta.env.VITE_VUE_API_URL+"/review/tutor/"+param;
+
+    return instance.get<GetTutorReviewResponse>(url);
 }
