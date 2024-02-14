@@ -6,7 +6,9 @@ import com.potato.TutorCall.chat.dto.req.SendChatReq;
 import com.potato.TutorCall.chat.service.ChatroomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +27,8 @@ public class ChatroomController {
    * @param userId 사용자의 id
    * @return
    */
-  @SendTo("/chatroom/{userId}")
+  @MessageMapping("/chatroom/{userId}")
+  @SendTo("/sub/chatroom/{userId}")
   public Flux<?> getChatroomList(@DestinationVariable Long userId) {
     return chatroomService.getChatroomList(userId);
   }
@@ -36,7 +39,8 @@ public class ChatroomController {
    * @param roomId
    * @return
    */
-  @SendTo("/chatroom/{roomId}")
+  @MessageMapping("/chatroom/{roomId}")
+  @SendTo("/sub/chatroom/{roomId}")
   public Flux<?> getUsersInChatroom(@DestinationVariable String roomId) {
     return chatroomService.getUsersInChatroom(roomId);
   }
@@ -45,23 +49,21 @@ public class ChatroomController {
    * 채팅방 생성
    *
    * @param createRoomReq
-   * @return 생성된 방의 ID
    */
-  @SendTo("/chatroom/created")
-  public Mono<?> createRoom(
-      @RequestBody CreateRoomReqDto createRoomReq) {
-    return chatroomService.createRoom(createRoomReq);
+  @MessageMapping("chatroom/created")
+  public void createRoom(@RequestBody CreateRoomReqDto createRoomReq) {
+    chatroomService.createRoom(createRoomReq);
   }
 
   /**
    * 채팅방에서 퇴장
    *
    * @param exitRoomReq
-   * @return
    */
-  @SendTo("/chatroom/exited")
-  public void exitRoom(@RequestBody ExitRoomReqDto exitRoomReq) {
-    chatroomService.exitRoom(exitRoomReq);
+  @MessageMapping("/chatroom/exited/{userId}")
+  @SendTo("/sub/chatroom/exited/{userId}")
+  public void exitRoom(@DestinationVariable Long userId, @RequestBody ExitRoomReqDto exitRoomReq) {
+    chatroomService.exitRoom(userId, exitRoomReq.getRoomId());
   }
 
 }
