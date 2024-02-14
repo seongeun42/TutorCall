@@ -1,12 +1,32 @@
 <script setup lang="ts">
-import {type, Ref, ref} from 'vue'
-import ChatBox from './ChatBox.vue';
-import ChatRoom from './ChatRoom.vue';
+import { type, Ref, ref } from 'vue'
+import ChatBox from './ChatBox.vue'
+import ChatRoom from './ChatRoom.vue'
 
-const show: Ref<boolean> = ref(false);
+const show: Ref<boolean> = ref(false)
 const onClick: void = () => {
   show.value = !show.value
 }
+
+import { RSocketConnector } from 'rsocket-core'
+import { WebsocketClientTransport } from 'rsocket-websocket-client'
+
+async function socketChatting() {
+  const connector = new RSocketConnector({
+    transport: new WebsocketClientTransport({
+      url: 'ws://localhost:6565/rs',
+      wsCreator: (url) => new WebSocket(url) as any
+    })
+  })
+
+  const rsocket = await connector.connect()
+}
+
+socketChatting()
+  .then(() => exit())
+  .catch((error: Error) => {
+    console.error(error)
+  })
 </script>
 
 <template>
@@ -14,10 +34,13 @@ const onClick: void = () => {
   <div
     class="group fixed bottom-10 right-10 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-blue-500 uppercase leading-normal text-white shadow-lg"
   >
-  <div v-if="show" class="w-[290px] h-[484px] rounded-md absolute w-50 h-50 right-10 bottom-10 place-content-center" >
-    <!-- <ChatBox /> -->
-    <ChatRoom/>
-  </div>
+    <div
+      v-if="show"
+      class="w-[290px] h-[484px] rounded-md absolute w-50 h-50 right-10 bottom-10 place-content-center"
+    >
+      <!-- <ChatBox /> -->
+      <ChatRoom />
+    </div>
     <a
       @click="onClick()"
       data-te-ripple-init
