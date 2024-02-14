@@ -23,7 +23,7 @@ export interface noticeInfo {
     }
   }
   
-  export interface faqData extends faqInfo {
+  export interface FaqData extends faqInfo {
     showAnswer: boolean
   }
   

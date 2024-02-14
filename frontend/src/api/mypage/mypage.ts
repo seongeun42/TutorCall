@@ -1,6 +1,6 @@
 import { instance } from '@/axios/axiosConfig'
 import type { commonResponse } from '@/interface/common/interface';
-import type { LectureHistory, lectureResponse, modifyIntro, modifynickname, modifynotify, modifypassword, modifytags, tutorcallResponse } from '@/interface/mypage/interface';
+import type { lectureHistory, lectureResponse, modifyIntro, modifynickname, modifynotify, modifypassword, modifytags, tutorcallResponse } from '@/interface/mypage/interface';
 import type { AxiosResponse } from 'axios';
 
 export async function tutorcallHistory(param:string):
