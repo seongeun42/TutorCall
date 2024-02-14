@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {type Ref, ref} from 'vue'
-import ChatRoom from './ChatRoom.vue';
+import ChatRoom from '@/components/chatting/ChatRoom.vue';
 
 const show: Ref<boolean> = ref(false);
 const onClick = () => {
