@@ -3,23 +3,84 @@ import type { Ref } from 'vue';
 import { ref } from 'vue';
 import { useUserStore } from '@/store/userStore';
 import * as api from '@/api/mypage/mypage'
-import { isAxiosError } from 'axios';
-import type { errorResponse } from '@/interface/common/interface';
+import { isAxiosError, type AxiosResponse } from 'axios';
+import type { commonResponse, errorResponse } from '@/interface/common/interface';
 import router from '@/router';
+import TagSelectForm from '@/pages/mypage/tutor/TagSelectForm.vue';
+import { reactive } from 'vue';
+import { onMounted } from 'vue';
 
-const today: String = new Date().toISOString().split('T')[0]
+interface selectform {
+  value: number
+  name: string
+}
+interface TagSelect{
+    school: string,
+    subject: string,
+    grade: string|selectform,
+    subjectDisabled: boolean,
+    gradeDisabled: boolean,
+    btnDisabled: boolean,
+    idx: number,
+    tag:number,
+    tags: number[],
+    disabled: boolean,
+}
+
 const userStore = useUserStore();
-
 const introduce:Ref<string> = ref('');
 const nickname:Ref<string> = ref(userStore.nickname);
 const password:Ref<string> = ref('');
 const newPassword:Ref<string> = ref('');
-const alram:Ref<string>
-= ref('true');
+const alram:Ref<string> = ref('true');
 const checkPassword:Ref<string> = ref('');
-const school:Ref<string> = ref('none');
-const subject:Ref<string> = ref('none');
 let tags:number[] = [];
+let tagForms:Ref<TagSelect[]> = ref([]);
+
+onMounted(()=>{
+  const initData:TagSelect ={
+    school: '',
+    subject: '',
+    grade: '',
+    subjectDisabled: true,
+    gradeDisabled: true,
+    btnDisabled: true,
+    idx: 0,
+    tag: 0,
+    tags: tags,
+    disabled: false
+  }
+  tagForms.value.push(initData);
+})
+
+function addTagForm(so:TagSelect):void{
+  
+  tagForms.value[so.idx] = so;
+
+  const initData:TagSelect ={
+    school: '',
+    subject: '',
+    grade: '',
+    subjectDisabled: true,
+    gradeDisabled: true,
+    btnDisabled: true,
+    idx: so.idx+1,
+    tag: 0,
+    tags: tags,
+    disabled: false
+  }
+
+  tagForms.value.push(initData);
+  tags.push(so.tag);
+  
+}
+
+function deleteTagForm(idx: number):void{
+
+  tagForms.value[idx].disabled = true;
+  tags = tags.filter((t)=> t!= tagForms.value[idx].tag);
+
+}
 
 async function modifyed(event: Event):Promise<void>{
 
@@ -35,6 +96,9 @@ async function modifyed(event: Event):Promise<void>{
 
   if(nickname.value.length!=0 && nickname.value != userStore.nickname){
     await api.modifynickname({nickname:nickname.value})
+    .then((response: AxiosResponse<commonResponse>)=>{
+      userStore.nickname= nickname.value;
+    })
     .catch((error : unknown)=>{
       if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
       throw error;
@@ -56,26 +120,11 @@ async function modifyed(event: Event):Promise<void>{
       return;
     }
   }
-
-  if(school.value!="none" && subject.value!="none"){
-    const startNumber:number = Number(school.value);
-    const rem:number = Number(subject.value);
-    for(let i=startNumber; i<=60; i++){
-      if(i%5==rem) {
-        tags.push(i);
-      }
-    }
-
     await api.modifyTag({tags: tags})
     .catch((error : unknown)=>{
       if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
       throw error;
     })
-
-  }else{
-    alert("관심 태그를 다시 설정해주세요.");
-    return;
-  }
 
   await api.modifyAlert({notificationOption: alram.value})
   .catch((error : unknown)=>{
@@ -165,26 +214,9 @@ async function modifyed(event: Event):Promise<void>{
         v-model="checkPassword"
       />
     </div>
-    <div class="mt-8 flex flex-row gap-2">
-      <div class="flex flex-col w-1/2">
-        <p class="text-xl mb-5">관심 학교 선택</p>
-        <select class="bg-gray-200 w-full h-20 text-lg rounded-lg" v-model="school">
-          <option value="none" disabled>관심 학교 선택</option>
-          <option value="0">초등학교</option>
-          <option value="31">중학교</option>
-          <option value="46">고등학교</option>
-        </select>
-      </div>
-      <div class="flex flex-col w-1/2">
-        <p class="text-xl mb-5 ">관심 과목 선택</p>
-        <select class="bg-gray-200 w-full h-20 text-lg rounded-lg" v-model="subject">
-          <option value="none" disabled>관심 과목 선택</option>
-          <option value="1">국어</option>
-          <option value="2">수학</option>
-          <option value="3">과학</option>
-          <option value="4">사회</option>
-          <option value="5">영어</option>
-        </select>
+    <div class="mt-8">
+      <div v-for="(tf, index) in tagForms" :key="index">
+        <TagSelectForm v-if="!tf.disabled" :selectOption="tf" @update="addTagForm" @change="deleteTagForm"/>
       </div>
     </div>
     <div class="mt-8">

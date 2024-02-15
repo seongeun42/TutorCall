@@ -30,7 +30,6 @@ onMounted(() => {
   </div>
   <div class="min-h-[1000px]" id="mainComponent">
     <RouterView id="main" />
-    <!-- <TutorCallPage/> -->
   </div>
   <div v-if="userStore.isLogin">
     <ChatIcon />

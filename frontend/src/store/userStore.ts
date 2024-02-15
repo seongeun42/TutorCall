@@ -18,7 +18,7 @@ export const useUserStore = defineStore({
       this.id = user.id
       this.nickname = user.nickname
       this.role = user.role
-      this.isTutor = user.role === "TUTOR"
+      this.isTutor = user.role == 'TUTOR'
       this.email = user.email
       this.profile = user.profile
       this.isLogin = true

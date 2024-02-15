@@ -44,7 +44,7 @@ onMounted(async():Promise<void>=>{
                 {{ data.tag.subject }}
               </p>
               <p class="bg-green-500 w-16 text-white rounded-3xl text-center">
-                {{ data.tag.grade }}
+                {{ data.tag.grade }}학년
               </p>
             </div>
           </div>

@@ -22,10 +22,12 @@ export interface detailLecture extends lecture{
     maxParticipants: number,
     participants: number,
     promotionDue: string,
-    lectureStartAt:string,
-    lectureEndAt:string,
+    lectureStartAt: string,
+    lectureEndAt: string,
     participated: boolean,
     price: number,
+    promotionCreatedAt:string,
+    
 }
 
 export interface detailTutor extends user {

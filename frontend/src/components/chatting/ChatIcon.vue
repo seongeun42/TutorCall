@@ -6,8 +6,10 @@ import ChatRoom from './ChatRoom.vue'
 import { useChattingStore } from '@/store/chatStore';
 import { useUserStore } from '@/store/userStore'
 
-const show: Ref<boolean> = ref(false)
-const onClick: void = () => {
+import ChatRoom from '@/components/chatting/ChatRoom.vue';
+
+const show: Ref<boolean> = ref(false);
+const onClick = () => {
   show.value = !show.value
 }
 

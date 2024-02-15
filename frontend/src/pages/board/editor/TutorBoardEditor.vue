@@ -12,16 +12,18 @@ interface selectform {
   value: number
   name: string
 }
+
 let tag: number = 0
+
 const school: selectform[] = [
   { value: 1, name: '초등학교' },
   { value: 31, name: '중학교' },
   { value: 46, name: '고등학교' }
 ]
+
 let grade: selectform[] = []
 const title: Ref<string> = ref('')
 const editorData: Ref<string> = ref('')
-const buttonClicked: Ref<string> = ref('')
 const editStore = useEditStore()
 const lectureId: number = Number(router.currentRoute.value.params['promotionNum'])
 const maxPeople: Ref<number> = ref(0)
@@ -32,6 +34,7 @@ const gradeSelected: Ref<selectform | string> = ref('')
 const subjectSelected: Ref<selectform | string> = ref('')
 const gradeDisabled: Ref<boolean> = ref(true)
 const subjectDisabled: Ref<boolean> = ref(true)
+
 watch(
   () => schoolSelected.value,
   (oldValue) => {
@@ -50,26 +53,32 @@ watch(
       subjectDisabled.value = true
       subjectSelected.value = ''
     }
+    if (editStore.needEdit) gradeSelected.value = editStore.grade.toString()
   }
 )
+
 watch(
   () => gradeSelected.value,
   (newValue, oldValue) => {
     if (Number(newValue) >= 0) {
       subjectDisabled.value = false
     }
+    if (editStore.needEdit) subjectSelected.value = editStore.subject.toString()
   }
 )
+
 watch(
   () => subjectSelected.value,
   () => {
     tag = Number(schoolSelected.value) + Number(gradeSelected.value) + Number(subjectSelected.value)
   }
 )
+
 onMounted(() => {
   if (editStore.needEdit) {
     title.value = editStore.title
     editorData.value = editStore.content
+    schoolSelected.value = editStore.school.toString()
   }
 })
 function cancelWrite(): void {
@@ -84,7 +93,7 @@ function handleModelValueUpdate(newValue: string) {
 async function submitPost(event: Event): Promise<void> {
   event.preventDefault()
   const promotionDue = new Date(deadline.value)
-  const url: string = 'http://localhost:8080/'
+  const url: string = import.meta.env.VITE_VUE_API_URL
 
   const param = {
     promotionTitle: title.value,
@@ -95,7 +104,7 @@ async function submitPost(event: Event): Promise<void> {
     tagId: tag
   }
 
-  const endpoint: string = 'lecture/promotion'
+  const endpoint: string = '/lecture/promotion'
 
   if (editStore.needEdit) {
     await api
@@ -113,7 +122,8 @@ async function submitPost(event: Event): Promise<void> {
   instance
     .post(url + endpoint, param)
     .then((response: any) => {
-      window.alert('문제 등록이 완료되었습니다. 튜터콜 대기실로 이동합니다.')
+      window.alert('홍보 등록이 완료되었습니다.')
+      router.push({ name: 'lectureList' })
     })
     .catch((error: any) => {
       console.log(error)
@@ -156,8 +166,8 @@ async function submitPost(event: Event): Promise<void> {
           <option value="" disabled>과목 선택</option>
           <option value="0">국어</option>
           <option value="1">수학</option>
-          <option value="2">사회</option>
-          <option value="3">과학</option>
+          <option value="2">과학</option>
+          <option value="3">사회</option>
           <option value="4">영어</option>
         </select>
       </div>
@@ -167,11 +177,6 @@ async function submitPost(event: Event): Promise<void> {
         <div>최대 모집 인원</div>
         <input class="info-input" type="text" v-model="maxPeople" />
         <div>명</div>
-      </div>
-      <div class="flex items-center mr-10">
-        <div>회당 가격</div>
-        <input class="info-input" type="text" v-model="lectureFee" />
-        <div>원</div>
       </div>
       <div class="flex items-center">
         <div>모집 마감 날짜</div>

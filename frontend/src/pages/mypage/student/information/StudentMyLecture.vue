@@ -5,6 +5,7 @@ import MyLectureDetail from '../../MyLectureDetail.vue'
 import type { lectureHistory, lectureResponse } from '@/interface/mypage/interface';
 import { isAxiosError, type AxiosResponse } from 'axios';
 import { type errorResponse } from '@/interface/common/interface';
+import  { tagConvert } from '@/util/tagConvert'
 
 
 const showDetail: Ref<boolean> = ref(false)
@@ -12,16 +13,18 @@ const selectedLecture: Ref<lectureHistory|null> = ref(null);
 const lectureData: Ref<lectureHistory[]|null> = ref(null);
 const page:Ref<number> = ref(0);
 const size:Ref<number> = ref(5);
-  const clickShow = function (index: number): void {
+
+const clickShow = function (index: number): void {
   showDetail.value = !showDetail.value
   if(lectureData.value != null) selectedLecture.value = lectureData.value[index];
 }
 
 onMounted(async():Promise<void>=>{
   const param:string = `page=${page.value}&size=${size.value}`
+  
   await mypageApi.lectureHistory(param)
   .then((response: AxiosResponse<lectureResponse>)=>{
-    lectureData.value = response.data.content;
+    lectureData.value = tagConvert(response.data.content);
   })
   .catch((error:unknown)=>{
     if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
@@ -39,12 +42,15 @@ onMounted(async():Promise<void>=>{
           <div class="pt-2 mx-5">
             <p>{{ data.tutor.nickname }}</p>
             <p class="mt-2 font-bold text-xl">{{ data.promotionTitle }}</p>
-            <div class="flex mt-1">
-              <p class="bg-blue-500 mr-2 rounded-3xl w-16 text-white text-center">
-                {{ data.tag.subject }}
+            <div class="flex mt-1 gap-2">
+              <p class="bg-blue-500 w-16 text-white rounded-3xl text-center">
+                {{ data.tag.level }}
               </p>
               <p class="bg-green-500 w-16 text-white rounded-3xl text-center">
-                {{ data.tag.grade }}
+                {{ data.tag.grade }}학년
+              </p>
+              <p class="bg-blue-500 mr-2 rounded-3xl w-16 text-white text-center">
+                {{ data.tag.subject }}
               </p>
             </div>
           </div>

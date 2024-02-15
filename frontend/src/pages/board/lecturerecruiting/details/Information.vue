@@ -5,7 +5,7 @@ import {type Ref, ref } from 'vue';
 import * as api from '@/api/lectureBoard/lectureBoard'
 import { isAxiosError, type AxiosResponse } from 'axios';
 import type { commonResponse, errorResponse } from '@/interface/common/interface';
-
+import { useUserStore } from '@/store/userStore';
 
 const props = defineProps<{"data":detailTutor, "isParticipated":boolean}>();
 
@@ -18,6 +18,11 @@ const state:Ref<boolean> = ref(props.isParticipated);
 async function registLecture(event: Event)
 :Promise<void>{
   event.preventDefault();
+
+  if(useUserStore().isTutor){
+    alert("선생님은 강의를 신청할 수 없습니다!");
+    return;
+  }
 
   await api.registLecture(promotionId)
   .then((response: AxiosResponse<registResponse>)=>{
