@@ -14,7 +14,7 @@ git config commit.template .gitmessage.txt
 cd .git/hooks/
 
 touch pre-commit
-
+      
 vim pre-commmit
 ```
 
