@@ -8,6 +8,7 @@ import { useUserStore } from '@/store/userStore'
 import { useNotificationStore } from '@/store/notificationStore'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import type { ComputedRef } from 'vue'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 const userStore = useUserStore()
 const APPLICATION_SERVER_URL = import.meta.env.VITE_VUE_API_URL
@@ -21,10 +22,13 @@ const publisher: Ref<Publisher | undefined> = ref(undefined)
 const publisherScreen: Ref<Publisher | undefined> = ref(undefined)
 const videoStore = useVideoStore()
 const notificationStore = useNotificationStore()
-const sessionId: number = parseInt(
-  notificationStore.roomSessionId?.replace('tutorCall', '') || '1',
-  10
-)
+const sessionId: ComputedRef<number> = computed(() => {
+  console.log('stored sessionId: ' + notificationStore.$state.roomSessionId)
+  if (notificationStore.$state.roomSessionId?.includes('Call')) {
+    return Number(notificationStore.$state.roomSessionId.replace('tutorCall', ''))
+  } else return Number(notificationStore.$state.roomSessionId?.replace('lecture', ''))
+})
+
 const router = useRouter()
 const subscribers: Ref<Subscriber[]> = ref([])
 const userName: string = userStore.nickname
@@ -81,7 +85,7 @@ const joinSession = async () => {
     console.warn(exception)
   })
   try {
-    const token = await getToken(sessionId)
+    const token = await getToken(sessionId.value)
     await sessionCamera.value.connect(token, { clientData: userName })
     const newPublisher = OVCamera.value?.initPublisher(undefined, {
       audioSource: undefined,
@@ -111,15 +115,16 @@ const screenSub = computed(() => {
   return v != undefined ? v : null
 })
 
-watch(subscribers.value, (o, v) => {
-  console.log(o, v)
-})
-
 const leaveSession = async () => {
   // 회의에 혼자 남은 상황에서 새로 고침하거나 나가면 세션 종료
   if (videoSubscribers.value.length == 0) {
-    const endPoint = `/tutorcall/${sessionId}/disconnection`
-    await axios.delete(APPLICATION_SERVER_URL + endPoint, {
+    let url = `/`
+    if (notificationStore.$state.roomSessionId?.includes('call')) {
+      url += `tutorcall/${sessionId.value}/disconnection`
+    } else {
+      url += `lecture/${sessionId.value}/disconnection`
+    }
+    await axios.delete(APPLICATION_SERVER_URL + url, {
       headers: { 'Content-Type': 'application/json' },
       withCredentials: true
     })
@@ -148,8 +153,14 @@ const getToken = async (sessionId: number) => {
 }
 
 const createToken = async (sessionId: number) => {
+  let url = `${APPLICATION_SERVER_URL}/`
+  if (notificationStore.$state.roomSessionId?.includes('call')) {
+    url += `tutorcall/${sessionId}/connection`
+  } else {
+    url += `lecture/${sessionId}/connection`
+  }
   const response = await axios.post(
-    `${APPLICATION_SERVER_URL}/tutorcall/${sessionId}/connection`,
+    url,
     {},
     {
       headers: { 'Content-Type': 'application/json' },
@@ -174,7 +185,7 @@ watch(
 function showScreenShare() {
   OVScreen.value = new OpenVidu()
   sessionScreen.value = OVScreen.value.initSession()
-  getToken(sessionId)
+  getToken(sessionId.value)
     .then((token) => {
       sessionScreen.value?.connect(token).then(() => {
         let screenPublisher = OVScreen.value?.initPublisher(undefined, {
@@ -235,7 +246,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   router.beforeEach(() => {})
   stopScreenSharing()
-  // leaveSession()
+  leaveSession()
 })
 </script>
 <template>
