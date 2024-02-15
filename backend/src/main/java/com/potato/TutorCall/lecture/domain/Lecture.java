@@ -30,8 +30,10 @@ public class Lecture {
   @ManyToOne(fetch = FetchType.LAZY)
   private Tutor tutor;
 
+  @Column(length = 500)
   private String promotionTitle;
 
+  @Column(length = 40000)
   private String promotionContent;
 
   private boolean promotionState;

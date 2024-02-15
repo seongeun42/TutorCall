@@ -30,8 +30,10 @@ public class Question {
   @ManyToOne(fetch = FetchType.LAZY)
   private User writer;
 
+  @Column(length = 500)
   private String title;
 
+  @Column(length = 40000)
   private String content;
 
   @JsonBackReference
