@@ -117,7 +117,7 @@ const screenSub = computed(() => {
 
 const leaveSession = async () => {
   let url = `/`
-  if (notificationStore.$state.roomSessionId?.includes('call')) {
+  if (notificationStore.$state.roomSessionId?.includes('Call')) {
     url += `tutorcall/${sessionId.value}/disconnection`
   } else {
     url += `lecture/${sessionId.value}/disconnection`
@@ -153,7 +153,7 @@ const getToken = async (sessionId: number) => {
 
 const createToken = async (sessionId: number) => {
   let url = `${APPLICATION_SERVER_URL}/`
-  if (notificationStore.$state.roomSessionId?.includes('call')) {
+  if (notificationStore.$state.roomSessionId?.includes('Call')) {
     url += `tutorcall/${sessionId}/connection`
   } else {
     url += `lecture/${sessionId}/connection`
@@ -244,7 +244,7 @@ onBeforeUnmount(() => {
 <template>
   <!-- 화면이 공유될 때 -->
   <div v-if="screenSub">
-    <div class="flex mb-5 subscribers">
+    <div class="subscribers">
       <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="mainStreamManager" />
       <div v-for="sub in videoSubscribers" :key="sub.stream.connection.connectionId">
         <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="sub" />
@@ -255,21 +255,26 @@ onBeforeUnmount(() => {
   <!-- 화면 공유 중이 아닐 때 -->
   <div v-else>
     <div v-if="videoSubscribers.length > 0">
-      <div class="flex mb-5 subscribers">
+      <div class="subscribers">
         <div v-for="sub in videoSubscribers" :key="sub.stream.connection.connectionId">
           <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="sub" />
         </div>
       </div>
-      <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
     </div>
-    <div v-else>
+    <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
+    <!-- <div v-else>
       <OnlineVideo class="w-[800px] h-[500px]" :stream-manager="mainStreamManager" />
-    </div>
+    </div> -->
   </div>
 </template>
 
 <style scoped>
 .subscribers {
   border: 1px solid #dbdbdb;
+  border-radius: 10px;
+  display: flex;
+  margin-bottom: 5px;
+  justify-content: center;
+  padding-top: 10px;
 }
 </style>
