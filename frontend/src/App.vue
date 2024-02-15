@@ -31,7 +31,9 @@ onMounted(() => {
   <div class="min-h-[1000px]" id="mainComponent">
     <RouterView id="main" />
   </div>
-  <ChatIcon />
+  <div v-if="userStore.isLogin">
+    <ChatIcon />
+  </div>
   <FooterBar />
 </template>
 

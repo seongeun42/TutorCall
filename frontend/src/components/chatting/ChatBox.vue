@@ -2,6 +2,13 @@
 import ChatFriend from '@/components/chatting/ChatFriend.vue'
 import ChatSearchVue from './ChatSearch.vue'
 import ChatTopMenu from './ChatTopMenu.vue'
+import { useChattingStore } from '@/store/chatStore';
+import { useUserStore } from '@/store/userStore'
+
+const chattingStore = useChattingStore();
+const userStore = useUserStore();
+
+chattingStore.sendMessage("chatroom/" + userStore.id, {}, null)
 </script>
 
 <template>
@@ -11,8 +18,10 @@ import ChatTopMenu from './ChatTopMenu.vue'
   >
     <div id="friendslist" class="absolute w-full h-full left-0 top-0">
       <ChatTopMenu class="h-20" />
-      <div id="friends" class="h-[384px] overflow-scroll no-scrollbar">
-        <ChatFriend />
+      <div id="friends" class="h-[354px] overflow-scroll no-scrollbar"> 
+        <div v-for="r in chattingStore.chatroomList">
+          <ChatFriend :roomInfo="r"/>
+        </div>
       </div>
       <ChatSearchVue class="h-14" />
     </div>
