@@ -21,10 +21,10 @@ onMounted(() => {
   }
 })
 
-window.addEventListener('unload', function(){
-  userStore.logout();
-  for(let cookie in Cookies.get()) Cookies.remove(cookie);
-});
+// window.addEventListener('unload', function(){
+//   userStore.logout();
+//   for(let cookie in Cookies.get()) Cookies.remove(cookie);
+// });
 
 </script>
 <template>

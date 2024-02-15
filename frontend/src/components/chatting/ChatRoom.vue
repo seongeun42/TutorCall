@@ -15,6 +15,22 @@ const props = defineProps<{
 // 채팅방 참여자들의 정보
 const participants = ref([] as Object[]);
 
+// 대표 참여자 - 현재 로그인한 사용자 제외
+const representer = computed(() => {
+  if(participants.value[0]) {
+    return participants.value[0].id == userStore.id? participants.value[1]: participants.value[0];
+  }
+  return Object
+})
+
+const otherName = computed(() => {
+  if(participants.value[0]) {
+    
+    return other.nickname;
+  }
+  return other.nickname + " 외 " + participants.value.length + "명";
+})
+
 // 대화 상대 - 현재 로그인한 사용자 제외
 const other = computed(() => {
   if(participants.value[0]) {
@@ -26,13 +42,27 @@ const other = computed(() => {
 // 자신
 const currentUser = computed(() => {
   if(participants.value[0]) {
-    return participants.value[0].id == userStore.id? participants.value[0]: participants.value[1];
+    for(const p in participants.value) {
+      if(p.id == userStore.id) {
+        return p;
+      }
+    }
   }
   return Object
 })
 
-// 이 채팅방의 메시지 목록
-// const chats = ref([] as Object);
+// 상대 메시지의 프로필
+const otherProfile = (chat) => {
+  if(participants.value[0]) {
+    for(const p in participants.value) {
+      if(p.id == chat.senderId) {
+        return p.profile;
+      }
+    }
+  }
+
+  return "@/img/default_profile.png"
+}
 
 const chattingStore = useChattingStore();
 const userStore = useUserStore();
@@ -54,14 +84,14 @@ chattingStore.getNewMessage(props.roomInfo.id);
       id="chatview"
       class="w-full h-full absolute left-0 top-0 overflow-hidden rounded-md shadow-lg"
     >
-      <ChatProfile :profile="other.profile" :room-name="props.roomInfo.name" :other-name="other.nickname" class="h-20" />
+      <ChatProfile :profile="representer.profile" :room-name="props.roomInfo.name" class="h-20" />
       <div id="chat-messages" class="w-full h-[350px] font-sans bg-white overflow-scroll no-scrollbar overflow-x-hidden pr-5">
         <div v-for="chat in chattingStore.chatMessages">
-          <ChattingMessageRight v-if="chat.senderId == currentUser.id" :profile="currentUser.profile" :message="chat.message"/>
-          <ChattingMessage v-else :profile="currentUser.profile" :message="chat.message" />
+          <ChattingMessageRight v-if="chat.senderId == userStore.id" :profile="currentUser.profile" :message="chat.message"/>
+          <ChattingMessage v-else :profile="otherProfile(chat)" :message="chat.message" />
         </div>
       </div>
-      <SendMessage :room-id="props.roomInfo.id" :sender-id="currentUser.id" class="h-14" />
+      <SendMessage :room-id="props.roomInfo.id" :sender-id="userStore.id" class="h-14" />
     </div>
 </template>
 

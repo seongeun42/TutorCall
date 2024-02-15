@@ -10,19 +10,19 @@ const props = defineProps<{
 // 채팅방 참여자들의 정보
 const participants = ref([] as Object[]);
 // 대표 참여자 - 현재 로그인한 사용자 제외
+
+const chattingStore = useChattingStore();
+const userStore = useUserStore();
+// 채팅방 참여자들의 id 값을 가져옴
+chattingStore.getParticipants(props.roomInfo.id, participants);
+chattingStore.sendMessage("chatroom/users/" + props.roomInfo.id, {}, null);
+
 const representer = computed(() => {
   if(participants.value[0]) {
     return participants.value[0].id == userStore.id? participants.value[1]: participants.value[0];
   }
   return Object
 })
-
-const chattingStore = useChattingStore();
-const userStore = useUserStore();
-
-// 채팅방 참여자들의 id 값을 가져옴
-chattingStore.getParticipants(props.roomInfo.id, participants);
-chattingStore.sendMessage("chatroom/users/" + props.roomInfo.id, {}, null);
 </script>
 
 <template v-if="participants[0]">
