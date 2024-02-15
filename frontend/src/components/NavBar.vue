@@ -6,6 +6,7 @@ import { useNotificationStore } from '@/store/notificationStore'
 import smallAlert from '@/components/tutorcallAlert/smallAlert.vue'
 import { type alertForm } from '@/interface/tutorcall/interface'
 import router from '@/router'
+import Cookies from 'js-cookie';
 
 const userStore = useUserStore();
 const notificationStore = useNotificationStore()
@@ -38,6 +39,7 @@ function logout():void{
   notificationStore.socketDisconnect();
   notificationStore.clear();
   sessionStorage.clear();
+  for(let cookie in Cookies.get()) Cookies.remove(cookie);
   router.push("/");
 }
 

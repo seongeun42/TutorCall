@@ -36,4 +36,5 @@ export interface loginForm {
 
 export interface signUpForm extends loginForm {
   nickname: string
+  role: string,
 }

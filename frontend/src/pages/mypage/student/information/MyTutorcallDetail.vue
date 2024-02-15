@@ -48,7 +48,7 @@ function updateReview(value:review):void{
     <div class="flex my-5">
       <img :src="props.data.tutor.profile" alt="" class="w-24 h-24 rounded-full" />
       <div class="mx-5">
-        <p>{{ props.data.tutor.nickname }}</p>
+        <p class="font-semibold">{{ props.data.tutor.nickname }}</p>
         <div class="flex mt-3">
           <div class="flex items-center">
           </div>

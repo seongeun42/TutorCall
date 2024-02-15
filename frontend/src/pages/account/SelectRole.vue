@@ -63,8 +63,10 @@ const saveChoice = (choice: string) => {
   
   if(choice =="선생님"){
     userStore.isTutor = true;
+    userStore.$state.role = "TUTOR"
   }else{
     userStore.isTutor = false;
+    userStore.$state.role = "USER"
   }
   emit('update:changeForm')
   closeModal()
