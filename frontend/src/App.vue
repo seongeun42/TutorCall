@@ -32,7 +32,9 @@ onMounted(() => {
     <RouterView id="main" />
     <!-- <TutorCallPage/> -->
   </div>
-  <ChatIcon />
+  <div v-if="userStore.isLogin">
+    <ChatIcon />
+  </div>
   <FooterBar />
 </template>
 
