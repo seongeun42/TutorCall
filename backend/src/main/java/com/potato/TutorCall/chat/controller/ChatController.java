@@ -25,9 +25,9 @@ public class ChatController {
    * @param roomId 채팅방의 Id
    * @return
    */
-  @MessageMapping("/chat/{roomId}/{userId}")
-  @SendTo("/sub/chat/{roomId}/{userId}")
-  public List<ChatResDto> receiveChatsInRoom(@DestinationVariable(value = "roomId") String roomId, @DestinationVariable(value = "userId") Long userId) {
+  @MessageMapping("/chat/{roomId}")
+  @SendTo("/sub/chat/{roomId}")
+  public List<ChatResDto> receiveChatsInRoom(@DestinationVariable(value = "roomId") String roomId) {
     return chatService.receiveChatsInRoom(roomId);
   }
 
@@ -37,8 +37,8 @@ public class ChatController {
    * @param newChat 새로운 메시지
    * @return 보낸 메시지를 바로 전달받음
    */
-  @MessageMapping("/chat/{roomId}")
-  @SendTo("/sub/chat/{roomId}")
+  @MessageMapping("/chat/new/{roomId}")
+  @SendTo("/sub/chat/new/{roomId}")
   public ChatResDto sendChatToRoom(@RequestBody SendChatReq newChat, @DestinationVariable String roomId) {
     return chatService.sendChatToRoom(newChat, roomId);
   }

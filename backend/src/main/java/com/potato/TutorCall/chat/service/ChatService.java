@@ -32,7 +32,6 @@ public class ChatService {
     return result;
   }
 
-
   public ChatResDto sendChatToRoom(SendChatReq newChat, String roomId) {
     ChatMessage newMessage = ChatMessage.builder()
             .id(UUID.randomUUID().toString())
