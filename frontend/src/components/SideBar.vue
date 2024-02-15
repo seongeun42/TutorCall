@@ -15,7 +15,7 @@ import { useUserStore } from '@/store/userStore';
                 </p>
               </li>
               <li class="flex items-center justify-center">
-                <img src="@/img/default_profile.png" alt="" class="rounded-full w-28 h-28" />
+                <img :src="useUserStore().profile" alt="" class="rounded-full w-28 h-28" />
               </li>
               <li class="flex items-center justify-center mt-3">
                 <p>{{ useUserStore().nickname }}</p>
