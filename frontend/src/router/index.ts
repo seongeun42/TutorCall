@@ -28,7 +28,6 @@ import TutorBoardEditor from '@/pages/board/editor/TutorBoardEditor.vue'
 import MyTutorcallList from '@/pages/mypage/student/information/MyTutorcallList.vue'
 import TutorCallList from '@/pages/mypage/tutor/MytutorCallList.vue'
 import { useUserStore } from '@/store/userStore'
-import path from 'path'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

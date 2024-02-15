@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { type, Ref, ref } from 'vue'
-import ChatBox from './ChatBox.vue'
-import ChatRoom from './ChatRoom.vue'
+import { ref } from 'vue';
+import type { Ref } from 'vue';
 
-const show: Ref<boolean> = ref(false)
-const onClick: void = () => {
+import ChatRoom from '@/components/chatting/ChatRoom.vue';
+
+const show: Ref<boolean> = ref(false);
+const onClick = () => {
   show.value = !show.value
 }
 

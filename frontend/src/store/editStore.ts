@@ -9,15 +9,17 @@ export const useEditStore = defineStore({
     title: '',
     content: '',
     needEdit: false,
+    images: [] as Array<string>
   }),
   actions: {
-    save(school:number, grade:number, subject:number, title:string, content:string, needEdit:boolean){
-        this.school=school,
-        this.grade = grade,
-        this.subject = subject,
-        this.title = title,
-        this.content = content,
-        this.needEdit = needEdit
+    save(school:number, grade:number, subject:number, title:string, content:string, needEdit:boolean, images: Array<string>){
+        this.school=school;
+        this.grade = grade;
+        this.subject = subject;
+        this.title = title;
+        this.content = content;
+        this.needEdit = needEdit;
+        this.images = images;
     },
     init(){
         this.school = 0,
@@ -26,7 +28,11 @@ export const useEditStore = defineStore({
         this.title = "",
         this.content = "",
         this.needEdit = false
+        this.images = []
     },
+    addImage(filename:string){
+      this.images.push(filename);
+    }
   },
   persist: {
     storage: sessionStorage
