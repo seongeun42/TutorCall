@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import type { Ref } from 'vue'
-import { ref } from 'vue'
-import { useUserStore } from '@/store/userStore'
+import type { Ref } from 'vue';
+import {computed, ref} from 'vue';
+import { useUserStore } from '@/store/userStore';
 import * as api from '@/api/mypage/mypage'
-import type { commonResponse, errorResponse } from '@/interface/common/interface'
-import { isAxiosError, type AxiosResponse } from 'axios'
-import router from '@/router'
+import type { commonResponse, errorResponse } from '@/interface/common/interface';
+import axios, { isAxiosError, type AxiosResponse } from 'axios';
+import router from '@/router';
+import {fileupload} from "@/api/mypage/mypage";
+// import upload from '@/util/upload/upload'
 
 const userStore = useUserStore()
 
@@ -54,19 +56,33 @@ async function modifyed(event: Event): Promise<void> {
   alert('정보 수정을 완료했습니다')
   router.push({ name: 'mypage' })
 }
+
+async function upload(event){
+  const file = event.target.files[0];
+
+  const formData = new FormData();
+  formData.append("profile", file);
+  const {data} = await fileupload(formData);
+  const { url } = data;
+  console.log(url);
+  userStore.profile = url;
+}
+
+
 </script>
 <template>
   <div class="mx-10 my-10">
     <p class="font-bold text-2xl mb-10">프로필 사진</p>
-    <div class="flex mx-10">
-      <img src="@/img/default_profile.png" class="w-28 h-28 rounded-full" alt="" />
+    <div class="flex mx-20">
+      <img :src="userStore.profile" class="w-28 h-28 rounded-full" alt="" />
       <div class="mx-10 my-3">
         <label
           for="file-upload"
           class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
         >
-          <button class="border-4 border-blue-300 w-32 h-16 text-blue-500">사진 업로드</button>
-          <input id="file-upload" name="file-upload" type="file" class="sr-only" />
+<!--          <button class="border-4 border-blue-300 w-40 h-16 text-blue-500" >사진 업로드</button>-->
+          <div class="border-4 border-blue-300 w-40 h-16 text-blue-500">파일 업로드</div>
+          <input id="file-upload" name="file-upload" type="file" class="sr-only" @change="upload" />
         </label>
       </div>
       <p class="border-2 mx-20"></p>
