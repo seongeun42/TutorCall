@@ -4,9 +4,11 @@ import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,9 +20,12 @@ public class ChatMessage implements Serializable {
 
   private Long senderId;
 
+  @Indexed
   private String chatroomId;
 
   private String message;
+
+  private LocalDateTime createdAt;
 
   // 생성자
   @Builder
@@ -29,6 +34,7 @@ public class ChatMessage implements Serializable {
     this.senderId = senderId;
     this.chatroomId = chatroomId;
     this.message = message;
+    this.createdAt = LocalDateTime.now();
   }
 
   @Override

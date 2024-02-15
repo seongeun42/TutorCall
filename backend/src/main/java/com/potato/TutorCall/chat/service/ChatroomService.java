@@ -73,9 +73,7 @@ public class ChatroomService {
     List<ChatParticipants> participants = chatparticipantsRepository.findAllByChatroomId(roomId);
     return participants.stream().map(c -> {
       Long userId = c.getUserId();
-      System.out.println(userId);
       User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다."));
-
 
       return UserSimpleDto.builder().user(user).build();
     }).toList();
