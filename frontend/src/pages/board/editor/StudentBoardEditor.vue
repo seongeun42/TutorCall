@@ -52,6 +52,7 @@ watch(
       subjectDisabled.value = true
       subjectSelected.value = ''
     }
+
     if (editStore.needEdit) gradeSelected.value = editStore.grade.toString()
   }
 )
@@ -62,7 +63,7 @@ watch(
     if (Number(newValue) >= 0) {
       subjectDisabled.value = false
     }
-    if(editStore.needEdit) subjectSelected.value = editStore.subject.toString();
+    if (editStore.needEdit) subjectSelected.value = editStore.subject.toString()
   }
 )
 
@@ -73,14 +74,13 @@ watch(
   }
 )
 
-
 const questionId: number = Number(router.currentRoute.value.params['qnaNum'])
 
 onMounted(() => {
   if (editStore.needEdit) {
     title.value = editStore.title
     editorData.value = editStore.content
-    schoolSelected.value = editStore.school.toString();
+    schoolSelected.value = editStore.school.toString()
   }
 })
 
@@ -100,7 +100,7 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
   event.preventDefault()
 
   buttonClicked.value = buttonName
-  const url: string = 'http://localhost:8080/'
+  const url: string = import.meta.env.VITE_VUE_API_URL
 
   const param = {
     questionTitle: title.value,
@@ -108,7 +108,7 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
     tagId: tag
   }
 
-  const endpoint: string = buttonClicked.value === 'qna' ? 'qna/question' : 'tutorcall/'
+  const endpoint: string = '/qna/question'
 
   if (editStore.needEdit) {
     await api
@@ -136,10 +136,10 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
 
 function tutorcallRequest() {
   if (notificationStore.requestUuid != null) {
-    console.log("한 번에 한 번의 요청만 가능")
+    console.log('한 번에 한 번의 요청만 가능')
     return
   }
-  const uuid = crypto.randomUUID();
+  const uuid = crypto.randomUUID()
   // 문제 수락 응답 받을 sub 구독
   notificationStore.callSubscribe(uuid)
   const message = {
@@ -152,7 +152,7 @@ function tutorcallRequest() {
   // 문제 요청 보내기
   notificationStore.sendMessage(`tag/${message.tagId}`, message)
   window.alert('문제 등록이 완료되었습니다. 튜터콜 대기실로 이동합니다.')
-  router.push({ name: 'waitingRoom', params: { userId: userStore.id } });
+  router.push({ name: 'waitingRoom', params: { userId: userStore.id } })
 }
 </script>
 <template>
