@@ -45,6 +45,7 @@ public class Review {
 
   private int professionalismRate;
 
+  @Column(length = 1000)
   private String content;
 
   private StudyType type;
