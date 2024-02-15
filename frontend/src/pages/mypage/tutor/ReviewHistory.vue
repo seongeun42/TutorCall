@@ -9,8 +9,8 @@ import { ref, type Ref} from 'vue';
 const userStore = useUserStore();
 const props = defineProps<{data: any}>();
 const score:number = Math.round((props.data.communicationRate+props.data.mannerRate+props.data.professionalismRate)/3)
-function isReviewType(data: any): data is review{
-  return data.review !== undefined;
+function isReviewType(data: any): data is TutorReview{
+  return data.review == undefined;
 }
 
 </script>

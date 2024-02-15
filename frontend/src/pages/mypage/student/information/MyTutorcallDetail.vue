@@ -69,7 +69,7 @@ function updateReview(value:review):void{
     </div>
     <div class="review-box rounded-xl shadow-md">
       <div v-if="myreview">
-        <ReviewHistory :data="myreview" mode="tutorcallReview"/>
+        <ReviewHistory :data="myreview"/>
       </div>
         <div v-else>
           <div v-if="canReview">
