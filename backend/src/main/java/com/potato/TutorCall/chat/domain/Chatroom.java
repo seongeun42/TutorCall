@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RedisHash("chatroom")
 public class Chatroom implements Serializable {
 
   @Id

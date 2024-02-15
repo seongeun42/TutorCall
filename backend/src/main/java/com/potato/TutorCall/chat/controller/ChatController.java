@@ -1,6 +1,7 @@
 package com.potato.TutorCall.chat.controller;
 
 import com.potato.TutorCall.chat.dto.req.SendChatReq;
+import com.potato.TutorCall.chat.dto.res.ChatResDto;
 import com.potato.TutorCall.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -8,8 +9,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /** 개별 채팅 메시지에 대한 컨트롤러 */
 @Controller
@@ -26,7 +27,7 @@ public class ChatController {
    */
   @MessageMapping("/chat/{roomId}/{userId}")
   @SendTo("/sub/chat/{roomId}/{userId}")
-  public Flux<?> receiveChatsInRoom(@DestinationVariable(value = "roomId") String roomId, @DestinationVariable(value = "userId") Long userId) {
+  public List<ChatResDto> receiveChatsInRoom(@DestinationVariable(value = "roomId") String roomId, @DestinationVariable(value = "userId") Long userId) {
     return chatService.receiveChatsInRoom(roomId);
   }
 
@@ -38,7 +39,7 @@ public class ChatController {
    */
   @MessageMapping("/chat/{roomId}")
   @SendTo("/sub/chat/{roomId}")
-  public Mono<?> sendChatToRoom(@RequestBody SendChatReq newChat, @DestinationVariable String roomId) {
+  public ChatResDto sendChatToRoom(@RequestBody SendChatReq newChat, @DestinationVariable String roomId) {
     return chatService.sendChatToRoom(newChat, roomId);
   }
 }

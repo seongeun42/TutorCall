@@ -3,65 +3,81 @@ package com.potato.TutorCall.chat.service;
 import com.potato.TutorCall.chat.domain.ChatParticipants;
 import com.potato.TutorCall.chat.domain.Chatroom;
 import com.potato.TutorCall.chat.dto.req.CreateRoomReqDto;
-import com.potato.TutorCall.chat.dto.req.ExitRoomReqDto;
+import com.potato.TutorCall.chat.dto.res.ChatroomInfoResDto;
 import com.potato.TutorCall.chat.repository.chatParticipants.ChatparticipantsRepository;
 import com.potato.TutorCall.chat.repository.chatroom.ChatroomRepository;
+import com.potato.TutorCall.exception.customException.NotFoundException;
+import com.potato.TutorCall.user.domain.User;
+import com.potato.TutorCall.user.dto.UserSimpleDto;
+import com.potato.TutorCall.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
+@Transactional
 public class ChatroomService {
   private final SimpMessagingTemplate simpMessagingTemplate;
   private final ChatroomRepository chatroomRepository;
   private final ChatparticipantsRepository chatparticipantsRepository;
+  private final UserRepository userRepository;
 
   public void createRoom(CreateRoomReqDto createRoomReq) {
     String roomId = UUID.randomUUID().toString();
-    // 새로운 채팅방 생성
     Chatroom newChatroom = new Chatroom(roomId, createRoomReq.getRoomName(), createRoomReq.getChatroomType());
-    chatroomRepository.save(newChatroom);
-    Mono<String> roomIdMono = Mono.just(roomId);
 
-    // 사용자-채팅방 관계 생성
-    for(Long userId: createRoomReq.getParticipants()) {
+    chatroomRepository.save(newChatroom);
+
+    for(Long participant: createRoomReq.getParticipants()) {
       ChatParticipants chatParticipant = ChatParticipants.builder()
               .id(UUID.randomUUID().toString())
               .chatroomId(roomId)
-              .userId(userId)
+              .userId(participant)
               .build();
+
+      // 새로 생긴 방에 대한 정보를 참여자들에게 보내줌
+      String destination = "/chatroom/created" + participant;
+      simpMessagingTemplate.convertAndSend(destination, roomId);
 
       chatparticipantsRepository.save(chatParticipant);
 
-      // 새로운 채팅방 참여자들에게 새로 생성된 방의 정보를 보내줌
-      String destination = "/sub/chatroom/new/" + userId;
-      simpMessagingTemplate.convertAndSend(destination,roomIdMono);
     }
   }
 
-  public Flux<?> getChatroomList(Long userId) {
-    return chatparticipantsRepository.getParticipatingRooms(userId);
+  public List<ChatroomInfoResDto> getChatroomList(Long userId) {
+    List<ChatParticipants> participants = chatparticipantsRepository.findAllByUserId(userId);
+    return participants.stream().map(c -> {
+      String roomId = c.getChatroomId();
+      Chatroom chatroom = chatroomRepository.findById(roomId).orElseThrow(() -> new NotFoundException("채팅방이 없음"));
+
+      return ChatroomInfoResDto.builder()
+              .id(chatroom.getId())
+              .name(chatroom.getName())
+              .chatroomType(chatroom.getType())
+              .build();
+    }).toList();
   }
 
   public void exitRoom(Long userId, String roomId) {
     chatparticipantsRepository.deleteByUserIdAndChatroomId(userId, roomId);
-
-    Mono<Long> zeroMono = Mono.just(0L);
-    Mono<Long> remains = chatparticipantsRepository.countUsersInRoom(roomId);
-
-    remains.zipWith(zeroMono).doOnNext(t -> {
-      if(t.getT1().equals(t.getT2())) {
-        chatroomRepository.deleteById(roomId);
-      }
-    }).subscribe();
   }
 
-  public Flux<?> getUsersInChatroom(String roomId) {
-    return chatparticipantsRepository.getUsersInChatroom(roomId);
+  public List<UserSimpleDto> getUsersInChatroom(String roomId) {
+    List<ChatParticipants> participants = chatparticipantsRepository.findAllByChatroomId(roomId);
+    return participants.stream().map(c -> {
+      Long userId = c.getUserId();
+      System.out.println(userId);
+      User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다."));
+
+
+      return UserSimpleDto.builder().user(user).build();
+    }).toList();
   }
 }

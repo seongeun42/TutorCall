@@ -1,5 +1,8 @@
 package com.potato.TutorCall.config;
 
+import com.potato.TutorCall.chat.domain.ChatMessage;
+import com.potato.TutorCall.chat.domain.ChatParticipants;
+import com.potato.TutorCall.chat.domain.Chatroom;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -58,11 +61,35 @@ public class RedisConfig {
   }
 
   @Bean
-  public ReactiveRedisOperations<String, Serializable> redisOperations(LettuceConnectionFactory connectionFactory) {
-    RedisSerializationContext<String, Serializable> serializationContext = RedisSerializationContext
-            .<String, Serializable>newSerializationContext(new StringRedisSerializer())
+  public ReactiveRedisOperations<String, ChatMessage> ChatMessageRedisOperations(LettuceConnectionFactory connectionFactory) {
+    RedisSerializationContext<String, ChatMessage> serializationContext = RedisSerializationContext
+            .<String, ChatMessage>newSerializationContext(new StringRedisSerializer())
             .key(new StringRedisSerializer())
-            .value(new GenericToStringSerializer<>(Serializable.class))
+            .value(new GenericToStringSerializer<>(ChatMessage.class))
+            .hashKey(new StringRedisSerializer())
+            .hashValue(new GenericJackson2JsonRedisSerializer())
+            .build();
+    return new ReactiveRedisTemplate<>(connectionFactory, serializationContext);
+  }
+
+  @Bean
+  public ReactiveRedisOperations<String, Chatroom> ChatroomRedisOperations(LettuceConnectionFactory connectionFactory) {
+    RedisSerializationContext<String, Chatroom> serializationContext = RedisSerializationContext
+            .<String, Chatroom>newSerializationContext(new StringRedisSerializer())
+            .key(new StringRedisSerializer())
+            .value(new GenericToStringSerializer<>(Chatroom.class))
+            .hashKey(new StringRedisSerializer())
+            .hashValue(new GenericJackson2JsonRedisSerializer())
+            .build();
+    return new ReactiveRedisTemplate<>(connectionFactory, serializationContext);
+  }
+
+  @Bean
+  public ReactiveRedisOperations<String, ChatParticipants> ChatParticipantsRedisOperations(LettuceConnectionFactory connectionFactory) {
+    RedisSerializationContext<String, ChatParticipants> serializationContext = RedisSerializationContext
+            .<String, ChatParticipants>newSerializationContext(new StringRedisSerializer())
+            .key(new StringRedisSerializer())
+            .value(new GenericToStringSerializer<>(ChatParticipants.class))
             .hashKey(new StringRedisSerializer())
             .hashValue(new GenericJackson2JsonRedisSerializer())
             .build();
