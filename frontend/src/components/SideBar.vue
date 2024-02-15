@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import { useUserStore } from '@/store/userStore';
+
+</script>
 <template>
   <div class="md flex flex-col bg-white border rounded-xl w-60">
     <div class="flex-grow">
@@ -14,7 +18,7 @@
                 <img src="@/img/default_profile.png" alt="" class="rounded-full w-28 h-28" />
               </li>
               <li class="flex items-center justify-center mt-3">
-                <p>김선생</p>
+                <p>{{ useUserStore().nickname }}</p>
               </li>
               <div class="my-10 ml-5">
                 <li class="my-5 flex">
@@ -56,22 +60,6 @@
                 <li class="my-5 flex">
                   <svg
                     width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M5 21C4.45 21 3.97933 20.8043 3.588 20.413C3.19667 20.0217 3.00067 19.5507 3 19V5C3 4.45 3.196 3.97933 3.588 3.588C3.98 3.19667 4.45067 3.00067 5 3H19C19.55 3 20.021 3.196 20.413 3.588C20.805 3.98 21.0007 4.45067 21 5V19C21 19.55 20.8043 20.021 20.413 20.413C20.0217 20.805 19.5507 21.0007 19 21H5ZM5 16.95V19H19V10.25L13.05 17L9 12.95L5 16.95ZM5 14.1L9 10.1L12.95 14.05L19 7.25V5H5V14.1ZM5 10.25V7.25V14.05V10.1V16.95V12.95V17V10.25ZM5 14.1V5V14.05V10.1V14.1ZM5 16.95V12.95V17V10.25V19V16.95Z"
-                      fill="black"
-                    />
-                  </svg>
-
-                  <!-- <RouterLink :to="{ name: 'profitCheck' }" class="ml-2">수익 통계</RouterLink> -->
-                </li>
-                <li class="my-5 flex">
-                  <svg
-                    width="24"
                     height="25"
                     viewBox="0 0 24 25"
                     fill="none"
@@ -104,8 +92,13 @@
                       stroke="black"
                     />
                   </svg>
-
                   <RouterLink :to="{ name: 'tutorMyLectures',query:{title: '내 과외'} }" class="ml-2">내 과외</RouterLink>
+                </li>
+                <li class="my-5 flex">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+                  </svg>
+                  <RouterLink :to="{ name: 'tutorcalllist',query: { title: '튜터콜' } }" class="ml-2">튜터콜</RouterLink>
                 </li>
               </div>
             </ul>
@@ -115,7 +108,5 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts"></script>
-
-<style scoped></style>
+<style scoped>
+</style>

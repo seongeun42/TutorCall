@@ -16,8 +16,8 @@ export interface questionInfo {
   title: string
   content: string
   writer: user
-  createDate: string
-  modifyedDate: string
+  createdAt: string
+  modifiedAt: string
   end: boolean
   tag: tagInfo
 }

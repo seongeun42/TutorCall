@@ -154,7 +154,6 @@ async function doSignUp(event: Event) {
 
 async function doLogin(event: Event) {
   event.preventDefault()
-  console.log("login");
   const param: loginForm = {
     email: loginEmail.value,
     password: loginPassword.value

@@ -8,6 +8,7 @@ const show: Ref<boolean> = ref(false);
 const onClick = () => {
   show.value = !show.value
 }
+
 </script>
 
 <template>
@@ -15,10 +16,13 @@ const onClick = () => {
   <div
     class="group fixed bottom-10 right-10 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-blue-500 uppercase leading-normal text-white shadow-lg"
   >
-  <div v-if="show" class="w-[290px] h-[484px] rounded-md absolute w-50 h-50 right-10 bottom-10 place-content-center" >
-    <!-- <ChatBox /> -->
-    <ChatRoom/>
-  </div>
+    <div
+      v-if="show"
+      class="w-[290px] h-[484px] rounded-md absolute w-50 h-50 right-10 bottom-10 place-content-center"
+    >
+      <!-- <ChatBox /> -->
+      <ChatRoom />
+    </div>
     <a
       @click="onClick()"
       data-te-ripple-init
