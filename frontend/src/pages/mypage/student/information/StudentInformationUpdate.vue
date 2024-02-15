@@ -4,8 +4,9 @@ import { ref } from 'vue';
 import { useUserStore } from '@/store/userStore';
 import * as api from '@/api/mypage/mypage'
 import type { commonResponse, errorResponse } from '@/interface/common/interface';
-import { isAxiosError, type AxiosResponse } from 'axios';
+import axios, { isAxiosError, type AxiosResponse } from 'axios';
 import router from '@/router';
+// import upload from '@/util/upload/upload'
 
 const userStore = useUserStore();
 
@@ -59,6 +60,17 @@ async function modifyed(event: Event):Promise<void>{
 
 }
 
+async function upload(event){
+  const file = event.target.files[0];
+
+  const formData = new FormData();
+  formData.append("profile", file);
+  const {data}  = await axios.post("/api/user/profile",formData);
+  const { url } = data.url;
+
+  userStore.profile = url;
+}
+
 </script>
 <template>
   <div class="mx-40 my-40">
@@ -70,8 +82,9 @@ async function modifyed(event: Event):Promise<void>{
           for="file-upload"
           class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
         >
-          <button class="border-4 border-blue-300 w-40 h-16 text-blue-500">사진 업로드</button>
-          <input id="file-upload" name="file-upload" type="file" class="sr-only" />
+<!--          <button class="border-4 border-blue-300 w-40 h-16 text-blue-500" >사진 업로드</button>-->
+          <div class="border-4 border-blue-300 w-40 h-16 text-blue-500">파일 업로드</div>
+          <input id="file-upload" name="file-upload" type="file" class="sr-only" onchange="upload" />
         </label>
 
         <p class="text-center mt-2 text-lg">삭제</p>
