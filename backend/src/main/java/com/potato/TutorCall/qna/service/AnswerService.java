@@ -82,7 +82,7 @@ public class AnswerService {
 
     if (targetQuestion.isEnd()) throw new DuplicatedException("이미 채택된 질문입니다.");
 
-    if (!targetAnswer.getQuestion().getWriter().getId().equals(userId))
+    if (!targetQuestion.getWriter().getId().equals(userId))
       throw new ForbiddenException("권한 없음");
 
     int count = answerRepository.chooseAnswer((long) answerId, true);
