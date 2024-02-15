@@ -10,7 +10,7 @@ import type{ emailCodeCheck,
     nickCheck, loginForm, signUpForm, signUpResponse, user, accountErrorResponse } from '@/interface/account/interface'
 
 import type { commonResponse, errorResponse } from '@/interface/common/interface'
-import { isAxiosError, type AxiosResponse } from 'axios'
+import axios, { isAxiosError, type AxiosResponse } from 'axios'
 
 // import exp from 'constants'
 
@@ -42,6 +42,7 @@ if (status) {
   }
 }
 
+const role: Ref<string> = ref('');
 function clearRegistInputValue(): void {
   emailAddr.value = ''
   vaildCode.value = ''
@@ -56,6 +57,7 @@ function toggle(): void {
 }
 
 function handleFormStatus(): void {
+
   isSignUp.value = !isSignUp.value
   isSignIn.value = !isSignIn.value
 }
@@ -102,7 +104,6 @@ async function checkEmailValidCode(){
       alert(error.response?.data.message);
     }
   })
-
 }
 
 function checkPassword(): boolean {
@@ -127,7 +128,8 @@ async function doSignUp(event: Event) {
   const param: signUpForm = {
     nickname: nickname.value,
     password: password.value,
-    email: emailAddr.value
+    email: emailAddr.value,
+    role: userStore.isTutor ? "TUTOR" : "USER"
   }
 
   if (checkPassword() == true && isEmailChecked.value && !isNickNameUsed.value) {
@@ -175,6 +177,8 @@ async function doLogin(event: Event) {
     })
 }
 
+
+
 </script>
 
 <template>
@@ -209,7 +213,7 @@ async function doLogin(event: Event) {
                 <div
                   class="bg-[#6181ad] rounded-lg w-14 h-9 text-white flex items-center justify-center font-semibold"
                   style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%)"
-                  @click="receiveEmailCode"
+                  @click.prevent="receiveEmailCode"
                 >
                   <!--@click 추가해서 이메일 인증 발송에 사용 예정-->
                   발송
@@ -231,11 +235,11 @@ async function doLogin(event: Event) {
                 <i class="bx bxs-user"></i>
                 <input type="text" placeholder="추천인" v-model="recommander" />
               </div>
-              <button type="submit" @click="doSignUp">회원 가입</button>
+              <button type="submit" @click.stop.prevent="doSignUp">회원 가입</button>
               <p>
                 <span> 이미 계정이 있으신가요? </span>
                 <b
-                  @click="toggle"
+                  @click.prevent="toggle"
                   class="pointer"
                   style="
                     text-decoration-line: underline;
@@ -265,7 +269,7 @@ async function doLogin(event: Event) {
                 <i class="bx bxs-lock-alt"></i>
                 <input type="password" placeholder="비밀번호" required v-model="loginPassword" />
               </div>
-              <button type="submit" @click="doLogin">로그인</button>
+              <button type="submit" @click.prevent="doLogin">로그인</button>
 
               <p>
                 <b> or continue with </b>
