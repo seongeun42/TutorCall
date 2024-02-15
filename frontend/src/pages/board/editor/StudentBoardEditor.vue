@@ -34,45 +34,7 @@ const editStore = useEditStore()
 const userStore = useUserStore()
 const notificationStore = useNotificationStore()
 
-watch(
-  () => schoolSelected.value,
-  (oldValue) => {
-    if (Number(oldValue) == 1) {
-      grade = []
-      for (let i = 0; i < 6; i++) grade.push({ value: i * 5, name: `${i + 1}학년` })
-      gradeDisabled.value = false
-      gradeSelected.value = ''
-      subjectDisabled.value = true
-      subjectSelected.value = ''
-    } else if (Number(oldValue) == 31 || Number(oldValue) == 46) {
-      grade = []
-      for (let i = 0; i < 3; i++) grade.push({ value: i * 5, name: `${i + 1}학년` })
-      gradeDisabled.value = false
-      gradeSelected.value = ''
-      subjectDisabled.value = true
-      subjectSelected.value = ''
-    }
 
-    if(editStore.needEdit) gradeSelected.value = editStore.grade.toString();
-  }
-)
-
-watch(
-  () => gradeSelected.value,
-  (newValue, oldValue) => {
-    if (Number(newValue) >= 0) {
-      subjectDisabled.value = false
-    }
-    if(editStore.needEdit) subjectSelected.value = editStore.subject.toString();
-  }
-)
-
-watch(
-  () => subjectSelected.value,
-  () => {
-    tag = Number(schoolSelected.value) + Number(gradeSelected.value) + Number(subjectSelected.value)
-  }
-)
 
 const questionId: number = Number(router.currentRoute.value.params['qnaNum'])
 

@@ -27,6 +27,7 @@ export interface detailLecture extends lecture{
     participated: boolean,
     price: number,
     promotionCreatedAt:string,
+    
 }
 
 export interface detailTutor extends user {

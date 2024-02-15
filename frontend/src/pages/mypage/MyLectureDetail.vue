@@ -38,6 +38,7 @@ onMounted(async()=>{
   await api.oneLecture(props.data.lectureId)
   .then((response: AxiosResponse<detailLecture>)=>{
     lectureData.value = response.data;
+    console.log(response);
     switch(lectureData.value.tag.level){
       case "ELEMENTARY":
           schoolname.value = "초등학교";
