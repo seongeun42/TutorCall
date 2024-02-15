@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue';
 import ChatBox from './ChatBox.vue'
-import ChatRoom from './ChatRoom.vue'
 import { useChattingStore } from '@/store/chatStore';
 import { useUserStore } from '@/store/userStore'
 

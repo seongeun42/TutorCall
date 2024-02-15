@@ -17,7 +17,7 @@ export const useChattingStore = defineStore('chatting', {
         // 사용자가 현재 직접 메시지를 주고 받는 채팅방의 id
         participatingRoom: '' as String | null,
         // 현재 메시지를 주고 받는 채팅방의 메시지들
-        chatMessages: [] as chatMessage[],
+        chatMessages: [] as Object[],
         // 사용자가 새롭게 참여하게 된 방에 대한 id
         newChatroom: null as Stomp.Subscription | null,
     }),
@@ -50,6 +50,23 @@ export const useChattingStore = defineStore('chatting', {
             if(this.stompClient) {
                 this.stompClient.subscribe("/sub/chatroom/users/" + roomId, (response: any) => {
                     participants.value = JSON.parse(response.body);
+                })
+            }
+        },
+        // 기존 채팅방에 있던 메시지들을 한 번에 불러옴
+        getAllChatsInRoom(roomId: string){
+            if(this.stompClient) {
+                this.stompClient.subscribe("/sub/chat/" + roomId, (response: any) => {
+                    console.log(response.body)
+                    this.chatMessages = JSON.parse(response.body)
+                })
+            }
+        },
+        // 채팅방에 새로운 메시지가 들어오면 이를 받음
+        getNewMessage(roomId: string, chats: Ref<Object[]>) {
+            if(this.stompClient) {
+                this.stompClient.subscribe("/sub/chat/new/" + roomId, (response: any) => {
+                    this.chatMessages.push(JSON.parse(response.body));
                 })
             }
         },

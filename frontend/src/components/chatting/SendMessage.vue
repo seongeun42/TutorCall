@@ -1,5 +1,23 @@
 <script setup lang="ts">
+import { defineProps } from 'vue';
+import { useChattingStore } from '@/store/chatStore';
 
+const props = defineProps<{
+  roomId: String,
+  senderId: number,
+}>()
+
+const chattingStore = useChattingStore();
+
+function sendMessage(event: Event) {
+  // console.log(event.target.value)
+  const message = event.target.value;
+  event.target.value = '';
+  chattingStore.sendMessage("chat/new/" + props.roomId, {
+    "senderId": props.senderId,
+    "message": message,
+  });
+}
 </script>
 
 <template>
@@ -10,9 +28,8 @@
     <input
       type="text"
       class="text-sm font-[400px] text-[#aab8c2] ml-[21px] mr-0 mt-[21px] mb-0 p-0 border-[none] bg-[#ffffff] font-sans focus:outline-0"
-      value="Send message..."
+      placeholder="Send message..."
       @keyup.enter="sendMessage"
-      v-model="newMessage"
     />
     <button
       id="send"
