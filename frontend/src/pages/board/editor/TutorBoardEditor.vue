@@ -24,7 +24,6 @@ const school: selectform[] = [
 let grade: selectform[] = []
 const title: Ref<string> = ref('')
 const editorData: Ref<string> = ref('')
-const buttonClicked: Ref<string> = ref('')
 const editStore = useEditStore()
 const lectureId: number = Number(router.currentRoute.value.params['promotionNum'])
 const maxPeople: Ref<number> = ref(0)
@@ -178,11 +177,6 @@ async function submitPost(event: Event): Promise<void> {
         <div>최대 모집 인원</div>
         <input class="info-input" type="text" v-model="maxPeople" />
         <div>명</div>
-      </div>
-      <div class="flex items-center mr-10">
-        <div>회당 가격</div>
-        <input class="info-input" type="text" v-model="lectureFee" />
-        <div>원</div>
       </div>
       <div class="flex items-center">
         <div>모집 마감 날짜</div>

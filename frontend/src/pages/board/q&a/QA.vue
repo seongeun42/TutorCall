@@ -208,7 +208,7 @@ function goEditor(): void {
         </button>
 
         <button
-          v-if="userStore.role === 'USER'"
+          v-if="userStore.$state.role === 'USER'"
           type="button"
           class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
           @click="goEditor"

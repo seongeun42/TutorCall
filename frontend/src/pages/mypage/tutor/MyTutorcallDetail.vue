@@ -28,10 +28,6 @@ const myreview:Ref<review|null> = ref(props.data.review);
       <p class="font-bold text-lg mr-8">과외 기간</p>
       <p class="text-xl">{{ data.createAt.split("T")[0] }}</p>
     </div>
-    <div class="flex">
-      <p class="font-bold text-lg mr-8">회당 가격</p>
-      <p class="text-xl">{{ data.price }} point</p>
-    </div>
     <div class="mt-10 font-semibold text-xl mb-5">
       <p>문제</p>
     </div>
@@ -40,9 +36,10 @@ const myreview:Ref<review|null> = ref(props.data.review);
     <div class="mt-10 font-semibold text-xl mb-5">
       <p>나의 과외 리뷰</p>
     </div>
-    <div class="review-box rounded-xl shadow-md">
+    <div class="review-box rounded-xl shadow-md flex flex-row justify-around">
       <div v-if="myreview">
-        <ReviewHistory :data="myreview"/>
+        <!-- <ReviewHistory :data="myreview" mode=""/> -->
+        <p class="flex items-center font-semibold">리뷰가 존재하는데 불러올 수가 없음...</p>
       </div>
         <div v-else>
           <div class="flex flex-row justify-around">

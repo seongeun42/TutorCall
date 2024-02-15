@@ -34,7 +34,7 @@ async function deletePromotion(event: Event):Promise<void>{
 
 onMounted(async()=>{
   await api.oneLecture(promotionId)
-  .then((response: AxiosResponse<DetailLecture>)=>{
+  .then((response: AxiosResponse<detailLecture>)=>{
     lectureData.value = response.data;
     switch(lectureData.value.tag.level){
         case "ELEMENTARY":
@@ -62,7 +62,7 @@ function editLecture(event:Event):void{
 event.preventDefault();
 if(lectureData.value){
   editStore.init();
-  if(lectureData.value.tutor.id != Number(useUserStore().userId)){
+  if(lectureData.value.tutor.id != Number(useUserStore().$state.id)){
       alert("수정 권한이 없습니다!");
       return;
     }
