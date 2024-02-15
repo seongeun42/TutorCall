@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 import type { Ref } from 'vue';
-
-import ChatRoom from '@/components/chatting/ChatRoom.vue';
+import ChatBox from './ChatBox.vue'
+import { useChattingStore } from '@/store/chatStore';
+import { useUserStore } from '@/store/userStore'
 
 const show: Ref<boolean> = ref(false);
 const onClick = () => {
   show.value = !show.value
 }
 
+const chattingStore = useChattingStore()
+const userStore = useUserStore();
+chattingStore.connectSocket(userStore.id);
 </script>
 
 <template>
@@ -20,8 +24,8 @@ const onClick = () => {
       v-if="show"
       class="w-[290px] h-[484px] rounded-md absolute w-50 h-50 right-10 bottom-10 place-content-center"
     >
-      <!-- <ChatBox /> -->
-      <ChatRoom />
+      <ChatBox />
+      <!-- <ChatRoom /> -->
     </div>
     <a
       @click="onClick()"

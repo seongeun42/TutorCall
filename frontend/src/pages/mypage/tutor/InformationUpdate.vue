@@ -1,44 +1,44 @@
 <script setup lang="ts">
-import type { Ref } from 'vue';
-import { ref } from 'vue';
-import { useUserStore } from '@/store/userStore';
+import type { Ref } from 'vue'
+import { ref } from 'vue'
+import { useUserStore } from '@/store/userStore'
 import * as api from '@/api/mypage/mypage'
-import { isAxiosError, type AxiosResponse } from 'axios';
-import type { commonResponse, errorResponse } from '@/interface/common/interface';
-import router from '@/router';
-import TagSelectForm from '@/pages/mypage/tutor/TagSelectForm.vue';
-import { reactive } from 'vue';
-import { onMounted } from 'vue';
+import { isAxiosError, type AxiosResponse } from 'axios'
+import type { commonResponse, errorResponse } from '@/interface/common/interface'
+import router from '@/router'
+import TagSelectForm from '@/pages/mypage/tutor/TagSelectForm.vue'
+import { reactive } from 'vue'
+import { onMounted } from 'vue'
 
 interface selectform {
   value: number
   name: string
 }
-interface TagSelect{
-    school: string,
-    subject: string,
-    grade: string|selectform,
-    subjectDisabled: boolean,
-    gradeDisabled: boolean,
-    btnDisabled: boolean,
-    idx: number,
-    tag:number,
-    tags: number[],
-    disabled: boolean,
+interface TagSelect {
+  school: string
+  subject: string
+  grade: string | selectform
+  subjectDisabled: boolean
+  gradeDisabled: boolean
+  btnDisabled: boolean
+  idx: number
+  tag: number
+  tags: number[]
+  disabled: boolean
 }
 
-const userStore = useUserStore();
-const introduce:Ref<string> = ref('');
-const nickname:Ref<string> = ref(userStore.nickname);
-const password:Ref<string> = ref('');
-const newPassword:Ref<string> = ref('');
-const alram:Ref<string> = ref('true');
-const checkPassword:Ref<string> = ref('');
-let tags:number[] = [];
-let tagForms:Ref<TagSelect[]> = ref([]);
+const userStore = useUserStore()
+const introduce: Ref<string> = ref('')
+const nickname: Ref<string> = ref(userStore.nickname)
+const password: Ref<string> = ref('')
+const newPassword: Ref<string> = ref('')
+const alram: Ref<string> = ref('true')
+const checkPassword: Ref<string> = ref('')
+let tags: number[] = []
+let tagForms: Ref<TagSelect[]> = ref([])
 
-onMounted(()=>{
-  const initData:TagSelect ={
+onMounted(() => {
+  const initData: TagSelect = {
     school: '',
     subject: '',
     grade: '',
@@ -50,101 +50,92 @@ onMounted(()=>{
     tags: tags,
     disabled: false
   }
-  tagForms.value.push(initData);
+  tagForms.value.push(initData)
 })
 
-function addTagForm(so:TagSelect):void{
-  
-  tagForms.value[so.idx] = so;
+function addTagForm(so: TagSelect): void {
+  tagForms.value[so.idx] = so
 
-  const initData:TagSelect ={
+  const initData: TagSelect = {
     school: '',
     subject: '',
     grade: '',
     subjectDisabled: true,
     gradeDisabled: true,
     btnDisabled: true,
-    idx: so.idx+1,
+    idx: so.idx + 1,
     tag: 0,
     tags: tags,
     disabled: false
   }
 
-  tagForms.value.push(initData);
-  tags.push(so.tag);
-  
+  tagForms.value.push(initData)
+  tags.push(so.tag)
 }
 
-function deleteTagForm(idx: number):void{
-
-  tagForms.value[idx].disabled = true;
-  tags = tags.filter((t)=> t!= tagForms.value[idx].tag);
-
+function deleteTagForm(idx: number): void {
+  tagForms.value[idx].disabled = true
+  tags = tags.filter((t) => t != tagForms.value[idx].tag)
 }
 
-async function modifyed(event: Event):Promise<void>{
+async function modifyed(event: Event): Promise<void> {
+  event.preventDefault()
 
-  event.preventDefault();
-
-  if(introduce.value.length!=0){
-    await api.modifyIntro({introduction: introduce.value})
-    .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
+  if (introduce.value.length != 0) {
+    await api.modifyIntro({ introduction: introduce.value }).catch((error: unknown) => {
+      if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+      throw error
     })
   }
 
-  if(nickname.value.length!=0 && nickname.value != userStore.nickname){
-    await api.modifynickname({nickname:nickname.value})
-    .then((response: AxiosResponse<commonResponse>)=>{
-      userStore.nickname= nickname.value;
-    })
-    .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
-    })
+  if (nickname.value.length != 0 && nickname.value != userStore.nickname) {
+    await api
+      .modifynickname({ nickname: nickname.value })
+      .then((response: AxiosResponse<commonResponse>) => {
+        userStore.nickname = nickname.value
+      })
+      .catch((error: unknown) => {
+        if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+        throw error
+      })
   }
-  if(password.value.length !=0 && newPassword.value.length !=0){
-    if(password.value == newPassword.value){
-      alert("이전 비밀번호와 변경 비밀번호가 같습니다.");
-      return;
+  if (password.value.length != 0 && newPassword.value.length != 0) {
+    if (password.value == newPassword.value) {
+      alert('이전 비밀번호와 변경 비밀번호가 같습니다.')
+      return
+    } else if (newPassword.value == checkPassword.value) {
+      await api
+        .modifyPassword({ password: password.value, newPassword: newPassword.value })
+        .catch((error: unknown) => {
+          if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+          throw error
+        })
+    } else {
+      alert('새로운 비밀번호를 다시 확인해주세요.')
+      return
     }
-    else if (newPassword.value == checkPassword.value){
-      await api.modifyPassword({password:password.value, newPassword: newPassword.value})
-      .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
-    })
-    }else{
-      alert('새로운 비밀번호를 다시 확인해주세요.');
-      return;
-    }
   }
-    await api.modifyTag({tags: tags})
-    .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
-    })
-
-  await api.modifyAlert({notificationOption: alram.value})
-  .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
+  await api.modifyTag({ tags: tags }).catch((error: unknown) => {
+    if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+    throw error
   })
 
-  alert('정보 수정을 완료했습니다');
-  router.push({"name":"mypage"});
+  await api.modifyAlert({ notificationOption: alram.value }).catch((error: unknown) => {
+    if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+    throw error
+  })
 
+  alert('정보 수정을 완료했습니다')
+  router.push({ name: 'mypage' })
 }
 </script>
 <template>
-  <div class="mx-40 my-40">
+  <div class="mx-10 my-10">
     <p class="font-bold text-2xl mb-10">프로필 사진</p>
-    <div class="flex mx-20">
+    <div class="flex mx-10">
       <img src="@/img/default_profile.png" class="w-28 h-28 rounded-full" alt="" />
       <div class="mx-10 my-3">
-        <button class="border-4 border-blue-300 w-40 h-16 text-blue-500">사진 업로드</button>
-        <p class="text-center mt-2 text-lg">삭제</p>
+        <button class="border-4 border-blue-300 w-32 h-16 text-blue-500">사진 업로드</button>
       </div>
       <p class="border-2 mx-20"></p>
       <div class="mx-10">
@@ -154,7 +145,7 @@ async function modifyed(event: Event):Promise<void>{
       </div>
     </div>
     <p class="my-10 border-2"></p>
-    <p class="font-bold text-2xl">사용자 정보 세부사항</p>
+    <p class="font-bold text-2xl">개인 정보</p>
     <div class="mt-8">
       <p class="text-xl mb-5">소개글</p>
       <div class="input-group">
@@ -216,7 +207,12 @@ async function modifyed(event: Event):Promise<void>{
     </div>
     <div class="mt-8">
       <div v-for="(tf, index) in tagForms" :key="index">
-        <TagSelectForm v-if="!tf.disabled" :selectOption="tf" @update="addTagForm" @change="deleteTagForm"/>
+        <TagSelectForm
+          v-if="!tf.disabled"
+          :selectOption="tf"
+          @update="addTagForm"
+          @change="deleteTagForm"
+        />
       </div>
     </div>
     <div class="mt-8">
@@ -227,8 +223,10 @@ async function modifyed(event: Event):Promise<void>{
       </select>
     </div>
     <div class="flex justify-end">
-      <button class="w-24 h-14 mt-10 bg-blue-800 text-white flex items-center justify-center"
-      @click="modifyed($event)">
+      <button
+        class="w-24 h-14 mt-10 bg-blue-800 text-white flex items-center justify-center"
+        @click="modifyed($event)"
+      >
         저장
       </button>
     </div>

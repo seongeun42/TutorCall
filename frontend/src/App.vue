@@ -9,6 +9,7 @@ import ChatIcon from './components/chatting/ChatIcon.vue'
 import TutorCallPage from '@/pages/tutorcall/TutorCallPage.vue'
 import { useNotificationStore } from '@/store/notificationStore'
 import { onMounted } from 'vue'
+import Cookies from 'js-cookie'
 
 const userStore = useUserStore()
 const notificationStore = useNotificationStore()
@@ -19,6 +20,12 @@ onMounted(() => {
     notificationStore.socketReconnect(userStore.id, userStore.isTutor, userStore.isActiveCall)
   }
 })
+
+window.addEventListener('unload', function(){
+  userStore.logout();
+  for(let cookie in Cookies.get()) Cookies.remove(cookie);
+});
+
 </script>
 <template>
   <div v-if="!userStore.isLogin">
@@ -31,7 +38,9 @@ onMounted(() => {
   <div class="min-h-[1000px]" id="mainComponent">
     <RouterView id="main" />
   </div>
-  <ChatIcon />
+  <div v-if="userStore.isLogin">
+    <ChatIcon />
+  </div>
   <FooterBar />
 </template>
 

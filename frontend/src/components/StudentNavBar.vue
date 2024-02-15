@@ -4,6 +4,7 @@ import { useUserStore } from '@/store/userStore'
 import { useNotificationStore } from '@/store/notificationStore'
 import { ref, type Ref } from 'vue'
 import CallNotification from '@/components/CallNotification.vue'
+import Cookies from 'js-cookie'
 
 const modalShow: Ref<boolean> = ref(false)
 
@@ -29,6 +30,7 @@ function logout():void{
   notificationStore.socketDisconnect();
   notificationStore.clear();
   sessionStorage.clear();
+  for(let cookie in Cookies.get()) Cookies.remove(cookie);
   router.push("/");
 }
 </script>

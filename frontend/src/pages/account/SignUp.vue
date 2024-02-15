@@ -3,14 +3,20 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 import SelectRole from './SelectRole.vue'
 import * as api from '@/api/login/signUp'
+import * as mypageApi from '@/api/mypage/mypage'
 import router from '@/router/index'
 import { useUserStore } from '@/store/userStore'
 import { useNotificationStore } from '@/store/notificationStore'
 import type{ emailCodeCheck,
     nickCheck, loginForm, signUpForm, signUpResponse, user, accountErrorResponse } from '@/interface/account/interface'
 
+import Cookie from 'js-cookie';
+
 import type { commonResponse, errorResponse } from '@/interface/common/interface'
 import axios, { isAxiosError, type AxiosResponse } from 'axios'
+import { computed } from 'vue'
+import SelectTagModal from '@/pages/account/SelectTagModal.vue'
+import type { modifytags } from '@/interface/mypage/interface'
 
 // import exp from 'constants'
 
@@ -28,6 +34,7 @@ const loginEmail: Ref<string> = ref('')
 const loginPassword: Ref<string> = ref('')
 const userStore = useUserStore()
 const notificationStore = useNotificationStore()
+const tagModal:Ref<boolean> = ref(false);
 
 const status = router.currentRoute.value.query.signUp
 
@@ -43,6 +50,7 @@ if (status) {
 }
 
 const role: Ref<string> = ref('');
+
 function clearRegistInputValue(): void {
   emailAddr.value = ''
   vaildCode.value = ''
@@ -68,8 +76,6 @@ function isValidEmail(): boolean {
 }
 
 async function receiveEmailCode() {
-  console.log('현재 입력된 이메일 값: ' + emailAddr.value)
-
   if (!isValidEmail()) {
     alert('이메일 형식이 아닙니다.')
     return
@@ -139,9 +145,14 @@ async function doSignUp(event: Event) {
         alert(response.data.message)
         isSignUp.value = false
         isSignIn.value = true
-        clearRegistInputValue()
-        router.push({ name: 'signform', query: { signUp: 'false' } })
-        return
+        alert(userStore.$state.role);
+        if(userStore.$state.role === 'USER'){
+          clearRegistInputValue()
+          router.push({ name: 'signform', query: { signUp: 'false' } })
+          return
+        }else{
+          tagModal.value = !tagModal.value;
+        }
       })
       .catch((error: unknown) => {
         if (isAxiosError<errorResponse>(error)) {
@@ -152,7 +163,6 @@ async function doSignUp(event: Event) {
     alert('입력 다시 확인')
   }
 }
-
 
 async function doLogin(event: Event) {
   event.preventDefault()
@@ -177,11 +187,34 @@ async function doLogin(event: Event) {
     })
 }
 
-
-
+async function tutorRegist(tags:number[]){
+  //1. 로그인 후 세션 가져오기
+  //2. 세션을 이용해서 tag 수정하기
+  //3. 로그아웃 시키고 (쿠키도 지우고) 로그인창으로 보내기
+  if(tags.length != 0){
+    tagModal.value = !tagModal.value;
+    const param: loginForm = {
+      email: emailAddr.value,
+      password: password.value,
+    }
+    await api.login(param);
+    await mypageApi.modifyTag({tags:tags});
+  
+    Cookie.remove('JSESSIONID');
+  }
+    clearRegistInputValue();
+    router.push({ name: 'signform', query: { signUp: 'false' } })
+  
+}
 </script>
 
 <template>
+  <div v-if="tagModal">
+    <div class="modal-box fixed top-[10%] left-[30%] min-h-[30rem] max-w-[40rem] z-50">
+      <SelectTagModal @update="tutorRegist"/>
+      </div>
+    <div class="modal-overlay z-40"></div>
+  </div>
   <div id="container" :class="['container', { 'sign-in': isSignIn, 'sign-up': isSignUp }]">
     <!-- FORM SECTION -->
     <div class="row">
@@ -235,7 +268,7 @@ async function doLogin(event: Event) {
                 <i class="bx bxs-user"></i>
                 <input type="text" placeholder="추천인" v-model="recommander" />
               </div>
-              <button type="submit" @click.stop.prevent="doSignUp">회원 가입</button>
+                <button type="submit" @click.stop.prevent="doSignUp">회원 가입</button>
               <p>
                 <span> 이미 계정이 있으신가요? </span>
                 <b
@@ -600,5 +633,13 @@ async function doLogin(event: Event) {
     margin: 0.5rem;
     font-size: 2rem;
   }
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 배경을 투명한 검정색으로 설정 */
 }
 </style>

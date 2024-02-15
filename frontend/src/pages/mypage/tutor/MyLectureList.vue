@@ -2,36 +2,34 @@
 import { ref, type Ref, onMounted } from 'vue'
 import * as mypageApi from '@/api/mypage/mypage'
 import MyLectureDetail from '@/pages/mypage/MyLectureDetail.vue'
-import type { lectureHistory, lectureResponse } from '@/interface/mypage/interface';
-import { isAxiosError, type AxiosResponse } from 'axios';
-import { type errorResponse } from '@/interface/common/interface';
-
+import type { lectureHistory, lectureResponse } from '@/interface/mypage/interface'
+import { isAxiosError, type AxiosResponse } from 'axios'
+import { type errorResponse } from '@/interface/common/interface'
 
 const showDetail: Ref<boolean> = ref(false)
-const selectedLecture: Ref<lectureHistory|null> = ref(null);
-const lectureData: Ref<lectureHistory[]|null> = ref(null);
-const page:Ref<number> = ref(0);
-const size:Ref<number> = ref(5);
-  const clickShow = function (index: number): void {
+const selectedLecture: Ref<lectureHistory | null> = ref(null)
+const lectureData: Ref<lectureHistory[] | null> = ref(null)
+const page: Ref<number> = ref(0)
+const size: Ref<number> = ref(5)
+const clickShow = function (index: number): void {
   showDetail.value = !showDetail.value
-  if(lectureData.value != null) selectedLecture.value = lectureData.value[index];
+  if (lectureData.value != null) selectedLecture.value = lectureData.value[index]
 }
 
-onMounted(async():Promise<void>=>{
-  const param:string = `page=${page.value}&size=${size.value}`
-  await mypageApi.lectureHistory(param)
-  .then((response: AxiosResponse<lectureResponse>)=>{
-    lectureData.value = response.data.content;
-  })
-  .catch((error:unknown)=>{
-    if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-  })
+onMounted(async (): Promise<void> => {
+  const param: string = `page=${page.value}&size=${size.value}`
+  await mypageApi
+    .lectureHistory(param)
+    .then((response: AxiosResponse<lectureResponse>) => {
+      lectureData.value = response.data.content
+    })
+    .catch((error: unknown) => {
+      if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+    })
 })
-
-
 </script>
 <template>
-  <div class="flex">
+  <div v-if="lectureData?.length > 0" class="flex">
     <div class="lecturelist bg-blue-50">
       <div v-for="(data, index) in lectureData" :key="index">
         <div class="flex mt-5 mb-10 justify-center">
@@ -79,15 +77,17 @@ onMounted(async():Promise<void>=>{
       </div>
     </div>
     <div class="lecturedetail">
-      <MyLectureDetail v-if="showDetail&&selectedLecture" :data="selectedLecture" />
+      <MyLectureDetail v-if="showDetail && selectedLecture" :data="selectedLecture" />
     </div>
+  </div>
+  <div v-else>
+    <div class="font-semibold text-2xl">강의 내역이 존재하지 않습니다</div>
   </div>
 </template>
 <style scoped>
 .lecturelist {
   min-height: 900px;
   background-color: #f3fcff;
-
   padding: 10px;
 }
 

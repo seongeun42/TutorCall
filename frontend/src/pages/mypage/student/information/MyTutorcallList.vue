@@ -74,7 +74,7 @@ onMounted(async():Promise<void>=>{
         <div class="border-gray border-2"></div>
       </div>
     </div>
-    <div class="lecturedetail">
+    <div class="lecturedetail shadow-md ml-2">
       <MyTutorcallDetail v-if="showDetail&&selected" :data="selected"/>
     </div>
   </div>

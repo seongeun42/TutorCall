@@ -42,8 +42,7 @@ function showDetail(event:Event):void{
           <h5 class="mb-2 text-xl font-bold leading-tight text-neutral-800 dark:text-neutral-50">
             {{ props.data.title }}
           </h5>
-          <p class="mb-4 text-base text-neutral-600 dark:text-neutral-200">
-            {{ props.data.content }}
+          <p class="mb-4 text-base text-neutral-600 dark:text-neutral-200" v-html="props.data.content">
           </p>
           <div class="flex justify-between items-center">
             <div class="flex items-center mb-5 mr-5">

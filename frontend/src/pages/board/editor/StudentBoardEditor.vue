@@ -90,9 +90,9 @@ function cancelWrite(): void {
   }
 }
 
-function handleModelValueUpdate(newValue: string) {
+function handleModelValueUpdate(newValue: any) {
   // 값 변경 추적 로직을 작성합니다.
-  editorData.value = newValue
+  editorData.value = newValue.value
   console.log(editorData.value)
 }
 

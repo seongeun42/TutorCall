@@ -9,56 +9,52 @@ import router from '@/router';
 import {fileupload} from "@/api/mypage/mypage";
 // import upload from '@/util/upload/upload'
 
-const userStore = useUserStore();
+const userStore = useUserStore()
 
-const nickname:Ref<string> = ref(userStore.nickname);
-const password:Ref<string> = ref('');
-const newPassword:Ref<string> = ref('');
-const alram:Ref<string>
-= ref('true');
-const checkPassword:Ref<string> = ref('');
+const nickname: Ref<string> = ref(userStore.nickname)
+const password: Ref<string> = ref('')
+const newPassword: Ref<string> = ref('')
+const alram: Ref<string> = ref('true')
+const checkPassword: Ref<string> = ref('')
 
+async function modifyed(event: Event): Promise<void> {
+  event.preventDefault()
 
-async function modifyed(event: Event):Promise<void>{
-
-  event.preventDefault();
-
-  if(nickname.value.length!=0 && nickname.value != userStore.nickname){
-    await api.modifynickname({nickname:nickname.value})
-    .then((response: AxiosResponse<commonResponse>)=>{
-      userStore.nickname= nickname.value;
-    })
-    .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
-    })
+  if (nickname.value.length != 0 && nickname.value != userStore.nickname) {
+    await api
+      .modifynickname({ nickname: nickname.value })
+      .then((response: AxiosResponse<commonResponse>) => {
+        userStore.nickname = nickname.value
+      })
+      .catch((error: unknown) => {
+        if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+        throw error
+      })
   }
-  if(password.value.length !=0 && newPassword.value.length !=0){
-    if(password.value == newPassword.value){
-      alert("이전 비밀번호와 변경 비밀번호가 같습니다.");
-      return;
-    }
-    else if (newPassword.value == checkPassword.value){
-      await api.modifyPassword({password:password.value, newPassword: newPassword.value})
-      .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
-    })
-    }else{
-      alert('새로운 비밀번호를 다시 확인해주세요.');
-      return;
+  if (password.value.length != 0 && newPassword.value.length != 0) {
+    if (password.value == newPassword.value) {
+      alert('이전 비밀번호와 변경 비밀번호가 같습니다.')
+      return
+    } else if (newPassword.value == checkPassword.value) {
+      await api
+        .modifyPassword({ password: password.value, newPassword: newPassword.value })
+        .catch((error: unknown) => {
+          if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+          throw error
+        })
+    } else {
+      alert('새로운 비밀번호를 다시 확인해주세요.')
+      return
     }
   }
 
-  await api.modifyAlert({notificationOption: alram.value})
-  .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
+  await api.modifyAlert({ notificationOption: alram.value }).catch((error: unknown) => {
+    if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+    throw error
   })
 
-  alert('정보 수정을 완료했습니다');
-  router.push({"name":"mypage"});
-
+  alert('정보 수정을 완료했습니다')
+  router.push({ name: 'mypage' })
 }
 
 async function upload(event){
@@ -75,7 +71,7 @@ async function upload(event){
 
 </script>
 <template>
-  <div class="mx-40 my-40">
+  <div class="mx-10 my-10">
     <p class="font-bold text-2xl mb-10">프로필 사진</p>
     <div class="flex mx-20">
       <img :src="userStore.profile" class="w-28 h-28 rounded-full" alt="" />
@@ -88,8 +84,6 @@ async function upload(event){
           <div class="border-4 border-blue-300 w-40 h-16 text-blue-500">파일 업로드</div>
           <input id="file-upload" name="file-upload" type="file" class="sr-only" @change="upload" />
         </label>
-
-        <p class="text-center mt-2 text-lg">삭제</p>
       </div>
       <p class="border-2 mx-20"></p>
       <div class="mx-10">
@@ -99,7 +93,7 @@ async function upload(event){
       </div>
     </div>
     <p class="my-10 border-2"></p>
-    <p class="font-bold text-2xl">사용자 정보 세부사항</p>
+    <p class="font-bold text-2xl">개인 정보</p>
 
     <div class="mt-8">
       <p class="text-xl mb-5">닉네임</p>
@@ -155,8 +149,10 @@ async function upload(event){
       </select>
     </div>
     <div class="flex justify-end">
-      <button class="w-24 h-14 mt-10 bg-blue-800 text-white flex items-center justify-center"
-      @click="modifyed($event)">
+      <button
+        class="w-24 h-14 mt-10 bg-blue-800 text-white flex items-center justify-center"
+        @click="modifyed($event)"
+      >
         저장
       </button>
     </div>
