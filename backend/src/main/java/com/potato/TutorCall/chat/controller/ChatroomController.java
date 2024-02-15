@@ -2,18 +2,18 @@ package com.potato.TutorCall.chat.controller;
 
 import com.potato.TutorCall.chat.dto.req.CreateRoomReqDto;
 import com.potato.TutorCall.chat.dto.req.ExitRoomReqDto;
-import com.potato.TutorCall.chat.dto.req.SendChatReq;
+import com.potato.TutorCall.chat.dto.res.ChatroomInfoResDto;
 import com.potato.TutorCall.chat.service.ChatroomService;
+import com.potato.TutorCall.user.dto.UserSimpleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /** 채팅방에 대한 컨트롤러 */
 @Controller
@@ -29,8 +29,7 @@ public class ChatroomController {
    */
   @MessageMapping("/chatroom/{userId}")
   @SendTo("/sub/chatroom/{userId}")
-  public Flux<String> getChatroomList(@DestinationVariable Long userId) {
-    System.out.println("test");
+  public List<ChatroomInfoResDto> getChatroomList(@DestinationVariable Long userId) {
     return chatroomService.getChatroomList(userId);
   }
 
@@ -42,7 +41,7 @@ public class ChatroomController {
    */
   @MessageMapping("/chatroom/users/{roomId}")
   @SendTo("/sub/chatroom/users/{roomId}")
-  public Flux<?> getUsersInChatroom(@DestinationVariable String roomId) {
+  public List<UserSimpleDto> getUsersInChatroom(@DestinationVariable String roomId) {
     return chatroomService.getUsersInChatroom(roomId);
   }
 

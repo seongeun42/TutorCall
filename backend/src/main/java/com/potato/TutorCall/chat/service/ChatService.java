@@ -7,26 +7,33 @@ import com.potato.TutorCall.chat.repository.chat.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ChatService {
   private final ChatMessageRepository chatMessageRepository;
 
-  public Flux<ChatResDto> receiveChatsInRoom(String roomId) {
-    return chatMessageRepository.findAllByChatroomIdOrderByCreatedAt(roomId).map(c -> ChatResDto.builder()
-            .senderId(c.getSenderId())
-            .message(c.getMessage())
-            .createdAt(c.getCreatedAt().toLocalDateTime())
-            .build());
+  public List<ChatResDto> receiveChatsInRoom(String roomId) {
+    List<ChatMessage> chatMessages = chatMessageRepository.findAllByChatroomIdOrderByCreatedAt(roomId);
+
+    List<ChatResDto> result = new ArrayList<>();
+    for(ChatMessage chatMessage: chatMessages) {
+      result.add(ChatResDto.builder()
+              .senderId(chatMessage.getSenderId())
+              .message(chatMessage.getMessage())
+              .build());
+    }
+
+    return result;
   }
 
 
-  public Mono<ChatResDto> sendChatToRoom(SendChatReq newChat, String roomId) {
+  public ChatResDto sendChatToRoom(SendChatReq newChat, String roomId) {
     ChatMessage newMessage = ChatMessage.builder()
             .id(UUID.randomUUID().toString())
             .senderId(newChat.getSenderId())
@@ -34,11 +41,11 @@ public class ChatService {
             .message(newChat.getMessage())
             .build();
 
-    return chatMessageRepository.save(newMessage)
-            .then(Mono.just(ChatResDto.builder()
-                    .senderId(newMessage.getSenderId())
-                    .message(newMessage.getMessage())
-                    .createdAt(newMessage.getCreatedAt().toLocalDateTime())
-                    .build()));
+    chatMessageRepository.save(newMessage);
+
+    return ChatResDto.builder()
+            .senderId(newMessage.getSenderId())
+            .message(newMessage.getMessage())
+            .build();
   }
 }

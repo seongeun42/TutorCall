@@ -3,71 +3,81 @@ package com.potato.TutorCall.chat.service;
 import com.potato.TutorCall.chat.domain.ChatParticipants;
 import com.potato.TutorCall.chat.domain.Chatroom;
 import com.potato.TutorCall.chat.dto.req.CreateRoomReqDto;
-import com.potato.TutorCall.chat.dto.req.ExitRoomReqDto;
+import com.potato.TutorCall.chat.dto.res.ChatroomInfoResDto;
 import com.potato.TutorCall.chat.repository.chatParticipants.ChatparticipantsRepository;
 import com.potato.TutorCall.chat.repository.chatroom.ChatroomRepository;
+import com.potato.TutorCall.exception.customException.NotFoundException;
+import com.potato.TutorCall.user.domain.User;
+import com.potato.TutorCall.user.dto.UserSimpleDto;
+import com.potato.TutorCall.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class ChatroomService {
   private final SimpMessagingTemplate simpMessagingTemplate;
   private final ChatroomRepository chatroomRepository;
   private final ChatparticipantsRepository chatparticipantsRepository;
+  private final UserRepository userRepository;
 
   public void createRoom(CreateRoomReqDto createRoomReq) {
     String roomId = UUID.randomUUID().toString();
     Chatroom newChatroom = new Chatroom(roomId, createRoomReq.getRoomName(), createRoomReq.getChatroomType());
 
-    chatroomRepository.save(newChatroom)
-            .doOnError(e -> log.error("채팅방 생성 중 오류: ", e))
-            .thenMany(Flux.fromIterable(createRoomReq.getParticipants()))
-            .flatMap(userId -> {
-              ChatParticipants chatParticipant = ChatParticipants.builder()
-                      .id(UUID.randomUUID().toString())
-                      .chatroomId(roomId)
-                      .userId(userId)
-                      .build();
+    chatroomRepository.save(newChatroom);
 
-              // 새로 생긴 방에 대한 정보를 참여자들에게 보내줌
-              String destination = "/chatroom/created" + userId;
-              simpMessagingTemplate.convertAndSend(destination, roomId);
+    for(Long participant: createRoomReq.getParticipants()) {
+      ChatParticipants chatParticipant = ChatParticipants.builder()
+              .id(UUID.randomUUID().toString())
+              .chatroomId(roomId)
+              .userId(participant)
+              .build();
 
-              return chatparticipantsRepository.save(chatParticipant)
-                      .doOnError(e -> log.error("참가자 저장 중 오류: ", e));
-            }).subscribe();
+      // 새로 생긴 방에 대한 정보를 참여자들에게 보내줌
+      String destination = "/chatroom/created" + participant;
+      simpMessagingTemplate.convertAndSend(destination, roomId);
+
+      chatparticipantsRepository.save(chatParticipant);
+
+    }
   }
 
-  public Flux<String> getChatroomList(Long userId) {
-    return chatparticipantsRepository.getParticipatingRooms(userId);
+  public List<ChatroomInfoResDto> getChatroomList(Long userId) {
+    List<ChatParticipants> participants = chatparticipantsRepository.findAllByUserId(userId);
+    return participants.stream().map(c -> {
+      String roomId = c.getChatroomId();
+      Chatroom chatroom = chatroomRepository.findById(roomId).orElseThrow(() -> new NotFoundException("채팅방이 없음"));
+
+      return ChatroomInfoResDto.builder()
+              .id(chatroom.getId())
+              .name(chatroom.getName())
+              .chatroomType(chatroom.getType())
+              .build();
+    }).toList();
   }
 
   public void exitRoom(Long userId, String roomId) {
-    chatparticipantsRepository.deleteByUserIdAndChatroomId(userId, roomId)
-            .doOnError(e -> log.error("채팅방 퇴장 중 에러: ", e))
-            .doOnSuccess(r -> log.info("채팅방 퇴장 성공"))
-            .then(chatparticipantsRepository.countUsersInRoom(roomId)
-                    .flatMap(remains -> {
-                      if (remains.equals(0L)) {
-                        return chatroomRepository.deleteById(roomId)
-                                .doOnError(e -> log.error("채팅방 삭제 중 에러: ", e))
-                                .doOnSuccess(r -> log.info("채팅방 삭제 성공"));
-                      }
-                      return Mono.empty();
-                    })
-            ).subscribe();
+    chatparticipantsRepository.deleteByUserIdAndChatroomId(userId, roomId);
   }
 
-  public Flux<?> getUsersInChatroom(String roomId) {
-    return chatparticipantsRepository.getUsersInChatroom(roomId);
+  public List<UserSimpleDto> getUsersInChatroom(String roomId) {
+    List<ChatParticipants> participants = chatparticipantsRepository.findAllByChatroomId(roomId);
+    return participants.stream().map(c -> {
+      Long userId = c.getUserId();
+      System.out.println(userId);
+      User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다."));
+
+
+      return UserSimpleDto.builder().user(user).build();
+    }).toList();
   }
 }

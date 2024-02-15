@@ -1,17 +1,16 @@
 package com.potato.TutorCall.chat.domain;
 
 import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-@Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@Setter
+@RedisHash("chat")
 public class ChatMessage implements Serializable {
 
   @Id
@@ -23,8 +22,6 @@ public class ChatMessage implements Serializable {
 
   private String message;
 
-  @CreatedDate private Timestamp createdAt;
-
   // 생성자
   @Builder
   public ChatMessage(String id, Long senderId, String chatroomId, String message) {
@@ -32,5 +29,15 @@ public class ChatMessage implements Serializable {
     this.senderId = senderId;
     this.chatroomId = chatroomId;
     this.message = message;
+  }
+
+  @Override
+  public String toString() {
+    return "ChatMessage{" +
+            "id='" + id + '\'' +
+            ", senderId=" + senderId +
+            ", chatroomId='" + chatroomId + '\'' +
+            ", message='" + message + '\'' +
+            '}';
   }
 }
