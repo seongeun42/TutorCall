@@ -3,7 +3,7 @@ import { defineProps } from 'vue';
 
 const props = defineProps<{
   profile: String,
-  message: String
+  message: String,
 }>()
 </script>
 
