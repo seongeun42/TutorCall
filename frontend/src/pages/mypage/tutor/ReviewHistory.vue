@@ -26,7 +26,7 @@ function isReviewType(data: any): data is TutorReview{
               <div>
                 <p class="ml-5 font-semibold">{{ userStore.$state.nickname }}</p>
                 <div class="flex ml-5">
-                  <div>{{ props.data.createAt.split(".")[0].replace("T", " ") }}</div>
+                  <div>{{ props.data.createAt }}</div>
                 </div>
               </div>
             </div>
