@@ -10,8 +10,7 @@
       </div>
       <p class="border border-b-1 border-gray-300 my-5"></p>
       <div class="mx-10 my-20">
-        <p class="text-xl">
-          {{ noticeDetailData?.content }}
+        <p class="text-xl" v-html="noticeDetailData?.content">
         </p>
       </div>
       <p class="border border-b-1 border-gray-300 my-5"></p>

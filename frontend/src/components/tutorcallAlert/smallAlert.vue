@@ -124,7 +124,7 @@ const goLecture = () => {
               <div
                 class="min-h-[15rem] bg-orange-50 mr-2 ml-2 mb-2 mt-4 flex items-center justify-center"
               >
-                <p class="text-center font-semibold">{{ props.data.content }}</p>
+                <p class="text-center font-semibold" v-html="props.data.content"></p>
               </div>
             </div>
             <div v-if="props.data.matched == 2">

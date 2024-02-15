@@ -9,8 +9,7 @@ const props = defineProps<{"data":detailLecture|null}>();
   <div class="container mx-auto bg-gray-100 pb-10 rounded-xl">
     <div class="mx-10 pt-5">
       <p class="text-2xl mt-5">모집 내용</p>
-      <p class="my-20 text-xl">
-        {{ props.data?.promotionContent }}
+      <p class="my-20 text-xl" v-html="props.data?.promotionContent">
       </p>
     </div>
   </div>

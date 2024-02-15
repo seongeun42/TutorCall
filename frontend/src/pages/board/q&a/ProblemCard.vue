@@ -29,8 +29,7 @@ const props = defineProps<{ data: questionInfo }>()
         >
           {{ props.data.title }}
         </h5>
-        <p class="text-center mb-4 text-base text-neutral-600 dark:text-neutral-200">
-          {{ props.data.content }}
+        <p class="text-center mb-4 text-base text-neutral-600 dark:text-neutral-200" v-html="props.data.content">
         </p>
       </div>
     </div>
