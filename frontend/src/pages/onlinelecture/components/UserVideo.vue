@@ -116,27 +116,24 @@ const screenSub = computed(() => {
 })
 
 const leaveSession = async () => {
-  // 회의에 혼자 남은 상황에서 새로 고침하거나 나가면 세션 종료
-  if (videoSubscribers.value.length == 0) {
-    let url = `/`
-    if (notificationStore.$state.roomSessionId?.includes('call')) {
-      url += `tutorcall/${sessionId.value}/disconnection`
-    } else {
-      url += `lecture/${sessionId.value}/disconnection`
-    }
-    await axios.delete(APPLICATION_SERVER_URL + url, {
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true
-    })
-    return
+  let url = `/`
+  if (notificationStore.$state.roomSessionId?.includes('call')) {
+    url += `tutorcall/${sessionId.value}/disconnection`
   } else {
-    if (sessionCamera.value) {
-      sessionCamera.value.disconnect()
-    }
-    if (sessionScreen.value) {
-      sessionScreen.value.disconnect()
-    }
+    url += `lecture/${sessionId.value}/disconnection`
   }
+  await axios.delete(APPLICATION_SERVER_URL + url, {
+    headers: { 'Content-Type': 'application/json' },
+    withCredentials: true
+  })
+
+  if (sessionCamera.value) {
+    sessionCamera.value.disconnect()
+  }
+  if (sessionScreen.value) {
+    sessionScreen.value.disconnect()
+  }
+
   shareStreamManager.value = undefined
   mainStreamManager.value = undefined
   publisherScreen.value = undefined
@@ -144,7 +141,9 @@ const leaveSession = async () => {
   subscribers.value = []
   OVScreen.value = undefined
   OVCamera.value = undefined
-
+  if (!userStore.isTutor) {
+    router.push('/reviewform')
+  }
   window.removeEventListener('beforeunload', leaveSession)
 }
 
@@ -236,15 +235,8 @@ const stopScreenSharing = () => {
 
 onMounted(() => {
   joinSession()
-  const leaveGuard = () => {
-    leaveSession()
-  }
-  router.beforeEach(() => {
-    leaveGuard()
-  })
 })
 onBeforeUnmount(() => {
-  router.beforeEach(() => {})
   stopScreenSharing()
   leaveSession()
 })

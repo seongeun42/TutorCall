@@ -1,36 +1,41 @@
 <script setup lang="ts">
-import router from '@/router';
+import router from '@/router'
 import lectureReview from '@/components/Review.vue'
-import type { ComputedRef } from 'vue';
-import { computed } from 'vue';
+import { onMounted } from 'vue'
+import { ref } from 'vue'
+import type { Ref } from 'vue'
+import { useNotificationStore } from '@/store/notificationStore'
 
-const mode:ComputedRef<string> = computed(()=>{
-    if(router.currentRoute.value.fullPath.includes('tutorcall')){
-        return 'tutorcall'
-    }else return 'lecture'
-})
+const mode: Ref<string> = ref('')
+const id: Ref<number> = ref(0)
 
-const id:ComputedRef<number> = computed(()=>{
-    if(router.currentRoute.value.fullPath.includes('tutorcall')){
-        // tutorcallid를 어떻게 받는질 모르겠음. router로 전달해주면 될듯??
-        return Number(router.currentRoute.value.params.tutorcallId[0]);
-    }else return Number(router.currentRoute.value.params.lectureId[0]);
-})
-
-function afterReview():void{
-    router.push('/');
+function afterReview(): void {
+  console.log('메인페이지로!')
+  router.push('/')
+  console.log('router pushed')
 }
 
+onMounted(() => {
+  const sessionId = useNotificationStore().$state.roomSessionId
+
+  if (sessionId?.includes('lecture')) {
+    mode.value = 'onlinelecture'
+    id.value = Number(sessionId.replace('lecture', ''))
+  } else {
+    mode.value = 'tutorcall'
+    id.value = Number(sessionId?.replace('tutorcall', ''))
+  }
+})
 </script>
 <template>
-    <div>
-        <div class="review-box rounded-xl shadow-md">
-            <div class="modal-box fixed top-[10%] left-[35%] min-h-[30rem] z-10">
-                <lectureReview :mode="mode" @update="afterReview" @change="afterReview" :id="id"/>
-            </div>
-            <div class="modal-overlay  z-5"></div>
-        </div>
+  <div>
+    <div class="review-box rounded-xl shadow-md">
+      <div class="modal-box fixed top-[10%] left-[35%] min-h-[30rem] z-10">
+        <lectureReview :mode="mode" @update="afterReview" @change="afterReview" :id="id" />
       </div>
+      <div class="modal-overlay z-5"></div>
+    </div>
+  </div>
 </template>
 <style scoped>
 .review-box {
