@@ -25,7 +25,6 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      'rsocket-core': 'rsocket-core/dist/rsocket-core.js',
       // '@': fileURLToPath(new URL('./src', import.meta.url))
       '@': path.resolve(__dirname, './src')
     }
