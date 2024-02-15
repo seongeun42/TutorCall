@@ -71,7 +71,12 @@ const joinSession = async () => {
       subscribers.value.splice(index, 1)
     }
   })
-
+  sessionCamera.value.on('signal', (event) => {
+    videoStore.messages.push({
+      userName: JSON.parse(event.from?.data).clientData,
+      message: event.data
+    })
+  })
   sessionCamera.value.on('exception', (exception) => {
     console.warn(exception)
   })
@@ -230,7 +235,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   router.beforeEach(() => {})
   stopScreenSharing()
-  leaveSession()
+  // leaveSession()
 })
 </script>
 <template>

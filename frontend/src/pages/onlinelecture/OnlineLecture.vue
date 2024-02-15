@@ -6,20 +6,8 @@ import OnlineLectureUserProfile from '@/pages/onlinelecture/components/OnlineLec
 import OnlineLectureChatInput from '@/pages/onlinelecture/components/OnlineLectureChatInput.vue'
 import OnlineLectureSettingBtn from '@/pages/onlinelecture/components/OnlineLectureSettingBtn.vue'
 import UserVideo from './components/UserVideo.vue'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import type { Ref } from 'vue'
-import { useVideoStore } from '@/store/videoStore'
-const videoStore = useVideoStore()
-watch(videoStore, () => {
-  videoStore.sessionCamera?.on('signal', (event) => {
-    videoStore.messages.push({
-      userName: JSON.parse(event.from?.data).clientData,
-      message: event.data
-    })
-    // console.log('잘 받고 있나?', event.data, JSON.parse(event.from?.data).clientData)
-    // videoStore.messages.push({ userName: event.from, message: event.data })
-  })
-})
 
 const chatSideView: Ref<boolean> = ref(true)
 
@@ -78,8 +66,7 @@ const dummydata2: userInfo = {
           />
           <div class="border-4 h-[700px]">
             <div v-if="chatSideView" class="flex-col">
-              <div class="h-[600px]">
-                <OnlineLectureChatForm />
+              <div class="min-h-[600px] max-h-[600px] overflow-scroll no-scrollbar">
                 <OnlineLectureChatForm />
               </div>
               <div>

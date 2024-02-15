@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { ref, type Ref, watch } from 'vue'
+import { ref, type Ref } from 'vue'
 import { useVideoStore } from '@/store/videoStore'
-import { useUserStore } from '@/store/userStore'
-const userStore = useUserStore()
 const message: Ref<string> = ref('')
 const videoStore = useVideoStore()
 function sendMsg(): void {
@@ -12,8 +10,6 @@ function sendMsg(): void {
       to: []
     })
     .then(() => {
-      // videoStore.messages.push({ userName: userStore.nickname, message: message.value })
-      // console.log('반응 좀 보자')
       message.value = ''
     })
 }
