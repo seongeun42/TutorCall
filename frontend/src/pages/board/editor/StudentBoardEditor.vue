@@ -52,6 +52,7 @@ watch(
       subjectDisabled.value = true
       subjectSelected.value = ''
     }
+    
     if (editStore.needEdit) gradeSelected.value = editStore.grade.toString()
   }
 )
