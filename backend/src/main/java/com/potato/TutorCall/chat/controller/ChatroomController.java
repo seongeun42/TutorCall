@@ -25,12 +25,13 @@ public class ChatroomController {
    * 사용자가 참여한 채팅방의 목록을 반환
    *
    * @param userId 사용자의 id
+   * @param type 채팅방 타입(1:1 또는 단체)
    * @return
    */
-  @MessageMapping("/chatroom/{userId}")
-  @SendTo("/sub/chatroom/{userId}")
-  public List<ChatroomInfoResDto> getChatroomList(@DestinationVariable Long userId) {
-    return chatroomService.getChatroomList(userId);
+  @MessageMapping("/chatroom/{userId}/{type}")
+  @SendTo("/sub/chatroom/{userId}/{type}")
+  public List<ChatroomInfoResDto> getChatroomList(@DestinationVariable Long userId, @DestinationVariable String type) {
+    return chatroomService.getChatroomList(userId, type);
   }
 
   /**

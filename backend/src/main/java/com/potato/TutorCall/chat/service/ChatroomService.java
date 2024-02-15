@@ -2,6 +2,7 @@ package com.potato.TutorCall.chat.service;
 
 import com.potato.TutorCall.chat.domain.ChatParticipants;
 import com.potato.TutorCall.chat.domain.Chatroom;
+import com.potato.TutorCall.chat.domain.enums.ChatroomType;
 import com.potato.TutorCall.chat.dto.req.CreateRoomReqDto;
 import com.potato.TutorCall.chat.dto.res.ChatroomInfoResDto;
 import com.potato.TutorCall.chat.repository.chatParticipants.ChatparticipantsRepository;
@@ -51,7 +52,7 @@ public class ChatroomService {
     }
   }
 
-  public List<ChatroomInfoResDto> getChatroomList(Long userId) {
+  public List<ChatroomInfoResDto> getChatroomList(Long userId, String type) {
     List<ChatParticipants> participants = chatparticipantsRepository.findAllByUserId(userId);
     return participants.stream().map(c -> {
       String roomId = c.getChatroomId();
@@ -62,7 +63,7 @@ public class ChatroomService {
               .name(chatroom.getName())
               .chatroomType(chatroom.getType())
               .build();
-    }).toList();
+    }).filter(info -> info.getChatroomType().equals(ChatroomType.valueOf(type))).toList();
   }
 
   public void exitRoom(Long userId, String roomId) {
