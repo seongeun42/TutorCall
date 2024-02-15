@@ -86,8 +86,8 @@ function cancelWrite(): void {
     router.push('/')
   }
 }
-function handleModelValueUpdate(newValue: string) {
-  editorData.value = newValue
+function handleModelValueUpdate(newValue: any) {
+  editorData.value = newValue.value
 }
 
 async function submitPost(event: Event): Promise<void> {

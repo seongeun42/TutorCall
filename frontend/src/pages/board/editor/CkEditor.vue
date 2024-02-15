@@ -37,8 +37,8 @@ let text: Ref<string> = ref(editStore.content);
  * v-model 값 연결
  */
 watch(text, (newValue: string, oldValue: string) => {
-  const textOnly: string = newValue.replace(/<[^>]+>/g, '')
-  emits('update:modelValue', textOnly)
+  // const textOnly: string = newValue.replace(/<[^>]+>/g, '')
+  emits('update:modelValue', text)
 })
 
 // import Upload Adapter

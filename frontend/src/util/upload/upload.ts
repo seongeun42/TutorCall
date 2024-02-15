@@ -1,6 +1,4 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import {useUserStore} from "@/store/userStore";
-import {defineStore} from "pinia";
 import {useEditStore} from "@/store/editStore";
 
 const secretAccessKey = import.meta.env.VITE_S3_SECRET_KEY; // IAM user secret key
@@ -29,14 +27,14 @@ const onImageUploaded = async (file: any) => {
         Bucket: bucket,
         Key: filename,
         Body: file,
+        ContentType: ext
     });
 
     try {
         const response = await client.send(command);
         const editStore = useEditStore();
         editStore.addImage(filename);
-        return response
-
+        return {default: `https://wockss3.s3.ap-northeast-2.amazonaws.com/${filename}`}
     } catch (err) {
         console.error(err);
     }
