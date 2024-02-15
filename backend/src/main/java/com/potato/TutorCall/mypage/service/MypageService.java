@@ -1,6 +1,7 @@
 package com.potato.TutorCall.mypage.service;
 
 import com.potato.TutorCall.exception.customException.NotFoundException;
+import com.potato.TutorCall.image.ImageService;
 import com.potato.TutorCall.lecture.domain.Lecture;
 import com.potato.TutorCall.lecture.service.LectureService;
 import com.potato.TutorCall.mypage.dto.res.MyLectureListResDto;
@@ -16,6 +17,8 @@ import com.potato.TutorCall.tutorcall.service.TutorCallService;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.repository.UserRepository;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.AuthenticationException;
@@ -27,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +43,7 @@ public class MypageService {
   private final TutorCallService tutorCallService;
   private final ReviewService reviewService;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
+  private final ImageService imageService;
   public MyPageProfileResDto getUserProfile(Long id) {
     User currentUser =
         userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다."));
@@ -56,11 +60,13 @@ public class MypageService {
     return userInfo;
   }
 
-  public void updateProfile(Long id, String profile) {
+  public String updateProfile(Long id, MultipartFile multipartFile) throws IOException {
     User currentUser =
         userRepository.findById(id).orElseThrow(() -> new NotFoundException("사용자 정보가 없습니다."));
+    String url = this.imageService.imageUpload(multipartFile);
 
-    currentUser.changeProfile(profile);
+    currentUser.changeProfile(url);
+    return url;
   }
 
   public void updateNickname(Long id, String nickname) {

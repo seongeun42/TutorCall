@@ -103,7 +103,7 @@ public class User {
     this.nickname = nickname;
     this.password = password;
     this.role = role;
-    this.profile = role.equals(RoleType.USER) ? "@/img/profile/default_student.png" : "@/img/profile/default_tutor.png";
+    this.profile = role.equals(RoleType.USER) ? "https://wockss3.s3.ap-northeast-2.amazonaws.com/default_student.png" : "https://wockss3.s3.ap-northeast-2.amazonaws.com/default_tutor.png";
     this.sns = sns;
     this.point = point;
   }
