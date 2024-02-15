@@ -57,7 +57,7 @@ const joinSession = async () => {
   OVCamera.value = new OpenVidu()
 
   sessionCamera.value = OVCamera.value.initSession()
-
+  videoStore.sessionCamera = sessionCamera.value
   sessionCamera.value.on('streamCreated', ({ stream }) => {
     const subscriber = sessionCamera.value?.subscribe(stream, undefined)
     if (subscriber) {
@@ -71,7 +71,12 @@ const joinSession = async () => {
       subscribers.value.splice(index, 1)
     }
   })
-
+  sessionCamera.value.on('signal', (event) => {
+    videoStore.messages.push({
+      userName: JSON.parse(event.from?.data).clientData,
+      message: event.data
+    })
+  })
   sessionCamera.value.on('exception', (exception) => {
     console.warn(exception)
   })
@@ -88,6 +93,7 @@ const joinSession = async () => {
       insertMode: 'APPEND',
       mirror: false
     })
+
     mainStreamManager.value = newPublisher
     publisher.value = newPublisher
     sessionCamera.value.publish(publisher.value)
@@ -103,6 +109,10 @@ const videoSubscribers = computed(() =>
 const screenSub = computed(() => {
   const v = subscribers.value.find((sub) => sub.stream.typeOfVideo === 'SCREEN')
   return v != undefined ? v : null
+})
+
+watch(subscribers.value, (o, v) => {
+  console.log(o, v)
 })
 
 const leaveSession = async () => {
@@ -225,7 +235,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   router.beforeEach(() => {})
   stopScreenSharing()
-  leaveSession()
+  // leaveSession()
 })
 </script>
 <template>

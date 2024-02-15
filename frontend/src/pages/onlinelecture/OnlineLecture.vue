@@ -28,11 +28,6 @@ interface userInfo {
   mikeStatus: boolean
 }
 
-interface chatForm {
-  isMychat: boolean
-  message: string
-}
-
 const dummydata: userInfo = {
   imgUrl: '',
   nickName: '투블럭의 여집합',
@@ -45,16 +40,6 @@ const dummydata2: userInfo = {
   nickName: '파트너 피카츄',
   isHost: false,
   mikeStatus: false
-}
-
-const dummydata4: chatForm = {
-  isMychat: true,
-  message: '테스트 말풍선'
-}
-
-const dummydata5: chatForm = {
-  isMychat: false,
-  message: '테스트 말풍선'
 }
 </script>
 <template>
@@ -81,9 +66,8 @@ const dummydata5: chatForm = {
           />
           <div class="border-4 h-[700px]">
             <div v-if="chatSideView" class="flex-col">
-              <div class="h-[600px]">
-                <OnlineLectureChatForm :data="dummydata4" />
-                <OnlineLectureChatForm :data="dummydata5" />
+              <div class="min-h-[600px] max-h-[600px] overflow-scroll no-scrollbar">
+                <OnlineLectureChatForm />
               </div>
               <div>
                 <OnlineLectureChatInput />
