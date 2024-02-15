@@ -27,6 +27,7 @@ import StudentBoardEditor from '@/pages/board/editor/StudentBoardEditor.vue'
 import TutorBoardEditor from '@/pages/board/editor/TutorBoardEditor.vue'
 import MyTutorcallList from '@/pages/mypage/student/information/MyTutorcallList.vue'
 import TutorCallList from '@/pages/mypage/tutor/MytutorCallList.vue'
+import RegistReviewAfterVideo from '@/components/RegistReviewAfterVideo.vue'
 import { useUserStore } from '@/store/userStore'
 
 const router = createRouter({
@@ -90,9 +91,9 @@ const router = createRouter({
           props: true
         },
         {
-          path:'/tutorcallList',
+          path: '/tutorcallList',
           name: 'tutorcalllist',
-          component: TutorCallList,
+          component: TutorCallList
         },
 
         // 학생 마이페이지
@@ -123,12 +124,11 @@ const router = createRouter({
           name: 'paymentInfo',
           component: MyPaymentInfo,
           props: true
-
         },
         {
-          path:'/tutorcallList',
+          path: '/tutorcallList',
           name: 'studenttutorcalllist',
-          component: MyTutorcallList,
+          component: MyTutorcallList
         }
       ]
     },
@@ -176,9 +176,9 @@ const router = createRouter({
           component: DetailLecture
         },
         {
-          path:'/edit/:promotionNum',
-          name:'editlecture',
-          component: TutorBoardEditor,
+          path: '/edit/:promotionNum',
+          name: 'editlecture',
+          component: TutorBoardEditor
         }
       ]
     },
@@ -205,8 +205,8 @@ const router = createRouter({
           component: StudentBoardEditor
         },
         {
-          path:'edit/:qnaNum',
-          name:'editqna',
+          path: 'edit/:qnaNum',
+          name: 'editqna',
           component: StudentBoardEditor
         }
       ]
@@ -251,6 +251,12 @@ const router = createRouter({
       path: '/promotionform',
       name: 'teacherPromotionForm',
       component: TutorBoardEditor
+    },
+    // 강의 종료 후, 리뷰 남기로 이동
+    {
+      path: '/reviewform',
+      name: 'reviewAfterVideo',
+      component: RegistReviewAfterVideo
     }
   ]
 })
