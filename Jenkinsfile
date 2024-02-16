@@ -84,7 +84,7 @@ pipeline {
             }
             steps {								
                 dir('backend'){
-                    sh "docker build -t env.BACKEND ."
+                    sh "docker build -t ${env.BACKEND} ."
                 }
             }
             post {
@@ -110,8 +110,7 @@ pipeline {
                             echo "컨테이너 제거 중 에러가 발생했습니다: ${e.getMessage()}"
                         }
                     }
-                sh "docker rm -f \$(docker ps -aqf \"name=^/${env.BACKEND}\$\")"
-                sh "docker run -itd -p 8080:8080 --name ${env.BACKEND} ${env.BACKEND}"
+                sh "docker run -itd -p 8080:8080 -v /data/image:/data/image --name ${env.BACKEND} ${env.BACKEND}"
             }
             post {
                 success {
