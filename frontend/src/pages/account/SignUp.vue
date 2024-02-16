@@ -65,6 +65,7 @@ function toggle(): void {
 }
 
 function handleFormStatus(): void {
+
   isSignUp.value = !isSignUp.value
   isSignIn.value = !isSignIn.value
 }
@@ -109,7 +110,6 @@ async function checkEmailValidCode(){
       alert(error.response?.data.message);
     }
   })
-
 }
 
 function checkPassword(): boolean {
@@ -270,7 +270,7 @@ async function tutorRegist(tags:number[]){
               <p>
                 <span> 이미 계정이 있으신가요? </span>
                 <b
-                  @click="toggle"
+                  @click.prevent="toggle"
                   class="pointer"
                   style="
                     text-decoration-line: underline;

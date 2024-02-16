@@ -1,12 +1,8 @@
 <script setup lang="ts">
-interface userInfo {
-  imgUrl: string
-  nickName: string
-  isHost: boolean
-  mikeStatus: boolean
-}
-
-const props = defineProps<{ info: userInfo }>()
+import { useUserStore } from '@/store/userStore'
+import { useVideoStore } from '@/store/videoStore'
+const videoStore = useVideoStore()
+const userStore = useUserStore()
 </script>
 <template>
   <div class="grid grid-cols-8 mx-3 my-2">
@@ -17,13 +13,10 @@ const props = defineProps<{ info: userInfo }>()
     </div>
     <div class="col-span-5 justify-self-start text-center">
       <p class="flex justify-center items-center h-full mx-2 font-semibold">
-        {{ props.info.nickName }}
+        {{ userStore.nickname }}
       </p>
     </div>
-    <div class="col-span-1 flex items-center justify-center" v-if="props.info.isHost">
-      <img src="@/img/host.jpg" alt="" />
-    </div>
-    <div class="col-span-1 flex items-center justify-center" v-if="!props.info.mikeStatus">
+    <div class="col-span-1 flex items-center justify-center" v-if="!videoStore.micActive">
       <img src="@/img/nomike.jpg" alt="" />
     </div>
   </div>

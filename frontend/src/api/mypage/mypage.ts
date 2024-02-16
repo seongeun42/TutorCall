@@ -61,3 +61,12 @@ export async function getTutorReview(param:string)
 
     return instance.get<GetTutorReviewResponse>(url);
 }
+
+export async function fileupload(formData){
+    const url = import.meta.env.VITE_VUE_API_URL + '/mypage/profile';
+    return instance.patch(url, formData,{
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
+    });
+}

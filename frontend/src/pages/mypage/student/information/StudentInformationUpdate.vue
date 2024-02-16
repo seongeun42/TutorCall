@@ -1,80 +1,89 @@
 <script setup lang="ts">
 import type { Ref } from 'vue';
-import { ref } from 'vue';
+import {computed, ref} from 'vue';
 import { useUserStore } from '@/store/userStore';
 import * as api from '@/api/mypage/mypage'
 import type { commonResponse, errorResponse } from '@/interface/common/interface';
-import { isAxiosError, type AxiosResponse } from 'axios';
+import axios, { isAxiosError, type AxiosResponse } from 'axios';
 import router from '@/router';
+import {fileupload} from "@/api/mypage/mypage";
+// import upload from '@/util/upload/upload'
 
-const userStore = useUserStore();
+const userStore = useUserStore()
 
-const nickname:Ref<string> = ref(userStore.nickname);
-const password:Ref<string> = ref('');
-const newPassword:Ref<string> = ref('');
-const alram:Ref<string>
-= ref('true');
-const checkPassword:Ref<string> = ref('');
+const nickname: Ref<string> = ref(userStore.nickname)
+const password: Ref<string> = ref('')
+const newPassword: Ref<string> = ref('')
+const alram: Ref<string> = ref('true')
+const checkPassword: Ref<string> = ref('')
 
+async function modifyed(event: Event): Promise<void> {
+  event.preventDefault()
 
-async function modifyed(event: Event):Promise<void>{
-
-  event.preventDefault();
-
-  if(nickname.value.length!=0 && nickname.value != userStore.nickname){
-    await api.modifynickname({nickname:nickname.value})
-    .then((response: AxiosResponse<commonResponse>)=>{
-      userStore.nickname= nickname.value;
-    })
-    .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
-    })
+  if (nickname.value.length != 0 && nickname.value != userStore.nickname) {
+    await api
+      .modifynickname({ nickname: nickname.value })
+      .then((response: AxiosResponse<commonResponse>) => {
+        userStore.nickname = nickname.value
+      })
+      .catch((error: unknown) => {
+        if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+        throw error
+      })
   }
-  if(password.value.length !=0 && newPassword.value.length !=0){
-    if(password.value == newPassword.value){
-      alert("이전 비밀번호와 변경 비밀번호가 같습니다.");
-      return;
-    }
-    else if (newPassword.value == checkPassword.value){
-      await api.modifyPassword({password:password.value, newPassword: newPassword.value})
-      .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
-    })
-    }else{
-      alert('새로운 비밀번호를 다시 확인해주세요.');
-      return;
+  if (password.value.length != 0 && newPassword.value.length != 0) {
+    if (password.value == newPassword.value) {
+      alert('이전 비밀번호와 변경 비밀번호가 같습니다.')
+      return
+    } else if (newPassword.value == checkPassword.value) {
+      await api
+        .modifyPassword({ password: password.value, newPassword: newPassword.value })
+        .catch((error: unknown) => {
+          if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+          throw error
+        })
+    } else {
+      alert('새로운 비밀번호를 다시 확인해주세요.')
+      return
     }
   }
 
-  await api.modifyAlert({notificationOption: alram.value})
-  .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
+  await api.modifyAlert({ notificationOption: alram.value }).catch((error: unknown) => {
+    if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+    throw error
   })
 
-  alert('정보 수정을 완료했습니다');
-  router.push({"name":"mypage"});
-
+  alert('정보 수정을 완료했습니다')
+  router.push({ name: 'mypage' })
 }
+
+async function upload(event){
+  const file = event.target.files[0];
+
+  const formData = new FormData();
+  formData.append("profile", file);
+  const {data} = await fileupload(formData);
+  const { url } = data;
+  console.log(url);
+  userStore.profile = url;
+}
+
 
 </script>
 <template>
-  <div class="mx-40 my-40">
+  <div class="mx-10 my-10">
     <p class="font-bold text-2xl mb-10">프로필 사진</p>
     <div class="flex mx-20">
-      <img src="@/img/default_profile.png" class="w-28 h-28 rounded-full" alt="" />
+      <img :src="userStore.profile" class="w-28 h-28 rounded-full" alt="" />
       <div class="mx-10 my-3">
         <label
           for="file-upload"
           class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
         >
-          <button class="border-4 border-blue-300 w-40 h-16 text-blue-500">사진 업로드</button>
-          <input id="file-upload" name="file-upload" type="file" class="sr-only" />
+<!--          <button class="border-4 border-blue-300 w-40 h-16 text-blue-500" >사진 업로드</button>-->
+          <div class="border-4 border-blue-300 w-40 h-16 text-blue-500">파일 업로드</div>
+          <input id="file-upload" name="file-upload" type="file" class="sr-only" @change="upload" />
         </label>
-
-        <p class="text-center mt-2 text-lg">삭제</p>
       </div>
       <p class="border-2 mx-20"></p>
       <div class="mx-10">
@@ -84,7 +93,7 @@ async function modifyed(event: Event):Promise<void>{
       </div>
     </div>
     <p class="my-10 border-2"></p>
-    <p class="font-bold text-2xl">사용자 정보 세부사항</p>
+    <p class="font-bold text-2xl">개인 정보</p>
 
     <div class="mt-8">
       <p class="text-xl mb-5">닉네임</p>
@@ -140,8 +149,10 @@ async function modifyed(event: Event):Promise<void>{
       </select>
     </div>
     <div class="flex justify-end">
-      <button class="w-24 h-14 mt-10 bg-blue-800 text-white flex items-center justify-center"
-      @click="modifyed($event)">
+      <button
+        class="w-24 h-14 mt-10 bg-blue-800 text-white flex items-center justify-center"
+        @click="modifyed($event)"
+      >
         저장
       </button>
     </div>

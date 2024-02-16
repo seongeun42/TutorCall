@@ -8,7 +8,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="message">
+  <div class="message right">
     <div class="flex items-end">
       <div>
         <img :src="props.profile" />

@@ -14,12 +14,13 @@ export const useChattingStore = defineStore('chatting', {
         stompClient: null as Stomp.Client | null,
         // 사용자가 현재 참여 중인 채팅방들의 id 목록
         chatroomList: [] as Object[],
-        // 사용자가 현재 직접 메시지를 주고 받는 채팅방의 id
-        participatingRoom: '' as String | null,
         // 현재 메시지를 주고 받는 채팅방의 메시지들
-        chatMessages: [] as chatMessage[],
+        chatMessages: [] as Object[],
         // 사용자가 새롭게 참여하게 된 방에 대한 id
         newChatroom: null as Stomp.Subscription | null,
+        // 현재 보고 있는 방 타입(1:1 또는 단체)
+        roomType: "PERSONAL",
+        subInfo: new Set(),
     }),
     actions: {
         // 소켓을 연결
@@ -33,7 +34,10 @@ export const useChattingStore = defineStore('chatting', {
                         this.chatroomList.push(response.body);
                     })
                     // 사용자가 현재 참여하고 있는 채팅방의 정보들
-                    this.stompClient.subscribe("/sub/chatroom/" + userId, (response: any) => {
+                    this.stompClient.subscribe("/sub/chatroom/" + userId + "/PERSONAL", (response: any) => {
+                        this.chatroomList = JSON.parse(response.body);
+                    })
+                    this.stompClient.subscribe("/sub/chatroom/" + userId + "/GROUP", (response: any) => {
                         this.chatroomList = JSON.parse(response.body);
                     })
                 }
@@ -48,9 +52,31 @@ export const useChattingStore = defineStore('chatting', {
         // 채팅방에 참여한 사람들의 id를 가져옴
         getParticipants(roomId: string, participants: Ref<Object[]>) {
             if(this.stompClient) {
-                this.stompClient.subscribe("/sub/chatroom/users/" + roomId, (response: any) => {
-                    participants.value = JSON.parse(response.body);
-                })
+                    this.stompClient.subscribe("/sub/chatroom/users/" + roomId, (response: any) => {
+                        participants.value = JSON.parse(response.body);
+                    })
+            }
+        },
+        // 기존 채팅방에 있던 메시지들을 한 번에 불러옴
+        getAllChatsInRoom(roomId: string){
+            if(this.stompClient) {
+                if(!this.subInfo.has("/sub/chat/" + roomId)) {
+                    this.subInfo.add("/sub/chat/" + roomId)
+                    this.stompClient.subscribe("/sub/chat/" + roomId, (response: any) => {
+                        this.chatMessages = JSON.parse(response.body)
+                    })
+                }
+            }
+        },
+        // 채팅방에 새로운 메시지가 들어오면 이를 받음
+        getNewMessage(roomId: string, chats: Ref<Object[]>) {
+            if(this.stompClient) {
+                if(!this.subInfo.has("/sub/chat/new/" + roomId)) {
+                    this.subInfo.add("/sub/chat/new/" + roomId)
+                    this.stompClient.subscribe("/sub/chat/new/" + roomId, (response: any) => {
+                        this.chatMessages.push(JSON.parse(response.body));
+                    })
+                }
             }
         },
         clearParticipantingRoom() {
