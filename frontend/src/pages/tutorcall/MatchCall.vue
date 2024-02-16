@@ -36,7 +36,7 @@ const goLecture = () => {
   <div class="container">
     <div class="content">
       <div class="image-container">
-        <img :src="props.accept.tutor.profile" alt="Test Image" />
+        <img :src="props.accept.data.tutor.profile" alt="Test Image" />
       </div>
       <div>
         <MatchText />
