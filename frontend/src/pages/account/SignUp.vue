@@ -142,11 +142,10 @@ async function doSignUp(event: Event) {
     await api
       .signUp(param)
       .then((response: AxiosResponse<signUpResponse>) => {
-        alert(response.data.message)
         isSignUp.value = false
         isSignIn.value = true
-        alert(userStore.$state.role);
         if(userStore.$state.role === 'USER'){
+          alert(response.data.message)
           clearRegistInputValue()
           router.push({ name: 'signform', query: { signUp: 'false' } })
           return
@@ -191,7 +190,6 @@ async function tutorRegist(tags:number[]){
   //1. 로그인 후 세션 가져오기
   //2. 세션을 이용해서 tag 수정하기
   //3. 로그아웃 시키고 (쿠키도 지우고) 로그인창으로 보내기
-  if(tags.length != 0){
     tagModal.value = !tagModal.value;
     const param: loginForm = {
       email: emailAddr.value,
@@ -201,8 +199,8 @@ async function tutorRegist(tags:number[]){
     await mypageApi.modifyTag({tags:tags});
   
     Cookie.remove('JSESSIONID');
-  }
     clearRegistInputValue();
+    alert("회원가입 되었습니다!");
     router.push({ name: 'signform', query: { signUp: 'false' } })
   
 }

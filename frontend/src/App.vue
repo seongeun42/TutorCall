@@ -37,11 +37,6 @@ onMounted(async () => {
   }
 })
 
-window.addEventListener('unload', function(){
-  userStore.logout();
-  for(let cookie in Cookies.get()) Cookies.remove(cookie);
-});
-
 </script>
 <template>
   <div v-if="!userStore.isLogin">
