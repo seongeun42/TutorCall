@@ -30,7 +30,6 @@ const router = useRouter()
 
 async function init(): Promise<void> {
   await api.getNoticeData().then((response: AxiosResponse<noticeResponse>) => {
-    console.log(response)
     if (response.status == 200) {
       noticeData.value = response.data.notices
     }

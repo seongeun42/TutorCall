@@ -10,7 +10,6 @@ const props = defineProps<{
 const chattingStore = useChattingStore();
 
 function sendMessage(event: Event) {
-  // console.log(event.target.value)
   const message = event.target.value;
   event.target.value = '';
   chattingStore.sendMessage("chat/new/" + props.roomId, {

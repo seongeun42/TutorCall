@@ -78,7 +78,6 @@ export const useNotificationStore = defineStore('notification', {
     socketDisconnect() {
       if (this.stompClient) {
         this.stompClient.disconnect(() => {
-          console.log('WebSocket 연결 해제')
         })
       }
     },

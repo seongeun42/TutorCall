@@ -33,7 +33,7 @@ function updateReview(value:review):void{
 }
 
 onMounted(async()=>{
-  console.log(props.data);
+
   await api.oneLecture(props.data.lectureId)
   .then((response: AxiosResponse<detailLecture>)=>{
     lectureData.value = response.data;

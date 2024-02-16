@@ -25,7 +25,6 @@ const onClick = (r: Object) => {
 const toggleRoomType = (m: String) => {
   chattingStore.roomType = m;
   chattingStore.sendMessage("chatroom/" + userStore.id + "/" + chattingStore.roomType, {}, null)
-  console.log("test: " + chattingStore.roomType);
 }
 </script>
 

@@ -33,7 +33,6 @@ const input = {
 }
 
 const goLecture = () => {
-  console.log(notificationStore.roomSessionId)
   const sessionId = notificationStore.roomSessionId?.replace('tutorCall', '')
   router.push(`/onlinelecture/${sessionId}`)
 }
