@@ -228,7 +228,7 @@ function goList(): void {
     <div class="mt-10 mx-40 flex justify-center items-center">
       <button
         type="button"
-        class="bg-sky-500 text-white text-xl rounded-lg shadow-xl"
+        class="bg-sky-100 text-xl rounded-lg shadow-xl font-semibold"
         style="width: calc(3 * 3rem); height: 3rem"
         @click="goList"
       >

@@ -35,7 +35,7 @@ onMounted(async():Promise<void>=>{
 </script>
 <template>
   <div class="flex">
-    <div class="lecturelist bg-blue-50">
+    <div class="lecturelist shadow-xl">
       <div v-for="(data, index) in lectureData" :key="index">
         <div class="flex mt-5 mb-10 justify-center">
           <img :src="data.tutor.profile" alt="" class="w-24 h-24 rounded-full" />
@@ -81,7 +81,7 @@ onMounted(async():Promise<void>=>{
             </svg>
           </div>
         </div>
-        <div class="border-gray border-2"></div>
+        <div class="border-gray border-b"></div>
       </div>
     </div>
     <div class="lecturedetail">
@@ -92,8 +92,6 @@ onMounted(async():Promise<void>=>{
 <style scoped>
 .lecturelist {
   min-height: 900px;
-  background-color: #f3fcff;
-
   padding: 10px;
 }
 
