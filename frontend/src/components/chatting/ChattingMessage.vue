@@ -25,7 +25,7 @@ const props = defineProps<{
 
 <style scoped>
 .message {
-  @apply flex pr-0 w-full mb-10 mt-5;
+  @apply flex pr-0 w-full;
 }
 .message.right {
   @apply flex-row-reverse mr-[-19px] ml-[19px] pl-0 pt-0;
