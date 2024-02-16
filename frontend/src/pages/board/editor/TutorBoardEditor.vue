@@ -125,8 +125,8 @@ async function submitPost(event: Event): Promise<void> {
       window.alert('홍보 등록이 완료되었습니다.')
       router.push({ name: 'lectureList' })
     })
-    .catch((error: any) => {
-      console.log(error)
+    .catch((error: unknown) => {
+      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
     })
 }
 </script>

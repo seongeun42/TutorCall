@@ -25,7 +25,6 @@ function hideAlert(): void {
 
 function tutorcallAccept() {
   if (notificationStore.waitingMatching) {
-    console.log('수락 대기 중이라 안 됨')
     return
   }
   const uuid = crypto.randomUUID()

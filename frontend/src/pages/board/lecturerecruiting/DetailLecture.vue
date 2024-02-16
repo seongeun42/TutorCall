@@ -17,19 +17,22 @@ const endDate: Ref<string> = ref('')
 const schoolname: Ref<string> = ref('')
 const editStore = useEditStore()
 
-async function deletePromotion(event: Event): Promise<void> {
-  event.preventDefault()
-  await api
-    .deletePromotion(promotionId)
-    .then((response: AxiosResponse<deleteResponse>) => {
-      alert(response.data.message)
-      router.push({ name: 'lectureList' })
-    })
-    .catch((error: unknown) => {
-      if (isAxiosError<errorResponse>(error)) {
-        alert(error.response?.data.message)
-      }
-    })
+function goList():void{
+  router.push({"name":'lectureList'});
+}
+async function deletePromotion(event: Event):Promise<void>{
+
+  event.preventDefault();
+  await api.deletePromotion(promotionId)
+  .then((response: AxiosResponse<deleteResponse>)=>{
+    alert(response.data.message);
+    router.push({"name":"lectureList"});
+  })
+  .catch((error:unknown)=>{
+    if(isAxiosError<errorResponse>(error)){
+      alert(error.response?.data.message);
+    }
+  })
 }
 
 onMounted(async () => {
@@ -150,8 +153,9 @@ function editLecture(event: Event): void {
         <Content :data="lectureData" class="my-20" />
         <button
           type="button"
-          class="rounded bg-primary mt-4 px-6 py-3 pb-2 pt-2 text-2xl font-bold uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+          class="bg-sky-100 text-xl rounded-lg shadow-xl font-semibold"
           style="width: calc(3 * 3rem); height: 3rem"
+          @click="goList"
         >
           목록
         </button>

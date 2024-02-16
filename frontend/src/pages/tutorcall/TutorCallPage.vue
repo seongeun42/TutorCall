@@ -76,7 +76,7 @@ const notificationStore = useNotificationStore()
 // }
 
 // function testBtn():void{
-//   console.log("ddd");
+// 
 //   pushNewData("testDatainput");
 // }
 </script>

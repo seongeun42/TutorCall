@@ -7,7 +7,7 @@ const props = defineProps({
 const videoRef = ref(null)
 
 watch(props, () => {
-  console.log(props.streamManager)
+
   if (props.streamManager) {
     props.streamManager.addVideoElement(videoRef.value)
   }

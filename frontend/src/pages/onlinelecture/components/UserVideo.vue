@@ -23,7 +23,7 @@ const publisherScreen: Ref<Publisher | undefined> = ref(undefined)
 const videoStore = useVideoStore()
 const notificationStore = useNotificationStore()
 const sessionId: ComputedRef<number> = computed(() => {
-  console.log('stored sessionId: ' + notificationStore.$state.roomSessionId)
+
   if (notificationStore.$state.roomSessionId?.includes('Call')) {
     return Number(notificationStore.$state.roomSessionId.replace('tutorCall', ''))
   } else return Number(notificationStore.$state.roomSessionId?.replace('lecture', ''))
@@ -102,7 +102,7 @@ const joinSession = async () => {
     publisher.value = newPublisher
     sessionCamera.value.publish(publisher.value)
   } catch (error: any) {
-    console.log('There was an error connecting to the session:', error.code, error.message)
+
   }
   window.addEventListener('beforeunload', leaveSession)
 }

@@ -72,6 +72,10 @@ function deleteTagForm(idx: number):void{
 const emit = defineEmits(['update']);
 
 function closeModal():void{
+    if(tags.length == 0){
+      alert("태그는 1개 이상 선택해 주세요!");
+      return;
+    }
     emit('update', tags);
 }
 

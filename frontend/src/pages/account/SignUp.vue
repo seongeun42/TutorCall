@@ -65,6 +65,7 @@ function toggle(): void {
 }
 
 function handleFormStatus(): void {
+
   isSignUp.value = !isSignUp.value
   isSignIn.value = !isSignIn.value
 }
@@ -109,7 +110,6 @@ async function checkEmailValidCode(){
       alert(error.response?.data.message);
     }
   })
-
 }
 
 function checkPassword(): boolean {
@@ -142,11 +142,10 @@ async function doSignUp(event: Event) {
     await api
       .signUp(param)
       .then((response: AxiosResponse<signUpResponse>) => {
-        alert(response.data.message)
         isSignUp.value = false
         isSignIn.value = true
-        alert(userStore.$state.role);
         if(userStore.$state.role === 'USER'){
+          alert(response.data.message)
           clearRegistInputValue()
           router.push({ name: 'signform', query: { signUp: 'false' } })
           return
@@ -191,7 +190,6 @@ async function tutorRegist(tags:number[]){
   //1. 로그인 후 세션 가져오기
   //2. 세션을 이용해서 tag 수정하기
   //3. 로그아웃 시키고 (쿠키도 지우고) 로그인창으로 보내기
-  if(tags.length != 0){
     tagModal.value = !tagModal.value;
     const param: loginForm = {
       email: emailAddr.value,
@@ -201,8 +199,8 @@ async function tutorRegist(tags:number[]){
     await mypageApi.modifyTag({tags:tags});
   
     Cookie.remove('JSESSIONID');
-  }
     clearRegistInputValue();
+    alert("회원가입 되었습니다!");
     router.push({ name: 'signform', query: { signUp: 'false' } })
   
 }
@@ -272,7 +270,7 @@ async function tutorRegist(tags:number[]){
               <p>
                 <span> 이미 계정이 있으신가요? </span>
                 <b
-                  @click="toggle"
+                  @click.prevent="toggle"
                   class="pointer"
                   style="
                     text-decoration-line: underline;
@@ -303,33 +301,7 @@ async function tutorRegist(tags:number[]){
                 <input type="password" placeholder="비밀번호" required v-model="loginPassword" />
               </div>
               <button type="submit" @click.prevent="doLogin">로그인</button>
-
               <p>
-                <b> or continue with </b>
-                <span>
-                  <div style="max-width: 45px; display: inline-flex; justify-content: center">
-                    <img
-                      src="@/img/google_logo.png"
-                      alt="구글계정로그인"
-                      style="margin-left: 5px; margin-right: 5px"
-                    />
-                    <img
-                      src="@/img/naver_logo.png"
-                      alt="네이버계정로그인"
-                      style="margin-left: 5px; margin-right: 5px"
-                    />
-                    <img
-                      src="@/img/kakao_logo.png"
-                      alt="카카오계정로그인"
-                      style="margin-left: 5px; margin-right: 5px"
-                    />
-                    <img
-                      src="@/img/insta_logo.png"
-                      alt="인스타계정로그인"
-                      style="margin-left: 5px; margin-right: 5px"
-                    />
-                  </div>
-                </span>
               </p>
               <p>
                 <span style="font-size: small; font-weight: 900"> 계정이 없으신가요? </span>

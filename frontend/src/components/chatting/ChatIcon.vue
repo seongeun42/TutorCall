@@ -8,6 +8,7 @@ import { useUserStore } from '@/store/userStore'
 const show: Ref<boolean> = ref(false);
 const onClick = () => {
   show.value = !show.value
+  chattingStore.roomType = "PERSONAL"
 }
 
 const chattingStore = useChattingStore()
@@ -25,7 +26,6 @@ chattingStore.connectSocket(userStore.id);
       class="w-[290px] h-[484px] rounded-md absolute w-50 h-50 right-10 bottom-10 place-content-center"
     >
       <ChatBox />
-      <!-- <ChatRoom /> -->
     </div>
     <a
       @click="onClick()"
