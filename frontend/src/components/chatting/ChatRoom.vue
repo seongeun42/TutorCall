@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, computed } from 'vue';
+import { defineProps, ref, computed, nextTick } from 'vue';
 import { useChattingStore } from '@/store/chatStore';
 import { useUserStore } from '@/store/userStore';
 
@@ -77,6 +77,13 @@ chattingStore.sendMessage("chat/" + props.roomInfo.id, {}, null);
 
 // 새 메시지가 추가될 때 마다 받아와야 함
 chattingStore.getNewMessage(props.roomInfo.id);
+
+async function updateScrollbar() {
+  await nextTick(() => {
+    let mySpace = document.getElementById("chat-messages");
+    mySpace.scrollTop = mySpace.scrollHeight;
+  })
+}
 </script>
 
 <template>
@@ -88,7 +95,8 @@ chattingStore.getNewMessage(props.roomInfo.id);
       <div id="chat-messages" class="w-full h-[350px] font-sans bg-white overflow-scroll no-scrollbar overflow-x-hidden pr-5">
         <div v-for="chat in chattingStore.chatMessages">
           <ChattingMessageRight v-if="chat.senderId == userStore.id" :profile="currentUser.profile" :message="chat.message"/>
-          <ChattingMessage v-else :profile="otherProfile(chat)" :message="chat.message" />
+          <ChattingMessage v-else :profile="otherProfile(chat)" :message="chat.message"/>
+          {{ updateScrollbar() }}
         </div>
       </div>
       <SendMessage :room-id="props.roomInfo.id" :sender-id="userStore.id" class="h-14" />
