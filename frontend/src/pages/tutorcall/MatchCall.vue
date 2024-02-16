@@ -2,15 +2,27 @@
 import FloatObject from '@/pages/tutorcall/FloatObject.vue'
 import MatchText from '@/pages/tutorcall/MatchText.vue'
 import router from '@/router'
-import { defineProps } from 'vue'
+import { defineProps, watch } from 'vue'
 import { useNotificationStore } from '@/store/notificationStore'
 import type { acceptTutor } from '@/interface/tutorcall/interface'
-
+interface data {
+  id: number
+  delay: number
+  size: number
+  objectsize: number
+  positionX: number
+  positionY: number
+  data: any
+}
 const notificationStore = useNotificationStore()
 const props = defineProps<{
-  accept: acceptTutor
+  pushedData: data
 }>()
 
+watch(props, (o,v) => {
+  console.log(o);
+  console.log(v);
+})
 const mainContent = document.querySelector('#mainComponent')
 const mainWidth = mainContent?.clientWidth ?? 1960
 const mainHeight = mainContent?.clientHeight ?? 1000
@@ -36,7 +48,7 @@ const goLecture = () => {
   <div class="container">
     <div class="content">
       <div class="image-container">
-        <img :src="props.accept.data.tutor.profile" alt="Test Image" />
+        <img src="https://via.placeholder.com/300x300" alt="Test Image" />
       </div>
       <div>
         <MatchText />
