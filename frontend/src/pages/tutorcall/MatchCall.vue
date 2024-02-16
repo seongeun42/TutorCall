@@ -19,7 +19,10 @@ const notificationStore = useNotificationStore()
 const props = defineProps<{
   accept: Object
 }>()
-
+watch(props.accept, (o, v) => {
+  console.log(o)
+  console.log(v)
+})
 const mainContent = document.querySelector('#mainComponent')
 const mainWidth = mainContent?.clientWidth ?? 1960
 const mainHeight = mainContent?.clientHeight ?? 1000
