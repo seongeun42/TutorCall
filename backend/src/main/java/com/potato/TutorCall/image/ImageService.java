@@ -38,7 +38,7 @@ public class ImageService{
         String s3URL = s3config.amazonS3Client().getUrl(bucket, uuidFilename).toString();
 
         //우리 서버 파일 삭제
-        localFile.delete();
+        // localFile.delete();
         return s3URL;
     }
 }
