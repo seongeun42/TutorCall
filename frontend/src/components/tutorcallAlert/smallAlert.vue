@@ -80,7 +80,7 @@ const goLecture = () => {
           </p>
         </div>
         <div>
-          <p class="text-center text-xs">1시간 전</p>
+          <p class="text-center text-xs">지금</p>
         </div>
       </div>
       <div class="flex flex-row justify-between mt-4">

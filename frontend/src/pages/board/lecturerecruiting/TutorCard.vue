@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { lecture } from '@/interface/lectureBoard/interface';
-import router from '@/router/index';
+import type { lecture } from '@/interface/lectureBoard/interface'
+import router from '@/router/index'
 
-const props = defineProps<{"data":lecture}>();
+const props = defineProps<{ data: lecture }>()
 
-function showDetail(event:Event):void{
-  event.preventDefault();
-  router.push({"name":'lectureDetail', params:{'promotionNum':props.data.id}});
+function showDetail(event: Event): void {
+  event.preventDefault()
+  router.push({ name: 'lectureDetail', params: { promotionNum: props.data.id } })
 }
 </script>
 <template>
@@ -35,15 +35,17 @@ function showDetail(event:Event):void{
             <div class="bg-green-300 p-2 rounded-full aspect-w-2 aspect-h-1">
               <p class="text-white">{{ props.data.tag.grade }}학년</p>
             </div>
-            <div class="bg-blue-300 p-2 rounded-full aspect-w-2 aspect-h-1">
+            <div class="bg-yellow-300 p-2 rounded-full aspect-w-2 aspect-h-1">
               <p class="text-white">{{ props.data.tag.subject }}</p>
             </div>
           </div>
           <h5 class="mb-2 text-xl font-bold leading-tight text-neutral-800 dark:text-neutral-50">
             {{ props.data.title }}
           </h5>
-          <p class="mb-4 text-base text-neutral-600 dark:text-neutral-200" v-html="props.data.content">
-          </p>
+          <p
+            class="mb-4 text-base text-neutral-600 dark:text-neutral-200"
+            v-html="props.data.content"
+          ></p>
           <div class="flex justify-between items-center">
             <div class="flex items-center mb-5 mr-5">
               <img :src="props.data.tutor.profile" alt="" class="w-10 h-10 rounded-full" />

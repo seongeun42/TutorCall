@@ -247,7 +247,7 @@ onBeforeUnmount(() => {
     <div class="subscribers">
       <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="mainStreamManager" />
       <div v-for="sub in videoSubscribers" :key="sub.stream.connection.connectionId">
-        <OnlineVideo class="w-[250px] h-[150px]" :stream-manager="sub" />
+        <OnlineVideo class="w-[250px] h-[150px] mx-2" :stream-manager="sub" />
       </div>
     </div>
     <OnlineVideo :stream-manager="screenSub" />
@@ -276,5 +276,6 @@ onBeforeUnmount(() => {
   margin-bottom: 5px;
   justify-content: center;
   padding-top: 10px;
+  padding-bottom: 10px;
 }
 </style>
