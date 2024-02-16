@@ -14,12 +14,14 @@ interface data {
   positionY: number
   data: any
 }
+
 const notificationStore = useNotificationStore()
 const props = defineProps<{
-  pushedData: data
+  accept: Object
 }>()
 
-watch(props, (o,v) => {
+
+watch(props.accept, (o,v) => {
   console.log(o);
   console.log(v);
 })
