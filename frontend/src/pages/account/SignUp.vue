@@ -301,33 +301,7 @@ async function tutorRegist(tags:number[]){
                 <input type="password" placeholder="비밀번호" required v-model="loginPassword" />
               </div>
               <button type="submit" @click.prevent="doLogin">로그인</button>
-
               <p>
-                <b> or continue with </b>
-                <span>
-                  <div style="max-width: 45px; display: inline-flex; justify-content: center">
-                    <img
-                      src="@/img/google_logo.png"
-                      alt="구글계정로그인"
-                      style="margin-left: 5px; margin-right: 5px"
-                    />
-                    <img
-                      src="@/img/naver_logo.png"
-                      alt="네이버계정로그인"
-                      style="margin-left: 5px; margin-right: 5px"
-                    />
-                    <img
-                      src="@/img/kakao_logo.png"
-                      alt="카카오계정로그인"
-                      style="margin-left: 5px; margin-right: 5px"
-                    />
-                    <img
-                      src="@/img/insta_logo.png"
-                      alt="인스타계정로그인"
-                      style="margin-left: 5px; margin-right: 5px"
-                    />
-                  </div>
-                </span>
               </p>
               <p>
                 <span style="font-size: small; font-weight: 900"> 계정이 없으신가요? </span>
