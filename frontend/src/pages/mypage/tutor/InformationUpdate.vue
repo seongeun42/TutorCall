@@ -136,7 +136,7 @@ async function upload(event){
   formData.append("profile", file);
   const {data} = await fileupload(formData);
   const { url } = data;
-  console.log(url);
+
   userStore.profile = url;
 }
 

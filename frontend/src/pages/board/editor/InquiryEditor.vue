@@ -7,7 +7,6 @@ const editorData: Ref<string> = ref('')
 
 function handleModelValueUpdate(newValue: string): void {
   editorData.value = newValue
-  console.log(editorData.value)
 }
 
 function cancelWrite(): void {

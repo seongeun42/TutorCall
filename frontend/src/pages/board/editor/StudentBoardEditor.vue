@@ -93,7 +93,6 @@ function cancelWrite(): void {
 function handleModelValueUpdate(newValue: any) {
   // 값 변경 추적 로직을 작성합니다.
   editorData.value = newValue.value
-  console.log(editorData.value)
 }
 
 async function submitPost(buttonName: string, event: Event): Promise<void> {
@@ -129,14 +128,14 @@ async function submitPost(buttonName: string, event: Event): Promise<void> {
       window.alert('문제 등록이 완료되었습니다.')
       router.push({ name: 'qnalist' })
     })
-    .catch((error: any) => {
-      console.log(error)
+    .catch((error: unknown) => {
+      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
     })
 }
 
 function tutorcallRequest() {
   if (notificationStore.requestUuid != null) {
-    console.log('한 번에 한 번의 요청만 가능')
+    alert('한 번에 한 번의 요청만 가능합니다')
     return
   }
   const uuid = crypto.randomUUID()

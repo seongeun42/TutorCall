@@ -10,9 +10,7 @@ const mode: Ref<string> = ref('')
 const id: Ref<number> = ref(0)
 
 function afterReview(): void {
-  console.log('메인페이지로!')
   router.push('/')
-  console.log('router pushed')
 }
 
 onMounted(() => {

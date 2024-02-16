@@ -42,9 +42,7 @@ import { type AxiosResponse } from 'axios'
 import type { faqInfo, faqResponse, FaqData } from '@/interface/notice/interface'
 
 const toggleAnswer = (data: FaqData): void => {
-  // console.log(data)
   data.showAnswer = !data.showAnswer
-  // console.log(data)
 }
 
 const faqData: Ref<FaqData[]> = ref([])
@@ -55,11 +53,6 @@ function init(): void {
       response.data.faqs.forEach((faq: faqInfo) => {
         faqData.value.push({ ...faq, showAnswer: false })
       })
-      // console.log(faqData.value)
-      // console.log(response.data)
-      // faqData.value = response.data.faqs
-      // faqData.value.showAnswer = false
-      // console.log(faqData.value)
     }
   })
 }
