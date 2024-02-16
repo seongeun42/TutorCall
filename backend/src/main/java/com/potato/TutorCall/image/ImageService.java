@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ImageService{
     private final S3Config s3config;
-    private final String localLocation = "/Users/jaechan/data/image/";
+    private final String localLocation = "/data/image/";
 
 
     @Value("${cloud.aws.s3.bucket}")
