@@ -5,13 +5,12 @@
         <h5 class="font-bold text-3xl ml-10">{{ noticeDetailData?.title }}</h5>
         <div class="flex">
           <p class="text-xl mr-10">관리자</p>
-          <p class="text-xl">{{ noticeDetailData?.createdAt }}</p>
+          <p class="text-xl">{{ noticeDetailData?.createdAt.slice(0, 10) }}</p>
         </div>
       </div>
       <p class="border border-b-1 border-gray-300 my-5"></p>
       <div class="mx-10 my-20">
-        <p class="text-xl" v-html="noticeDetailData?.content">
-        </p>
+        <p class="text-xl" v-html="noticeDetailData?.content"></p>
       </div>
       <p class="border border-b-1 border-gray-300 my-5"></p>
       <div class="flex flex-col items-center">

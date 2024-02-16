@@ -49,7 +49,7 @@ const goLecture = () => {
       <div>
         <MatchText />
       </div>
-      <button @click="goLecture">강의실 이동</button>
+      <button class="go-lecture" @click="goLecture">강의실 이동</button>
     </div>
   </div>
 </template>
@@ -75,5 +75,13 @@ const goLecture = () => {
   border-radius: 50%;
   overflow: hidden;
   margin-top: 20px;
+}
+
+.go-lecture {
+  background-color: #023e53;
+  color: white;
+  border-radius: 5px;
+  width: 100px;
+  height: 40px;
 }
 </style>
