@@ -20,10 +20,9 @@ const props = defineProps<{
   accept: Object
 }>()
 
-
-watch(props.accept, (o,v) => {
-  console.log(o);
-  console.log(v);
+watch(props.accept, (o, v) => {
+  console.log(o)
+  console.log(v)
 })
 const mainContent = document.querySelector('#mainComponent')
 const mainWidth = mainContent?.clientWidth ?? 1960
@@ -49,9 +48,6 @@ const goLecture = () => {
 <template>
   <div class="container">
     <div class="content">
-      <div class="image-container">
-        <img src="https://via.placeholder.com/300x300" alt="Test Image" />
-      </div>
       <div>
         <MatchText />
       </div>
