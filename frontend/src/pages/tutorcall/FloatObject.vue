@@ -30,7 +30,7 @@ onMounted(()=>{
       top: props.accept.positionX + 'px',
       left: props.accept.positionY + 'px',
       transform: 'translate(-50%, -50%)',
-      backgroundImage: 'url(https://via.placeholder.com/' + props.accept.size + 'x' + props.accept.size + ')',
+      backgroundImage: 'url('+props.accept.tutor.profile+')',
       animation: 'ani' + Math.floor(Math.random() * 3) + 1
     }"
   >

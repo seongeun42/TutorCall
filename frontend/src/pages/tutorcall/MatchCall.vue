@@ -4,18 +4,11 @@ import MatchText from '@/pages/tutorcall/MatchText.vue'
 import router from '@/router'
 import { defineProps } from 'vue'
 import { useNotificationStore } from '@/store/notificationStore'
-interface data {
-  id: number
-  delay: number
-  size: number
-  objectsize: number
-  positionX: number
-  positionY: number
-  data: any
-}
+import type { acceptTutor } from '@/interface/tutorcall/interface'
+
 const notificationStore = useNotificationStore()
 const props = defineProps<{
-  pushedData: data
+  accept: acceptTutor
 }>()
 
 const mainContent = document.querySelector('#mainComponent')
@@ -43,7 +36,7 @@ const goLecture = () => {
   <div class="container">
     <div class="content">
       <div class="image-container">
-        <img src="https://via.placeholder.com/300x300" alt="Test Image" />
+        <img :src="props.accept.tutor.profile" alt="Test Image" />
       </div>
       <div>
         <MatchText />
