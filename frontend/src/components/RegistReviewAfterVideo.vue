@@ -21,7 +21,7 @@ onMounted(() => {
     id.value = Number(sessionId.replace('lecture', ''))
   } else {
     mode.value = 'tutorcall'
-    id.value = Number(sessionId?.replace('tutorcall', ''))
+    id.value = Number(sessionId?.replace('tutorCall', ''))
   }
 })
 </script>
