@@ -15,7 +15,7 @@ function afterReview(): void {
 
 onMounted(() => {
   const sessionId = useNotificationStore().$state.roomSessionId
-
+  console.log(sessionId);
   if (sessionId?.includes('lecture')) {
     mode.value = 'onlinelecture'
     id.value = Number(sessionId.replace('lecture', ''))
@@ -23,6 +23,8 @@ onMounted(() => {
     mode.value = 'tutorcall'
     id.value = Number(sessionId?.replace('tutorCall', ''))
   }
+  console.log(sessionId.replace('tutorCall',''));
+  console.log(id.value);
 })
 </script>
 <template>

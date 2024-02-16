@@ -62,7 +62,7 @@ function updateReview(value:review):void{
     <div class="mt-10 font-semibold text-xl mb-5">
       <p>문제</p>
     </div>
-    <p>{{ data.problem }}</p>
+    <p v-html="data.problem"></p>
 
     <div class="mt-10 font-semibold text-xl mb-5">
       <p>나의 리뷰</p>
