@@ -1,7 +1,7 @@
 # Tutor Call
 
 ## Git Convention
-### 커밋메시지 템플릿 적용법
+### 커밋 메시지 템플릿 적용법
 
 * 레포지토리에 있는 .gitmessage.txt를 아래와 같이 적용
 ```d
