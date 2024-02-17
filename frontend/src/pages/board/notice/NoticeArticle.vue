@@ -1,9 +1,13 @@
 <template>
-  <div v-for="data in noticeData" :data="data" @click="goNoticeDetail(data.noticeId)">
+  <div
+    v-for="data in noticeData"
+    :key="data.noticeId"
+    :data="data"
+    @click="goNoticeDetail(data.noticeId)"
+  >
     <div class="border border-gray-200 py-10 my-10">
       <div class="flex ml-10 flex-row justify-between">
         <div class="flex ml-10">
-          <p>{{ data.noticeId }}</p>
           <p
             class="mx-10 rounded-lg bg-blue-800 text-white text-center"
             style="width: 90px; height: 30px"
@@ -30,7 +34,6 @@ const router = useRouter()
 
 async function init(): Promise<void> {
   await api.getNoticeData().then((response: AxiosResponse<noticeResponse>) => {
-    console.log(response)
     if (response.status == 200) {
       noticeData.value = response.data.notices
     }

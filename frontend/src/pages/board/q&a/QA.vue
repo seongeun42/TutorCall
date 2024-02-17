@@ -6,7 +6,9 @@ import type { Ref } from 'vue'
 import router from '@/router/index'
 import{ type AxiosResponse, isAxiosError } from 'axios';
 import type{ questionInfo, questionResponse } from '@/interface/qna/interface'
-import type { errorResponse } from '@/interface/common/interface';
+import type { errorResponse } from '@/interface/common/interface'
+import { useEditStore } from '@/store/editStore'
+import { tagConvert } from '@/util/tagConvert'
 import { useUserStore } from '@/store/userStore'
 
 interface selectform {
@@ -28,6 +30,7 @@ const subjectSelected: Ref<selectform | string> = ref('')
 const gradeDisabled: Ref<boolean> = ref(true)
 const subjectDisabled: Ref<boolean> = ref(true)
 const keyword: Ref<string> = ref('')
+const editStore = useEditStore();
 const userStore = useUserStore()
 
 const prevPage = (): void => {
@@ -51,7 +54,7 @@ async function init(): Promise<void> {
     .then((response: AxiosResponse<questionResponse>) => {
       if (response.status == 200) {
         totalPages = response.data.questions.totalPages
-        questionData.value = response.data.questions.content
+        questionData.value = response.data.questions.content;
         originData.value = questionData.value
       }
     })
@@ -143,6 +146,7 @@ async function keywordSearch(event: Event): Promise<void> {
 }
 
 function goEditor(): void {
+  editStore.init();
   router.push({ name: 'studentRequestForm' })
 }
 </script>
@@ -184,8 +188,8 @@ function goEditor(): void {
           <option value="" disabled selected>과목 선택</option>
           <option value=0>국어</option>
           <option value=1>수학</option>
-          <option value=2>사회</option>
-          <option value=3>과학</option>
+          <option value=2>과학</option>
+          <option value=3>사회</option>
           <option value=4>영어</option>
 
         </select>
@@ -204,7 +208,7 @@ function goEditor(): void {
         </button>
 
         <button
-          v-if="userStore.role === 'USER'"
+          v-if="userStore.$state.role === 'USER'"
           type="button"
           class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md text-white"
           @click="goEditor"

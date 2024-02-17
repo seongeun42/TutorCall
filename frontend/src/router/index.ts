@@ -25,8 +25,10 @@ import InquiryEditor from '@/pages/board/editor/InquiryEditor.vue'
 import MatchCall from '@/pages/tutorcall/MatchCall.vue'
 import StudentBoardEditor from '@/pages/board/editor/StudentBoardEditor.vue'
 import TutorBoardEditor from '@/pages/board/editor/TutorBoardEditor.vue'
+import MyTutorcallList from '@/pages/mypage/student/information/MyTutorcallList.vue'
+import TutorCallList from '@/pages/mypage/tutor/MytutorCallList.vue'
+import RegistReviewAfterVideo from '@/components/RegistReviewAfterVideo.vue'
 import { useUserStore } from '@/store/userStore'
-import path from 'path'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,7 +53,6 @@ const router = createRouter({
       path: '/mypage',
       name: 'mypage',
       component: MyPage,
-      props: true,
       children: [
         // 선생님 마이페이지
         // 개인정보 수정
@@ -74,7 +75,6 @@ const router = createRouter({
           name: 'profitCheck',
           component: ProfitCheck,
           props: true
-
         },
         // 출금
         {
@@ -82,7 +82,6 @@ const router = createRouter({
           name: 'withdrawl',
           component: WithdrawlPage,
           props: true
-
         },
         // 내 과외
         {
@@ -90,7 +89,11 @@ const router = createRouter({
           name: 'tutorMyLectures',
           component: MyLectureList,
           props: true
-
+        },
+        {
+          path: '/tutorcallList',
+          name: 'tutorcalllist',
+          component: TutorCallList
         },
 
         // 학생 마이페이지
@@ -100,7 +103,6 @@ const router = createRouter({
           name: 'userUpdate',
           component: StudentInformationUpdate,
           props: true
-
         },
         // 포인트 내역
         {
@@ -108,7 +110,6 @@ const router = createRouter({
           name: 'pointUsage',
           component: PointUsage,
           props: true
-
         },
         // 내 과외
         {
@@ -116,7 +117,6 @@ const router = createRouter({
           name: 'userMyLectures',
           component: StudentMyLecture,
           props: true
-
         },
         // 결제 정보
         {
@@ -124,7 +124,11 @@ const router = createRouter({
           name: 'paymentInfo',
           component: MyPaymentInfo,
           props: true
-
+        },
+        {
+          path: '/tutorcallList',
+          name: 'studenttutorcalllist',
+          component: MyTutorcallList
         }
       ]
     },
@@ -158,19 +162,23 @@ const router = createRouter({
       // 과외 구하는 모집 및 홍보 게시판
       path: '/lecturespromotion',
       name: 'lecturesPromo',
-      redirect: {"name":'lectureList'},
+      redirect: { name: 'lectureList' },
       children: [
         // 모홍게 상세
         {
-          path:'/list',
-          name:'lectureList',
-          component: LectureRecruit,
-
+          path: '/list',
+          name: 'lectureList',
+          component: LectureRecruit
         },
         {
           path: ':promotionNum',
           name: 'lectureDetail',
           component: DetailLecture
+        },
+        {
+          path: '/edit/:promotionNum',
+          name: 'editlecture',
+          component: TutorBoardEditor
         }
       ]
     },
@@ -192,8 +200,13 @@ const router = createRouter({
           component: DetailQA
         },
         {
-          path:'writeqna',
-          name:'writeqna',
+          path: 'writeqna',
+          name: 'writeqna',
+          component: StudentBoardEditor
+        },
+        {
+          path: 'edit/:qnaNum',
+          name: 'editqna',
           component: StudentBoardEditor
         }
       ]
@@ -205,7 +218,7 @@ const router = createRouter({
       children: [
         // 개별 온라인 과외방 + 튜터콜
         {
-          path: ':tutorId/:onlineLectureNum',
+          path: ':onlineLectureNum',
           name: 'onlineLectureNum',
           component: OnlineLecture
         },
@@ -225,7 +238,7 @@ const router = createRouter({
     {
       path: '/matchcall',
       name: 'matchcall',
-      component: MatchCall,
+      component: MatchCall
     },
     // 학생 튜터콜 및 Q&A 에디터
     {
@@ -238,56 +251,59 @@ const router = createRouter({
       path: '/promotionform',
       name: 'teacherPromotionForm',
       component: TutorBoardEditor
+    },
+    // 강의 종료 후, 리뷰 남기로 이동
+    {
+      path: '/reviewform',
+      name: 'reviewAfterVideo',
+      component: RegistReviewAfterVideo
     }
   ]
 })
 
 // 컴포넌트 가드
 router.beforeEach((to) => {
-  const userStore = useUserStore();
+  const userStore = useUserStore()
   // 로그인을 안한 상태에서 회원전용 페이지에 접근하려는 경우
   if (
     !userStore.isLogin &&
-    (to.name == "teacherPromotionForm" ||
-      to.name == "studentRequestForm" ||
-      to.name == "matchcall" ||
-      to.name == "waitingRoom" ||
-      to.name == "onlineLectureNum" ||
-      to.name == "onlineLecture" ||
-      to.name == "writeqna" ||
-      to.name == "qnaDetail" ||
-      to.name == "lectureDetail" ||
-      to.name == "mypage")
+    (to.name == 'teacherPromotionForm' ||
+      to.name == 'studentRequestForm' ||
+      to.name == 'matchcall' ||
+      to.name == 'waitingRoom' ||
+      to.name == 'onlineLectureNum' ||
+      to.name == 'onlineLecture' ||
+      to.name == 'writeqna' ||
+      to.name == 'qnaDetail' ||
+      to.name == 'lectureDetail' ||
+      to.name == 'mypage')
   ) {
-    alert("회원전용 기능입니다. 로그인이 필요합니다.");
-    return { name: "signform" };
+    alert('회원전용 기능입니다. 로그인이 필요합니다.')
+    return { name: 'signform' }
   }
   // 로그인을 안했거나, 학생이 아닌 선생님이 학생 마이페이지에 접근하려 할 때 라우터가드
   if (
-    (!userStore.isLogin || userStore.isLogin && userStore.isTutor) && (
-      to.name == "userUpdate" ||
-      to.name == "pointUsage" ||
-      to.name == "userMyLectures" ||
-      to.name == "paymentInfo"
-    )
+    (!userStore.isLogin || (userStore.isLogin && userStore.isTutor)) &&
+    (to.name == 'userUpdate' ||
+      to.name == 'pointUsage' ||
+      to.name == 'userMyLectures' ||
+      to.name == 'paymentInfo')
   ) {
-    alert("해당 페이지에 접근 권한이 없습니다.")
+    alert('해당 페이지에 접근 권한이 없습니다.')
     return { name: 'main' }
   }
-    // 로그인을 안했거나, 학생이 아닌 선생님이 학생 마이페이지에 접근하려 할 때 라우터가드
-    if (
-      (!userStore.isLogin || userStore.isLogin && !userStore.isTutor) && (
-        to.name == "tutorUpdate" ||
-        to.name == "reviewCheck" ||
-        to.name == "profitCheck" ||
-        to.name == "withdrawl" ||
-        to.name == "tutorMyLectures"
-      )
-    ) {
-      alert("해당 페이지에 접근 권한이 없습니다.")
-      return { name: 'main' }
-    }
-});
-
+  // 로그인을 안했거나, 학생이 아닌 선생님이 학생 마이페이지에 접근하려 할 때 라우터가드
+  if (
+    (!userStore.isLogin || (userStore.isLogin && !userStore.isTutor)) &&
+    (to.name == 'tutorUpdate' ||
+      to.name == 'reviewCheck' ||
+      to.name == 'profitCheck' ||
+      to.name == 'withdrawl' ||
+      to.name == 'tutorMyLectures')
+  ) {
+    alert('해당 페이지에 접근 권한이 없습니다.')
+    return { name: 'main' }
+  }
+})
 
 export default router

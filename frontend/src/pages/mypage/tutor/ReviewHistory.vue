@@ -1,30 +1,90 @@
+<script setup lang="ts">
+import type { review } from '@/interface/common/interface';
+import StarScore from './StarScore.vue'
+import { useUserStore } from '@/store/userStore';
+import { onMounted } from 'vue';
+import type { TutorReview } from '@/interface/mypage/interface';
+import { ref, type Ref} from 'vue';
+
+const userStore = useUserStore();
+const props = defineProps<{data: any}>();
+const score:number = Math.round((props.data.communicationRate+props.data.mannerRate+props.data.professionalismRate)/3)
+function isReviewType(data: any): data is TutorReview{
+  return data.reviewer == undefined;
+}
+</script>
 <template>
-  <!-- <div v-for="i in 9" :key="i"> -->
-  <div class="flex my-10 items-center justify-between">
-    <div class="flex items-center">
-      <img src="@/img/student.jpg" class="w-14 h-14 rounded-full" alt="" />
-      <p class="ml-5">김잼민</p>
-      <img src="@/img/accuse.png" class="w-8 h-8 ml-2 mr-10" alt="" />
-      <div class="flex ml-40">
-        <p class="mr-5">평점</p>
-        <StarScore :score="score" />
+  <div v-if="isReviewType(props.data)" class="p-4 m-4" id="student">
+    <div class="flex pt-2 w-full justify-center">
+      <div class="flex-row">
+        <div class="flex flex-col">
+          <div class="flex flex-row justify-between gap-3">
+            <div class="flex flex-row">
+              <div>
+                <img :src="userStore.$state.profile" class="w-14 h-14 rounded-full ml-4" alt="" />
+              </div>
+              <div>
+                <p class="ml-5 font-semibold">{{ userStore.$state.nickname }}</p>
+                <div class="flex ml-5">
+                  <div>{{ props.data.createAt }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-center items-center">
+              <p class="mr-5 ml-5 font-semibold text-lg">평점</p>
+              <StarScore :score="score" />
+            </div>
+          </div>
+          <div>
+            <div class="flex pt-5 pb-5 ml-4">
+              <div class="flex justify-center h-full flex-col">
+                <p class="font-semibold text-lg">리뷰 내용</p>
+                <p class="text-lg">
+                  {{ props.data.content }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div>2023.10.12</div>
   </div>
-  <div class="flex">
-    <p class="text-lg">
-      매너가 좀 많이 부족한 것 같아요. 그리고 무엇보다 학력 위조의 의심이 들 정도로 설명을 못하던데
-      누구 가르치는 일은 반드시 접고 다른 일 알아보시면 좋겠습니다.
-    </p>
+  <div v-else class="p-4 m-4 shadow-md" id="tutorpage">
+    <div class="flex pt-2 w-full justify-center">
+      <div class="flex-row w-10/12">
+        <div class="flex flex-col">
+          <div class="flex flex-row justify-between gap-3">
+            <div class="flex flex-row">
+              <div>
+                <img :src="props.data.reviewer.profile" class="w-14 h-14 rounded-full ml-4" alt="" />
+              </div>
+              <div>
+                <p class="ml-5 font-semibold">{{ props.data.reviewer.nickname }}</p>
+                <div class="flex ml-5">
+                  <div>{{ props.data.createdAt.split(".")[0].replace("T", " ") }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-center items-center">
+              <p class="mr-5 ml-5 font-semibold text-lg">평점</p>
+              <StarScore :score="score" />
+            </div>
+          </div>
+          <div>
+            <div class="flex pt-5 pb-5 ml-4">
+              <div class="flex justify-center h-full flex-col">
+                <p class="font-semibold text-lg">리뷰 내용</p>
+                <p class="text-lg">
+                  {{ props.data.content }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <!-- </div> -->
 </template>
-
-<script setup lang="ts">
-import StarScore from './StarScore.vue'
-
-const score: number = 1
-</script>
-
-<style scoped></style>
+<style scoped>
+</style>

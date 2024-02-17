@@ -1,16 +1,41 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const emits = defineEmits(["toggle-room-type"]);
+
+const leftColor = ref("#3b82f6");
+const rightColor = ref("#d1d5db");
+const roomType = ref("PERSONAL");
+
+const selectLeft = (e) => {
+  leftColor.value = "#3b82f6";
+  rightColor.value = "#d1d5db";
+  roomType.value =  "PERSONAL";
+  
+  emits('toggle-room-type', roomType.value);
+}
+
+const selectRight = (e) => {
+  leftColor.value = "#d1d5db";
+  rightColor.value = "#3b82f6";
+  roomType.value =  "GROUP";
+  
+  emits('toggle-room-type', roomType.value);
+}
+</script>
 
 <template>
   <div class="h-20 w-72">
     <span
       class="-mb-px hover:cursor-pointer grid justify-items-stretch content-center border-b-[#d8dfe3] border-b-2 border-solid"
+      @click="selectLeft"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         stroke-width="2"
-        stroke="#d1d5db"
+        :stroke="leftColor"
         class="w-8 h-8 justify-self-center"
       >
         <path
@@ -22,13 +47,14 @@
     </span>
     <span
       class="-mb-px hover:cursor-pointer grid justify-items-stretch content-center border-b-[#d8dfe3] border-b-2 border-solid"
+      @click="selectRight"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         stroke-width="2"
-        stroke="#d1d5db"
+        :stroke="rightColor"
         class="w-8 h-8 justify-self-center"
       >
         <path

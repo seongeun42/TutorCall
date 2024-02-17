@@ -28,7 +28,6 @@ function matchReject() {
   notificationStore.sendMessage(`tutorcall/answer/${props.accept.data.resId}/rejection`, null)
 }
 
-// onMounted(()=> console.log(props.pushedData))
 </script>
 <template>
   <div class="speech-bubble">

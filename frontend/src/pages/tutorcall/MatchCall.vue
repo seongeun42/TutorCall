@@ -1,49 +1,56 @@
 <script setup lang="ts">
 import FloatObject from '@/pages/tutorcall/FloatObject.vue'
 import MatchText from '@/pages/tutorcall/MatchText.vue'
-import { defineProps } from 'vue';
-
-interface data{
-  id: number,
-  delay: number,
-  size: number,
-  objectsize: number,
-  positionX: number,
-  positionY: number,
-  data:any,
+import router from '@/router'
+import { defineProps, watch } from 'vue'
+import { useNotificationStore } from '@/store/notificationStore'
+import type { acceptTutor } from '@/interface/tutorcall/interface'
+interface data {
+  id: number
+  delay: number
+  size: number
+  objectsize: number
+  positionX: number
+  positionY: number
+  data: any
 }
 
+const notificationStore = useNotificationStore()
 const props = defineProps<{
-  pushedData: data
+  accept: Object
 }>()
-
-const mainContent = document.querySelector('#mainComponent');
-const mainWidth = mainContent?.clientWidth ?? 1960;
-const mainHeight = mainContent?.clientHeight ?? 1000;
+watch(props.accept, (o, v) => {
+  console.log(o)
+  console.log(v)
+})
+const mainContent = document.querySelector('#mainComponent')
+const mainWidth = mainContent?.clientWidth ?? 1960
+const mainHeight = mainContent?.clientHeight ?? 1000
 
 const input = {
   id: 1,
   delay: 0,
   size: 300,
   objectsize: 300,
-  positionX: mainHeight/2,
-  positionY: mainWidth/2,
+  positionX: mainHeight / 2,
+  positionY: mainWidth / 2,
   data: null
 }
 
-
+const goLecture = () => {
+  const sessionId = notificationStore.roomSessionId?.replace('tutorCall', '')
+  router.push(`/onlinelecture/${sessionId}`)
+}
 // const props= defineProps<{'userId':number}>();
 </script>
 
 <template>
   <div class="container">
     <div class="content">
-      <div class="image-container">
-        <img src="https://via.placeholder.com/300x300" alt="Test Image">
-      </div>
       <div>
-        <MatchText/>
+        <MatchText />
       </div>
+      <button class="go-lecture" @click="goLecture">강의실 이동</button>
     </div>
   </div>
 </template>
@@ -69,5 +76,13 @@ const input = {
   border-radius: 50%;
   overflow: hidden;
   margin-top: 20px;
+}
+
+.go-lecture {
+  background-color: #023e53;
+  color: white;
+  border-radius: 5px;
+  width: 100px;
+  height: 40px;
 }
 </style>

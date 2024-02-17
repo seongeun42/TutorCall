@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Ref } from 'vue';
+import { type Ref, watch } from 'vue'
 import { ref } from 'vue';
 import SpeechBubble from '@/pages/tutorcall/SpeechBubble.vue';
 import floatingObject from '@/util/animation/floatingObject'
@@ -10,6 +10,11 @@ const props = defineProps<{
   accept: acceptTutor,
 }>()
 
+
+watch(props, (o,v) => {
+  console.log(o);
+  console.log(v);
+})
 const show:Ref<boolean> = ref(false);
 
 function click():void{
@@ -30,7 +35,7 @@ onMounted(()=>{
       top: props.accept.positionX + 'px',
       left: props.accept.positionY + 'px',
       transform: 'translate(-50%, -50%)',
-      backgroundImage: 'url(https://via.placeholder.com/' + props.accept.size + 'x' + props.accept.size + ')',
+      backgroundImage: 'url('+props.accept.data.tutor.profile+')',
       animation: 'ani' + Math.floor(Math.random() * 3) + 1
     }"
   >

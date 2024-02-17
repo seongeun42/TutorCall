@@ -1,4 +1,3 @@
-import { fileURLToPath, URL } from 'node:url'
 import ckeditor5 from '@ckeditor/vite-plugin-ckeditor5'
 
 import { defineConfig } from 'vite'
@@ -10,6 +9,13 @@ import { manualChunksPlugin } from 'vite-plugin-webpackchunkname'
 const require = createRequire(import.meta.url)
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      external: [
+        /^node:.*/,
+      ]
+    }
+  },
   plugins: [
     vue(),
     manualChunksPlugin(),

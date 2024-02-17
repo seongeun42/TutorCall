@@ -10,15 +10,13 @@
       </div>
       <p class="border border-b-1 border-gray-300 my-5"></p>
       <div class="mx-10 my-20">
-        <p class="text-xl">
-          {{ noticeDetailData?.content }}
-        </p>
+        <p class="text-xl" v-html="noticeDetailData?.content"></p>
       </div>
       <p class="border border-b-1 border-gray-300 my-5"></p>
       <div class="flex flex-col items-center">
         <button
           type="button"
-          class="rounded bg-primary mt-4 px-6 py-3 pb-2 pt-2 text-2xl font-bold uppercaseleading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+          class="bg-sky-100 text-xl rounded-lg shadow-xl font-semibold"
           style="width: calc(3 * 3rem); height: 3rem"
           @click="goNotice"
         >
@@ -52,7 +50,6 @@ function init(): void {
 
   api.getOneNoticeData(param).then((response: AxiosResponse<{ notice: noticeInfo }>) => {
     if (response.status == 200) {
-      // console.log(response.data)
       noticeDetailData.value = response.data
     }
   })

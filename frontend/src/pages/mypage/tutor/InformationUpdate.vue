@@ -1,101 +1,159 @@
 <script setup lang="ts">
-import type { Ref } from 'vue';
-import { ref } from 'vue';
-import { useUserStore } from '@/store/userStore';
+import type { Ref } from 'vue'
+import { ref } from 'vue'
+import { useUserStore } from '@/store/userStore'
 import * as api from '@/api/mypage/mypage'
-import { isAxiosError } from 'axios';
-import type { errorResponse } from '@/interface/common/interface';
-import router from '@/router';
+import { isAxiosError, type AxiosResponse } from 'axios'
+import type { commonResponse, errorResponse } from '@/interface/common/interface'
+import router from '@/router'
+import TagSelectForm from '@/pages/mypage/tutor/TagSelectForm.vue'
+import { reactive } from 'vue'
+import { onMounted } from 'vue'
+import {fileupload} from "@/api/mypage/mypage";
 
-const today: String = new Date().toISOString().split('T')[0]
-const userStore = useUserStore();
+interface selectform {
+  value: number
+  name: string
+}
+interface TagSelect {
+  school: string
+  subject: string
+  grade: string | selectform
+  subjectDisabled: boolean
+  gradeDisabled: boolean
+  btnDisabled: boolean
+  idx: number
+  tag: number
+  tags: number[]
+  disabled: boolean
+}
 
-const introduce:Ref<string> = ref('');
-const nickname:Ref<string> = ref(userStore.nickname);
-const password:Ref<string> = ref('');
-const newPassword:Ref<string> = ref('');
-const alram:Ref<string>
-= ref('true');
-const checkPassword:Ref<string> = ref('');
-const school:Ref<string> = ref('none');
-const subject:Ref<string> = ref('none');
-let tags:number[] = [];
+const userStore = useUserStore()
+const introduce: Ref<string> = ref('')
+const nickname: Ref<string> = ref(userStore.nickname)
+const password: Ref<string> = ref('')
+const newPassword: Ref<string> = ref('')
+const alram: Ref<string> = ref('true')
+const checkPassword: Ref<string> = ref('')
+let tags: number[] = []
+let tagForms: Ref<TagSelect[]> = ref([])
+onMounted(() => {
+  const initData: TagSelect = {
+    school: '',
+    subject: '',
+    grade: '',
+    subjectDisabled: true,
+    gradeDisabled: true,
+    btnDisabled: true,
+    idx: 0,
+    tag: 0,
+    tags: tags,
+    disabled: false
+  }
+  tagForms.value.push(initData)
+})
 
-async function modifyed(event: Event):Promise<void>{
+function addTagForm(so: TagSelect): void {
+  tagForms.value[so.idx] = so
 
-  event.preventDefault();
+  const initData: TagSelect = {
+    school: '',
+    subject: '',
+    grade: '',
+    subjectDisabled: true,
+    gradeDisabled: true,
+    btnDisabled: true,
+    idx: so.idx + 1,
+    tag: 0,
+    tags: tags,
+    disabled: false
+  }
 
-  if(introduce.value.length!=0){
-    await api.modifyIntro({introduction: introduce.value})
-    .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
+  tagForms.value.push(initData)
+  tags.push(so.tag)
+}
+
+function deleteTagForm(idx: number): void {
+  tagForms.value[idx].disabled = true
+  tags = tags.filter((t) => t != tagForms.value[idx].tag)
+}
+
+async function modifyed(event: Event): Promise<void> {
+  event.preventDefault()
+
+  if (introduce.value.length != 0) {
+    await api.modifyIntro({ introduction: introduce.value }).catch((error: unknown) => {
+      if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+      throw error
     })
   }
 
-  if(nickname.value.length!=0 && nickname.value != userStore.nickname){
-    await api.modifynickname({nickname:nickname.value})
-    .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
-    })
+  if (nickname.value.length != 0 && nickname.value != userStore.nickname) {
+    await api
+      .modifynickname({ nickname: nickname.value })
+      .then((response: AxiosResponse<commonResponse>) => {
+        userStore.nickname = nickname.value
+      })
+      .catch((error: unknown) => {
+        if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+        throw error
+      })
   }
-  if(password.value.length !=0 && newPassword.value.length !=0){
-    if(password.value == newPassword.value){
-      alert("이전 비밀번호와 변경 비밀번호가 같습니다.");
-      return;
+  if (password.value.length != 0 && newPassword.value.length != 0) {
+    if (password.value == newPassword.value) {
+      alert('이전 비밀번호와 변경 비밀번호가 같습니다.')
+      return
+    } else if (newPassword.value == checkPassword.value) {
+      await api
+        .modifyPassword({ password: password.value, newPassword: newPassword.value })
+        .catch((error: unknown) => {
+          if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+          throw error
+        })
+    } else {
+      alert('새로운 비밀번호를 다시 확인해주세요.')
+      return
     }
-    else if (newPassword.value == checkPassword.value){
-      await api.modifyPassword({password:password.value, newPassword: newPassword.value})
-      .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
-    })
-    }else{
-      alert('새로운 비밀번호를 다시 확인해주세요.');
-      return;
-    }
   }
-
-  if(school.value!="none" && subject.value!="none"){
-    const startNumber:number = Number(school.value);
-    const rem:number = Number(subject.value);
-    for(let i=startNumber; i<=60; i++){
-      if(i%5==rem) {
-        tags.push(i);
-      }
-    }
-
-    await api.modifyTag({tags: tags})
-    .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
-    })
-
-  }else{
-    alert("관심 태그를 다시 설정해주세요.");
-    return;
-  }
-
-  await api.modifyAlert({notificationOption: alram.value})
-  .catch((error : unknown)=>{
-      if(isAxiosError<errorResponse>(error)) alert(error.response?.data.message);
-      throw error;
+  await api.modifyTag({ tags: tags }).catch((error: unknown) => {
+    if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+    throw error
   })
 
-  alert('정보 수정을 완료했습니다');
-  router.push({"name":"mypage"});
+  await api.modifyAlert({ notificationOption: alram.value }).catch((error: unknown) => {
+    if (isAxiosError<errorResponse>(error)) alert(error.response?.data.message)
+    throw error
+  })
 
+  alert('정보 수정을 완료했습니다')
+  router.push({ name: 'mypage' })
 }
+
+async function upload(event){
+  const file = event.target.files[0];
+
+  const formData = new FormData();
+  formData.append("profile", file);
+  const {data} = await fileupload(formData);
+  const { url } = data;
+
+  userStore.profile = url;
+}
+
 </script>
 <template>
-  <div class="mx-40 my-40">
+  <div class="mx-10 my-10">
     <p class="font-bold text-2xl mb-10">프로필 사진</p>
-    <div class="flex mx-20">
-      <img src="@/img/default_profile.png" class="w-28 h-28 rounded-full" alt="" />
+    <div class="flex mx-10">
+      <img :src="userStore.profile" class="w-28 h-28 rounded-full" alt="" />
       <div class="mx-10 my-3">
-        <button class="border-4 border-blue-300 w-40 h-16 text-blue-500">사진 업로드</button>
-        <p class="text-center mt-2 text-lg">삭제</p>
+        <label
+            for="file-upload"
+            class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+        >
+          <div class="border-4 border-blue-300 w-40 h-16 text-blue-500">파일 업로드</div>
+          <input id="file-upload" name="file-upload" type="file" class="sr-only" @change="upload" />
+        </label>
       </div>
       <p class="border-2 mx-20"></p>
       <div class="mx-10">
@@ -105,7 +163,7 @@ async function modifyed(event: Event):Promise<void>{
       </div>
     </div>
     <p class="my-10 border-2"></p>
-    <p class="font-bold text-2xl">사용자 정보 세부사항</p>
+    <p class="font-bold text-2xl">개인 정보</p>
     <div class="mt-8">
       <p class="text-xl mb-5">소개글</p>
       <div class="input-group">
@@ -165,26 +223,14 @@ async function modifyed(event: Event):Promise<void>{
         v-model="checkPassword"
       />
     </div>
-    <div class="mt-8 flex flex-row gap-2">
-      <div class="flex flex-col w-1/2">
-        <p class="text-xl mb-5">관심 학교 선택</p>
-        <select class="bg-gray-200 w-full h-20 text-lg rounded-lg" v-model="school">
-          <option value="none" disabled>관심 학교 선택</option>
-          <option value="0">초등학교</option>
-          <option value="31">중학교</option>
-          <option value="46">고등학교</option>
-        </select>
-      </div>
-      <div class="flex flex-col w-1/2">
-        <p class="text-xl mb-5 ">관심 과목 선택</p>
-        <select class="bg-gray-200 w-full h-20 text-lg rounded-lg" v-model="subject">
-          <option value="none" disabled>관심 과목 선택</option>
-          <option value="1">국어</option>
-          <option value="2">수학</option>
-          <option value="3">과학</option>
-          <option value="4">사회</option>
-          <option value="5">영어</option>
-        </select>
+    <div class="mt-8">
+      <div v-for="(tf, index) in tagForms" :key="index">
+        <TagSelectForm
+          v-if="!tf.disabled"
+          :selectOption="tf"
+          @update="addTagForm"
+          @change="deleteTagForm"
+        />
       </div>
     </div>
     <div class="mt-8">
@@ -195,8 +241,10 @@ async function modifyed(event: Event):Promise<void>{
       </select>
     </div>
     <div class="flex justify-end">
-      <button class="w-24 h-14 mt-10 bg-blue-800 text-white flex items-center justify-center"
-      @click="modifyed($event)">
+      <button
+        class="w-24 h-14 mt-10 bg-blue-800 text-white flex items-center justify-center"
+        @click="modifyed($event)"
+      >
         저장
       </button>
     </div>

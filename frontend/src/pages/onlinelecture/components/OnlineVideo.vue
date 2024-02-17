@@ -7,6 +7,7 @@ const props = defineProps({
 const videoRef = ref(null)
 
 watch(props, () => {
+
   if (props.streamManager) {
     props.streamManager.addVideoElement(videoRef.value)
   }
@@ -14,7 +15,14 @@ watch(props, () => {
 </script>
 
 <template>
-  <video ref="videoRef" autoplay></video>
+  <div class="video">
+    <video ref="videoRef" autoplay style="width: 100%"></video>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.video {
+  border-radius: 10px;
+  overflow: hidden;
+}
+</style>

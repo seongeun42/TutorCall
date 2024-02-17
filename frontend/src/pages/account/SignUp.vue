@@ -3,14 +3,20 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 import SelectRole from './SelectRole.vue'
 import * as api from '@/api/login/signUp'
+import * as mypageApi from '@/api/mypage/mypage'
 import router from '@/router/index'
 import { useUserStore } from '@/store/userStore'
 import { useNotificationStore } from '@/store/notificationStore'
 import type{ emailCodeCheck,
     nickCheck, loginForm, signUpForm, signUpResponse, user, accountErrorResponse } from '@/interface/account/interface'
 
+import Cookie from 'js-cookie';
+
 import type { commonResponse, errorResponse } from '@/interface/common/interface'
-import { isAxiosError, type AxiosResponse } from 'axios'
+import axios, { isAxiosError, type AxiosResponse } from 'axios'
+import { computed } from 'vue'
+import SelectTagModal from '@/pages/account/SelectTagModal.vue'
+import type { modifytags } from '@/interface/mypage/interface'
 
 // import exp from 'constants'
 
@@ -28,6 +34,7 @@ const loginEmail: Ref<string> = ref('')
 const loginPassword: Ref<string> = ref('')
 const userStore = useUserStore()
 const notificationStore = useNotificationStore()
+const tagModal:Ref<boolean> = ref(false);
 
 const status = router.currentRoute.value.query.signUp
 
@@ -41,6 +48,8 @@ if (status) {
     isSignIn.value = true
   }
 }
+
+const role: Ref<string> = ref('');
 
 function clearRegistInputValue(): void {
   emailAddr.value = ''
@@ -56,6 +65,7 @@ function toggle(): void {
 }
 
 function handleFormStatus(): void {
+
   isSignUp.value = !isSignUp.value
   isSignIn.value = !isSignIn.value
 }
@@ -66,8 +76,6 @@ function isValidEmail(): boolean {
 }
 
 async function receiveEmailCode() {
-  console.log('현재 입력된 이메일 값: ' + emailAddr.value)
-
   if (!isValidEmail()) {
     alert('이메일 형식이 아닙니다.')
     return
@@ -102,7 +110,6 @@ async function checkEmailValidCode(){
       alert(error.response?.data.message);
     }
   })
-
 }
 
 function checkPassword(): boolean {
@@ -127,19 +134,24 @@ async function doSignUp(event: Event) {
   const param: signUpForm = {
     nickname: nickname.value,
     password: password.value,
-    email: emailAddr.value
+    email: emailAddr.value,
+    role: userStore.isTutor ? "TUTOR" : "USER"
   }
 
   if (checkPassword() == true && isEmailChecked.value && !isNickNameUsed.value) {
     await api
       .signUp(param)
       .then((response: AxiosResponse<signUpResponse>) => {
-        alert(response.data.message)
         isSignUp.value = false
         isSignIn.value = true
-        clearRegistInputValue()
-        router.push({ name: 'signform', query: { signUp: 'false' } })
-        return
+        if(userStore.$state.role === 'USER'){
+          alert(response.data.message)
+          clearRegistInputValue()
+          router.push({ name: 'signform', query: { signUp: 'false' } })
+          return
+        }else{
+          tagModal.value = !tagModal.value;
+        }
       })
       .catch((error: unknown) => {
         if (isAxiosError<errorResponse>(error)) {
@@ -151,10 +163,8 @@ async function doSignUp(event: Event) {
   }
 }
 
-
 async function doLogin(event: Event) {
   event.preventDefault()
-  console.log("login");
   const param: loginForm = {
     email: loginEmail.value,
     password: loginPassword.value
@@ -176,9 +186,33 @@ async function doLogin(event: Event) {
     })
 }
 
+async function tutorRegist(tags:number[]){
+  //1. 로그인 후 세션 가져오기
+  //2. 세션을 이용해서 tag 수정하기
+  //3. 로그아웃 시키고 (쿠키도 지우고) 로그인창으로 보내기
+    tagModal.value = !tagModal.value;
+    const param: loginForm = {
+      email: emailAddr.value,
+      password: password.value,
+    }
+    await api.login(param);
+    await mypageApi.modifyTag({tags:tags});
+  
+    Cookie.remove('JSESSIONID');
+    clearRegistInputValue();
+    alert("회원가입 되었습니다!");
+    router.push({ name: 'signform', query: { signUp: 'false' } })
+  
+}
 </script>
 
 <template>
+  <div v-if="tagModal">
+    <div class="modal-box fixed top-[10%] left-[30%] min-h-[30rem] max-w-[40rem] z-50">
+      <SelectTagModal @update="tutorRegist"/>
+      </div>
+    <div class="modal-overlay z-40"></div>
+  </div>
   <div id="container" :class="['container', { 'sign-in': isSignIn, 'sign-up': isSignUp }]">
     <!-- FORM SECTION -->
     <div class="row">
@@ -210,7 +244,7 @@ async function doLogin(event: Event) {
                 <div
                   class="bg-[#6181ad] rounded-lg w-14 h-9 text-white flex items-center justify-center font-semibold"
                   style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%)"
-                  @click="receiveEmailCode"
+                  @click.prevent="receiveEmailCode"
                 >
                   <!--@click 추가해서 이메일 인증 발송에 사용 예정-->
                   발송
@@ -232,11 +266,11 @@ async function doLogin(event: Event) {
                 <i class="bx bxs-user"></i>
                 <input type="text" placeholder="추천인" v-model="recommander" />
               </div>
-              <button type="submit" @click="doSignUp">회원 가입</button>
+                <button type="submit" @click.stop.prevent="doSignUp">회원 가입</button>
               <p>
                 <span> 이미 계정이 있으신가요? </span>
                 <b
-                  @click="toggle"
+                  @click.prevent="toggle"
                   class="pointer"
                   style="
                     text-decoration-line: underline;
@@ -266,34 +300,8 @@ async function doLogin(event: Event) {
                 <i class="bx bxs-lock-alt"></i>
                 <input type="password" placeholder="비밀번호" required v-model="loginPassword" />
               </div>
-              <button type="submit" @click="doLogin">로그인</button>
-
+              <button type="submit" @click.prevent="doLogin">로그인</button>
               <p>
-                <b> or continue with </b>
-                <span>
-                  <div style="max-width: 45px; display: inline-flex; justify-content: center">
-                    <img
-                      src="@/img/google_logo.png"
-                      alt="구글계정로그인"
-                      style="margin-left: 5px; margin-right: 5px"
-                    />
-                    <img
-                      src="@/img/naver_logo.png"
-                      alt="네이버계정로그인"
-                      style="margin-left: 5px; margin-right: 5px"
-                    />
-                    <img
-                      src="@/img/kakao_logo.png"
-                      alt="카카오계정로그인"
-                      style="margin-left: 5px; margin-right: 5px"
-                    />
-                    <img
-                      src="@/img/insta_logo.png"
-                      alt="인스타계정로그인"
-                      style="margin-left: 5px; margin-right: 5px"
-                    />
-                  </div>
-                </span>
               </p>
               <p>
                 <span style="font-size: small; font-weight: 900"> 계정이 없으신가요? </span>
@@ -597,5 +605,13 @@ async function doLogin(event: Event) {
     margin: 0.5rem;
     font-size: 2rem;
   }
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 배경을 투명한 검정색으로 설정 */
 }
 </style>

@@ -15,46 +15,11 @@ function handleChatView(chat: boolean) {
   chatSideView.value = chat
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *
- * 이하부터 테스트를 위한 더미 코드기 때문에 나중에 지워야함
- *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 interface userInfo {
   imgUrl: string
   nickName: string
   isHost: boolean
   mikeStatus: boolean
-}
-
-interface chatForm {
-  isMychat: boolean
-  message: string
-}
-
-const dummydata: userInfo = {
-  imgUrl: '',
-  nickName: '투블럭의 여집합',
-  isHost: true,
-  mikeStatus: true
-}
-
-const dummydata2: userInfo = {
-  imgUrl: '',
-  nickName: '파트너 피카츄',
-  isHost: false,
-  mikeStatus: false
-}
-
-const dummydata4: chatForm = {
-  isMychat: true,
-  message: '테스트 말풍선'
-}
-
-const dummydata5: chatForm = {
-  isMychat: false,
-  message: '테스트 말풍선'
 }
 </script>
 <template>
@@ -64,7 +29,7 @@ const dummydata5: chatForm = {
     <hr />
 
     <div class="mt-5 grid grid-cols-9 gap-4 max-h-[1000px]">
-      <div class="col-span-7 grid grid-rows-9 max-h-[900px]">
+      <div class="col-span-7 grid grid-rows-9 max-h-[900px] video-box">
         <div class="row-span-8 max-h-[800px] flex justify-center items-center">
           <UserVideo />
         </div>
@@ -81,17 +46,16 @@ const dummydata5: chatForm = {
           />
           <div class="border-4 h-[700px]">
             <div v-if="chatSideView" class="flex-col">
-              <div class="h-[600px]">
-                <OnlineLectureChatForm :data="dummydata4" />
-                <OnlineLectureChatForm :data="dummydata5" />
+              <div class="min-h-[600px] max-h-[600px] overflow-scroll no-scrollbar">
+                <OnlineLectureChatForm />
               </div>
               <div>
                 <OnlineLectureChatInput />
               </div>
             </div>
             <div v-else>
-              <OnlineLectureUserProfile :info="dummydata" />
-              <OnlineLectureUserProfile :info="dummydata2" />
+              <OnlineLectureUserProfile />
+              <OnlineLectureUserProfile />
             </div>
           </div>
         </div>
@@ -99,4 +63,10 @@ const dummydata5: chatForm = {
     </div>
   </div>
 </template>
-<style scoped></style>
+<style scoped>
+.video-box {
+  border: 1px;
+  border-radius: 10px;
+  background-color: #ecf1fa;
+}
+</style>

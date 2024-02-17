@@ -5,11 +5,11 @@ export interface signUpResponse extends commonResponse {
 }
 
 export interface user {
-  id: string
-  role: string
-  nickname: string
-  point: number
-  profile: string
+  id: number,
+  role: string,
+  email: string,
+  nickname: string,
+  profile: string,
 }
 
 export interface accountErrorResponse extends errorResponse{
@@ -36,4 +36,5 @@ export interface loginForm {
 
 export interface signUpForm extends loginForm {
   nickname: string
+  role: string,
 }

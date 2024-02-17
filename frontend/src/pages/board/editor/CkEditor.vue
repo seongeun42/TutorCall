@@ -37,8 +37,8 @@ let text: Ref<string> = ref(editStore.content);
  * v-model 값 연결
  */
 watch(text, (newValue: string, oldValue: string) => {
-  const textOnly: string = newValue.replace(/<[^>]+>/g, '')
-  emits('update:modelValue', textOnly)
+  // const textOnly: string = newValue.replace(/<[^>]+>/g, '')
+  emits('update:modelValue', text)
 })
 
 // import Upload Adapter
@@ -46,7 +46,7 @@ import UploadAdapter from '@/components/UploadAdapter'
 import { onMounted } from 'vue'
 
 // Custom Upload Adapter Plugin function
-function CustomUploadAdapterPlugin(editor: any) {
+function customUploadAdapterPlugin(editor: any) {
   editor.plugins.get('FileRepository').createUploadAdapter = (loader: any) => {
     // Create new object and pass server url
     return new UploadAdapter(loader)
@@ -57,7 +57,7 @@ let editor=ClassicEditor;
 
 
 const editorConfig = {
-  extraPlugins: [CustomUploadAdapterPlugin],
+  extraPlugins: [customUploadAdapterPlugin],
   plugins: [
     Essentials,
     Bold,

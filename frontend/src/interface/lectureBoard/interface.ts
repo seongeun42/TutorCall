@@ -14,18 +14,19 @@ export interface lecture {
   createdAt: string
 }
 
-export interface detailLecture extends lecture{
-
-    promotionTitle: string,
-    promotionContent: string,
-    tutor: detailTutor,
-    maxParticipants: number,
-    participants: number,
-    promotionDue: string,
-    lectureStartAt:string,
-    lectureEndAt:string,
-    participated: boolean,
-    price: number,
+export interface detailLecture extends lecture {
+  promotionTitle: string
+  promotionContent: string
+  tutor: detailTutor
+  maxParticipants: number
+  participants: number
+  promotionDue: string
+  lectureStartAt: string
+  lectureEndAt: string
+  participated: boolean
+  price: number
+  promotionCreatedAt: string
+  lectureState: boolean
 }
 
 export interface detailTutor extends user {

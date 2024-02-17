@@ -22,14 +22,13 @@ const notificationStore = useNotificationStore()
 // }[] = reactive([]);
 
 // /* * * * * * * * * * * * *
-// * 
+// *
 // *   data: 소켓에서 받은 선생님 데이터
 // *   objectsize
 // *   position x
 // *   position y
 // *
 // * * * * * * * * * * * * * */
-
 
 // /*
 // * 이 made by written 중복 회피 로직은 쓰레기다 고쳐야함
@@ -77,10 +76,9 @@ const notificationStore = useNotificationStore()
 // }
 
 // function testBtn():void{
-//   console.log("ddd");
+// 
 //   pushNewData("testDatainput");
 // }
-
 </script>
 
 <template>
@@ -91,16 +89,14 @@ const notificationStore = useNotificationStore()
     <div class="wave -three"></div>
     <FloatObject
       v-for="(d, idx) in notificationStore.accepts"
-      :accept=d
+      :accept="d"
       :class="'obj' + d.id"
       :key="idx"
-      :position-y=d.positionY
-      :size=d.objectsize
-      :position-x=d.positionX
+      :position-y="d.positionY"
+      :size="d.objectsize"
+      :position-x="d.positionX"
     />
   </div>
-  <div @click="testBtn"
-  class="bg-gray-300 min-h-8"><p>pushdata</p></div>
 </template>
 <style scoped>
 .relative {
