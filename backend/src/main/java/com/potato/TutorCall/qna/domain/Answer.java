@@ -30,6 +30,7 @@ public class Answer {
   @ManyToOne(fetch = FetchType.LAZY)
   private Question question;
 
+  @Column(length = 4000)
   private String content;
 
   private boolean isChosen;

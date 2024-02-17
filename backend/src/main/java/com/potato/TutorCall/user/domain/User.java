@@ -97,14 +97,13 @@ public class User {
       String nickname,
       String password,
       RoleType role,
-      String profile,
       SnsType sns,
       int point) {
     this.email = email;
     this.nickname = nickname;
     this.password = password;
     this.role = role;
-    this.profile = profile;
+    this.profile = role.equals(RoleType.USER) ? "https://wockss3.s3.ap-northeast-2.amazonaws.com/default_student.png" : "https://wockss3.s3.ap-northeast-2.amazonaws.com/default_tutor.png";
     this.sns = sns;
     this.point = point;
   }

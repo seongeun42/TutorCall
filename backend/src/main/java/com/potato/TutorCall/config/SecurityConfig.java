@@ -33,8 +33,7 @@ public class SecurityConfig {
         .httpBasic(basic -> basic.disable()) // http basic 비활성화
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/test/data")
-                    .authenticated()
+                auth
                     .anyRequest()
                     .permitAll()); // 어떤 요청이든 허용
     return http.build();

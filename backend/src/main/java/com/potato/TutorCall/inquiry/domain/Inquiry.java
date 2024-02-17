@@ -25,10 +25,13 @@ public class Inquiry {
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
+  @Column(length = 500)
   private String title;
 
+  @Column(length = 4000)
   private String content;
 
+  @Column(length = 4000)
   private String answer;
 
   private boolean answerState;

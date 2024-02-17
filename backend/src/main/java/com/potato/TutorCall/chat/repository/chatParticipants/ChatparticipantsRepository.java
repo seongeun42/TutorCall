@@ -1,13 +1,17 @@
 package com.potato.TutorCall.chat.repository.chatParticipants;
 
 import com.potato.TutorCall.chat.domain.ChatParticipants;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.repository.CrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface ChatparticipantsRepository extends ReactiveCrudRepository<ChatParticipants, String> {
-  Mono<Void> deleteByUserIdAndChatroomId(Long userId, String chatroomId);
-  Flux<String> getParticipatingRooms(Long userId);
-  Flux<Long> getUsersInChatroom(String chatroomId);
-  Mono<Long> countUsersInRoom(String roomId);
+import java.util.List;
+
+public interface ChatparticipantsRepository extends CrudRepository<ChatParticipants, String> {
+  void deleteByUserIdAndChatroomId(Long userId, String chatroomId);
+//  List<String> getParticipatingRooms(Long userId);
+//  List<Long> getUsersInChatroom(String chatroomId);
+  List<ChatParticipants> findAllByUserId(Long userId);
+  List<ChatParticipants> findAllByChatroomId(String roomId);
+  Long countUsersInRoom(String roomId);
 }

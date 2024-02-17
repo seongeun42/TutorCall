@@ -4,16 +4,23 @@ import com.potato.TutorCall.auth.SessionKey;
 import com.potato.TutorCall.auth.dto.UserSessionDto;
 import com.potato.TutorCall.exception.customException.ForbiddenException;
 import com.potato.TutorCall.mypage.dto.req.*;
+import com.potato.TutorCall.mypage.dto.res.MyLectureListResDto;
 import com.potato.TutorCall.mypage.dto.res.MyPageProfileResDto;
+import com.potato.TutorCall.mypage.dto.res.ProfileUpdateResDto;
 import com.potato.TutorCall.mypage.dto.res.UpdateSuccessResDto;
 import com.potato.TutorCall.mypage.service.MypageService;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import javax.naming.AuthenticationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
+
+import java.io.IOException;
 
 /** 마이페이지 기능에 대한 컨트롤러 */
 @Slf4j
@@ -43,12 +50,20 @@ public class MyPageController {
    * @return
    */
   @PatchMapping("/profile")
+  @ResponseBody
   public ResponseEntity<?> updateProfileImage(
       @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession,
-      @RequestBody ProfileUpdateReqDto newProfile) {
-    mypageService.updateProfile(userSession.getId(), newProfile.getProfile());
+      MultipartRequest multipartRequest) throws IOException {
 
-    return ResponseEntity.ok(new UpdateSuccessResDto("프로필 사진이 변경되었습니다."));
+    MultipartFile multipartFile = multipartRequest.getFile("profile");
+    String url = mypageService.updateProfile(userSession.getId(), multipartFile);
+
+    return ResponseEntity.ok(
+        ProfileUpdateResDto
+            .builder()
+            .message("프로필 사진이 변경되었습니다.")
+            .url(url)
+            .build());
   }
 
   /**
@@ -153,14 +168,17 @@ public class MyPageController {
   }
 
   /**
-   * 내 과외 목록 조히(끝났다면 리뷰 작성 여부 포함)
+   * 내 과외 목록 조회(끝났다면 리뷰 작성 여부 포함)
    *
    * @return
    */
   @GetMapping("/lecture")
   public ResponseEntity<?> getLectureList(
       @SessionAttribute(name = SessionKey.USER) UserSessionDto userSession, Pageable pageable) {
-    return ResponseEntity.ok(mypageService.getLectureList(userSession.getId(), pageable));
+    Page<MyLectureListResDto> result = userSession.getRoleType().equals(RoleType.USER) ?
+            mypageService.getLectureListUser(userSession.getId(), pageable) :
+            mypageService.getLectureListTutor(userSession.getId(), pageable);
+    return ResponseEntity.ok(result);
   }
 
   /**

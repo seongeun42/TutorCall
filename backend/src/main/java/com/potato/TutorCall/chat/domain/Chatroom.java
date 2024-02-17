@@ -1,6 +1,8 @@
 package com.potato.TutorCall.chat.domain;
 
 import com.potato.TutorCall.chat.domain.enums.ChatroomType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Version;
 import lombok.AccessLevel;
@@ -9,12 +11,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RedisHash("chatroom")
 public class Chatroom implements Serializable {
 
   @Id
@@ -22,6 +25,8 @@ public class Chatroom implements Serializable {
 
   private String name;
 
+  @Indexed
+  @Enumerated(EnumType.STRING)
   private ChatroomType type;
 
   // 생성자

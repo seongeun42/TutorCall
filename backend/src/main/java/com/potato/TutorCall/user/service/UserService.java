@@ -4,6 +4,8 @@ import com.potato.TutorCall.auth.dto.request.SignupRequestDto;
 import com.potato.TutorCall.exception.customException.DuplicatedException;
 import com.potato.TutorCall.exception.customException.ForbiddenException;
 import com.potato.TutorCall.exception.customException.NotFoundException;
+import com.potato.TutorCall.tutor.domain.Tutor;
+import com.potato.TutorCall.tutor.service.TutorService;
 import com.potato.TutorCall.user.domain.User;
 import com.potato.TutorCall.user.domain.enums.RoleType;
 import com.potato.TutorCall.user.repository.UserRepository;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final TutorService tutorService;
 
   public User findUserByEmail(String email) {
     return userRepository.findByEmail(email);
@@ -43,10 +46,15 @@ public class UserService {
             .email(signupRequestDto.getEmail())
             .nickname(signupRequestDto.getNickname())
             .password(passwordEncoder.encode(signupRequestDto.getPassword()))
-            .role(RoleType.USER)
+            .role(signupRequestDto.getRole())
             .point(0)
             .build();
     this.userRepository.save(user);
+
+    if (signupRequestDto.getRole().equals(RoleType.TUTOR)) {
+      Tutor tutor = Tutor.builder().user(user).build();
+      tutorService.save(tutor);
+    }
 
     return user;
   }

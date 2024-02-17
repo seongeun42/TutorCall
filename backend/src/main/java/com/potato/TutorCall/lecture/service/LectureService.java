@@ -116,4 +116,9 @@ public class LectureService {
     lecture.changeLectureState(false);
     lecture.changeLiveUrl(null);
   }
+
+  public Page<Lecture> findAllByTutor(Tutor tutor, Pageable pageable) {
+    return lectureRepository.findAllByTutorOrderByIdDesc(tutor, pageable);
+  }
+
 }

@@ -3,25 +3,41 @@ package com.potato.TutorCall.chat.domain;
 import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-@Data
-public class ChatParticipants {
+@Getter
+@Setter
+@RedisHash("chatting_user")
+public class ChatParticipants implements Serializable {
   @Id
-  String id;
+  private String id;
 
-  Long userId;
+  @Indexed
+  private Long userId;
 
-  String chatroomId;
-
-  LocalDateTime lastVisited = LocalDateTime.now();
+  @Indexed
+  private String chatroomId;
 
   @Builder
   public ChatParticipants(String id, Long userId, String chatroomId) {
     this.id = id;
     this.userId = userId;
     this.chatroomId = chatroomId;
+  }
+
+  @Override
+  public String toString() {
+    return "ChatParticipants{" +
+            "id='" + id + '\'' +
+            ", userId=" + userId +
+            ", chatroomId='" + chatroomId + '\'' +
+            '}';
   }
 }
